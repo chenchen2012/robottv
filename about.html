@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About robot.tv - Shaping the future of robotics through video.">
+    <title>About Us | robot.tv</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+            letter-spacing: 7px;
+            animation: neonGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: #fff;
+            max-width: 900px;
+            margin-bottom: 40px;
+            line-height: 2;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-button {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #00d9ff, #ff8c00);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .neon-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.4), 0 0 40px rgba(255, 140, 0, 0.3);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .neon-box:hover {
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.8), 0 0 60px rgba(255, 140, 0, 0.6);
+        }
+
+        .email-link {
+            color: #00d9ff;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .email-link:hover {
+            color: #ff8c00;
+        }
+
+        @keyframes neonGlow {
+            0% { text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff, 0 0 40px #00d9ff; }
+            100% { text-shadow: 0 0 20px #ff8c00, 0 0 30px #ff8c00, 0 0 40px #ff8c00, 0 0 50px #ff8c00; }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            p {
+                font-size: 1.1rem;
+            }
+
+            .cta-button {
+                padding: 10px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WC8XB1DN1E');
+</script>
+
+</head>
+<body>
+    <div class="content-container">
+        <h1>About robot.tv</h1>
+        <div class="neon-box">
+            <p>Welcome to the future. At <strong>robot.tv</strong>, we are creating the next big revolution by showcasing the most cutting-edge robots and AI systems. Our mission is simple: to bring robots to life through immersive video experiences. In a world where robots are reshaping industries and redefining possibilities, <strong>robot.tv</strong> stands as the beacon where innovation meets reality.</p>
+            <p>Robots are not just the next step in technology—they are the future. Through video content, we capture their movements, intelligence, and capabilities in ways static media cannot. At <strong>robot.tv</strong>, we aim to inspire the next wave of innovation by connecting visionaries, developers, and firms to a global audience eager to witness the robotic revolution.</p>
+        </div>
+        <p>Let’s collaborate and shape the future. If you are a robotics firm, developer, or innovator looking to showcase your creations, <a href="https://news.robot.tv/contact">reach out to us</a> today.</p>
+        <a href="index.html" class="cta-button">Back to Home</a>
+    </div>
+</body>
+</html>

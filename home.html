@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Showcasing the best robots around the world.">
+    <title>robot.tv - Explore the World's Best Robots</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            color: #00d9ff;
+            margin: 0;
+            letter-spacing: 5px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 20px;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        .robots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+
+        .robot-item {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .robot-item:hover {
+            transform: scale(1.05);
+        }
+
+        .robot-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .robot-item h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #ff8c00;
+            margin: 10px 0;
+        }
+
+        .robot-item p {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .cta-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #00d9ff, #ff8c00);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Animation for FadeIn effect */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 10px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WC8XB1DN1E');
+</script>
+
+</head>
+<body>
+    <div class="content-container">
+        <h1>Top 10 Robots of the World</h1>
+        <p>Discover the most advanced and innovative robots from around the globe. Click on any robot to learn more!</p>
+        
+        <div class="robots-grid">
+            <div class="robot-item">
+                <img src="images/asimo.jpg" alt="Asimo (Japan)">
+                <h2>Asimo (Japan)</h2>
+                <p>A cutting-edge humanoid robot developed by Honda.</p>
+                <a href="asimo.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/atlas.jpg" alt="Atlas (US)">
+                <h2>Atlas (US)</h2>
+                <p>A humanoid robot created by Boston Dynamics.</p>
+                <a href="atlas.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/digit.jpg" alt="Digit (US)">
+                <h2>Digit (US)</h2>
+                <p>An agile bipedal robot designed by Agility Robotics.</p>
+                <a href="digit.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/handle.jpg" alt="Handle (US)">
+                <h2>Handle (US)</h2>
+                <p>A mobile robot with wheels and legs from Boston Dynamics.</p>
+                <a href="handle.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/apollo.jpg" alt="Apollo (US)">
+                <h2>Apollo (US)</h2>
+                <p>An advanced collaborative robot designed for industrial tasks.</p>
+                <a href="apollo.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/thr3.jpg" alt="T-HR3 (Japan)">
+                <h2>T-HR3 (Japan)</h2>
+                <p>A humanoid robot designed by Toyota for remote operation.</p>
+                <a href="thr3.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/spot.jpg" alt="Spot (US)">
+                <h2>Spot (US)</h2>
+                <p>A quadruped robot developed by Boston Dynamics for versatile tasks.</p>
+                <a href="spot.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/anymal.jpg" alt="AnyMal (Switzerland)">
+                <h2>AnyMal (Switzerland)</h2>
+                <p>A quadrupedal robot developed by ANYbotics for autonomous inspection.</p>
+                <a href="anymal.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/unitreeg1.jpg" alt="Unitree G1 (China)">
+                <h2>Unitree G1 (China)</h2>
+                <p>A humanoid robot for industrial and personal applications from Unitree Robotics.</p>
+                <a href="unitreeg1.html" class="cta-button">Learn More</a>
+            </div>
+            <div class="robot-item">
+                <img src="images/yumi.jpg" alt="YuMi (Switzerland)">
+                <h2>YuMi (Switzerland)</h2>
+                <p>A collaborative robot developed by ABB for industrial automation.</p>
+                <a href="yumi.html" class="cta-button">Learn More</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AILD - AI Learners and Developers, your hub for learning and collaborating in AI">
+    <title>AILD - AI Learners and Developers</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0e0f1a;
+            color: #d1d5db;
+            overflow-x: hidden;
+        }
+        header {
+            background-color: #0f0f3d;
+            color: #00e0ff;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 1rem;
+        }
+        nav ul li a {
+            color: #00e0ff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #1effa6;
+        }
+        .hero {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(to right, #00172d, #003859);
+            color: #ffffff;
+            box-shadow: inset 0 0 15px rgba(0, 224, 255, 0.3);
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0px 4px 8px #00e0ff;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .section {
+            margin: 3rem 0;
+        }
+        .section h2 {
+            color: #1effa6;
+            font-size: 2rem;
+            text-shadow: 0px 4px 8px rgba(0, 224, 255, 0.4);
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #00e0ff, #1effa6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0px 4px 10px rgba(0, 224, 255, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 20px rgba(0, 224, 255, 0.6);
+        }
+        .features {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .feature {
+            flex: 1;
+            background: #101223;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 224, 255, 0.2);
+            transition: box-shadow 0.3s;
+        }
+        .feature:hover {
+            box-shadow: 0px 6px 20px rgba(0, 224, 255, 0.5);
+        }
+        footer {
+            background-color: #0f0f3d;
+            color: #d1d5db;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: #00e0ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: #1effa6;
+        }
+        @media (max-width: 768px) {
+            .features {
+                flex-direction: column;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>AILD</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#community" class="btn-primary">Join the Community</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Welcome to AI Learners & Developers</h1>
+        <p>Your hub for learning, collaboration, and innovation in the field of Artificial Intelligence.</p>
+        <a href="#community" class="btn-primary">Join Now</a>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2>About AILD.org</h2>
+            <p>AILD.org (AI Learners and Developers) is a community-driven platform dedicated to empowering individuals and teams to learn, innovate, and collaborate in artificial intelligence. Whether you're a beginner or an advanced developer, AILD.org offers resources, courses, and a thriving community to support your journey in AI.</p>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section">
+            <h2>Our Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>Learning Paths</h3>
+                    <p>Structured AI courses for beginners, intermediates, and advanced learners. Start with AI basics, progress to machine learning, and dive into deep learning.</p>
+                </div>
+                <div class="feature">
+                    <h3>Interactive Community</h3>
+                    <p>Connect with AI enthusiasts and professionals. Share knowledge, collaborate on projects, and get support through our forums and discussions.</p>
+                </div>
+                <div class="feature">
+                    <h3>Resources & Tools</h3>
+                    <p>Access a library of AI tools, datasets, and coding environments. Experiment, learn, and build with resources designed to help you excel in AI.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section id="community" class="section">
+            <h2>Join the Community</h2>
+            <p>Become part of a growing community of AI learners and developers. Access exclusive content, events, and real-world projects to stay ahead in AI.</p>
+            <a href="#community" class="btn-primary">Get Started</a>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <p>© 2024 AILD.org - AI Learners and Developers</p>
+        <p>Contact us: <a href="mailto:chenchen2012@hotmail.com">chenchen2012@hotmail.com</a></p>
+    </footer>
+</body>
+</html>

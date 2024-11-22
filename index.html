@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cutting-edge robotics innovations, news, and insights.">
+    <title>robot.tv - Shaping the Future with Robotics</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen video background for animation */
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            filter: blur(2px);
+            opacity: 0.7;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 6rem;
+            color: #00d9ff;
+            margin: 0;
+            letter-spacing: 5px;
+            animation: neonGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-top: 20px;
+            max-width: 600px;
+            line-height: 1.8;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-button {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #00d9ff, #ff8c00);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .neon-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.4), 0 0 40px rgba(255, 140, 0, 0.3);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .neon-box:hover {
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.8), 0 0 60px rgba(255, 140, 0, 0.6);
+        }
+
+        .neon-box h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #ff8c00;
+        }
+
+        /* Animation for FadeIn effect */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Neon glowing animation for the heading */
+        @keyframes neonGlow {
+            0% { text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff, 0 0 40px #00d9ff; }
+            100% { text-shadow: 0 0 20px #ff8c00, 0 0 30px #ff8c00, 0 0 40px #ff8c00, 0 0 50px #ff8c00; }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 4rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 10px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 60px 20px;
+            background-color: #111111;
+            text-align: center;
+        }
+
+        .about-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #00d9ff;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .about-section a.email-link {
+            color: #00d9ff;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .about-section a.email-link:hover {
+            color: #ff8c00;
+        }
+    </style>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WC8XB1DN1E');
+</script>
+
+</head>
+<body>
+
+    <!-- Fullscreen Background Video (Placeholder) -->
+    <video autoplay muted loop class="video-background">
+        <source src="path_to_background_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Main Content -->
+<div class="content-container">
+    <h1>Robot.tv</h1>
+    <p>Welcome to <span class="highlight">robot.tv</span>, your gateway to the latest innovations in robotics. Explore breakthroughs in AI and future-defining robots.</p>
+    <a href="home.html" class="cta-button">Explore Best Robots</a>
+    <a href="https://news.robot.tv" class="cta-button">Robot News</a>
+</div>
+
+    <!-- About Section -->
+    <div id="about" class="about-section">
+        <h2>About robot.tv</h2>
+        <div class="neon-box">
+            <p>At <strong>robot.tv</strong>, we are creating the next big revolution by showcasing the most cutting-edge robots and AI systems. Our mission is simple: to bring robots to life through immersive video experiences. In a world where robots are reshaping industries and redefining possibilities, <strong>robot.tv</strong> stands as the beacon where innovation meets reality.</p>
+            <p>We aim to inspire the next wave of innovation by connecting visionaries, developers, and firms to a global audience eager to witness the robotic revolution.</p>
+        </div>
+        <p>Let’s collaborate and shape the future. If you are a robotics firm, developer, or innovator looking to showcase your creations, <a class="email-link" href="https://news.robot.tv/contact">reach out to us</a> today.</p>
+    </div>
+
+</body>
+</html>
