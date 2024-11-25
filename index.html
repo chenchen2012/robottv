@@ -17,6 +17,17 @@
             overflow-x: hidden;
         }
 
+        /* Central logo styling */
+        .logo-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logo-container img {
+            max-width: 150px;
+            height: auto;
+        }
+
         /* Fullscreen video background for animation */
         .video-background {
             position: fixed;
@@ -161,32 +172,27 @@
         }
     </style>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WC8XB1DN1E');
-</script>
-
 </head>
 <body>
 
-    <!-- Fullscreen Background Video (Placeholder) -->
+    <!-- Fullscreen Background Video (Placeholder) 
     <video autoplay muted loop class="video-background">
         <source src="path_to_background_video.mp4" type="video/mp4">
         Your browser does not support the video tag.
-    </video>
+    </video> -->
+
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="images/robot_logo.png" alt="Robot TV Logo">
+    </div>
 
     <!-- Main Content -->
-<div class="content-container">
-    <h1>Robot.tv</h1>
-    <p>Welcome to <span class="highlight">robot.tv</span>, your gateway to the latest innovations in robotics. Explore breakthroughs in AI and future-defining robots.</p>
-    <a href="home.html" class="cta-button">Explore Best Robots</a>
-    <a href="https://news.robot.tv" class="cta-button">Robot News</a>
-</div>
+    <div class="content-container">
+        <h1>Robot.tv</h1>
+        <p>Welcome to <span class="highlight">robot.tv</span>, your gateway to the latest innovations in robotics. Explore breakthroughs in AI and future-defining robots.</p>
+        <a href="home.html" class="cta-button">Explore Best Robots</a>
+        <a href="https://news.robot.tv" class="cta-button">Robot News</a>
+    </div>
 
     <!-- About Section -->
     <div id="about" class="about-section">
