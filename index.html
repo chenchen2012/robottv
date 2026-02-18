@@ -252,10 +252,22 @@
         .then((d) => {
           const posts = Array.isArray(d?.result) ? d.result : [];
           if (!posts.length) return;
-          setCard("top", posts[0]);
-          setCard("humanoid", posts.find((p) => hasCat(p, "humanoid")) || posts[1]);
-          setCard("quadruped", posts.find((p) => hasCat(p, "quadruped")) || posts[2]);
-          setCard("startup", posts.find((p) => hasCat(p, "startup")) || posts[3]);
+          const used = new Set();
+          const pickUnique = (matcher) => {
+            const match = posts.find((p) => p?.slug && !used.has(p.slug) && matcher(p));
+            if (match) {
+              used.add(match.slug);
+              return match;
+            }
+            const fallback = posts.find((p) => p?.slug && !used.has(p.slug));
+            if (fallback) used.add(fallback.slug);
+            return fallback;
+          };
+
+          setCard("top", pickUnique(() => true));
+          setCard("humanoid", pickUnique((p) => hasCat(p, "humanoid")));
+          setCard("quadruped", pickUnique((p) => hasCat(p, "quadruped")));
+          setCard("startup", pickUnique((p) => hasCat(p, "startup")));
         })
         .catch(() => {});
 
