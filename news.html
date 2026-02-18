@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="robot.tv News delivers high-signal robotics coverage with video-first analysis across humanoids, quadrupeds, and startup execution.">
+    <title>News | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-news-v1">
+    <style>
+        .news-hero { margin-top: 1rem; padding: 1.3rem; }
+        .news-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0.85rem; margin-top: 1rem; }
+        .news-card { border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(160deg, #101926, #0b131f); overflow: hidden; }
+        .news-card.featured { grid-row: span 2; }
+        .news-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-bottom: 1px solid #24344f; }
+        .news-content { padding: 0.85rem; }
+        .news-meta { margin: 0; color: #9fb2d4; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .news-card h3 { margin: 0.45rem 0 0; line-height: 1.3; font-size: 1.05rem; }
+        .news-card p { margin: 0.55rem 0 0; color: var(--muted); line-height: 1.55; }
+        .news-actions { margin-top: 0.7rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .news-empty { margin-top: 1rem; padding: 1rem; color: var(--muted); }
+        @media (max-width: 980px) { .news-grid { grid-template-columns: 1fr 1fr; } .news-card.featured { grid-column: span 2; grid-row: auto; } }
+        @media (max-width: 760px) { .news-grid { grid-template-columns: 1fr; } .news-card.featured { grid-column: auto; } }
+    </style>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="news.html">News</a>
+                <a href="home.html">Robot Index</a>
+                <a href="live.html">Live Now</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Submit Video</a>
+        </header>
+
+        <main>
+            <section class="panel news-hero">
+                <p class="kicker">NEWSROOM</p>
+                <h1>High-Signal Robotics Coverage</h1>
+                <p class="hero-copy">Daily intelligence on humanoids, quadrupeds, and robotics startups, built around video-first reporting and deployment context.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv" target="_blank" rel="noopener">Open CMS</a>
+                    <a class="btn btn-ghost" href="index.html">Back to Homepage</a>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Latest Posts</h2>
+                    <a href="https://news.robot.tv" target="_blank" rel="noopener">Manage content</a>
+                </div>
+                <div id="news-grid" class="news-grid" aria-live="polite"></div>
+                <div id="news-empty" class="panel news-empty" hidden>No posts yet. Publish your first article in Sanity Studio.</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const projectId = "lumv116w";
+        const dataset = "production";
+        const query = `*[_type=="post"] | order(publishedAt desc)[0...12]{
+          _id,title,excerpt,publishedAt,youtubeUrl,
+          "author": author->name,
+          "categories": categories[]->title
+        }`;
+        const endpoint = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`;
+        const grid = document.getElementById("news-grid");
+        const empty = document.getElementById("news-empty");
+
+        const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
+        const videoIdFromUrl = (url) => {
+            const match = String(url || "").match(/[?&]v=([^&]+)/) || String(url || "").match(/youtu\.be\/([^?&]+)/);
+            return match ? match[1] : "";
+        };
+        const thumbFromUrl = (url) => {
+            const id = videoIdFromUrl(url);
+            return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+        };
+        const postDate = (iso) => {
+            try { return new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"}); }
+            catch { return "Recent"; }
+        };
+
+        const render = (posts) => {
+            if (!posts.length) {
+                empty.hidden = false;
+                grid.innerHTML = "";
+                return;
+            }
+            empty.hidden = true;
+            grid.innerHTML = posts.map((post, idx) => `
+                <article class="news-card ${idx === 0 ? "featured" : ""}">
+                    <img class="news-thumb" src="${escapeHtml(thumbFromUrl(post.youtubeUrl))}" alt="${escapeHtml(post.title)} thumbnail" loading="lazy">
+                    <div class="news-content">
+                        <p class="news-meta">${escapeHtml(postDate(post.publishedAt))} | ${escapeHtml(post.author || "robot.tv")}</p>
+                        <h3>${escapeHtml(post.title)}</h3>
+                        <p>${escapeHtml(post.excerpt || "Read the latest robotics intelligence from robot.tv newsroom.")}</p>
+                        <div class="news-actions">
+                            <a class="btn btn-primary" href="${escapeHtml(post.youtubeUrl || "#")}" target="_blank" rel="noopener">Watch Video</a>
+                            <a class="btn btn-ghost" href="https://news.robot.tv" target="_blank" rel="noopener">Read in CMS</a>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        };
+
+        fetch(endpoint)
+            .then((res) => res.json())
+            .then((data) => render(Array.isArray(data.result) ? data.result : []))
+            .catch(() => {
+                empty.hidden = false;
+                empty.textContent = "Unable to load posts right now. You can still publish from Sanity Studio.";
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+[
+  {
+    "_id": "author-chen-chen",
+    "_type": "author",
+    "name": "Chen Chen",
+    "slug": {
+      "_type": "slug",
+      "current": "chen-chen"
+    },
+    "bio": "Founder of robot.tv. Covers humanoids, autonomy, and robotics startup execution."
+  },
+  {
+    "_id": "category-humanoid-robots",
+    "_type": "category",
+    "title": "Humanoid Robots",
+    "slug": {
+      "_type": "slug",
+      "current": "humanoid-robots"
+    },
+    "description": "Biped robotics launches, field trials, and capability milestones."
+  },
+  {
+    "_id": "category-quadruped-robots",
+    "_type": "category",
+    "title": "Quadruped Robots",
+    "slug": {
+      "_type": "slug",
+      "current": "quadruped-robots"
+    },
+    "description": "Inspection, security, and remote operations with four-legged platforms."
+  },
+  {
+    "_id": "category-robotics-startups",
+    "_type": "category",
+    "title": "Robotics Startups",
+    "slug": {
+      "_type": "slug",
+      "current": "robotics-startups"
+    },
+    "description": "Funding, GTM, and product velocity from emerging robotics companies."
+  },
+  {
+    "_id": "post-humanoid-deployments-2026",
+    "_type": "post",
+    "title": "Humanoid Deployments Enter the Factory Proof Stage in 2026",
+    "slug": {
+      "_type": "slug",
+      "current": "humanoid-deployments-factory-proof-stage-2026"
+    },
+    "excerpt": "Pilot deployments are shifting from demo optics to measurable throughput and reliability metrics.",
+    "publishedAt": "2026-02-18T12:00:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=gOYAfEOeg1Y",
+    "author": {
+      "_type": "reference",
+      "_ref": "author-chen-chen"
+    },
+    "categories": [
+      {
+        "_type": "reference",
+        "_ref": "category-humanoid-robots"
+      },
+      {
+        "_type": "reference",
+        "_ref": "category-robotics-startups"
+      }
+    ],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "intro1",
+        "style": "normal",
+        "children": [
+          {
+            "_type": "span",
+            "_key": "intro1a",
+            "text": "The market signal is no longer about impressive movement alone. Buyers now ask about uptime, intervention rate, and integration effort with existing workflows."
+          }
+        ],
+        "markDefs": []
+      },
+      {
+        "_type": "block",
+        "_key": "intro2",
+        "style": "normal",
+        "children": [
+          {
+            "_type": "span",
+            "_key": "intro2a",
+            "text": "For 2026, the winners are likely teams that pair reliable hardware with deployment-focused software and clear economics."
+          }
+        ],
+        "markDefs": []
+      }
+    ]
+  },
+  {
+    "_id": "post-quadrupeds-inspection-scale",
+    "_type": "post",
+    "title": "Quadrupeds Scale from Pilot to Routine Industrial Inspection",
+    "slug": {
+      "_type": "slug",
+      "current": "quadrupeds-routine-industrial-inspection-scale"
+    },
+    "excerpt": "Inspection robots are moving into routine operations with stronger autonomy and alert quality.",
+    "publishedAt": "2026-02-17T15:00:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=zFUHi3_oiXk",
+    "author": {
+      "_type": "reference",
+      "_ref": "author-chen-chen"
+    },
+    "categories": [
+      {
+        "_type": "reference",
+        "_ref": "category-quadruped-robots"
+      }
+    ],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "q1",
+        "style": "normal",
+        "children": [
+          {
+            "_type": "span",
+            "_key": "q1a",
+            "text": "Energy, utilities, and manufacturing operators are adopting quadrupeds where repeatable patrol routes and anomaly detection can reduce manual burden."
+          }
+        ],
+        "markDefs": []
+      },
+      {
+        "_type": "block",
+        "_key": "q2",
+        "style": "normal",
+        "children": [
+          {
+            "_type": "span",
+            "_key": "q2a",
+            "text": "The next adoption unlock is better workflow integration: ticketing, digital twins, and operator escalation loops."
+          }
+        ],
+        "markDefs": []
+      }
+    ]
+  },
+  {
+    "_id": "post-startup-velocity-brief",
+    "_type": "post",
+    "title": "Startup Velocity Brief: What Separates Robotics Teams That Ship",
+    "slug": {
+      "_type": "slug",
+      "current": "startup-velocity-brief-robotics-teams-that-ship"
+    },
+    "excerpt": "Speed matters, but execution quality and deployment discipline decide long-term survival.",
+    "publishedAt": "2026-02-16T10:30:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=lQsvTrRTBRs",
+    "author": {
+      "_type": "reference",
+      "_ref": "author-chen-chen"
+    },
+    "categories": [
+      {
+        "_type": "reference",
+        "_ref": "category-robotics-startups"
+      }
+    ],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "s1",
+        "style": "normal",
+        "children": [
+          {
+            "_type": "span",
+            "_key": "s1a",
+            "text": "Investors increasingly differentiate between demo-heavy updates and customer-validated deployment progress."
+          }
+        ],
+        "markDefs": []
+      },
+      {
+        "_type": "block",
+        "_key": "s2",
+        "style": "normal",
+        "children": [
+          {
+            "_type": "span",
+            "_key": "s2a",
+            "text": "Teams that report hard metrics and maintain a tight ship cycle continue to earn trust."
+          }
+        ],
+        "markDefs": []
+      }
+    ]
+  }
+]

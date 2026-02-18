@@ -10,7 +10,7 @@ export default defineConfig({
   title: 'robot.tv News CMS',
   projectId,
   dataset,
-  basePath: '/',
+  basePath: '/studio',
   plugins: [deskTool()],
   schema: {
     types: schemaTypes,
