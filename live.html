@@ -43,6 +43,10 @@
             border: 0;
             display: block;
         }
+        #live-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+        }
 
         .live-meta {
             margin-top: 0.8rem;
@@ -78,18 +82,71 @@
             </p>
 
             <div class="live-embed">
-                <iframe
-                    src="https://www.youtube.com/embed/G6ERanEbzEE?autoplay=1&mute=1&rel=0"
-                    title="robot.tv live stream"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen>
-                </iframe>
+                <div id="live-player"></div>
             </div>
 
-            <p class="live-meta">
-                Source: <a href="https://www.youtube.com/watch?v=G6ERanEbzEE" target="_blank" rel="noopener">BattleBots livestream on YouTube</a>.
-            </p>
+            <p class="live-meta" id="live-meta">Loading robot livestream...</p>
         </main>
     </div>
+    <script>
+      const streamCandidates = [
+        { id: "G6ERanEbzEE", label: "BattleBots livestream", url: "https://www.youtube.com/watch?v=G6ERanEbzEE" },
+        { id: "xk-6syjmGa8", label: "Robotic sci-fi live feed", url: "https://www.youtube.com/watch?v=xk-6syjmGa8" },
+        { id: "Hag52ouCzJs", label: "Robot animation livestream", url: "https://www.youtube.com/watch?v=Hag52ouCzJs" }
+      ];
+
+      const meta = document.getElementById("live-meta");
+      let player;
+      let currentIndex = 0;
+      let startupTimer = null;
+
+      const setMeta = (text, link) => {
+        meta.innerHTML = link
+          ? `Source: <a href="${link}" target="_blank" rel="noopener">${text}</a>. Auto-fallback is enabled.`
+          : text;
+      };
+
+      const activateCandidate = (index) => {
+        currentIndex = (index + streamCandidates.length) % streamCandidates.length;
+        const item = streamCandidates[currentIndex];
+        setMeta(item.label, item.url);
+        if (player && typeof player.loadVideoById === "function") {
+          player.loadVideoById(item.id);
+        }
+      };
+
+      const nextCandidate = () => activateCandidate(currentIndex + 1);
+
+      function onYouTubeIframeAPIReady() {
+        const first = streamCandidates[0];
+        setMeta(first.label, first.url);
+        player = new YT.Player("live-player", {
+          videoId: first.id,
+          playerVars: {
+            autoplay: 1,
+            mute: 1,
+            rel: 0,
+            playsinline: 1
+          },
+          events: {
+            onReady: () => {
+              player.playVideo();
+              clearTimeout(startupTimer);
+              startupTimer = setTimeout(() => {
+                const state = player.getPlayerState();
+                if (state === -1) nextCandidate();
+              }, 9000);
+            },
+            onStateChange: (event) => {
+              if (event.data === YT.PlayerState.ENDED) nextCandidate();
+            },
+            onError: () => nextCandidate()
+          }
+        });
+      }
+
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
