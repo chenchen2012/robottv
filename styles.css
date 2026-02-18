@@ -823,22 +823,60 @@ a {
 
 .about-hero {
     margin-top: 1rem;
+    padding: 1.45rem;
+    background:
+        radial-gradient(900px 300px at 8% 10%, rgba(239, 45, 82, 0.2), transparent 52%),
+        radial-gradient(880px 300px at 96% 22%, rgba(94, 132, 255, 0.18), transparent 54%),
+        linear-gradient(160deg, #0f1724, #111a27);
+    border-color: #32486c;
+}
+
+.about-hero h1 {
+    font-size: clamp(2rem, 5.4vw, 3.45rem);
+    max-width: 12.5ch;
+}
+
+.about-hero .hero-copy {
+    max-width: 62ch;
 }
 
 .about-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.85rem;
+    gap: 0.95rem;
 }
 
 .about-card {
-    padding: 1rem;
+    padding: 1.05rem;
+    border-color: #2f405d;
+    background:
+        linear-gradient(160deg, #101a2a, #0d1522);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(239, 45, 82, 0.75), rgba(94, 132, 255, 0.75));
+    opacity: 0.7;
+}
+
+.about-card:hover {
+    transform: translateY(-2px);
+    border-color: #445f87;
+    box-shadow: 0 12px 28px rgba(3, 8, 15, 0.36);
 }
 
 .about-card h2 {
     margin: 0;
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     letter-spacing: 0.03em;
 }
 
@@ -858,13 +896,17 @@ a {
 
 .about-cta {
     margin-top: 1.2rem;
-    padding: 1.1rem;
+    padding: 1.2rem;
+    border-color: #3d5478;
+    background:
+        radial-gradient(920px 220px at 10% 50%, rgba(94, 132, 255, 0.14), transparent 62%),
+        linear-gradient(160deg, #111b2a, #0f1826);
 }
 
 .about-cta h2 {
     margin: 0.4rem 0 0;
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     line-height: 1.28;
 }
 
