@@ -3,210 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Showcasing the best robots around the world.">
-    <title>robot.tv - Explore the World's Best Robots</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #0a0a0a;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
-        }
+    <meta name="description" content="Global Robot Index by robot.tv. High-signal profiles of major robots, with video and capability context.">
+    <title>Robot Index | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260218-robots">
 
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            color: #00d9ff;
-            margin: 0;
-            letter-spacing: 5px;
-            animation: fadeIn 2s ease-out;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #fff;
-            margin-top: 20px;
-            max-width: 600px;
-            line-height: 1.8;
-        }
-
-        .robots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-            margin-top: 40px;
-        }
-
-        .robot-item {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease;
-            text-align: center;
-        }
-
-        .robot-item:hover {
-            transform: scale(1.05);
-        }
-
-        .robot-item img {
-            width: 250px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .robot-item h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            color: #ff8c00;
-            margin: 10px 0;
-        }
-
-        .robot-item p {
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        .cta-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #00d9ff, #ff8c00);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-size: 1rem;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-        }
-
-        /* Animation for FadeIn effect */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3rem;
-            }
-
-            p {
-                font-size: 1rem;
-            }
-
-            .cta-button {
-                padding: 10px 30px;
-                font-size: 1rem;
-            }
-        }
-    </style>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WC8XB1DN1E');
-</script>
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WC8XB1DN1E');
+    </script>
 </head>
 <body>
-    <div class="content-container">
-        <h1>Top 10 Robots of the World</h1>
-        <p>Discover the most advanced and innovative robots from around the globe. Click on any robot to learn more!</p>
-        
-        <div class="robots-grid">
-            <div class="robot-item">
-                <img src="images/asimo.jpg" alt="Asimo (Japan)">
-                <h2>Asimo (Japan)</h2>
-                <p>A cutting-edge humanoid robot developed by Honda.</p>
-                <a href="asimo.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/atlas.jpg" alt="Atlas (US)">
-                <h2>Atlas (US)</h2>
-                <p>A humanoid robot created by Boston Dynamics.</p>
-                <a href="atlas.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/digit.jpg" alt="Digit (US)">
-                <h2>Digit (US)</h2>
-                <p>An agile bipedal robot designed by Agility Robotics.</p>
-                <a href="digit.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/handle.jpg" alt="Handle (US)">
-                <h2>Handle (US)</h2>
-                <p>A mobile robot with wheels and legs from Boston Dynamics.</p>
-                <a href="handle.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/apollo.jpg" alt="Apollo (US)">
-                <h2>Apollo (US)</h2>
-                <p>An advanced collaborative robot designed for industrial tasks.</p>
-                <a href="apollo.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/thr3.jpg" alt="T-HR3 (Japan)">
-                <h2>T-HR3 (Japan)</h2>
-                <p>A humanoid robot designed by Toyota for remote operation.</p>
-                <a href="thr3.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/spot.jpg" alt="Spot (US)">
-                <h2>Spot (US)</h2>
-                <p>A quadruped robot developed by Boston Dynamics for versatile tasks.</p>
-                <a href="spot.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/anymal.jpg" alt="AnyMal (Switzerland)">
-                <h2>AnyMal (Switzerland)</h2>
-                <p>A quadrupedal robot developed by ANYbotics for autonomous inspection.</p>
-                <a href="anymal.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/unitreeg1.jpg" alt="Unitree G1 (China)">
-                <h2>Unitree G1 (China)</h2>
-                <p>A humanoid robot for industrial and personal applications from Unitree Robotics.</p>
-                <a href="unitreeg1.html" class="cta-button">Learn More</a>
-            </div>
-            <div class="robot-item">
-                <img src="images/yumi.jpg" alt="YuMi (Switzerland)">
-                <h2>YuMi (Switzerland)</h2>
-                <p>A collaborative robot developed by ABB for industrial automation.</p>
-                <a href="yumi.html" class="cta-button">Learn More</a>
-            </div>
-        </div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Submit Robot</a>
+        </header>
+
+        <main>
+            <section class="panel hero">
+                <p class="kicker">GLOBAL ROBOT INDEX</p>
+                <h1>Major Robot Profiles</h1>
+                <p class="hero-copy">
+                    A curated list of high-impact robots across humanoid, quadruped, and industrial categories.
+                    Every profile links to a dedicated page with embedded video and specs context.
+                </p>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Top Profiles (High-Res Media)</h2>
+                    <a href="https://news.robot.tv">Open newsroom</a>
+                </div>
+                <div class="robot-profile-grid">
+                    <article class="robot-profile-card">
+                        <img src="images/robots/honda-asimo.jpg" alt="ASIMO robot">
+                        <h3>ASIMO</h3>
+                        <p>Honda | Japan | Humanoid</p>
+                        <a class="btn btn-ghost" href="asimo.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/boston-dynamics-atlas.jpg" alt="Atlas robot">
+                        <h3>Atlas</h3>
+                        <p>Boston Dynamics | US | Humanoid</p>
+                        <a class="btn btn-ghost" href="atlas.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/agility-digit.jpg" alt="Digit robot">
+                        <h3>Digit</h3>
+                        <p>Agility Robotics | US | Humanoid</p>
+                        <a class="btn btn-ghost" href="digit.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/boston-dynamics-handle.jpg" alt="Handle robot">
+                        <h3>Handle</h3>
+                        <p>Boston Dynamics | US | Mobile Manipulator</p>
+                        <a class="btn btn-ghost" href="handle.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/apptronik-apollo.jpg" alt="Apollo robot">
+                        <h3>Apollo</h3>
+                        <p>Apptronik | US | Humanoid</p>
+                        <a class="btn btn-ghost" href="apollo.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/toyota-thr3.jpg" alt="T-HR3 robot">
+                        <h3>T-HR3</h3>
+                        <p>Toyota | Japan | Humanoid</p>
+                        <a class="btn btn-ghost" href="thr3.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/boston-dynamics-spot.jpg" alt="Spot robot">
+                        <h3>Spot</h3>
+                        <p>Boston Dynamics | US | Quadruped</p>
+                        <a class="btn btn-ghost" href="spot.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/anybotics-anymal.jpg" alt="ANYmal robot">
+                        <h3>ANYmal</h3>
+                        <p>ANYbotics | Switzerland | Quadruped</p>
+                        <a class="btn btn-ghost" href="anymal.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/unitree-g1.jpg" alt="Unitree G1 robot">
+                        <h3>Unitree G1</h3>
+                        <p>Unitree | China | Humanoid</p>
+                        <a class="btn btn-ghost" href="unitreeg1.html">View Profile</a>
+                    </article>
+                    <article class="robot-profile-card">
+                        <img src="images/robots/abb-yumi.jpg" alt="YuMi robot">
+                        <h3>YuMi</h3>
+                        <p>ABB | Switzerland/Sweden | Industrial Cobot</p>
+                        <a class="btn btn-ghost" href="yumi.html">View Profile</a>
+                    </article>
+                </div>
+            </section>
+        </main>
     </div>
 </body>
 </html>
