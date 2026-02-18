@@ -75,14 +75,22 @@
 
                 <aside class="live-spotlight panel" aria-label="Live stream spotlight">
                     <a class="live-preview" href="live.html">
-                        <img id="live-preview-image" src="https://img.youtube.com/vi/G6ERanEbzEE/hqdefault.jpg" alt="robot live stream preview" loading="lazy">
+                        <iframe
+                            id="live-preview-frame"
+                            src="https://www.youtube.com/embed/G6ERanEbzEE?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+                            title="robot.tv live preview"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            loading="lazy"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                        </iframe>
                         <span class="live-preview-badge"><span class="live-dot" aria-hidden="true"></span>On Air</span>
                     </a>
                     <div class="live-spotlight-copy">
                         <p class="kicker">LIVE SPOTLIGHT</p>
-                        <h2 class="live-spotlight-title" id="live-preview-title">BattleBots livestream is on now</h2>
-                        <p class="live-spotlight-desc">Rotating live source, auto-selected from approved robot streams.</p>
-                        <p class="live-source-line">Source: <strong id="live-preview-source">BattleBots livestream</strong></p>
+                        <h2 class="live-spotlight-title">BattleBots livestream is on now</h2>
+                        <p class="live-spotlight-desc">Live preview is muted and auto-plays inline for faster scanning.</p>
+                        <p class="live-source-line">Source: <strong>BattleBots livestream</strong></p>
                         <div class="hero-actions">
                             <a class="btn btn-primary" href="live.html">Open Live Room</a>
                         </div>
@@ -201,28 +209,6 @@
         </footer>
     </div>
     <script>
-      const livePreviewCandidates = [
-        { id: "G6ERanEbzEE", title: "BattleBots livestream is on now", source: "BattleBots livestream" },
-        { id: "xk-6syjmGa8", title: "Robotic sci-fi stream now playing", source: "Robotic sci-fi live feed" },
-        { id: "Hag52ouCzJs", title: "Robot animation live stream active", source: "Robot animation livestream" }
-      ];
-
-      let livePreviewIndex = 0;
-      const livePreviewImage = document.getElementById("live-preview-image");
-      const livePreviewTitle = document.getElementById("live-preview-title");
-      const livePreviewSource = document.getElementById("live-preview-source");
-
-      const updateLivePreview = () => {
-        const item = livePreviewCandidates[livePreviewIndex % livePreviewCandidates.length];
-        livePreviewImage.src = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`;
-        livePreviewTitle.textContent = item.title;
-        livePreviewSource.textContent = item.source;
-        livePreviewIndex += 1;
-      };
-
-      updateLivePreview();
-      setInterval(updateLivePreview, 9000);
-
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
