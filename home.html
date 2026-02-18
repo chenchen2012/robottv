@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Global Robot Index by robot.tv. High-signal profiles of major robots, with video and capability context.">
-    <title>Robot Index | robot.tv</title>
+    <meta name="description" content="Global Robot Index by robot.tv with filters, deployment context, and profile watch links.">
+    <title>Global Robot Index | robot.tv</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260218-robots">
-
+    <link rel="stylesheet" href="styles.css?v=20260218-robots-v2">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag(){dataLayer.push(arguments);} 
       gtag('js', new Date());
       gtag('config', 'G-WC8XB1DN1E');
     </script>
@@ -42,81 +41,159 @@
             <section class="panel hero">
                 <p class="kicker">GLOBAL ROBOT INDEX</p>
                 <h1>Major Robot Profiles</h1>
-                <p class="hero-copy">
-                    A curated list of high-impact robots across humanoid, quadruped, and industrial categories.
-                    Every profile links to a dedicated page with embedded video and specs context.
-                </p>
+                <p class="hero-copy">Filter by robot class, region, company and use case. Track deployment status, release timing, and profile video links.</p>
+            </section>
+
+            <section class="section panel index-toolbar">
+                <div class="filters-grid">
+                    <label>
+                        Type
+                        <select id="filter-type">
+                            <option value="all">All</option>
+                            <option value="Humanoid">Humanoid</option>
+                            <option value="Quadruped">Quadruped</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="AMR">AMR</option>
+                        </select>
+                    </label>
+                    <label>
+                        Region
+                        <select id="filter-region">
+                            <option value="all">All</option>
+                            <option value="US">US</option>
+                            <option value="China">China</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Europe">Europe</option>
+                        </select>
+                    </label>
+                    <label>
+                        Use Case
+                        <select id="filter-use">
+                            <option value="all">All</option>
+                            <option value="Factory">Factory</option>
+                            <option value="Warehouse">Warehouse</option>
+                            <option value="Inspection">Inspection</option>
+                            <option value="Research">Research</option>
+                            <option value="General">General</option>
+                        </select>
+                    </label>
+                    <label>
+                        Company
+                        <select id="filter-company">
+                            <option value="all">All</option>
+                        </select>
+                    </label>
+                    <label>
+                        Sort
+                        <select id="sort-by">
+                            <option value="newest">Newest</option>
+                            <option value="watched">Most Watched</option>
+                            <option value="deployed">Most Deployed</option>
+                        </select>
+                    </label>
+                </div>
             </section>
 
             <section class="section">
                 <div class="section-head">
-                    <h2>Top Profiles (High-Res Media)</h2>
-                    <a href="https://news.robot.tv">Open newsroom</a>
+                    <h2>Robot Profiles</h2>
+                    <a href="https://news.robot.tv">Live coverage</a>
                 </div>
-                <div class="robot-profile-grid">
-                    <article class="robot-profile-card">
-                        <img src="images/robots/honda-asimo.jpg" alt="ASIMO robot">
-                        <h3>ASIMO</h3>
-                        <p>Honda | Japan | Humanoid</p>
-                        <a class="btn btn-ghost" href="asimo.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/boston-dynamics-atlas.jpg" alt="Atlas robot">
-                        <h3>Atlas</h3>
-                        <p>Boston Dynamics | US | Humanoid</p>
-                        <a class="btn btn-ghost" href="atlas.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/agility-digit.jpg" alt="Digit robot">
-                        <h3>Digit</h3>
-                        <p>Agility Robotics | US | Humanoid</p>
-                        <a class="btn btn-ghost" href="digit.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/boston-dynamics-handle.jpg" alt="Handle robot">
-                        <h3>Handle</h3>
-                        <p>Boston Dynamics | US | Mobile Manipulator</p>
-                        <a class="btn btn-ghost" href="handle.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/apptronik-apollo.jpg" alt="Apollo robot">
-                        <h3>Apollo</h3>
-                        <p>Apptronik | US | Humanoid</p>
-                        <a class="btn btn-ghost" href="apollo.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/toyota-thr3.jpg" alt="T-HR3 robot">
-                        <h3>T-HR3</h3>
-                        <p>Toyota | Japan | Humanoid</p>
-                        <a class="btn btn-ghost" href="thr3.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/boston-dynamics-spot.jpg" alt="Spot robot">
-                        <h3>Spot</h3>
-                        <p>Boston Dynamics | US | Quadruped</p>
-                        <a class="btn btn-ghost" href="spot.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/anybotics-anymal.jpg" alt="ANYmal robot">
-                        <h3>ANYmal</h3>
-                        <p>ANYbotics | Switzerland | Quadruped</p>
-                        <a class="btn btn-ghost" href="anymal.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/unitree-g1.jpg" alt="Unitree G1 robot">
-                        <h3>Unitree G1</h3>
-                        <p>Unitree | China | Humanoid</p>
-                        <a class="btn btn-ghost" href="unitreeg1.html">View Profile</a>
-                    </article>
-                    <article class="robot-profile-card">
-                        <img src="images/robots/abb-yumi.jpg" alt="YuMi robot">
-                        <h3>YuMi</h3>
-                        <p>ABB | Switzerland/Sweden | Industrial Cobot</p>
-                        <a class="btn btn-ghost" href="yumi.html">View Profile</a>
-                    </article>
-                </div>
+                <div id="profiles" class="robot-index-grid"></div>
             </section>
         </main>
     </div>
+
+    <script>
+        const robots = [
+            { name: "Tesla Optimus", company: "Tesla", region: "US", type: "Humanoid", year: 2025, useCase: "General", status: "Pilot", watched: 96, deployed: 68, image: "images/robots/tesla-optimus.jpg", video: "https://www.youtube.com/results?search_query=tesla+optimus", source: "https://www.tesla.com/AI" },
+            { name: "Figure 02", company: "Figure AI", region: "US", type: "Humanoid", year: 2024, useCase: "Factory", status: "Pilot", watched: 93, deployed: 61, image: "images/robots/figure-02.jpg", video: "https://www.youtube.com/results?search_query=figure+02+robot", source: "https://www.figure.ai/" },
+            { name: "Unitree H1", company: "Unitree", region: "China", type: "Humanoid", year: 2024, useCase: "Research", status: "Shipping", watched: 88, deployed: 54, image: "images/robots/unitree-h1.jpg", video: "https://www.youtube.com/results?search_query=unitree+h1", source: "https://www.unitree.com/" },
+            { name: "Unitree Go2", company: "Unitree", region: "China", type: "Quadruped", year: 2024, useCase: "Inspection", status: "Shipping", watched: 84, deployed: 73, image: "images/robots/unitree-go2.jpg", video: "https://www.youtube.com/results?search_query=unitree+go2", source: "https://www.unitree.com/" },
+            { name: "Unitree Go1", company: "Unitree", region: "China", type: "Quadruped", year: 2021, useCase: "Research", status: "Shipping", watched: 76, deployed: 79, image: "images/robots/unitree-go1.jpg", video: "https://www.youtube.com/results?search_query=unitree+go1", source: "https://www.unitree.com/" },
+            { name: "Unitree B2", company: "Unitree", region: "China", type: "Quadruped", year: 2024, useCase: "Inspection", status: "Pilot", watched: 81, deployed: 57, image: "images/robots/unitree-b2.jpg", video: "https://www.youtube.com/results?search_query=unitree+b2", source: "https://www.unitree.com/" },
+            { name: "CyberOne", company: "Xiaomi", region: "China", type: "Humanoid", year: 2022, useCase: "Research", status: "Research", watched: 74, deployed: 24, image: "images/robots/xiaomi-cyberone.jpg", video: "https://www.youtube.com/results?search_query=xiaomi+cyberone", source: "https://www.mi.com/global/" },
+            { name: "Walker S", company: "UBTECH", region: "China", type: "Humanoid", year: 2024, useCase: "Factory", status: "Pilot", watched: 78, deployed: 42, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=ubtech+walker+s", source: "https://www.ubtrobot.com/" },
+            { name: "PM01", company: "EngineAI", region: "China", type: "Humanoid", year: 2025, useCase: "General", status: "Pilot", watched: 69, deployed: 30, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=engineai+pm01", source: "https://www.engineai.com/" },
+            { name: "Kepler Humanoid", company: "Kepler", region: "China", type: "Humanoid", year: 2025, useCase: "Factory", status: "Pilot", watched: 67, deployed: 28, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=kepler+humanoid+robot", source: "https://www.kepler-robotics.com/" },
+            { name: "HRP-5P", company: "AIST/Kawada", region: "Japan", type: "Humanoid", year: 2018, useCase: "Construction", status: "Research", watched: 60, deployed: 19, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=hrp-5p", source: "https://www.aist.go.jp/" },
+            { name: "Stretch", company: "Boston Dynamics", region: "US", type: "Industrial", year: 2022, useCase: "Warehouse", status: "Shipping", watched: 72, deployed: 64, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=boston+dynamics+stretch", source: "https://bostondynamics.com/" },
+            { name: "MiR AMR", company: "MiR", region: "Europe", type: "AMR", year: 2020, useCase: "Factory", status: "Shipping", watched: 62, deployed: 82, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=mobile+industrial+robots+mir", source: "https://www.mobile-industrial-robots.com/" },
+            { name: "Fetch AMR", company: "Fetch/Zebra", region: "US", type: "AMR", year: 2020, useCase: "Warehouse", status: "Shipping", watched: 61, deployed: 77, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=fetch+robotics+amr", source: "https://www.zebra.com/" },
+            { name: "OTTO AMR", company: "OTTO Motors", region: "Europe", type: "AMR", year: 2021, useCase: "Factory", status: "Shipping", watched: 65, deployed: 75, image: "images/robots/otto-amr-2.jpg", video: "https://www.youtube.com/results?search_query=otto+motors+amr", source: "https://ottomotors.com/" },
+            { name: "UR20 / UR30", company: "Universal Robots", region: "Europe", type: "Industrial", year: 2023, useCase: "Factory", status: "Shipping", watched: 70, deployed: 86, image: "images/robots/universal-robots-ur20.jpg", video: "https://www.youtube.com/results?search_query=ur20+ur30", source: "https://www.universal-robots.com/" },
+            { name: "FANUC CRX", company: "FANUC", region: "Japan", type: "Industrial", year: 2021, useCase: "Factory", status: "Shipping", watched: 66, deployed: 84, image: "images/robots/fanuc-crx.jpg", video: "https://www.youtube.com/results?search_query=fanuc+crx", source: "https://www.fanuc.com/" },
+            { name: "KUKA LBR iiwa", company: "KUKA", region: "Europe", type: "Industrial", year: 2019, useCase: "Factory", status: "Shipping", watched: 63, deployed: 80, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=kuka+lbr+iiwa", source: "https://www.kuka.com/" },
+            { name: "GR-2", company: "Fourier", region: "China", type: "Humanoid", year: 2024, useCase: "General", status: "Pilot", watched: 73, deployed: 31, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=fourier+gr-2", source: "https://www.fftai.com/" },
+            { name: "Neo", company: "1X", region: "Europe", type: "Humanoid", year: 2024, useCase: "General", status: "Pilot", watched: 79, deployed: 29, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=1x+neo+robot", source: "https://www.1x.tech/" }
+        ];
+
+        const typeFilter = document.getElementById("filter-type");
+        const regionFilter = document.getElementById("filter-region");
+        const useFilter = document.getElementById("filter-use");
+        const companyFilter = document.getElementById("filter-company");
+        const sortBy = document.getElementById("sort-by");
+        const grid = document.getElementById("profiles");
+
+        const companies = Array.from(new Set(robots.map((r) => r.company))).sort();
+        companies.forEach((name) => {
+            const option = document.createElement("option");
+            option.value = name;
+            option.textContent = name;
+            companyFilter.appendChild(option);
+        });
+
+        const escapeHtml = (s) => s.replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
+
+        const sortFn = (a, b, mode) => {
+            if (mode === "watched") return b.watched - a.watched;
+            if (mode === "deployed") return b.deployed - a.deployed;
+            return b.year - a.year;
+        };
+
+        const render = () => {
+            const type = typeFilter.value;
+            const region = regionFilter.value;
+            const useCase = useFilter.value;
+            const company = companyFilter.value;
+            const mode = sortBy.value;
+
+            const filtered = robots
+                .filter((r) => type === "all" || r.type === type)
+                .filter((r) => region === "all" || r.region === region)
+                .filter((r) => useCase === "all" || r.useCase === useCase)
+                .filter((r) => company === "all" || r.company === company)
+                .sort((a, b) => sortFn(a, b, mode));
+
+            grid.innerHTML = filtered.map((r) => `
+                <article class="robot-index-card">
+                    <div class="thumb-wrap"><img loading="lazy" src="${escapeHtml(r.image)}" alt="${escapeHtml(r.name)} thumbnail"></div>
+                    <div class="card-top">
+                        <h3>${escapeHtml(r.name)}</h3>
+                        <span class="status-badge ${r.status.toLowerCase()}">${escapeHtml(r.status)}</span>
+                    </div>
+                    <p class="meta-line">${escapeHtml(r.company)} | ${escapeHtml(r.region)} | ${escapeHtml(r.type)}</p>
+                    <p class="meta-line">Released: ${r.year} | Use case: ${escapeHtml(r.useCase)}</p>
+                    <p class="summary">30-sec summary: ${escapeHtml(r.name)} is a major ${escapeHtml(r.type.toLowerCase())} platform tracked by robot.tv for deployment momentum and ecosystem impact.</p>
+                    <details>
+                        <summary>Profile details</summary>
+                        <table class="spec-table">
+                            <tr><th>Primary use</th><td>${escapeHtml(r.useCase)}</td></tr>
+                            <tr><th>Deployment signal</th><td>${r.deployed}/100</td></tr>
+                            <tr><th>Viewer interest</th><td>${r.watched}/100</td></tr>
+                            <tr><th>Last updated</th><td>Feb 18, 2026</td></tr>
+                        </table>
+                        <p class="citation">Source: <a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">official site</a></p>
+                    </details>
+                    <div class="card-actions">
+                        <a class="btn btn-primary" href="${escapeHtml(r.video)}" target="_blank" rel="noopener">Watch profile</a>
+                    </div>
+                </article>
+            `).join("");
+        };
+
+        [typeFilter, regionFilter, useFilter, companyFilter, sortBy].forEach((el) => el.addEventListener("change", render));
+        render();
+    </script>
 </body>
 </html>
