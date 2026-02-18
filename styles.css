@@ -634,6 +634,74 @@ a {
     line-height: 1.28;
 }
 
+.detail-hero {
+    margin-top: 1rem;
+    padding: 1.2rem;
+}
+
+.detail-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 0.85rem;
+}
+
+.detail-video,
+.detail-meta {
+    padding: 0.9rem;
+}
+
+.detail-video h2,
+.detail-meta h2 {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.04rem;
+    letter-spacing: 0.03em;
+}
+
+.detail-video p,
+.detail-meta p {
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+.detail-frame {
+    margin-top: 0.7rem;
+    border: 1px solid #23354f;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+}
+
+.detail-frame iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    display: block;
+}
+
+.detail-list {
+    margin: 0.55rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.detail-list li {
+    border: 1px solid #24354f;
+    border-radius: 9px;
+    padding: 0.6rem 0.7rem;
+    background: rgba(9, 14, 24, 0.75);
+    color: #d4deef;
+    font-size: 0.93rem;
+}
+
+.detail-list strong {
+    color: #9fb2d4;
+    margin-right: 0.42rem;
+}
+
 .video-modal {
     position: fixed;
     inset: 0;
@@ -748,6 +816,10 @@ a {
     }
 
     .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid {
         grid-template-columns: 1fr;
     }
 }

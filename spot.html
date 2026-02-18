@@ -3,197 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Discover Spot, Boston Dynamics' agile quadruped robot designed for a variety of industries.">
-    <title>Spot - robot.tv</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #0a0a0a;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            color: #00d9ff;
-            margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #fff;
-            max-width: 800px;
-            margin-bottom: 40px;
-            line-height: 1.8;
-        }
-
-        /* Styling the video container */
-        .video-container {
-            position: relative;
-            width: 80%;
-            max-width: 800px;
-            height: 450px;
-            margin: 20px auto;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            background-color: #000;
-        }
-
-        iframe, video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 20px;
-        }
-
-        .fallback-message {
-            display: none;
-            color: #ff8c00;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            margin-top: 20px;
-        }
-
-        .back-button {
-            margin-top: 40px;
-            padding: 10px 30px;
-            background: linear-gradient(45deg, #00d9ff, #ff8c00);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-size: 1rem;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-        }
-
-        .back-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-        }
-
-        /* Footer styling */
-        .footer {
-            margin-top: 60px;
-            padding: 20px;
-            background-color: #111;
-            color: #ccc;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .footer a {
-            color: #00d9ff;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3rem;
-            }
-
-            p {
-                font-size: 1rem;
-            }
-
-            .video-container {
-                height: 300px;
-            }
-        }
-    </style>  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WC8XB1DN1E');
-</script> 
+    <meta name="description" content="Spot, developed by Boston Dynamics and released in 2019, is an agile quadruped robot designed for a variety of industries, including construction, oil and gas, and public safety. Its advanced mobility and adaptability allow it to navigate difficult terrain and automate routine tasks, making it a versatile solution for many real-world applications.">
+    <meta property="og:title" content="Spot | robot.tv">
+    <meta property="og:description" content="Spot, developed by Boston Dynamics and released in 2019, is an agile quadruped robot designed for a variety of industries, including construction, oil and gas, and public safety. Its advanced mobility and adaptability allow it to navigate difficult terrain and automate routine tasks, making it a versatile solution for many real-world applications.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://robot.tv/spot.html">
+    <meta property="og:image" content="https://robot.tv/images/spot.jpg">
+    <link rel="canonical" href="https://robot.tv/spot.html">
+    <title>Spot | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260218-detail-v1">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WC8XB1DN1E');
+    </script>
 </head>
 <body>
-    <div class="content-container">
-        <h1>Spot</h1>
-        <p>Spot, developed by Boston Dynamics and released in 2019, is an agile quadruped robot designed for a variety of industries, including construction, oil and gas, and public safety. Its advanced mobility and adaptability allow it to navigate difficult terrain and automate routine tasks, making it a versatile solution for many real-world applications.</p>
-        
-        <div class="video-container">
-            <!-- YouTube iframe embed (lazy loading for performance) -->
-            <iframe id="youtube-player" loading="lazy" width="100%" height="100%" src="https://www.youtube.com/embed/zFUHi3_oiXk?rel=0&autoplay=0&controls=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            
-            <!-- Fallback Video -->
-            <video id="fallback-video" controls poster="images/spot_poster.jpg" style="display:none;" preload="metadata">
-                <source src="https://vod8h1q13xn.vod.126.net/vod8h1q13xn/0cb47ee92dde488dbcc3bcb006f9b6db.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
 
-            <!-- Fallback message -->
-            <div id="fallback-message" class="fallback-message">
-                YouTube is unavailable, playing local video.
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Submit Video</a>
+        </header>
+
+        <main>
+            <section class="panel detail-hero">
+                <p class="kicker">ROBOT PROFILE</p>
+                <h1>Spot</h1>
+                <p class="hero-copy">Spot, developed by Boston Dynamics and released in 2019, is an agile quadruped robot designed for a variety of industries, including construction, oil and gas, and public safety. Its advanced mobility and adaptability allow it to navigate difficult terrain and automate routine tasks, making it a versatile solution for many real-world applications.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://www.youtube.com/watch?v=zFUHi3_oiXk" target="_blank" rel="noopener">Open on YouTube</a>
+                    <a class="btn btn-ghost" href="index.html">Back to Homepage</a>
+                </div>
+            </section>
+
+            <section class="detail-grid">
+                <article class="panel detail-video">
+                    <h2>Feature Video</h2>
+                    <p>Video starts automatically when the page loads.</p>
+                    <div class="detail-frame">
+                        <iframe
+                            src="https://www.youtube.com/embed/zFUHi3_oiXk?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1"
+                            title="Spot video"
+                            loading="eager"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </article>
+
+                <article class="panel detail-meta">
+                    <h2>Profile Snapshot</h2>
+                    <ul class="detail-list">
+                        <li><strong>Category:</strong> Quadruped</li>
+                        <li><strong>Company:</strong> Boston Dynamics</li>
+                        <li><strong>First revealed:</strong> 2019</li>
+                        <li><strong>Tracking source:</strong> <a href="https://bostondynamics.com/spot" target="_blank" rel="noopener">Official page</a></li>
+                    </ul>
+                    <p>robot.tv tracks this platform for deployment signals, capability progress, and commercial relevance.</p>
+                </article>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="https://news.robot.tv">Newsroom</a>
             </div>
-        </div>
-
-        <a href="index.html" class="back-button">Back to Robots</a>
+        </footer>
     </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>Explore more about robots on <a href="home.html">robot.tv</a> | <a href="about.html">About</a></p>
-    </div>
-
-    <!-- JavaScript for fallback logic -->
-    <script>
-        function isYouTubeAccessible(callback) {
-            var timeout = setTimeout(function() {
-                callback(false); // fallback after 2 seconds
-            }, 2000);
-
-            var img = new Image();
-            img.src = "https://www.youtube.com/favicon.ico?" + new Date().getTime();
-            img.onload = function() {
-                clearTimeout(timeout);
-                callback(true);
-            };
-            img.onerror = function() {
-                clearTimeout(timeout);
-                callback(false);
-            };
-        }
-
-        // Check if YouTube is accessible
-        isYouTubeAccessible(function(isAccessible) {
-            var youtubePlayer = document.getElementById('youtube-player');
-            var fallbackVideo = document.getElementById('fallback-video');
-            var fallbackMessage = document.getElementById('fallback-message');
-
-            if (!isAccessible) {
-                youtubePlayer.style.display = 'none';
-                fallbackVideo.style.display = 'block';
-                fallbackMessage.style.display = 'block';
-            }
-        });
-    </script>
 </body>
 </html>
