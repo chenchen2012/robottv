@@ -34,9 +34,9 @@
     .section { margin-top:1.2rem; }
     .section-head { display:flex; justify-content:space-between; align-items:center; gap:.7rem; border-bottom:1px solid var(--line); padding-bottom:.5rem; margin-bottom:.8rem; }
     .section-head h2 { font-size:1.04rem; letter-spacing:.04em; }
-    .grid { display:grid; grid-template-columns:1.35fr 1fr 1fr; gap:.85rem; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.85rem; }
     .card { border:1px solid var(--line); border-radius:10px; background:linear-gradient(160deg,#101926,#0b131f); overflow:hidden; }
-    .card.featured { grid-row:span 2; }
+    .card.featured { grid-column:span 2; border-color:#3d5378; box-shadow:0 0 0 1px rgba(94,132,255,.18) inset; }
     .thumb { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom:1px solid #24344f; }
     .content { padding:.85rem; }
     .meta { margin:0; color:#9fb2d4; font-size:.8rem; letter-spacing:.05em; text-transform:uppercase; }
@@ -54,7 +54,10 @@
     .tag-list { margin:.6rem 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.45rem; }
     .tag-list li { border:1px solid #2a3f5d; border-radius:999px; padding:.22rem .55rem; color:#c6d2e8; font-size:.8rem; }
 
-    @media (max-width:980px){ .grid{grid-template-columns:1fr 1fr;} .card.featured{grid-column:span 2; grid-row:auto;} .article{grid-template-columns:1fr;} }
+    .footer { margin-top:1.2rem; padding:1rem; display:flex; justify-content:space-between; gap:.8rem; flex-wrap:wrap; color:#a7b7d1; font-size:.9rem; }
+    .footer-links { display:flex; gap:.9rem; flex-wrap:wrap; }
+
+    @media (max-width:980px){ .grid{grid-template-columns:1fr 1fr;} .card.featured{grid-column:span 2;} .article{grid-template-columns:1fr;} }
     @media (max-width:760px){ .header{flex-direction:column; align-items:flex-start;} .grid{grid-template-columns:1fr;} .card.featured{grid-column:auto;} }
   </style>
 </head>
@@ -75,6 +78,14 @@
     </header>
 
     <main id="app"></main>
+    <footer class="panel footer">
+      <div>robot.tv News | Real-time robotics briefings</div>
+      <div class="footer-links">
+        <a href="https://robot.tv">robot.tv</a>
+        <a href="https://robot.tv/home.html">Robot Index</a>
+        <a href="https://robot.tv/about.html">About</a>
+      </div>
+    </footer>
   </div>
 
   <script>
