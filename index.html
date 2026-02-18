@@ -95,22 +95,22 @@
                     <a href="https://news.robot.tv">Open newsroom</a>
                 </div>
                 <div class="story-grid">
-                    <a class="story-card story-large" href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards">
+                    <a id="story-top" class="story-card story-large" href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards">
                         <span class="story-tag">Top Story</span>
-                        <h3>Track the fastest-moving robotics stories every day</h3>
-                        <p>Curated highlights, launch analysis, and practical deployment signals.</p>
+                        <h3 id="story-top-title">Track the fastest-moving robotics stories every day</h3>
+                        <p id="story-top-desc">Curated highlights, launch analysis, and practical deployment signals.</p>
                     </a>
-                    <a class="story-card" href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum">
+                    <a id="story-humanoid" class="story-card" href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum">
                         <span class="story-tag">Humanoids</span>
-                        <h3>Performance jumps in biped locomotion and dexterity</h3>
+                        <h3 id="story-humanoid-title">Performance jumps in biped locomotion and dexterity</h3>
                     </a>
-                    <a class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale">
+                    <a id="story-quadruped" class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale">
                         <span class="story-tag">Quadrupeds</span>
-                        <h3>Field-proven robots expanding security and inspection use</h3>
+                        <h3 id="story-quadruped-title">Field-proven robots expanding security and inspection use</h3>
                     </a>
-                    <a class="story-card" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship">
+                    <a id="story-startup" class="story-card" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship">
                         <span class="story-tag">Startups</span>
-                        <h3>Funding, product velocity, and GTM signals across robotics</h3>
+                        <h3 id="story-startup-title">Funding, product velocity, and GTM signals across robotics</h3>
                     </a>
                 </div>
             </section>
@@ -205,6 +205,36 @@
 
       updateLivePreview();
       setInterval(updateLivePreview, 9000);
+
+      const sanityProjectId = "lumv116w";
+      const sanityDataset = "production";
+      const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
+      const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,"slug":slug.current,"cats":categories[]->title}`;
+
+      const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv";
+      const hasCat = (post, name) => Array.isArray(post?.cats) && post.cats.some((c) => String(c || "").toLowerCase().includes(name));
+
+      const setCard = (prefix, post) => {
+        if (!post || !post.slug) return;
+        const link = document.getElementById(`story-${prefix}`);
+        const title = document.getElementById(`story-${prefix}-title`);
+        const desc = document.getElementById("story-top-desc");
+        if (link) link.href = toPostUrl(post.slug);
+        if (title) title.textContent = post.title || title.textContent;
+        if (prefix === "top" && desc) desc.textContent = post.excerpt || desc.textContent;
+      };
+
+      fetch(`${sanityUrl}?query=${encodeURIComponent(q)}`)
+        .then((r) => r.json())
+        .then((d) => {
+          const posts = Array.isArray(d?.result) ? d.result : [];
+          if (!posts.length) return;
+          setCard("top", posts[0]);
+          setCard("humanoid", posts.find((p) => hasCat(p, "humanoid")) || posts[1]);
+          setCard("quadruped", posts.find((p) => hasCat(p, "quadruped")) || posts[2]);
+          setCard("startup", posts.find((p) => hasCat(p, "startup")) || posts[3]);
+        })
+        .catch(() => {});
     </script>
 </body>
 </html>
