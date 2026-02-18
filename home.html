@@ -104,6 +104,22 @@
         </main>
     </div>
 
+    <div id="video-modal" class="video-modal" hidden>
+        <div class="video-modal-backdrop" data-close="1"></div>
+        <div class="video-modal-panel" role="dialog" aria-modal="true" aria-label="Robot profile video">
+            <button id="video-close" class="video-close" type="button" aria-label="Close video">Close</button>
+            <div class="video-frame-wrap">
+                <iframe
+                    id="video-frame"
+                    src=""
+                    title="Robot profile video"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
     <script>
         const robots = [
             { name: "Tesla Optimus", company: "Tesla", region: "US", type: "Humanoid", year: 2025, useCase: "General", status: "Pilot", watched: 96, deployed: 68, image: "images/robots/tesla-optimus.jpg", video: "https://www.youtube.com/results?search_query=tesla+optimus", source: "https://www.tesla.com/AI" },
@@ -113,19 +129,19 @@
             { name: "Unitree Go1", company: "Unitree", region: "China", type: "Quadruped", year: 2021, useCase: "Research", status: "Shipping", watched: 76, deployed: 79, image: "images/robots/unitree-go1.jpg", video: "https://www.youtube.com/results?search_query=unitree+go1", source: "https://www.unitree.com/" },
             { name: "Unitree B2", company: "Unitree", region: "China", type: "Quadruped", year: 2024, useCase: "Inspection", status: "Pilot", watched: 81, deployed: 57, image: "images/robots/unitree-b2.jpg", video: "https://www.youtube.com/results?search_query=unitree+b2", source: "https://www.unitree.com/" },
             { name: "CyberOne", company: "Xiaomi", region: "China", type: "Humanoid", year: 2022, useCase: "Research", status: "Research", watched: 74, deployed: 24, image: "images/robots/xiaomi-cyberone.jpg", video: "https://www.youtube.com/results?search_query=xiaomi+cyberone", source: "https://www.mi.com/global/" },
-            { name: "Walker S", company: "UBTECH", region: "China", type: "Humanoid", year: 2024, useCase: "Factory", status: "Pilot", watched: 78, deployed: 42, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=ubtech+walker+s", source: "https://www.ubtrobot.com/" },
-            { name: "PM01", company: "EngineAI", region: "China", type: "Humanoid", year: 2025, useCase: "General", status: "Pilot", watched: 69, deployed: 30, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=engineai+pm01", source: "https://www.engineai.com/" },
-            { name: "Kepler Humanoid", company: "Kepler", region: "China", type: "Humanoid", year: 2025, useCase: "Factory", status: "Pilot", watched: 67, deployed: 28, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=kepler+humanoid+robot", source: "https://www.kepler-robotics.com/" },
-            { name: "HRP-5P", company: "AIST/Kawada", region: "Japan", type: "Humanoid", year: 2018, useCase: "Construction", status: "Research", watched: 60, deployed: 19, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=hrp-5p", source: "https://www.aist.go.jp/" },
-            { name: "Stretch", company: "Boston Dynamics", region: "US", type: "Industrial", year: 2022, useCase: "Warehouse", status: "Shipping", watched: 72, deployed: 64, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=boston+dynamics+stretch", source: "https://bostondynamics.com/" },
-            { name: "MiR AMR", company: "MiR", region: "Europe", type: "AMR", year: 2020, useCase: "Factory", status: "Shipping", watched: 62, deployed: 82, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=mobile+industrial+robots+mir", source: "https://www.mobile-industrial-robots.com/" },
-            { name: "Fetch AMR", company: "Fetch/Zebra", region: "US", type: "AMR", year: 2020, useCase: "Warehouse", status: "Shipping", watched: 61, deployed: 77, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=fetch+robotics+amr", source: "https://www.zebra.com/" },
+            { name: "Walker S", company: "UBTECH", region: "China", type: "Humanoid", year: 2024, useCase: "Factory", status: "Pilot", watched: 78, deployed: 42, image: "https://img.youtube.com/vi/Iryqtfym7oo/hqdefault.jpg", video: "https://www.youtube.com/watch?v=Iryqtfym7oo", source: "https://www.ubtrobot.com/" },
+            { name: "PM01", company: "EngineAI", region: "China", type: "Humanoid", year: 2025, useCase: "General", status: "Pilot", watched: 69, deployed: 30, image: "https://img.youtube.com/vi/j-uMnH_f7cU/hqdefault.jpg", video: "https://www.youtube.com/watch?v=j-uMnH_f7cU", source: "https://www.engineai.com/" },
+            { name: "Kepler Humanoid", company: "Kepler", region: "China", type: "Humanoid", year: 2025, useCase: "Factory", status: "Pilot", watched: 67, deployed: 28, image: "https://img.youtube.com/vi/iWC8rSjDywU/hqdefault.jpg", video: "https://www.youtube.com/watch?v=iWC8rSjDywU", source: "https://www.kepler-robotics.com/" },
+            { name: "HRP-5P", company: "AIST/Kawada", region: "Japan", type: "Humanoid", year: 2018, useCase: "Construction", status: "Research", watched: 60, deployed: 19, image: "https://img.youtube.com/vi/ARpd5J5gDMk/hqdefault.jpg", video: "https://www.youtube.com/watch?v=ARpd5J5gDMk", source: "https://www.aist.go.jp/" },
+            { name: "Stretch", company: "Boston Dynamics", region: "US", type: "Industrial", year: 2022, useCase: "Warehouse", status: "Shipping", watched: 72, deployed: 64, image: "https://img.youtube.com/vi/JxM1vm-bYQ4/hqdefault.jpg", video: "https://www.youtube.com/watch?v=JxM1vm-bYQ4", source: "https://bostondynamics.com/" },
+            { name: "MiR AMR", company: "MiR", region: "Europe", type: "AMR", year: 2020, useCase: "Factory", status: "Shipping", watched: 62, deployed: 82, image: "https://img.youtube.com/vi/AQVDwW7uKZE/hqdefault.jpg", video: "https://www.youtube.com/watch?v=AQVDwW7uKZE", source: "https://www.mobile-industrial-robots.com/" },
+            { name: "Fetch AMR", company: "Fetch/Zebra", region: "US", type: "AMR", year: 2020, useCase: "Warehouse", status: "Shipping", watched: 61, deployed: 77, image: "https://img.youtube.com/vi/MJoem4xGfkY/hqdefault.jpg", video: "https://www.youtube.com/watch?v=MJoem4xGfkY", source: "https://www.zebra.com/" },
             { name: "OTTO AMR", company: "OTTO Motors", region: "Europe", type: "AMR", year: 2021, useCase: "Factory", status: "Shipping", watched: 65, deployed: 75, image: "images/robots/otto-amr-2.jpg", video: "https://www.youtube.com/results?search_query=otto+motors+amr", source: "https://ottomotors.com/" },
             { name: "UR20 / UR30", company: "Universal Robots", region: "Europe", type: "Industrial", year: 2023, useCase: "Factory", status: "Shipping", watched: 70, deployed: 86, image: "images/robots/universal-robots-ur20.jpg", video: "https://www.youtube.com/results?search_query=ur20+ur30", source: "https://www.universal-robots.com/" },
             { name: "FANUC CRX", company: "FANUC", region: "Japan", type: "Industrial", year: 2021, useCase: "Factory", status: "Shipping", watched: 66, deployed: 84, image: "images/robots/fanuc-crx.jpg", video: "https://www.youtube.com/results?search_query=fanuc+crx", source: "https://www.fanuc.com/" },
-            { name: "KUKA LBR iiwa", company: "KUKA", region: "Europe", type: "Industrial", year: 2019, useCase: "Factory", status: "Shipping", watched: 63, deployed: 80, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=kuka+lbr+iiwa", source: "https://www.kuka.com/" },
-            { name: "GR-2", company: "Fourier", region: "China", type: "Humanoid", year: 2024, useCase: "General", status: "Pilot", watched: 73, deployed: 31, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=fourier+gr-2", source: "https://www.fftai.com/" },
-            { name: "Neo", company: "1X", region: "Europe", type: "Humanoid", year: 2024, useCase: "General", status: "Pilot", watched: 79, deployed: 29, image: "images/robot_logo.png", video: "https://www.youtube.com/results?search_query=1x+neo+robot", source: "https://www.1x.tech/" }
+            { name: "KUKA LBR iiwa", company: "KUKA", region: "Europe", type: "Industrial", year: 2019, useCase: "Factory", status: "Shipping", watched: 63, deployed: 80, image: "https://img.youtube.com/vi/UfsZK-AUP04/hqdefault.jpg", video: "https://www.youtube.com/watch?v=UfsZK-AUP04", source: "https://www.kuka.com/" },
+            { name: "GR-2", company: "Fourier", region: "China", type: "Humanoid", year: 2024, useCase: "General", status: "Pilot", watched: 73, deployed: 31, image: "https://img.youtube.com/vi/jWTWWuzB6Cg/hqdefault.jpg", video: "https://www.youtube.com/watch?v=jWTWWuzB6Cg", source: "https://www.fftai.com/" },
+            { name: "Neo", company: "1X", region: "Europe", type: "Humanoid", year: 2024, useCase: "General", status: "Pilot", watched: 79, deployed: 29, image: "https://img.youtube.com/vi/BzPz7pg28Zg/hqdefault.jpg", video: "https://www.youtube.com/watch?v=BzPz7pg28Zg", source: "https://www.1x.tech/" }
         ];
 
         const typeFilter = document.getElementById("filter-type");
@@ -167,7 +183,9 @@
 
             grid.innerHTML = filtered.map((r) => `
                 <article class="robot-index-card">
-                    <div class="thumb-wrap"><img loading="lazy" src="${escapeHtml(r.image)}" alt="${escapeHtml(r.name)} thumbnail"></div>
+                    <div class="thumb-wrap" data-video="${escapeHtml(r.video)}">
+                        <img loading="lazy" src="${escapeHtml(r.image)}" alt="${escapeHtml(r.name)} thumbnail">
+                    </div>
                     <div class="card-top">
                         <h3>${escapeHtml(r.name)}</h3>
                         <span class="status-badge ${r.status.toLowerCase()}">${escapeHtml(r.status)}</span>
@@ -186,14 +204,94 @@
                         <p class="citation">Source: <a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">official site</a></p>
                     </details>
                     <div class="card-actions">
-                        <a class="btn btn-primary" href="${escapeHtml(r.video)}" target="_blank" rel="noopener">Watch profile</a>
+                        <button type="button" class="btn btn-primary js-watch" data-video="${escapeHtml(r.video)}">Play video</button>
                     </div>
                 </article>
             `).join("");
         };
 
+        const modal = document.getElementById("video-modal");
+        const frame = document.getElementById("video-frame");
+        const closeBtn = document.getElementById("video-close");
+
+        const toEmbedUrl = (url) => {
+            const match = url.match(/[?&]v=([^&]+)/);
+            if (!match) return "";
+            return `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`;
+        };
+        const toPreviewUrl = (url) => {
+            const match = url.match(/[?&]v=([^&]+)/);
+            if (!match) return "";
+            return `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1`;
+        };
+
+        const openVideo = (url) => {
+            const embed = toEmbedUrl(url);
+            if (!embed) return;
+            frame.src = embed;
+            modal.hidden = false;
+            document.body.style.overflow = "hidden";
+        };
+
+        const closeVideo = () => {
+            frame.src = "";
+            modal.hidden = true;
+            document.body.style.overflow = "";
+        };
+
+        grid.addEventListener("click", (event) => {
+            const target = event.target.closest(".js-watch");
+            if (!target) return;
+            openVideo(target.getAttribute("data-video") || "");
+        });
+
+        const prefersFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+        const attachHoverPreview = () => {
+            if (!prefersFinePointer) return;
+            grid.querySelectorAll(".thumb-wrap").forEach((wrap) => {
+                if (wrap.dataset.bound === "1") return;
+                wrap.dataset.bound = "1";
+                const videoUrl = wrap.getAttribute("data-video") || "";
+                const previewUrl = toPreviewUrl(videoUrl);
+                if (!previewUrl) return;
+
+                const startPreview = () => {
+                    if (wrap.querySelector("iframe")) return;
+                    const frame = document.createElement("iframe");
+                    frame.src = previewUrl;
+                    frame.loading = "lazy";
+                    frame.title = "Robot preview video";
+                    frame.allow = "autoplay; encrypted-media; picture-in-picture";
+                    frame.referrerPolicy = "strict-origin-when-cross-origin";
+                    wrap.classList.add("previewing");
+                    wrap.appendChild(frame);
+                };
+
+                const stopPreview = () => {
+                    const frame = wrap.querySelector("iframe");
+                    if (frame) frame.remove();
+                    wrap.classList.remove("previewing");
+                };
+
+                wrap.addEventListener("mouseenter", startPreview);
+                wrap.addEventListener("mouseleave", stopPreview);
+            });
+        };
+
+        modal.addEventListener("click", (event) => {
+            if (event.target.dataset.close === "1") closeVideo();
+        });
+        closeBtn.addEventListener("click", closeVideo);
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && !modal.hidden) closeVideo();
+        });
+
         [typeFilter, regionFilter, useFilter, companyFilter, sortBy].forEach((el) => el.addEventListener("change", render));
         render();
+        attachHoverPreview();
+        [typeFilter, regionFilter, useFilter, companyFilter, sortBy].forEach((el) =>
+            el.addEventListener("change", () => setTimeout(attachHoverPreview, 0))
+        );
     </script>
 </body>
 </html>
