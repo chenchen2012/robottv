@@ -29,6 +29,14 @@ const sourceToCategory = (source, title) => {
 const stripHtml = (s) => s.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim()
 
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-').slice(0, 90)
+const normalizeTitle = (s) => String(s || '')
+  .toLowerCase()
+  .replace(/['’]/g, '')
+  .replace(/[^a-z0-9\s]/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim()
+const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'for', 'to', 'of', 'in', 'on', 'with', 'after', 'than'])
+const titleKey = (s) => normalizeTitle(s).split(' ').filter((w) => w && !STOPWORDS.has(w)).slice(0, 8).join(' ')
 
 const youtubeFromQuery = async (q) => {
   const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
@@ -53,19 +61,34 @@ const now = new Date()
 const slotHour = now.getUTCHours() < 12 ? '00' : '12'
 const slotStamp = `${now.getUTCFullYear()}${String(now.getUTCMonth()+1).padStart(2,'0')}${String(now.getUTCDate()).padStart(2,'0')}${slotHour}`
 
+const existingQuery = encodeURIComponent(`*[_type=="post" && publishedAt > dateTime(now()) - 60*60*24*14]{"title": title}`)
+const existingResp = await fetch(`https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${existingQuery}`)
+const existingJson = await existingResp.json()
+const existingKeys = new Set((existingJson?.result || []).map((p) => titleKey(p.title)).filter(Boolean))
+
 const xml = await fetch(rssUrl).then((r) => r.text())
 const parsed = parseRssItems(xml)
-const selected = parsed.filter((x) => trustedSources.has(x.source)).slice(0, 2)
+const selected = []
+const seenKeys = new Set(existingKeys)
+for (const x of parsed) {
+  if (!trustedSources.has(x.source)) continue
+  const cleanTitle = x.title.replace(/\s+-\s+[^-]+$/, '').trim()
+  const key = titleKey(cleanTitle)
+  if (!key || seenKeys.has(key)) continue
+  seenKeys.add(key)
+  selected.push({...x, cleanTitle})
+  if (selected.length === 2) break
+}
 
 if (!selected.length) {
-  console.error('No trusted headlines found in RSS feed')
+  console.error('No trusted non-duplicate headlines found in RSS feed')
   process.exit(1)
 }
 
 const docs = []
 for (let i = 0; i < selected.length; i += 1) {
   const h = selected[i]
-  const cleanTitle = h.title.replace(/\s+-\s+[^-]+$/, '').trim()
+  const cleanTitle = h.cleanTitle
   const slug = slugify(cleanTitle)
   const yt = await youtubeFromQuery(`${cleanTitle} ${h.source}`)
   const category = sourceToCategory(h.source, cleanTitle)

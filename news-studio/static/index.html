@@ -89,6 +89,21 @@
     const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"});
     const sanityQuery = (q) => `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(q)}`;
     const sanityParam = (value) => encodeURIComponent(JSON.stringify(value));
+    const normalizeTitle = (s) => String(s || "")
+      .toLowerCase()
+      .replace(/['’]/g, "")
+      .replace(/[^a-z0-9\s]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const dedupePosts = (posts) => {
+      const seen = new Set();
+      return posts.filter((p) => {
+        const key = normalizeTitle(p.title).split(" ").filter((w) => !["the","a","an","and","for","to","of","in","on","with","after","than"].includes(w)).slice(0, 8).join(" ");
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    };
 
     const blockToText = (block) => (block.children || []).map((c) => c.text || "").join("").trim();
 
@@ -114,7 +129,9 @@
       const grid = document.getElementById("grid");
       const empty = document.getElementById("empty");
       if (!posts.length) { empty.hidden = false; return; }
-      grid.innerHTML = posts.map((p, i) => `
+      const uniquePosts = dedupePosts(posts);
+      if (!uniquePosts.length) { empty.hidden = false; return; }
+      grid.innerHTML = uniquePosts.map((p, i) => `
         <article class="card ${i === 0 ? "featured" : ""}">
           <img class="thumb" src="${esc(thumb(p.youtubeUrl))}" alt="${esc(p.title)} thumbnail" loading="lazy">
           <div class="content">
@@ -122,8 +139,7 @@
             <h3><a href="/post/${esc(p.slug)}">${esc(p.title)}</a></h3>
             <p>${esc(p.excerpt || "Latest robotics intelligence from robot.tv.")}</p>
             <div class="row">
-              <a class="btn btn-primary" href="/post/${esc(p.slug)}">Read Article</a>
-              <a class="btn btn-ghost" href="${esc(p.youtubeUrl || "#")}" target="_blank" rel="noopener">Watch</a>
+              <a class="btn btn-primary" href="/post/${esc(p.slug)}">Open Briefing</a>
             </div>
           </div>
         </article>
@@ -166,7 +182,6 @@
             </div>
             <div class="actions">
               <a class="btn btn-primary" href="/">Back to News</a>
-              ${post.youtubeUrl ? `<a class="btn btn-ghost" href="${esc(post.youtubeUrl)}" target="_blank" rel="noopener">Watch on YouTube</a>` : ""}
             </div>
           </article>
           <aside class="panel article-side">
