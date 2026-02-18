@@ -109,19 +109,23 @@
                 </div>
                 <div class="story-grid">
                     <a id="story-top" class="story-card story-large" href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards">
+                        <img id="story-top-thumb" class="story-media" src="https://img.youtube.com/vi/e2z1WU9qvik/hqdefault.jpg" alt="Top story video thumbnail" loading="lazy">
                         <span class="story-tag">Top Story</span>
                         <h3 id="story-top-title">Track the fastest-moving robotics stories every day</h3>
                         <p id="story-top-desc">Curated highlights, launch analysis, and practical deployment signals.</p>
                     </a>
                     <a id="story-humanoid" class="story-card" href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum">
+                        <img id="story-humanoid-thumb" class="story-media" src="https://img.youtube.com/vi/LPEGve_U1cY/hqdefault.jpg" alt="Humanoid story video thumbnail" loading="lazy">
                         <span class="story-tag">Humanoids</span>
                         <h3 id="story-humanoid-title">Performance jumps in biped locomotion and dexterity</h3>
                     </a>
                     <a id="story-quadruped" class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale">
+                        <img id="story-quadruped-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Quadruped story video thumbnail" loading="lazy">
                         <span class="story-tag">Quadrupeds</span>
                         <h3 id="story-quadruped-title">Field-proven robots expanding security and inspection use</h3>
                     </a>
                     <a id="story-startup" class="story-card" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship">
+                        <img id="story-startup-thumb" class="story-media" src="https://img.youtube.com/vi/lQsvTrRTBRs/hqdefault.jpg" alt="Startup story video thumbnail" loading="lazy">
                         <span class="story-tag">Startups</span>
                         <h3 id="story-startup-title">Funding, product velocity, and GTM signals across robotics</h3>
                     </a>
@@ -222,18 +226,25 @@
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
-      const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,"slug":slug.current,"cats":categories[]->title}`;
+      const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,"slug":slug.current,"cats":categories[]->title}`;
 
       const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv";
       const hasCat = (post, name) => Array.isArray(post?.cats) && post.cats.some((c) => String(c || "").toLowerCase().includes(name));
+      const videoIdFromUrl = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
+      const thumbFromVideo = (u) => {
+        const id = videoIdFromUrl(u);
+        return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+      };
 
       const setCard = (prefix, post) => {
         if (!post || !post.slug) return;
         const link = document.getElementById(`story-${prefix}`);
         const title = document.getElementById(`story-${prefix}-title`);
+        const thumb = document.getElementById(`story-${prefix}-thumb`);
         const desc = document.getElementById("story-top-desc");
         if (link) link.href = toPostUrl(post.slug);
         if (title) title.textContent = post.title || title.textContent;
+        if (thumb) thumb.src = thumbFromVideo(post.youtubeUrl);
         if (prefix === "top" && desc) desc.textContent = post.excerpt || desc.textContent;
       };
 

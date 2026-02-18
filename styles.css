@@ -508,6 +508,17 @@ a {
     box-shadow: 0 10px 24px rgba(5, 8, 14, 0.22);
 }
 
+.story-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #24344f;
+    display: block;
+    margin-bottom: 0.55rem;
+    background: #0b121d;
+}
+
 .story-card:hover,
 .robot-card:hover {
     border-color: #3f5373;
@@ -516,6 +527,10 @@ a {
 
 .story-large {
     grid-row: span 2;
+}
+
+.story-large .story-media {
+    aspect-ratio: 16 / 8.6;
 }
 
 .story-tag {
