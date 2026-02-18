@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260218-detail-v1">
+    <link rel="stylesheet" href="styles.css?v=20260218-detail-v2">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -51,7 +51,7 @@
                 <p class="hero-copy">Unitree G1, released in 2024, is a humanoid robot developed in China. It showcases incredible agility and adaptability, making it a versatile solution for various industries.</p>
                 <div class="hero-actions">
                     <a class="btn btn-primary" href="https://www.youtube.com/watch?v=GzX1qOIO1bE" target="_blank" rel="noopener">Open on YouTube</a>
-                    <a class="btn btn-ghost" href="index.html">Back to Homepage</a>
+                    <a id="back-home" class="btn btn-ghost" href="index.html#humanoids">Back to Home</a>
                 </div>
             </section>
 
@@ -93,5 +93,20 @@
             </div>
         </footer>
     </div>
+
+    <script>
+      (function () {
+        const back = document.getElementById('back-home');
+        if (!back) return;
+        const ref = document.referrer || '';
+        const sameSite = ref.includes('/index.html') || ref.endsWith('robot.tv/') || ref.includes('/home.html');
+        back.addEventListener('click', function (event) {
+          if (sameSite && window.history.length > 1) {
+            event.preventDefault();
+            window.history.back();
+          }
+        });
+      })();
+    </script>
 </body>
 </html>

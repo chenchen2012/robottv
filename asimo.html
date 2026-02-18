@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260218-detail-v1">
+    <link rel="stylesheet" href="styles.css?v=20260218-detail-v2">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -51,7 +51,7 @@
                 <p class="hero-copy">ASIMO, developed by Honda, is one of the most iconic humanoid robots ever created. First introduced in 2000, it was designed to mimic human movement, making it capable of walking, running, climbing stairs, and even performing complex gestures. ASIMO's cutting-edge technology includes balance control, object recognition, and the ability to interact with people, which has paved the way for advances in robotics. Its versatile capabilities have inspired countless robotics innovations, making ASIMO a symbol of humanoid robotics' potential in service and assistance roles.</p>
                 <div class="hero-actions">
                     <a class="btn btn-primary" href="https://www.youtube.com/watch?v=l562zFlHLRo" target="_blank" rel="noopener">Open on YouTube</a>
-                    <a class="btn btn-ghost" href="index.html">Back to Homepage</a>
+                    <a id="back-home" class="btn btn-ghost" href="index.html#humanoids">Back to Home</a>
                 </div>
             </section>
 
@@ -93,5 +93,20 @@
             </div>
         </footer>
     </div>
+
+    <script>
+      (function () {
+        const back = document.getElementById('back-home');
+        if (!back) return;
+        const ref = document.referrer || '';
+        const sameSite = ref.includes('/index.html') || ref.endsWith('robot.tv/') || ref.includes('/home.html');
+        back.addEventListener('click', function (event) {
+          if (sameSite && window.history.length > 1) {
+            event.preventDefault();
+            window.history.back();
+          }
+        });
+      })();
+    </script>
 </body>
 </html>
