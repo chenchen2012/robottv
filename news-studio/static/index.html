@@ -88,6 +88,7 @@
     const thumb = (u) => { const id = videoId(u); return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "https://robot.tv/images/robot_logo.png"; };
     const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"});
     const sanityQuery = (q) => `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(q)}`;
+    const sanityParam = (value) => encodeURIComponent(JSON.stringify(value));
 
     const blockToText = (block) => (block.children || []).map((c) => c.text || "").join("").trim();
 
@@ -180,7 +181,7 @@
     if (path.startsWith("/post/")) {
       const slug = path.replace("/post/", "").trim();
       const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,publishedAt,youtubeUrl,body,"author":author->name,"categories":categories[]->title}`;
-      fetch(sanityQuery(query) + `&$slug=${encodeURIComponent(slug)}`)
+      fetch(sanityQuery(query) + `&$slug=${sanityParam(slug)}`)
         .then((r) => r.json())
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
