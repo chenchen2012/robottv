@@ -19,3 +19,9 @@
   to = "/static/index.html"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/post/*"
+  to = "/static/index.html"
+  status = 200
+  force = true
