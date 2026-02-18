@@ -587,6 +587,53 @@ a {
     margin-top: 0.65rem;
 }
 
+.about-hero {
+    margin-top: 1rem;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.about-card {
+    padding: 1rem;
+}
+
+.about-card h2 {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+}
+
+.about-card p,
+.about-card li {
+    color: #c6d0e4;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.about-card ul {
+    margin: 0.6rem 0 0;
+    padding-left: 1rem;
+    display: grid;
+    gap: 0.35rem;
+}
+
+.about-cta {
+    margin-top: 1.2rem;
+    padding: 1.1rem;
+}
+
+.about-cta h2 {
+    margin: 0.4rem 0 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.35rem;
+    line-height: 1.28;
+}
+
 .video-modal {
     position: fixed;
     inset: 0;
@@ -698,6 +745,10 @@ a {
 
     .robot-index-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
     }
 }
 

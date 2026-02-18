@@ -3,134 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About robot.tv - Shaping the future of robotics through video.">
-    <title>About Us | robot.tv</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #0a0a0a;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
-        }
+    <meta name="description" content="Learn about Robot.TV, the global robotics media station covering humanoids, quadrupeds, industrial automation, robot startups, and embodied AI.">
+    <meta name="keywords" content="robotics news, humanoid robots, quadruped robots, robot TV, industrial automation, embodied AI">
+    <meta property="og:title" content="About Robot.TV | Global Robotics Media Station">
+    <meta property="og:description" content="Robot.TV is a video-first global platform for robotics coverage, analysis, and real-world deployment intelligence.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/about.html">
+    <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
+    <title>About Robot.TV | Global Robotics Media Station</title>
+    <link rel="canonical" href="https://robot.tv/about.html">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260218-about-v1">
 
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 40px 20px;
-        }
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Robot.TV",
+      "url": "https://robot.tv",
+      "logo": "https://robot.tv/images/robot_logo.png",
+      "description": "Robot.TV is a global robotics media station delivering video-first coverage on humanoids, quadrupeds, industrial automation, and embodied AI.",
+      "sameAs": [
+        "https://news.robot.tv"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "editorial",
+        "email": "chenchen2012@hotmail.com"
+      }
+    }
+    </script>
 
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 5rem;
-            color: #00d9ff;
-            margin-bottom: 20px;
-            letter-spacing: 7px;
-            animation: neonGlow 1.5s ease-in-out infinite alternate;
-        }
-
-        p {
-            font-size: 1.3rem;
-            color: #fff;
-            max-width: 900px;
-            margin-bottom: 40px;
-            line-height: 2;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-
-        .cta-button {
-            margin-top: 40px;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, #00d9ff, #ff8c00);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-size: 1.2rem;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-        }
-
-        .neon-box {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(0, 217, 255, 0.4), 0 0 40px rgba(255, 140, 0, 0.3);
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
-        .neon-box:hover {
-            box-shadow: 0 0 40px rgba(0, 217, 255, 0.8), 0 0 60px rgba(255, 140, 0, 0.6);
-        }
-
-        .email-link {
-            color: #00d9ff;
-            font-weight: bold;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .email-link:hover {
-            color: #ff8c00;
-        }
-
-        @keyframes neonGlow {
-            0% { text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff, 0 0 40px #00d9ff; }
-            100% { text-shadow: 0 0 20px #ff8c00, 0 0 30px #ff8c00, 0 0 40px #ff8c00, 0 0 50px #ff8c00; }
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3.5rem;
-            }
-
-            p {
-                font-size: 1.1rem;
-            }
-
-            .cta-button {
-                padding: 10px 30px;
-                font-size: 1.1rem;
-            }
-        }
-    </style>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WC8XB1DN1E');
-</script>
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WC8XB1DN1E');
+    </script>
 </head>
 <body>
-    <div class="content-container">
-        <h1>About robot.tv</h1>
-        <div class="neon-box">
-            <p>Welcome to the future. At <strong>robot.tv</strong>, we are creating the next big revolution by showcasing the most cutting-edge robots and AI systems. Our mission is simple: to bring robots to life through immersive video experiences. In a world where robots are reshaping industries and redefining possibilities, <strong>robot.tv</strong> stands as the beacon where innovation meets reality.</p>
-            <p>Robots are not just the next step in technology—they are the future. Through video content, we capture their movements, intelligence, and capabilities in ways static media cannot. At <strong>robot.tv</strong>, we aim to inspire the next wave of innovation by connecting visionaries, developers, and firms to a global audience eager to witness the robotic revolution.</p>
-        </div>
-        <p>Let’s collaborate and shape the future. If you are a robotics firm, developer, or innovator looking to showcase your creations, <a href="mailto:chenchen2012&#64;hotmail&#46;com">reach out to us</a> today.</p>
-        <a href="index.html" class="cta-button">Back to Home</a>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="live.html">Live Now</a>
+                <a href="home.html">Robot Index</a>
+                <a href="https://news.robot.tv">News</a>
+            </nav>
+            <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Contact</a>
+        </header>
+
+        <main>
+            <section class="panel hero about-hero">
+                <p class="kicker">ABOUT ROBOT.TV</p>
+                <h1>The Global TV Station for Robotics</h1>
+                <p class="hero-copy">Robot.TV is a video-first media network tracking the most important robotics systems in the world, from humanoid breakthroughs to large-scale industrial deployments.</p>
+            </section>
+
+            <section class="section about-grid">
+                <article class="panel about-card">
+                    <h2>Our Mission</h2>
+                    <p>We make robotics understandable, credible, and actionable. Our mission is to turn fast-moving technical progress into clear intelligence for builders, operators, investors, and the global public.</p>
+                </article>
+
+                <article class="panel about-card">
+                    <h2>What We Cover</h2>
+                    <ul>
+                        <li>Humanoid, quadruped, and industrial robot launches</li>
+                        <li>Real-world deployment and automation outcomes</li>
+                        <li>Robot startup momentum and product strategy shifts</li>
+                        <li>Embodied AI advances and hardware execution quality</li>
+                    </ul>
+                </article>
+
+                <article class="panel about-card">
+                    <h2>Editorial Standards</h2>
+                    <ul>
+                        <li>Accuracy over hype</li>
+                        <li>Source-based reporting and citation</li>
+                        <li>Clear distinction between demo and production readiness</li>
+                        <li>Transparent updates as stories evolve</li>
+                    </ul>
+                </article>
+
+                <article class="panel about-card">
+                    <h2>Why Robot.TV</h2>
+                    <p>Robotics is becoming core infrastructure. Video reveals what text alone cannot: mobility, dexterity, reliability, and real operating context. Robot.TV exists to make that visible at global scale.</p>
+                </article>
+            </section>
+
+            <section class="panel about-cta">
+                <p class="kicker">JOIN THE NETWORK</p>
+                <h2>Submit demos, share news tips, or discuss partnerships</h2>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="mailto:chenchen2012&#64;hotmail&#46;com">Contact Editorial Team</a>
+                    <a class="btn btn-ghost" href="https://news.robot.tv">Visit Newsroom</a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>Robot.TV | Global robotics media network</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="https://news.robot.tv">News</a>
+            </div>
+        </footer>
     </div>
 </body>
-
 </html>
