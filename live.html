@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Watch robot.tv live programming and streams.">
+    <title>Live Now | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260218-live">
+    <style>
+        .live-page {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+
+        .live-title {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.6rem, 4.6vw, 2.6rem);
+        }
+
+        .live-sub {
+            color: var(--muted);
+            max-width: 760px;
+            line-height: 1.6;
+            margin-top: 0.65rem;
+        }
+
+        .live-embed {
+            margin-top: 1rem;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .live-embed iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: 0;
+            display: block;
+        }
+
+        .live-meta {
+            margin-top: 0.8rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="home.html">Robot Index</a>
+            </nav>
+            <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Submit Video</a>
+        </header>
+
+        <main class="panel live-page">
+            <p class="kicker">LIVE BROADCAST</p>
+            <h1 class="live-title">robot.tv Live Now</h1>
+            <p class="live-sub">
+                Real-time robotics coverage, launches, demos, and industry updates.
+                Replace the placeholder video ID in this page with your actual YouTube live stream ID.
+            </p>
+
+            <div class="live-embed">
+                <iframe
+                    src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&rel=0"
+                    title="robot.tv live stream"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <p class="live-meta">
+                To use your own stream: edit <code>live.html</code> and replace <code>jfKfPfyJRdk</code> in the iframe URL.
+            </p>
+        </main>
+    </div>
+</body>
+</html>
