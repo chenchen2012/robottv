@@ -521,6 +521,32 @@ a {
     background: #0b121d;
 }
 
+.story-media-shell {
+    position: relative;
+    display: block;
+}
+
+.story-preview-layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.16s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.story-preview-frame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+.story-card.previewing .story-preview-layer {
+    opacity: 1;
+}
+
 .story-card:hover,
 .robot-card:hover {
     border-color: #3f5373;

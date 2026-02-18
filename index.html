@@ -116,24 +116,36 @@
                     <a href="https://news.robot.tv">Open newsroom</a>
                 </div>
                 <div class="story-grid">
-                    <a id="story-top" class="story-card story-large" href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards">
-                        <img id="story-top-thumb" class="story-media" src="https://img.youtube.com/vi/e2z1WU9qvik/hqdefault.jpg" alt="Top story video thumbnail" loading="lazy">
+                    <a id="story-top" class="story-card story-large" href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards" data-video="https://www.youtube.com/watch?v=e2z1WU9qvik">
+                        <span class="story-media-shell">
+                            <img id="story-top-thumb" class="story-media" src="https://img.youtube.com/vi/e2z1WU9qvik/hqdefault.jpg" alt="Top story video thumbnail" loading="lazy">
+                            <span id="story-top-preview" class="story-preview-layer" aria-hidden="true"></span>
+                        </span>
                         <span class="story-tag">Top Story</span>
                         <h3 id="story-top-title">Track the fastest-moving robotics stories every day</h3>
                         <p id="story-top-desc">Curated highlights, launch analysis, and practical deployment signals.</p>
                     </a>
-                    <a id="story-humanoid" class="story-card" href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum">
-                        <img id="story-humanoid-thumb" class="story-media" src="https://img.youtube.com/vi/LPEGve_U1cY/hqdefault.jpg" alt="Humanoid story video thumbnail" loading="lazy">
+                    <a id="story-humanoid" class="story-card" href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum" data-video="https://www.youtube.com/watch?v=LPEGve_U1cY">
+                        <span class="story-media-shell">
+                            <img id="story-humanoid-thumb" class="story-media" src="https://img.youtube.com/vi/LPEGve_U1cY/hqdefault.jpg" alt="Humanoid story video thumbnail" loading="lazy">
+                            <span id="story-humanoid-preview" class="story-preview-layer" aria-hidden="true"></span>
+                        </span>
                         <span class="story-tag">Humanoids</span>
                         <h3 id="story-humanoid-title">Performance jumps in biped locomotion and dexterity</h3>
                     </a>
-                    <a id="story-quadruped" class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale">
-                        <img id="story-quadruped-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Quadruped story video thumbnail" loading="lazy">
+                    <a id="story-quadruped" class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale" data-video="https://www.youtube.com/watch?v=zFUHi3_oiXk">
+                        <span class="story-media-shell">
+                            <img id="story-quadruped-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Quadruped story video thumbnail" loading="lazy">
+                            <span id="story-quadruped-preview" class="story-preview-layer" aria-hidden="true"></span>
+                        </span>
                         <span class="story-tag">Quadrupeds</span>
                         <h3 id="story-quadruped-title">Field-proven robots expanding security and inspection use</h3>
                     </a>
-                    <a id="story-startup" class="story-card" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship">
-                        <img id="story-startup-thumb" class="story-media" src="https://img.youtube.com/vi/lQsvTrRTBRs/hqdefault.jpg" alt="Startup story video thumbnail" loading="lazy">
+                    <a id="story-startup" class="story-card" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship" data-video="https://www.youtube.com/watch?v=lQsvTrRTBRs">
+                        <span class="story-media-shell">
+                            <img id="story-startup-thumb" class="story-media" src="https://img.youtube.com/vi/lQsvTrRTBRs/hqdefault.jpg" alt="Startup story video thumbnail" loading="lazy">
+                            <span id="story-startup-preview" class="story-preview-layer" aria-hidden="true"></span>
+                        </span>
                         <span class="story-tag">Startups</span>
                         <h3 id="story-startup-title">Funding, product velocity, and GTM signals across robotics</h3>
                     </a>
@@ -229,6 +241,7 @@
         const thumb = document.getElementById(`story-${prefix}-thumb`);
         const desc = document.getElementById("story-top-desc");
         if (link) link.href = toPostUrl(post.slug);
+        if (link) link.dataset.video = post.youtubeUrl || "";
         if (title) title.textContent = post.title || title.textContent;
         if (thumb) thumb.src = thumbFromVideo(post.youtubeUrl);
         if (prefix === "top" && desc) desc.textContent = post.excerpt || desc.textContent;
@@ -245,6 +258,36 @@
           setCard("startup", posts.find((p) => hasCat(p, "startup")) || posts[3]);
         })
         .catch(() => {});
+
+      const toEmbedUrl = (u) => {
+        const id = videoIdFromUrl(u);
+        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1` : "";
+      };
+
+      const startPreview = (card) => {
+        const slot = card.querySelector(".story-preview-layer");
+        const embed = toEmbedUrl(card.dataset.video);
+        if (!slot || !embed || slot.dataset.active === "1") return;
+        slot.innerHTML = `<iframe class="story-preview-frame" src="${embed}" title="Story preview" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        slot.dataset.active = "1";
+        card.classList.add("previewing");
+      };
+
+      const stopPreview = (card) => {
+        const slot = card.querySelector(".story-preview-layer");
+        if (!slot) return;
+        slot.innerHTML = "";
+        slot.dataset.active = "0";
+        card.classList.remove("previewing");
+      };
+
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        document.querySelectorAll(".story-card").forEach((card) => {
+          card.addEventListener("mouseenter", () => startPreview(card));
+          card.addEventListener("mouseleave", () => stopPreview(card));
+          card.addEventListener("blur", () => stopPreview(card));
+        });
+      }
     </script>
 </body>
 </html>
