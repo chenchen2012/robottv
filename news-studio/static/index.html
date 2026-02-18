@@ -38,6 +38,10 @@
     .card { border:1px solid var(--line); border-radius:10px; background:linear-gradient(160deg,#101926,#0b131f); overflow:hidden; }
     .card.featured { grid-column:span 2; border-color:#3d5378; box-shadow:0 0 0 1px rgba(94,132,255,.18) inset; }
     .thumb { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom:1px solid #24344f; }
+    .thumb-shell { position:relative; display:block; }
+    .thumb-preview { position:absolute; inset:0; opacity:0; transition:opacity .15s ease; border-bottom:1px solid #24344f; overflow:hidden; pointer-events:none; background:#000; }
+    .thumb-preview iframe { width:100%; height:100%; border:0; display:block; }
+    .card.previewing .thumb-preview { opacity:1; }
     .content { padding:.85rem; }
     .meta { margin:0; color:#9fb2d4; font-size:.8rem; letter-spacing:.05em; text-transform:uppercase; }
     .card h3 { margin:.45rem 0 0; line-height:1.3; font-size:1.04rem; }
@@ -143,8 +147,11 @@
       const uniquePosts = dedupePosts(posts);
       if (!uniquePosts.length) { empty.hidden = false; return; }
       grid.innerHTML = uniquePosts.map((p, i) => `
-        <article class="card ${i === 0 ? "featured" : ""}">
-          <img class="thumb" src="${esc(thumb(p.youtubeUrl))}" alt="${esc(p.title)} thumbnail" loading="lazy">
+        <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
+          <span class="thumb-shell">
+            <img class="thumb" src="${esc(thumb(p.youtubeUrl))}" alt="${esc(p.title)} thumbnail" loading="lazy">
+            <span class="thumb-preview" aria-hidden="true"></span>
+          </span>
           <div class="content">
             <p class="meta">${esc(formatDate(p.publishedAt))} | ${esc(p.author || "robot.tv")}</p>
             <h3><a href="/post/${esc(p.slug)}">${esc(p.title)}</a></h3>
@@ -155,6 +162,37 @@
           </div>
         </article>
       `).join("");
+
+      const canHoverPreview = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (!canHoverPreview) return;
+
+      const toEmbed = (u) => {
+        const id = videoId(u);
+        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1` : "";
+      };
+
+      const startPreview = (card) => {
+        const slot = card.querySelector(".thumb-preview");
+        const embed = toEmbed(card.dataset.video);
+        if (!slot || !embed || slot.dataset.active === "1") return;
+        slot.innerHTML = `<iframe src="${esc(embed)}" title="Article preview" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        slot.dataset.active = "1";
+        card.classList.add("previewing");
+      };
+
+      const stopPreview = (card) => {
+        const slot = card.querySelector(".thumb-preview");
+        if (!slot) return;
+        slot.innerHTML = "";
+        slot.dataset.active = "0";
+        card.classList.remove("previewing");
+      };
+
+      grid.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("mouseenter", () => startPreview(card));
+        card.addEventListener("mouseleave", () => stopPreview(card));
+        card.addEventListener("blur", () => stopPreview(card));
+      });
     };
 
     const renderArticle = (post) => {
