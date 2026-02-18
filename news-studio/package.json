@@ -1,0 +1,17 @@
+{
+  "name": "robot-tv-news-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3.80.1",
+    "styled-components": "^6.1.15"
+  }
+}
