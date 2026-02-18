@@ -1,0 +1,56 @@
+[
+  {
+    "_id": "post-manual-20260218-1",
+    "_type": "post",
+    "title": "China's humanoid robots take centre stage for Lunar New Year showtime",
+    "slug": {"_type": "slug", "current": "china-humanoid-robots-lunar-new-year-showtime"},
+    "excerpt": "Reuters coverage highlights the visibility push for humanoid robotics during Lunar New Year programming.",
+    "publishedAt": "2026-02-18T21:40:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=W7kqiLFIgzU",
+    "author": {"_type": "reference", "_ref": "author-chen-chen"},
+    "categories": [{"_type": "reference", "_ref": "category-humanoid-robots"}],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "m1a",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m1as", "text": "Source: Reuters (February 16, 2026)."}]
+      },
+      {
+        "_type": "block",
+        "_key": "m1b",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m1bs", "text": "robot.tv summary: The story reflects how robot makers are using high-visibility public events to normalize humanoid platforms and build market confidence."}]
+      }
+    ]
+  },
+  {
+    "_id": "post-manual-20260218-2",
+    "_type": "post",
+    "title": "Amazon halts Blue Jay robotics project after less than 6 months",
+    "slug": {"_type": "slug", "current": "amazon-halts-blue-jay-robotics-project"},
+    "excerpt": "TechCrunch reports Amazon has stopped the Blue Jay warehouse robotics effort shortly after prototyping.",
+    "publishedAt": "2026-02-18T21:45:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=rhai-LhYjbk",
+    "author": {"_type": "reference", "_ref": "author-chen-chen"},
+    "categories": [{"_type": "reference", "_ref": "category-robotics-startups"}],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "m2a",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m2as", "text": "Source: TechCrunch (February 18, 2026)."}]
+      },
+      {
+        "_type": "block",
+        "_key": "m2b",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m2bs", "text": "robot.tv summary: The shutdown is a reminder that warehouse robotics programs are being evaluated on measurable ROI and operational fit, not just technical novelty."}]
+      }
+    ]
+  }
+]
