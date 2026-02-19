@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260219-nav-v3">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
     <style>
         .news-hero { margin-top: 1rem; padding: 1.3rem; }
         .news-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0.85rem; margin-top: 1rem; }
@@ -53,7 +53,7 @@
                 <h1>High-Signal Robotics Coverage</h1>
                 <p class="hero-copy">Daily intelligence on humanoids, quadrupeds, and robotics startups, built around video-first reporting and deployment context.</p>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="https://news.robot.tv" target="_blank" rel="noopener">Open CMS</a>
+                    <a class="btn btn-primary" href="https://news.robot.tv">Open Newsroom</a>
                     <a class="btn btn-ghost" href="index.html">Back to Homepage</a>
                 </div>
             </section>
@@ -61,7 +61,7 @@
             <section class="section">
                 <div class="section-head">
                     <h2>Latest Posts</h2>
-                    <a href="https://news.robot.tv" target="_blank" rel="noopener">Manage content</a>
+                    <a href="https://news.robot.tv">Open newsroom</a>
                 </div>
                 <div id="news-grid" class="news-grid" aria-live="polite"></div>
                 <div id="news-empty" class="panel news-empty" hidden>No posts yet. Publish your first article in Sanity Studio.</div>
@@ -73,7 +73,7 @@
         const projectId = "lumv116w";
         const dataset = "production";
         const query = `*[_type=="post"] | order(publishedAt desc)[0...12]{
-          _id,title,excerpt,publishedAt,youtubeUrl,
+          _id,title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,
           "author": author->name,
           "categories": categories[]->title
         }`;
@@ -94,6 +94,7 @@
             try { return new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"}); }
             catch { return "Recent"; }
         };
+        const postUrl = (post) => post && post.slug ? `https://news.robot.tv/post/${post.slug}` : "https://news.robot.tv";
 
         const render = (posts) => {
             if (!posts.length) {
@@ -110,8 +111,7 @@
                         <h3>${escapeHtml(post.title)}</h3>
                         <p>${escapeHtml(post.excerpt || "Read the latest robotics intelligence from robot.tv newsroom.")}</p>
                         <div class="news-actions">
-                            <a class="btn btn-primary" href="${escapeHtml(post.youtubeUrl || "#")}" target="_blank" rel="noopener">Watch Video</a>
-                            <a class="btn btn-ghost" href="https://news.robot.tv" target="_blank" rel="noopener">Read in CMS</a>
+                            <a class="btn btn-primary" href="${escapeHtml(postUrl(post))}">Open Briefing</a>
                         </div>
                     </div>
                 </article>
