@@ -23,4 +23,8 @@ Set these secrets in your repository settings (`Settings -> Secrets and variable
 2. Select `Auto Publish Robot News`.
 3. Click `Run workflow`.
 
-The workflow also runs automatically every 12 hours via cron.
+The workflow runs automatically every 12 hours via cron and now includes:
+- duplicate guard on recent titles
+- top-company weighted selection
+- draft fallback for low-confidence items
+- feed health check (`MAX_FEED_AGE_HOURS`, default `24`)
