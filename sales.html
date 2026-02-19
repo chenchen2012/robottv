@@ -3,204 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Premium domain for sale. Get it now!">
-    <title>Premium Domain for Sale</title>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMIZ5FT9ulNfM/9mkKHiw6MzmV9ErTQsJyz/BP" crossorigin="anonymous">
-    <!-- External font for modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <meta name="description" content="Premium domain name available for acquisition. Secure transfer via GoDaddy or Aliyun account push with lower fees.">
+    <meta property="og:title" content="Domain For Sale | robot.tv">
+    <meta property="og:description" content="Acquire a premium domain with secure transfer and fast response.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/sales.html">
+    <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
+    <title>Domain For Sale | robot.tv</title>
+    <link rel="canonical" href="https://robot.tv/sales.html">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            color: #e0e0e0;
-            background-color: #0d0d0d; /* Dark background by default */
-            display: flex;
+        .sales-stage {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: 1.15fr 0.95fr;
+            gap: 0.9rem;
+        }
+
+        .sales-panel {
+            padding: 1rem;
+        }
+
+        .sales-panel h1 {
+            margin: 0.42rem 0 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.6rem, 4.2vw, 2.5rem);
+            line-height: 1.14;
+        }
+
+        .sales-copy {
+            margin: 0.75rem 0 0;
+            color: var(--muted);
+            line-height: 1.62;
+            max-width: 64ch;
+        }
+
+        .sales-domain {
+            margin-top: 0.85rem;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: background-image 1s ease-in-out; /* Smooth transition for background image */
+            gap: 0.5rem;
+            border: 1px solid #44628f;
+            border-radius: 999px;
+            padding: 0.3rem 0.72rem;
+            color: #e6efff;
+            background: rgba(18, 32, 53, 0.72);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
         }
 
-        .container {
-            width: 90%;
-            max-width: 700px;
-            text-align: center;
-            padding: 40px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 30px rgba(255, 0, 255, 0.3);
-            transition: transform 0.3s ease;
+        .sales-actions {
+            margin-top: 1rem;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 80vh;
+            gap: 0.6rem;
+            flex-wrap: wrap;
         }
 
-        .container:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 40px rgba(255, 0, 255, 0.6);
+        .sales-grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.85rem;
         }
 
-        h1 {
-            font-family: 'Arial', sans-serif;
-            font-size: 36px;
-            color: #00e5ff;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+        .sales-card {
+            border: 1px solid #2f4566;
+            border-radius: 11px;
+            padding: 0.78rem;
+            background: linear-gradient(165deg, #0f1826, #0b131f);
         }
 
-        p {
-            font-size: 18px;
-            color: #e0e0e0;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        .sales-card h3 {
+            margin: 0;
+            font-size: 1rem;
         }
 
-        .highlight {
-            color: #ff00ff;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(255, 0, 255, 0.6);
+        .sales-card p {
+            margin: 0.52rem 0 0;
+            color: #bfd0ec;
+            line-height: 1.56;
+            font-size: 0.92rem;
         }
 
-        .cta-button {
-            background: linear-gradient(135deg, #00e5ff, #ff00ff);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.6), 0 0 15px rgba(255, 0, 255, 0.6);
+        .sales-faq {
+            margin-top: 1rem;
+            display: grid;
+            gap: 0.7rem;
         }
 
-        .cta-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.8), 0 0 25px rgba(255, 0, 255, 0.8);
+        .faq-item {
+            border: 1px solid #2f4566;
+            border-radius: 10px;
+            padding: 0.72rem;
+            background: rgba(13, 22, 35, 0.72);
         }
 
-        .icon {
-            font-size: 60px;
-            color: #00e5ff;
-            margin-bottom: 30px;
-            animation: pulse 1.5s infinite;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+        .faq-item h3 {
+            margin: 0;
+            font-size: 0.98rem;
         }
 
-        .contact {
-            font-size: 16px;
-            color: #a0a0a0;
-            margin-top: 50px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        .faq-item p {
+            margin: 0.48rem 0 0;
+            color: #bfd0ec;
+            line-height: 1.55;
+            font-size: 0.9rem;
         }
 
-        .contact a {
-            color: #00e5ff;
-            text-decoration: none;
-            font-weight: bold;
+        .sales-note {
+            margin-top: 0.8rem;
+            color: #9eb2d5;
+            font-size: 0.85rem;
         }
 
-        .contact a:hover {
-            text-decoration: underline;
+        @media (max-width: 980px) {
+            .sales-stage { grid-template-columns: 1fr; }
+            .sales-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Add media queries for mobile responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                width: 100%;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            p {
-                font-size: 16px;
-            }
-
-            .cta-button {
-                font-size: 18px;
-                padding: 12px 30px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 22px;
-            }
-
-            p {
-                font-size: 14px;
-            }
-
-            .cta-button {
-                font-size: 16px;
-                padding: 10px 25px;
-            }
+        @media (max-width: 760px) {
+            .sales-grid { grid-template-columns: 1fr; }
         }
     </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WC8XB1DN1E');
-</script>
-
 </head>
-
 <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
 
     <div class="container">
-        <div class="icon">
-            <i class="fas fa-robot"></i>
-        </div>
-        <h1>This Domain is available!</h1>
-        <b>
-        <p>Whatever you're building, <br/>This domain offers <br/>Exceptional brand value & <br/>Limitless potential.</p></b>
-        <h1>Claim it now before it's gone!</h1>
-        <div>
-            <a href="mailto:chenchen2012&#64;hotmail&#46;com"><button class="cta-button">Get It Now!</button></a>
-        </div>
-        <!-- Contact Section at the Bottom -->
-        <div class="contact">
-            <i class="fas fa-envelope"></i> Contact us: 
-            <a href="mailto:chenchen2012&#64;hotmail&#46;com">Contact Us</a>
-        </div>
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="contact.html">Submit Video</a>
+        </header>
+
+        <main class="sales-stage">
+            <section class="panel sales-panel">
+                <p class="kicker">DOMAIN ACQUISITION</p>
+                <h1>This Premium Domain Is Available</h1>
+                <p class="sales-copy">If this domain forwarded you here, it is currently open for acquisition. This page is designed for fast decision-making: clear transfer options, trusted process, and direct offer flow.</p>
+                <p class="sales-domain">Current Domain: <span id="sales-domain-value">Loading...</span></p>
+
+                <div class="sales-actions">
+                    <a id="make-offer" class="btn btn-primary" href="contact.html">Make Offer</a>
+                    <a id="ask-questions" class="btn btn-ghost" href="contact.html">Ask Questions</a>
+                </div>
+
+                <section class="sales-grid" aria-label="Domain value summary">
+                    <article class="sales-card">
+                        <h3>Brand Clarity</h3>
+                        <p>Short, memorable naming with strong positioning value for media, robotics, or AI products.</p>
+                    </article>
+                    <article class="sales-card">
+                        <h3>Transfer Flexibility</h3>
+                        <p>Preferred transfer through <strong>GoDaddy</strong> or <strong>Aliyun</strong> account push for lower fee overhead.</p>
+                    </article>
+                    <article class="sales-card">
+                        <h3>Secure Alternative</h3>
+                        <p>Escrow-style transfer can be used on request if both sides prefer a third-party transaction flow.</p>
+                    </article>
+                </section>
+            </section>
+
+            <aside class="panel sales-panel">
+                <p class="kicker">BUYER FAQ</p>
+                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif; font-size:1.22rem;">Fast, Transparent Transfer</h2>
+
+                <section class="sales-faq">
+                    <article class="faq-item">
+                        <h3>How does transfer work?</h3>
+                        <p>After terms are confirmed, domain transfer is executed via registrar account push (GoDaddy or Aliyun preferred).</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>How long does it take?</h3>
+                        <p>Account push can usually complete quickly once buyer account details are ready and payment is confirmed.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Can I negotiate?</h3>
+                        <p>Yes. Use the offer form to send your budget range and intended use case for review.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>How do I contact immediately?</h3>
+                        <p>Use the contact form on robot.tv to send offer details and preferred contact channel.</p>
+                    </article>
+                </section>
+
+                <p class="sales-note">Tip: include your target price range, transfer registrar preference (GoDaddy/Aliyun), and purchase timeline for faster response.</p>
+            </aside>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Premium robotics media and digital assets</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="contact.html">Contact</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+            </div>
+        </footer>
     </div>
 
     <script>
-        // JavaScript to preload the background image and apply it when loaded
-        const img = new Image();
-        img.src = 'your-background-image.jpg'; // Replace with the actual image URL
+      const host = window.location.hostname || "domain";
+      const domainEl = document.getElementById("sales-domain-value");
+      if (domainEl) domainEl.textContent = host;
 
-        img.onload = () => {
-            document.body.style.backgroundImage = `url('${img.src}')`;
-            document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.backgroundPosition = "center center";
-            document.body.style.backgroundAttachment = "fixed";
-            document.body.style.backgroundSize = "cover";
-        };
+      const encodedDomain = encodeURIComponent(host);
+      const offerUrl = `contact.html?topic=domain-sale&domain=${encodedDomain}`;
+      const offer = document.getElementById("make-offer");
+      const ask = document.getElementById("ask-questions");
+      if (offer) offer.href = offerUrl;
+      if (ask) ask.href = offerUrl;
     </script>
-
+    <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
-
 </html>
-
