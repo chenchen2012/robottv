@@ -737,6 +737,7 @@ a {
 }
 
 .thumb-wrap {
+    display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
     border-radius: 8px;
@@ -799,6 +800,7 @@ a {
     opacity: 0;
     transition: opacity 0.22s ease;
     z-index: 2;
+    pointer-events: none;
 }
 
 .js-company-video .thumb-wrap.preview-ready img {
@@ -1086,15 +1088,16 @@ a {
     border-radius: 12px;
     padding: 0.75rem;
     background: linear-gradient(160deg, #101926, #0c141f);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     z-index: 0;
     isolation: isolate;
+    overflow: hidden;
 }
 
 .company-card:hover {
-    transform: translateY(-2px);
     border-color: #46648f;
+    box-shadow: 0 8px 26px rgba(5, 10, 18, 0.36);
     z-index: 2;
 }
 

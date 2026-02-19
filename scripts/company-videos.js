@@ -9,7 +9,7 @@
   const embedUrl = (u) => {
     const id = videoId(u);
     return id
-      ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1`
+      ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=${id}&iv_load_policy=3`
       : '';
   };
 
@@ -101,6 +101,7 @@
       iframe.title = 'Video preview';
       iframe.loading = 'lazy';
       iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.setAttribute('tabindex', '-1');
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';
       iframe.addEventListener('load', () => {
         // Delay the crossfade slightly to avoid dark flashes before first frame paint.
