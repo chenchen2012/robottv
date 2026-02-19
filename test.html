@@ -33,6 +33,19 @@
       box-shadow: 0 10px 24px rgba(6, 11, 18, 0.24);
     }
 
+    .program-card-now {
+      border-color: #4d6ea5;
+      box-shadow: 0 14px 28px rgba(13, 25, 43, 0.34);
+    }
+
+    .program-card-next {
+      border-color: #3e5c87;
+    }
+
+    .program-card-brief {
+      border-color: #365173;
+    }
+
     .program-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
     .program-head h2 { margin: 0; font-size: 1.02rem; letter-spacing: 0.04em; font-family: 'Orbitron', sans-serif; }
     .status-pill {
@@ -70,8 +83,14 @@
 
     .next-meta { margin-top: 0.5rem; color: #9eb4d8; font-size: 0.86rem; }
 
-    .brief-list { margin: 0.75rem 0 0; padding-left: 1rem; color: #c4d3ec; display: grid; gap: 0.52rem; }
-    .brief-list li { line-height: 1.5; }
+    .next-source {
+      margin-top: 0.38rem;
+      color: #b3c6e6;
+      font-size: 0.8rem;
+    }
+
+    .brief-list { margin: 0.72rem 0 0; padding-left: 1rem; color: #c4d3ec; display: grid; gap: 0.42rem; }
+    .brief-list li { line-height: 1.42; max-width: 34ch; }
 
     .rotation-note {
       margin-top: 0.65rem;
@@ -116,7 +135,7 @@
       </section>
 
       <section class="program-grid" aria-label="Now Playing schedule blocks">
-        <article class="program-card">
+        <article class="program-card program-card-now">
           <div class="program-head">
             <h2>Now Playing</h2>
             <span class="status-pill">Live Now</span>
@@ -132,14 +151,14 @@
             </iframe>
           </a>
           <h3 class="program-title" id="live-title">BattleBots livestream is on now</h3>
-          <p class="program-desc" id="live-desc">Live feed for operators tracking active robot coverage.</p>
+          <p class="program-desc" id="live-desc">Live robotics feed with active operator context.</p>
           <div class="program-actions">
             <a class="btn btn-primary" href="live.html">Open Live Room</a>
             <a class="btn btn-ghost" href="https://news.robot.tv">Open Newsroom</a>
           </div>
         </article>
 
-        <article class="program-card" id="next-up-card">
+        <article class="program-card program-card-next" id="next-up-card">
           <div class="program-head">
             <h2>Next Up</h2>
             <span class="status-pill">Auto Rotate</span>
@@ -150,12 +169,13 @@
           <h3 id="next-title" class="program-title">Loading next segment...</h3>
           <p id="next-desc" class="program-desc">Pulling latest coverage from the newsroom feed.</p>
           <p id="next-meta" class="next-meta">Rotates every 12 seconds. Hover to pause.</p>
+          <p id="next-source" class="next-source">Source: robot.tv Newsroom</p>
           <div class="program-actions">
             <a id="next-open" class="btn btn-primary" href="https://news.robot.tv">Open Segment</a>
           </div>
         </article>
 
-        <article class="program-card">
+        <article class="program-card program-card-brief">
           <div class="program-head">
             <h2>Today's Brief</h2>
             <span class="status-pill">Editor Pick</span>
@@ -197,12 +217,16 @@
       if (!nextItems.length) return;
       const post = nextItems[nextIndex % nextItems.length];
       const link = toPostUrl(post.slug);
+      const dateLabel = post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "Latest";
+      const categories = Array.isArray(post.cats) ? post.cats.filter(Boolean).slice(0, 1) : [];
+      const sourceLabel = categories.length ? categories[0] : "robot.tv Newsroom";
       document.getElementById('next-link').href = link;
       document.getElementById('next-open').href = link;
       document.getElementById('next-thumb').src = toThumb(post.youtubeUrl);
       document.getElementById('next-title').textContent = post.title || 'Next robotics segment';
       document.getElementById('next-desc').textContent = post.excerpt || 'Latest newsroom briefing for robotics operators and builders.';
       document.getElementById('next-meta').textContent = `Segment ${nextIndex + 1} of ${nextItems.length} | Rotates every 12 seconds`;
+      document.getElementById('next-source').textContent = `Source: ${sourceLabel} | ${dateLabel}`;
       nextIndex = (nextIndex + 1) % nextItems.length;
     };
 
