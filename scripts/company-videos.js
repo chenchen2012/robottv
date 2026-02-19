@@ -103,7 +103,10 @@
       iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';
       iframe.addEventListener('load', () => {
-        wrap.classList.add('previewing');
+        // Delay the crossfade slightly to avoid dark flashes before first frame paint.
+        setTimeout(() => {
+          wrap.classList.add('preview-ready');
+        }, 140);
       }, { once: true });
       wrap.appendChild(iframe);
     };
@@ -115,7 +118,7 @@
       }
       const iframe = wrap.querySelector('iframe');
       if (iframe) iframe.remove();
-      wrap.classList.remove('previewing');
+      wrap.classList.remove('preview-ready');
     };
 
     if (canHover) {
