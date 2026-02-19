@@ -59,7 +59,7 @@
     else if (targetIsNews) active = isNewsLink;
     else if (targetHref) {
       const targetPath = normalize(targetHref);
-      active = canonical(path) === canonical(targetPath);
+      active = !isNewsLink && canonical(path) === canonical(targetPath);
     }
 
     if (active) a.classList.add('is-active');
