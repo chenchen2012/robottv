@@ -821,8 +821,16 @@ a {
     margin-top: 0.65rem;
 }
 
-.about-hero {
+.about-stage {
     margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 0.95rem;
+    align-items: stretch;
+}
+
+.about-hero {
+    margin-top: 0;
     padding: 1.45rem;
     background:
         radial-gradient(900px 300px at 8% 10%, rgba(239, 45, 82, 0.2), transparent 52%),
@@ -840,10 +848,57 @@ a {
     max-width: 62ch;
 }
 
+.about-visual {
+    padding: 1rem;
+    border-color: #395073;
+    background:
+        radial-gradient(760px 240px at 10% 20%, rgba(94, 132, 255, 0.16), transparent 58%),
+        linear-gradient(160deg, #121c2b, #0f1724);
+}
+
+.about-visual h2 {
+    margin: 0.4rem 0 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.12rem, 2.2vw, 1.45rem);
+    line-height: 1.22;
+}
+
+.about-metrics {
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.metric {
+    border: 1px solid #2f4567;
+    border-radius: 10px;
+    padding: 0.65rem 0.72rem;
+    background: rgba(10, 16, 26, 0.72);
+}
+
+.metric-label {
+    margin: 0;
+    color: #9fb2d4;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.metric-value {
+    margin: 0.36rem 0 0;
+    color: #e0e9fb;
+    font-size: 0.95rem;
+    line-height: 1.35;
+}
+
 .about-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.95rem;
+}
+
+.about-pillars .about-card p {
+    font-size: 0.98rem;
 }
 
 .about-card {
@@ -880,6 +935,16 @@ a {
     letter-spacing: 0.03em;
 }
 
+.about-card-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 9px;
+    border: 1px solid #2c3f5d;
+    margin-bottom: 0.66rem;
+}
+
 .about-card p,
 .about-card li {
     color: #c6d0e4;
@@ -908,6 +973,58 @@ a {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     line-height: 1.28;
+}
+
+.about-workflow {
+    padding: 1rem;
+    border-color: #354d73;
+    background:
+        radial-gradient(960px 220px at 95% 0%, rgba(239, 45, 82, 0.12), transparent 62%),
+        linear-gradient(160deg, #111b2a, #0f1826);
+}
+
+.workflow-grid {
+    margin-top: 0.8rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.72rem;
+}
+
+.workflow-step {
+    border: 1px solid #2d4262;
+    border-radius: 10px;
+    padding: 0.8rem;
+    background: rgba(8, 14, 24, 0.75);
+}
+
+.workflow-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #2c3e5d;
+    margin-bottom: 0.58rem;
+    display: block;
+}
+
+.step-no {
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: #9fb4da;
+}
+
+.workflow-step h3 {
+    margin: 0.36rem 0 0;
+    font-size: 1.03rem;
+}
+
+.workflow-step p {
+    margin: 0.52rem 0 0;
+    color: #c3d0e8;
+    line-height: 1.58;
+    font-size: 0.93rem;
 }
 
 .detail-hero {
