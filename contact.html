@@ -143,6 +143,9 @@
                     <input type="hidden" name="_subject" value="robot.tv contact form submission">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
+                    <input type="hidden" name="topic" value="">
+                    <input type="hidden" name="domain" value="">
+                    <input type="hidden" name="source" value="">
 
                     <div class="grid">
                         <label>
@@ -206,11 +209,35 @@
             <input type="text" name="contact_value">
             <input type="text" name="youtube_url">
             <input type="text" name="robot_company">
+            <input type="text" name="topic">
+            <input type="text" name="domain">
+            <input type="text" name="source">
             <textarea name="message"></textarea>
         </form>
     </div>
 
     <script>
+        // Keep campaign/source context with each submission (e.g. domain-sale lead).
+        (() => {
+            const form = document.querySelector('form[name="robottv-contact"]');
+            if (!form) return;
+            const q = new URLSearchParams(window.location.search);
+            const topic = (q.get("topic") || "").trim();
+            const domain = (q.get("domain") || "").trim();
+            const source = (q.get("source") || "").trim();
+            const apply = (name, value) => {
+                const input = form.querySelector(`input[name="${name}"]`);
+                if (input && value) input.value = value;
+            };
+            apply("topic", topic);
+            apply("domain", domain);
+            apply("source", source);
+            if (topic === "domain-sale") {
+                const heading = document.querySelector(".contact-panel h2");
+                if (heading) heading.textContent = "Send Domain Offer / Inquiry";
+            }
+        })();
+
         // Fire-and-forget backup copy to Netlify Forms so submissions are recoverable.
         document.addEventListener("submit", (event) => {
             const form = event.target;
@@ -220,7 +247,7 @@
             const fd = new FormData(form);
             const payload = new URLSearchParams();
             payload.set("form-name", "robottv-contact-backup");
-            ["name", "organization", "contact_channel", "contact_value", "youtube_url", "robot_company", "message"]
+            ["name", "organization", "contact_channel", "contact_value", "youtube_url", "robot_company", "topic", "domain", "source", "message"]
                 .forEach((key) => payload.set(key, String(fd.get(key) || "")));
 
             fetch("/", {

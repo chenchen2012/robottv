@@ -218,19 +218,39 @@
     </div>
 
     <script>
-      const host = window.location.hostname || "";
+      const query = new URLSearchParams(window.location.search);
+      const paramDomain = (query.get("d") || "").trim().toLowerCase();
+      const host = (window.location.hostname || "").toLowerCase();
       const domainEl = document.getElementById("sales-domain-value");
-      const labelDomain = host && host !== "robot.tv" && host !== "www.robot.tv"
-        ? host
+
+      const validDomain = (s) => /^[a-z0-9][a-z0-9.-]+\.[a-z]{2,}$/i.test(s);
+      const resolvedDomain = validDomain(paramDomain)
+        ? paramDomain
+        : host;
+
+      const labelDomain = resolvedDomain && resolvedDomain !== "robot.tv" && resolvedDomain !== "www.robot.tv"
+        ? resolvedDomain
         : "Domain from your inquiry";
       if (domainEl) domainEl.textContent = labelDomain;
 
       const encodedDomain = encodeURIComponent(labelDomain);
-      const offerUrl = `contact.html?topic=domain-sale&domain=${encodedDomain}`;
+      const offerUrl = `contact.html?topic=domain-sale&domain=${encodedDomain}&source=sales-page`;
       const offer = document.getElementById("make-offer");
       const ask = document.getElementById("ask-questions");
       if (offer) offer.href = offerUrl;
       if (ask) ask.href = offerUrl;
+
+      const track = (cta) => {
+        if (typeof window.gtag !== "function") return;
+        window.gtag("event", "domain_sales_cta_click", {
+          cta_label: cta,
+          domain_context: labelDomain,
+          page_path: window.location.pathname
+        });
+      };
+
+      if (offer) offer.addEventListener("click", () => track("make_offer"));
+      if (ask) ask.addEventListener("click", () => track("ask_questions"));
     </script>
     <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
