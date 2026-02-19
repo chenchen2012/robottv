@@ -21,6 +21,8 @@
     .header { display:flex; align-items:center; justify-content:space-between; gap:1rem; border:1px solid var(--line); background:linear-gradient(135deg, rgba(10,15,24,.95), rgba(12,18,29,.95)); border-radius:10px; padding:.8rem 1rem; }
     .brand img { width:150px; display:block; }
     .nav { display:flex; gap:1rem; flex-wrap:wrap; color:var(--muted); font-weight:600; }
+    .nav a:hover { color:#d3deef; }
+    .nav a.is-active { border:1px solid #415a80; border-radius:999px; padding:.22rem .62rem; color:#e2ecff; background:rgba(94,132,255,.14); }
     .cta { border:1px solid #46597a; border-radius:999px; padding:.45rem .9rem; font-weight:700; font-size:.88rem; }
     .hero { margin-top:1rem; padding:1.35rem; }
     .kicker { margin:0; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:#acbcd7; font-weight:700; }
@@ -98,6 +100,17 @@
   </div>
 
   <script>
+    (() => {
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      const path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+      const onNews = path === '/' || path.startsWith('/post/');
+      nav.querySelectorAll('a').forEach((a) => {
+        const href = a.getAttribute('href') || '';
+        if ((onNews && href === '/') || (!onNews && href !== '/')) a.classList.add('is-active');
+      });
+    })();
+
     const projectId = "lumv116w";
     const dataset = "production";
     const app = document.getElementById("app");

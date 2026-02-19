@@ -107,6 +107,14 @@ a {
     color: #d3deef;
 }
 
+.site-nav a.is-active {
+    border: 1px solid #415a80;
+    border-radius: 999px;
+    padding: 0.22rem 0.62rem;
+    color: #e2ecff;
+    background: rgba(94, 132, 255, 0.14);
+}
+
 .nav-priority {
     border: 1px solid #415a80;
     border-radius: 999px;
