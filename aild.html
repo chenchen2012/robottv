@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="AILD - AI Learners and Developers, your hub for learning and collaborating in AI">
     <title>AILD - AI Learners and Developers</title>
-    <link rel="icon" href="images/favicon.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260219-nav-v3">
     <style>
         /* Basic Styling */
         body {
@@ -20,29 +15,29 @@
             color: #d1d5db;
             overflow-x: hidden;
         }
-        .aild-header {
+        header {
             background-color: #0f0f3d;
             color: #00e0ff;
             padding: 1rem 0;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        .aild-header nav ul {
+        nav ul {
             display: flex;
             justify-content: center;
             list-style: none;
             padding: 0;
         }
-        .aild-header nav ul li {
+        nav ul li {
             margin: 0 1rem;
         }
-        .aild-header nav ul li a {
+        nav ul li a {
             color: #00e0ff;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
         }
-        .aild-header nav ul li a:hover {
+        nav ul li a:hover {
             color: #1effa6;
         }
         .hero {
@@ -130,19 +125,18 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="site-header" style="margin: 1rem auto; width: min(1180px, 94vw);">
-        <a class="brand" href="index.html" aria-label="robot.tv home">
-            <img src="images/robot_logo.png" alt="robot.tv">
-        </a>
-        <nav class="site-nav" aria-label="Primary navigation">
-            <a href="index.html">Home</a>
-            <a href="home.html">Robot Index</a>
-            <a href="companies.html">Companies</a>
-            <a href="live.html">Live Now</a>
-            <a href="https://news.robot.tv">News</a>
-            <a href="about.html">About</a>
+    <header>
+        <h1>AILD</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="home.html">Robot Index</a></li>
+                <li><a href="companies.html">Companies</a></li>
+                <li><a href="live.html">Live Now</a></li>
+                <li><a href="https://news.robot.tv">News</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
         </nav>
-        <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Submit Video</a>
     </header>
 
     <!-- Hero Section -->
@@ -192,6 +186,5 @@
         <p>© 2024 AILD.org - AI Learners and Developers</p>
         <p>Contact us: <a href="mailto:chenchen2012@hotmail.com">chenchen2012@hotmail.com</a></p>
     </footer>
-    <script src="scripts/nav-active.js"></script>
 </body>
 </html>
