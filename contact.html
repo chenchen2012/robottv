@@ -138,11 +138,11 @@
                 <p class="kicker">SUBMIT</p>
                 <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Send Message / Video</h2>
 
-                <form name="robottv-contact" method="POST" action="/contact-success/" data-netlify="true" data-netlify-honeypot="bot-field" class="contact-form">
-                    <input type="hidden" name="form-name" value="robottv-contact">
-                    <p class="hidden-field">
-                        <label>Don't fill this out if you're human: <input name="bot-field"></label>
-                    </p>
+                <form name="robottv-contact" method="POST" action="https://formsubmit.co/cc801@duke.edu" class="contact-form">
+                    <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
+                    <input type="hidden" name="_subject" value="robot.tv contact form submission">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
 
                     <div class="grid">
                         <label>
@@ -193,7 +193,7 @@
                         <button class="btn btn-primary" type="submit">Send to robot.tv</button>
                         <a class="btn btn-ghost" href="index.html">Back Home</a>
                     </div>
-                    <p class="contact-note">Form submissions are handled by Netlify Forms.</p>
+                    <p class="contact-note">Submissions are forwarded directly to the robot.tv inbox.</p>
                 </form>
             </section>
         </main>
