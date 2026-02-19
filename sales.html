@@ -157,7 +157,7 @@
                 <p class="kicker">DOMAIN ACQUISITION</p>
                 <h1>This Premium Domain Is Available</h1>
                 <p class="sales-copy">If this domain forwarded you here, it is currently open for acquisition. This page is designed for fast decision-making: clear transfer options, trusted process, and direct offer flow.</p>
-                <p class="sales-domain">Current Domain: <span id="sales-domain-value">Loading...</span></p>
+                <p class="sales-domain">Target Domain: <span id="sales-domain-value">Domain from your inquiry</span></p>
 
                 <div class="sales-actions">
                     <a id="make-offer" class="btn btn-primary" href="contact.html">Make Offer</a>
@@ -218,11 +218,14 @@
     </div>
 
     <script>
-      const host = window.location.hostname || "domain";
+      const host = window.location.hostname || "";
       const domainEl = document.getElementById("sales-domain-value");
-      if (domainEl) domainEl.textContent = host;
+      const labelDomain = host && host !== "robot.tv" && host !== "www.robot.tv"
+        ? host
+        : "Domain from your inquiry";
+      if (domainEl) domainEl.textContent = labelDomain;
 
-      const encodedDomain = encodeURIComponent(host);
+      const encodedDomain = encodeURIComponent(labelDomain);
       const offerUrl = `contact.html?topic=domain-sale&domain=${encodedDomain}`;
       const offer = document.getElementById("make-offer");
       const ask = document.getElementById("ask-questions");
