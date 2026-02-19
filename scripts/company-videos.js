@@ -81,9 +81,15 @@
 
     if (!wrap || !url) return;
     if (img && !img.getAttribute('src')) img.src = thumbUrl(url);
+    if (!wrap.querySelector('.preview-chip')) {
+      const chip = document.createElement('span');
+      chip.className = 'preview-chip';
+      chip.textContent = 'Hover Preview';
+      wrap.appendChild(chip);
+    }
 
     const start = () => {
-      if (wrap.classList.contains('previewing')) return;
+      if (wrap.querySelector('iframe')) return;
       const src = embedUrl(url);
       if (!src) return;
       const iframe = document.createElement('iframe');
@@ -92,8 +98,10 @@
       iframe.loading = 'lazy';
       iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.addEventListener('load', () => {
+        wrap.classList.add('previewing');
+      }, { once: true });
       wrap.appendChild(iframe);
-      wrap.classList.add('previewing');
     };
 
     const stop = () => {

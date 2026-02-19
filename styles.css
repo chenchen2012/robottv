@@ -751,6 +751,7 @@ a {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: opacity 0.18s ease;
 }
 
 .thumb-wrap iframe {
@@ -759,10 +760,37 @@ a {
     width: 100%;
     height: 100%;
     border: 0;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    background: #000;
 }
 
 .thumb-wrap.previewing img {
-    opacity: 0;
+    opacity: 0.12;
+}
+
+.thumb-wrap.previewing iframe {
+    opacity: 1;
+}
+
+.preview-chip {
+    position: absolute;
+    right: 0.45rem;
+    bottom: 0.45rem;
+    border: 1px solid #3e5579;
+    border-radius: 999px;
+    padding: 0.14rem 0.44rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #d8e4fb;
+    background: rgba(7, 12, 20, 0.72);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.js-company-video:hover .thumb-wrap {
+    border-color: #3f5d86;
 }
 
 .card-top {
