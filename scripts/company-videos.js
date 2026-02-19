@@ -1,6 +1,5 @@
 (function () {
   const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (!canHover) return;
 
   const videoId = (u) => {
     const s = String(u || '');
@@ -18,6 +17,62 @@
     const id = videoId(u);
     return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
   };
+
+  const ensureModal = () => {
+    let modal = document.getElementById('video-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'video-modal';
+    modal.className = 'video-modal';
+    modal.hidden = true;
+    modal.innerHTML = `
+      <div class="video-modal-backdrop" data-close="1"></div>
+      <div class="video-modal-panel" role="dialog" aria-modal="true" aria-label="Company video">
+        <button id="video-close" class="video-close" type="button" aria-label="Close video">Close</button>
+        <div class="video-frame-wrap">
+          <iframe
+            id="video-frame"
+            src=""
+            title="Company video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    return modal;
+  };
+
+  const openModalVideo = (url) => {
+    const modal = ensureModal();
+    const frame = document.getElementById('video-frame');
+    const src = embedUrl(url);
+    if (!frame || !src) return;
+    frame.src = src;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModalVideo = () => {
+    const modal = document.getElementById('video-modal');
+    const frame = document.getElementById('video-frame');
+    if (!modal || !frame) return;
+    modal.hidden = true;
+    frame.src = '';
+    document.body.style.overflow = '';
+  };
+
+  document.addEventListener('click', (event) => {
+    const closeTarget = event.target.closest('[data-close="1"], #video-close');
+    if (!closeTarget) return;
+    closeModalVideo();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeModalVideo();
+  });
 
   document.querySelectorAll('.js-company-video').forEach((card) => {
     const url = card.dataset.video || '';
@@ -47,8 +102,17 @@
       wrap.classList.remove('previewing');
     };
 
-    card.addEventListener('mouseenter', start);
-    card.addEventListener('mouseleave', stop);
-    card.addEventListener('blur', stop);
+    if (canHover) {
+      card.addEventListener('mouseenter', start);
+      card.addEventListener('mouseleave', stop);
+      card.addEventListener('blur', stop);
+    }
+
+    if (card.classList.contains('js-company-modal')) {
+      card.addEventListener('click', (event) => {
+        event.preventDefault();
+        openModalVideo(url);
+      });
+    }
   });
 })();
