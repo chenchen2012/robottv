@@ -6,15 +6,21 @@
 
   const normalize = (href) => {
     if (!href) return '';
-    if (href.startsWith('http')) {
-      try {
-        const u = new URL(href);
-        return (u.pathname || '/').replace(/\/+$/, '') || '/';
-      } catch {
-        return '';
-      }
+    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return '';
+    try {
+      const u = new URL(href, window.location.origin);
+      return (u.pathname || '/').replace(/\/+$/, '') || '/';
+    } catch {
+      return '';
     }
-    return href.replace(/\/+$/, '') || '/';
+  };
+
+  const canonical = (path) => {
+    if (!path) return '';
+    let p = path;
+    if (p === '/index.html') return '/';
+    if (p.endsWith('.html')) p = p.slice(0, -5);
+    return p || '/';
   };
 
   const byPath = {
@@ -42,15 +48,18 @@
   if (!targetHref && robotDetailSlugs.has(current)) targetHref = 'home.html';
 
   nav.querySelectorAll('a').forEach((a) => {
-    const path = normalize(a.getAttribute('href') || '');
-    const isNewsLink = (a.getAttribute('href') || '').includes('news.robot.tv');
+    const href = a.getAttribute('href') || '';
+    const path = normalize(href);
+    const isNewsLink = href.includes('news.robot.tv');
     const onNewsDomain = window.location.hostname === 'news.robot.tv';
+    const targetIsNews = String(targetHref).includes('news.robot.tv');
 
     let active = false;
     if (onNewsDomain && isNewsLink) active = true;
+    else if (targetIsNews) active = isNewsLink;
     else if (targetHref) {
       const targetPath = normalize(targetHref);
-      active = path === targetPath;
+      active = canonical(path) === canonical(targetPath);
     }
 
     if (active) a.classList.add('is-active');
