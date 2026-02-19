@@ -945,6 +945,11 @@ a {
     margin-bottom: 0.66rem;
 }
 
+.about-card picture,
+.workflow-step picture {
+    display: block;
+}
+
 .about-card p,
 .about-card li {
     color: #c6d0e4;
