@@ -524,6 +524,131 @@ a {
     gap: 0.8rem;
 }
 
+.global-map {
+    padding: 0.95rem;
+    display: grid;
+    grid-template-columns: 1.45fr 0.9fr;
+    gap: 0.85rem;
+}
+
+.global-map-stage {
+    border: 1px solid #2c3f5d;
+    border-radius: 12px;
+    padding: 0.85rem;
+    background: linear-gradient(170deg, #0d1726, #101b2a);
+}
+
+.map-kicker {
+    margin: 0;
+    color: #a8bddf;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.global-map-shell {
+    margin-top: 0.7rem;
+    position: relative;
+    aspect-ratio: 16 / 8.5;
+    border: 1px solid #32496c;
+    border-radius: 10px;
+    overflow: hidden;
+    background:
+        radial-gradient(420px 200px at 20% 35%, rgba(94, 132, 255, 0.2), transparent 64%),
+        radial-gradient(450px 180px at 75% 42%, rgba(239, 45, 82, 0.16), transparent 65%),
+        linear-gradient(175deg, #0b121f, #0d1523);
+}
+
+.global-map-grid {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to right, rgba(163, 188, 225, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(163, 188, 225, 0.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(circle at center, #000 35%, transparent 100%);
+}
+
+.global-map-pins {
+    position: absolute;
+    inset: 0;
+}
+
+.map-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border: 0;
+    background: transparent;
+    color: #e8f0ff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+}
+
+.map-pin-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ef2d52;
+    box-shadow: 0 0 0 rgba(239, 45, 82, 0.65);
+    animation: pulseLive 1.8s infinite;
+}
+
+.map-pin-label {
+    border: 1px solid #435f89;
+    border-radius: 999px;
+    padding: 0.16rem 0.45rem;
+    font-size: 0.72rem;
+    background: rgba(8, 13, 21, 0.74);
+    white-space: nowrap;
+}
+
+.map-pin:hover .map-pin-label,
+.map-pin.is-active .map-pin-label {
+    border-color: #6f91ca;
+    color: #f5f9ff;
+    background: rgba(20, 35, 58, 0.8);
+}
+
+.map-caption {
+    margin: 0.65rem 0 0;
+    color: #9fb4d7;
+    font-size: 0.86rem;
+}
+
+.map-card {
+    border: 1px solid #2f4768;
+    border-radius: 12px;
+    padding: 0.9rem;
+    background: linear-gradient(165deg, #121c2b, #0f1826);
+}
+
+.map-card h3 {
+    margin: 0.38rem 0 0;
+    line-height: 1.25;
+}
+
+.map-card p {
+    margin: 0.58rem 0 0;
+    color: #c4d1e8;
+    line-height: 1.55;
+}
+
+.map-card-meta {
+    color: #a8bedf;
+    font-size: 0.86rem;
+}
+
+.map-card-actions {
+    margin-top: 0.8rem;
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+
 .story-card {
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -1477,6 +1602,10 @@ a {
     .companies-grid,
     .company-videos-grid {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .global-map {
+        grid-template-columns: 1fr;
     }
 
     .company-layout {
