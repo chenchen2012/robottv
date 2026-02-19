@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="robot.tv test page for TV-style programming blocks.">
+  <title>robot.tv Test | Programming Blocks</title>
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+  <style>
+    .test-hero { margin-top: 1rem; padding: 1.2rem; }
+    .test-hero h1 { margin: 0.45rem 0 0; font-family: 'Orbitron', sans-serif; font-size: clamp(1.5rem, 4vw, 2.3rem); }
+    .test-copy { margin: 0.7rem 0 0; color: var(--muted); line-height: 1.6; max-width: 760px; }
+
+    .program-grid {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr;
+      gap: 0.9rem;
+    }
+
+    .program-card {
+      border: 1px solid #2c4060;
+      border-radius: 12px;
+      background: linear-gradient(165deg, #101a29, #0c1421);
+      padding: 0.9rem;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 24px rgba(6, 11, 18, 0.24);
+    }
+
+    .program-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+    .program-head h2 { margin: 0; font-size: 1.02rem; letter-spacing: 0.04em; font-family: 'Orbitron', sans-serif; }
+    .status-pill {
+      border: 1px solid #496aa1;
+      border-radius: 999px;
+      padding: 0.12rem 0.46rem;
+      font-size: 0.69rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #dbe7ff;
+      background: rgba(24, 39, 62, 0.7);
+    }
+
+    .program-media {
+      margin-top: 0.7rem;
+      border: 1px solid #2a3f5e;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0a111c;
+    }
+
+    .program-media img,
+    .program-media iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      display: block;
+      object-fit: cover;
+    }
+
+    .program-title { margin: 0.68rem 0 0; font-size: 1.06rem; line-height: 1.35; }
+    .program-desc { margin: 0.55rem 0 0; color: #b8c7e1; line-height: 1.58; }
+
+    .program-actions { margin-top: auto; display: flex; gap: 0.55rem; flex-wrap: wrap; padding-top: 0.8rem; }
+
+    .next-meta { margin-top: 0.5rem; color: #9eb4d8; font-size: 0.86rem; }
+
+    .brief-list { margin: 0.75rem 0 0; padding-left: 1rem; color: #c4d3ec; display: grid; gap: 0.52rem; }
+    .brief-list li { line-height: 1.5; }
+
+    .rotation-note {
+      margin-top: 0.65rem;
+      color: #97abcf;
+      font-size: 0.83rem;
+      border-top: 1px solid #2b3f5d;
+      padding-top: 0.55rem;
+    }
+
+    @media (max-width: 980px) {
+      .program-grid { grid-template-columns: 1fr; }
+      .program-card { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="robot.tv home">
+        <img src="images/robot_logo.png" alt="robot.tv">
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Home</a>
+        <a href="home.html">Robot Index</a>
+        <a href="companies.html">Companies</a>
+        <a href="live.html">Live Now</a>
+        <a href="https://news.robot.tv">News</a>
+        <a href="about.html">About</a>
+      </nav>
+      <a class="nav-cta" href="mailto:chenchen2012&#64;hotmail&#46;com">Submit Video</a>
+    </header>
+
+    <main>
+      <section class="panel test-hero">
+        <p class="kicker">TEST PROTOTYPE</p>
+        <h1>TV-Style Program Blocks</h1>
+        <p class="test-copy">This prototype shows how robot.tv can feel like a network schedule: <strong>Live Now</strong>, <strong>Next Up</strong>, and <strong>Today’s Brief</strong>. Only this test page is affected.</p>
+      </section>
+
+      <section class="program-grid" aria-label="Now Playing schedule blocks">
+        <article class="program-card">
+          <div class="program-head">
+            <h2>Now Playing</h2>
+            <span class="status-pill">Live Now</span>
+          </div>
+          <a class="program-media" href="live.html" aria-label="Open live room">
+            <iframe
+              src="https://www.youtube.com/embed/G6ERanEbzEE?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+              title="robot.tv live preview"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen>
+            </iframe>
+          </a>
+          <h3 class="program-title" id="live-title">BattleBots livestream is on now</h3>
+          <p class="program-desc" id="live-desc">Live feed for operators tracking active robot coverage.</p>
+          <div class="program-actions">
+            <a class="btn btn-primary" href="live.html">Open Live Room</a>
+            <a class="btn btn-ghost" href="https://news.robot.tv">Open Newsroom</a>
+          </div>
+        </article>
+
+        <article class="program-card" id="next-up-card">
+          <div class="program-head">
+            <h2>Next Up</h2>
+            <span class="status-pill">Auto Rotate</span>
+          </div>
+          <a id="next-link" class="program-media" href="https://news.robot.tv">
+            <img id="next-thumb" src="images/robot_logo.png" alt="Next up preview" loading="lazy">
+          </a>
+          <h3 id="next-title" class="program-title">Loading next segment...</h3>
+          <p id="next-desc" class="program-desc">Pulling latest coverage from the newsroom feed.</p>
+          <p id="next-meta" class="next-meta">Rotates every 12 seconds. Hover to pause.</p>
+          <div class="program-actions">
+            <a id="next-open" class="btn btn-primary" href="https://news.robot.tv">Open Segment</a>
+          </div>
+        </article>
+
+        <article class="program-card">
+          <div class="program-head">
+            <h2>Today's Brief</h2>
+            <span class="status-pill">Editor Pick</span>
+          </div>
+          <h3 id="brief-title" class="program-title">Top robotics signals today</h3>
+          <p class="program-desc">A compressed view of what matters most right now.</p>
+          <ul id="brief-list" class="brief-list">
+            <li>Loading newsroom brief...</li>
+          </ul>
+          <p class="rotation-note">This block updates from the same feed as Latest Intelligence.</p>
+          <div class="program-actions">
+            <a class="btn btn-primary" href="https://news.robot.tv">Read Full Briefings</a>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sanityProjectId = "lumv116w";
+    const sanityDataset = "production";
+    const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
+    const q = `*[_type == "post"] | order(publishedAt desc)[0...14]{title,excerpt,youtubeUrl,publishedAt,"slug":slug.current,"cats":categories[]->title}`;
+
+    const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv";
+    const toVideoId = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
+    const toThumb = (u) => {
+      const id = toVideoId(u);
+      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+    };
+    const escapeHtml = (s) => String(s || "").replace(/[&<>\"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
+
+    let nextItems = [];
+    let nextIndex = 0;
+    let rotator = null;
+    let paused = false;
+
+    const renderNext = () => {
+      if (!nextItems.length) return;
+      const post = nextItems[nextIndex % nextItems.length];
+      const link = toPostUrl(post.slug);
+      document.getElementById('next-link').href = link;
+      document.getElementById('next-open').href = link;
+      document.getElementById('next-thumb').src = toThumb(post.youtubeUrl);
+      document.getElementById('next-title').textContent = post.title || 'Next robotics segment';
+      document.getElementById('next-desc').textContent = post.excerpt || 'Latest newsroom briefing for robotics operators and builders.';
+      document.getElementById('next-meta').textContent = `Segment ${nextIndex + 1} of ${nextItems.length} | Rotates every 12 seconds`;
+      nextIndex = (nextIndex + 1) % nextItems.length;
+    };
+
+    const startRotation = () => {
+      if (rotator) clearInterval(rotator);
+      rotator = setInterval(() => {
+        if (!paused) renderNext();
+      }, 12000);
+    };
+
+    const renderBrief = (posts) => {
+      const list = document.getElementById('brief-list');
+      const title = document.getElementById('brief-title');
+      if (!list) return;
+      if (!posts.length) {
+        list.innerHTML = '<li>No newsroom posts yet.</li>';
+        return;
+      }
+      const top = posts.slice(0, 3);
+      title.textContent = `Top ${top.length} robotics signals today`;
+      list.innerHTML = top.map((p) => `<li><a href="${toPostUrl(p.slug)}">${escapeHtml(p.title)}</a></li>`).join('');
+    };
+
+    fetch(`${sanityUrl}?query=${encodeURIComponent(q)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        const posts = Array.isArray(d?.result) ? d.result.filter((p) => p?.slug && p?.title) : [];
+        if (!posts.length) return;
+
+        const lead = posts[0];
+        if (lead?.title) {
+          document.getElementById('live-title').textContent = `Live Context: ${lead.title}`;
+          document.getElementById('live-desc').textContent = lead.excerpt || document.getElementById('live-desc').textContent;
+        }
+
+        nextItems = posts.slice(1, 7);
+        if (!nextItems.length) nextItems = posts.slice(0, 1);
+        renderNext();
+        startRotation();
+
+        renderBrief(posts);
+      })
+      .catch(() => {});
+
+    const nextCard = document.getElementById('next-up-card');
+    if (nextCard) {
+      nextCard.addEventListener('mouseenter', () => { paused = true; });
+      nextCard.addEventListener('mouseleave', () => { paused = false; });
+    }
+  </script>
+  <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
+</body>
+</html>
