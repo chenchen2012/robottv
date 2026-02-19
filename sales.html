@@ -219,16 +219,24 @@
 
     <script>
       const query = new URLSearchParams(window.location.search);
-      const paramDomain = (query.get("d") || "").trim().toLowerCase();
+      const hashQuery = new URLSearchParams((window.location.hash || "").replace(/^#/, ""));
+      const paramDomain = (query.get("d") || query.get("domain") || hashQuery.get("d") || hashQuery.get("domain") || "").trim().toLowerCase();
       const host = (window.location.hostname || "").toLowerCase();
       const domainEl = document.getElementById("sales-domain-value");
 
       const validDomain = (s) => /^[a-z0-9][a-z0-9.-]+\.[a-z]{2,}$/i.test(s);
+      let referrerDomain = "";
+      try {
+        const ref = new URL(document.referrer || "");
+        referrerDomain = (ref.hostname || "").toLowerCase();
+      } catch {}
+
       const resolvedDomain = validDomain(paramDomain)
         ? paramDomain
-        : host;
+        : (validDomain(referrerDomain) ? referrerDomain : host);
 
-      const labelDomain = resolvedDomain && resolvedDomain !== "robot.tv" && resolvedDomain !== "www.robot.tv"
+      const isRobotDomain = (d) => d === "robot.tv" || d === "www.robot.tv";
+      const labelDomain = resolvedDomain && !isRobotDomain(resolvedDomain)
         ? resolvedDomain
         : "Domain from your inquiry";
       if (domainEl) domainEl.textContent = labelDomain;
