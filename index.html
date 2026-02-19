@@ -122,32 +122,6 @@
                 </div>
             </section>
 
-            <section class="section" id="global-map">
-                <div class="section-head">
-                    <h2>Interactive Global Robot Map</h2>
-                    <a href="companies.html">Open company profiles</a>
-                </div>
-                <section class="global-map panel" aria-label="Global robot map">
-                    <div class="global-map-stage">
-                        <p class="map-kicker">Company + Deployment Signals</p>
-                        <div class="global-map-shell">
-                            <div class="global-map-grid" aria-hidden="true"></div>
-                            <div class="map-zone map-zone-na" aria-hidden="true"><span>North America</span></div>
-                            <div class="map-zone map-zone-eu" aria-hidden="true"><span>Europe</span></div>
-                            <div class="map-zone map-zone-asia" aria-hidden="true"><span>Asia</span></div>
-                            <div class="map-zone map-zone-oce" aria-hidden="true"><span>Oceania</span></div>
-                            <div id="robot-map-pins" class="global-map-pins" aria-label="Robot map pins"></div>
-                        </div>
-                        <p class="map-caption">Tap a pin to open the latest robot and video from that region.</p>
-                    </div>
-                    <aside id="robot-map-card" class="map-card" aria-live="polite">
-                        <p class="kicker">Select A Pin</p>
-                        <h3>Global robotics coverage in one view</h3>
-                        <p>Browse leading companies by geography, then jump to profiles and latest videos.</p>
-                    </aside>
-                </section>
-            </section>
-
             <section class="section" id="latest">
                 <div class="section-head">
                     <h2>Latest Intelligence</h2>
@@ -251,68 +225,6 @@
         const items = picks.map((p) => `<span><a href="${toPostUrl(p.slug)}">${escapeHtml(p.title)}</a></span>`).join("");
         rail.innerHTML = items + items;
       };
-      const mapPins = [
-        { id: "unitree", label: "Unitree", region: "Hangzhou, China", x: 82, y: 42, company: "Unitree", robot: "Unitree G1", profile: "company-unitree.html", video: "https://www.youtube.com/watch?v=Ykiuz1ZdGBc" },
-        { id: "tesla", label: "Tesla", region: "California, USA", x: 18, y: 45, company: "Tesla", robot: "Optimus", profile: "company-tesla.html", video: "https://www.youtube.com/watch?v=gOYAfEOeg1Y" },
-        { id: "bd", label: "Boston Dynamics", region: "Massachusetts, USA", x: 24, y: 39, company: "Boston Dynamics", robot: "Atlas / Spot", profile: "company-boston-dynamics.html", video: "https://www.youtube.com/watch?v=3QRtVZRblmg" },
-        { id: "figure", label: "Figure", region: "California, USA", x: 16, y: 48, company: "Figure", robot: "Figure 02", profile: "company-figure.html", video: "https://www.youtube.com/watch?v=SUGQlsNcb5E" },
-        { id: "agility", label: "Agility", region: "Oregon, USA", x: 14, y: 43, company: "Agility Robotics", robot: "Digit", profile: "company-agility.html", video: "https://www.youtube.com/watch?v=2zCh_6GO49c" },
-        { id: "apptronik", label: "Apptronik", region: "Texas, USA", x: 20, y: 52, company: "Apptronik", robot: "Apollo", profile: "company-apptronik.html", video: "https://www.youtube.com/watch?v=aXYLqbY50cM" }
-      ];
-      const setMapCard = (pin) => {
-        const card = document.getElementById("robot-map-card");
-        if (!card || !pin) return;
-        card.innerHTML = `
-          <p class="kicker">Pinned Region</p>
-          <h3>${escapeHtml(pin.company)}</h3>
-          <p class="map-card-meta">${escapeHtml(pin.region)}</p>
-          <p>Flagship focus: <strong>${escapeHtml(pin.robot)}</strong></p>
-          <div class="map-card-actions">
-            <a class="btn btn-primary" href="${escapeHtml(pin.profile)}">Open Profile</a>
-            <a class="btn btn-ghost" href="${escapeHtml(pin.video)}" target="_blank" rel="noopener">Latest Video</a>
-          </div>
-        `;
-      };
-      const renderMap = () => {
-        const wrap = document.getElementById("robot-map-pins");
-        if (!wrap) return;
-        wrap.innerHTML = mapPins.map((pin) => `
-          <button type="button" class="map-pin" style="left:${pin.x}%;top:${pin.y}%;" data-pin="${escapeHtml(pin.id)}" aria-label="${escapeHtml(pin.company)} pin">
-            <span class="map-pin-dot" aria-hidden="true"></span>
-            <span class="map-pin-label">${escapeHtml(pin.label)}</span>
-          </button>
-        `).join("");
-        const buttons = wrap.querySelectorAll(".map-pin");
-        buttons.forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const pin = mapPins.find((p) => p.id === btn.dataset.pin);
-            buttons.forEach((b) => b.classList.remove("is-active"));
-            btn.classList.add("is-active");
-            setMapCard(pin);
-          });
-        });
-        if (buttons[0]) buttons[0].click();
-      };
-      const mapSection = document.getElementById("global-map");
-      let mapRendered = false;
-      const bootMap = () => {
-        if (mapRendered) return;
-        mapRendered = true;
-        renderMap();
-      };
-      if ("IntersectionObserver" in window && mapSection) {
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              bootMap();
-              io.disconnect();
-            }
-          });
-        }, { rootMargin: "200px 0px" });
-        io.observe(mapSection);
-      } else {
-        bootMap();
-      }
 
       const setCard = (prefix, post) => {
         if (!post || !post.slug) return;
