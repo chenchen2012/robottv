@@ -197,8 +197,40 @@
                 </form>
             </section>
         </main>
+
+        <!-- Free backup capture in Netlify Forms (no paid notifications required) -->
+        <form name="robottv-contact-backup" data-netlify="true" hidden>
+            <input type="text" name="name">
+            <input type="text" name="organization">
+            <input type="text" name="contact_channel">
+            <input type="text" name="contact_value">
+            <input type="text" name="youtube_url">
+            <input type="text" name="robot_company">
+            <textarea name="message"></textarea>
+        </form>
     </div>
 
+    <script>
+        // Fire-and-forget backup copy to Netlify Forms so submissions are recoverable.
+        document.addEventListener("submit", (event) => {
+            const form = event.target;
+            if (!(form instanceof HTMLFormElement)) return;
+            if (form.getAttribute("name") !== "robottv-contact") return;
+
+            const fd = new FormData(form);
+            const payload = new URLSearchParams();
+            payload.set("form-name", "robottv-contact-backup");
+            ["name", "organization", "contact_channel", "contact_value", "youtube_url", "robot_company", "message"]
+                .forEach((key) => payload.set(key, String(fd.get(key) || "")));
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: payload.toString(),
+                keepalive: true
+            }).catch(() => {});
+        });
+    </script>
     <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
