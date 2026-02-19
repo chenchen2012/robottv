@@ -195,6 +195,18 @@ a {
     font-size: 0.88rem;
 }
 
+.live-ticker:hover .ticker-track {
+    animation-play-state: paused;
+}
+
+.ticker-track a {
+    color: #b7c8e6;
+}
+
+.ticker-track a:hover {
+    color: #edf4ff;
+}
+
 .hero {
     margin-top: 0;
     padding: 1.6rem;

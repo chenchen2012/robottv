@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260219-nav-v3">
+<link rel="stylesheet" href="styles.css?v=20260219-nav-v4">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -96,6 +96,18 @@
                         </div>
                     </div>
                 </aside>
+            </section>
+
+            <section class="live-ticker panel" aria-label="Live Intelligence Rail">
+                <span class="ticker-label"><span class="live-dot" aria-hidden="true"></span>Live Intelligence Rail</span>
+                <div class="ticker-track-wrap">
+                    <div id="intelligence-rail" class="ticker-track">
+                        <span><a href="https://news.robot.tv">Opening latest newsroom signals...</a></span>
+                        <span><a href="https://news.robot.tv">Humanoid deployments</a></span>
+                        <span><a href="https://news.robot.tv">Quadruped operations</a></span>
+                        <span><a href="https://news.robot.tv">Startup execution velocity</a></span>
+                    </div>
+                </div>
             </section>
 
             <section class="index-spotlight panel" aria-label="Robot Index spotlight">
@@ -198,11 +210,20 @@
       const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,"slug":slug.current,"cats":categories[]->title}`;
 
       const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv";
+      const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
       const hasCat = (post, name) => Array.isArray(post?.cats) && post.cats.some((c) => String(c || "").toLowerCase().includes(name));
       const videoIdFromUrl = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
       const thumbFromVideo = (u) => {
         const id = videoIdFromUrl(u);
         return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+      };
+      const setRail = (posts) => {
+        const rail = document.getElementById("intelligence-rail");
+        if (!rail) return;
+        const picks = posts.filter((p) => p?.slug && p?.title).slice(0, 8);
+        if (!picks.length) return;
+        const items = picks.map((p) => `<span><a href="${toPostUrl(p.slug)}">${escapeHtml(p.title)}</a></span>`).join("");
+        rail.innerHTML = items + items;
       };
 
       const setCard = (prefix, post) => {
@@ -223,6 +244,7 @@
         .then((d) => {
           const posts = Array.isArray(d?.result) ? d.result : [];
           if (!posts.length) return;
+          setRail(posts);
           const used = new Set();
           const pickUnique = (matcher) => {
             const match = posts.find((p) => p?.slug && !used.has(p.slug) && matcher(p));
