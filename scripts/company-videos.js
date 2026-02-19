@@ -74,10 +74,14 @@
     if (event.key === 'Escape') closeModalVideo();
   });
 
+  const previewCards = [];
+  const HOVER_DELAY_MS = 120;
+
   document.querySelectorAll('.js-company-video').forEach((card) => {
     const url = card.dataset.video || '';
     const wrap = card.querySelector('.thumb-wrap');
     const img = wrap ? wrap.querySelector('img') : null;
+    let hoverTimer = null;
 
     if (!wrap || !url) return;
     if (img && !img.getAttribute('src')) img.src = thumbUrl(url);
@@ -105,13 +109,23 @@
     };
 
     const stop = () => {
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
       const iframe = wrap.querySelector('iframe');
       if (iframe) iframe.remove();
       wrap.classList.remove('previewing');
     };
 
     if (canHover) {
-      card.addEventListener('mouseenter', start);
+      card.addEventListener('mouseenter', () => {
+        if (hoverTimer) clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+          hoverTimer = null;
+          start();
+        }, HOVER_DELAY_MS);
+      });
       card.addEventListener('mouseleave', stop);
       card.addEventListener('blur', stop);
     }
@@ -122,5 +136,13 @@
         openModalVideo(url);
       });
     }
+
+    previewCards.push({ stop });
   });
+
+  if (canHover) {
+    window.addEventListener('scroll', () => {
+      previewCards.forEach((c) => c.stop());
+    }, { passive: true });
+  }
 })();
