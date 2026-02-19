@@ -161,6 +161,14 @@
                         <span class="story-tag">Startups</span>
                         <h3 id="story-startup-title">Funding, product velocity, and GTM signals across robotics</h3>
                     </a>
+                    <a id="story-operations" class="story-card" href="https://news.robot.tv" data-video="https://www.youtube.com/watch?v=zFUHi3_oiXk">
+                        <span class="story-media-shell">
+                            <img id="story-operations-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Operations story video thumbnail" loading="lazy">
+                            <span id="story-operations-preview" class="story-preview-layer" aria-hidden="true"></span>
+                        </span>
+                        <span class="story-tag">Operations</span>
+                        <h3 id="story-operations-title">Factory and logistics deployment signals from real-world robot fleets</h3>
+                    </a>
                 </div>
             </section>
 
@@ -261,6 +269,12 @@
           setCard("humanoid", pickUnique((p) => hasCat(p, "humanoid")));
           setCard("quadruped", pickUnique((p) => hasCat(p, "quadruped")));
           setCard("startup", pickUnique((p) => hasCat(p, "startup")));
+          setCard("operations", pickUnique((p) =>
+            hasCat(p, "operation") ||
+            hasCat(p, "industrial") ||
+            hasCat(p, "manufactur") ||
+            hasCat(p, "logistics")
+          ));
         })
         .catch(() => {});
 
