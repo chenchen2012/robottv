@@ -10,6 +10,10 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /about       /about.html       301!
 /live        /live.html        301!
 /companies   /companies.html   301!
+/unitree-h1 /unitreeh1.html 301!
+/unitree-h2 /unitreeh2.html 301!
+/unitree-go2 /unitreego2.html 301!
+/unitree-b2 /unitreeb2.html 301!
 /contact     /contact.html     301!
 /partner     /partner.html     301!
 /media-kit  /mediakit.html    301!
