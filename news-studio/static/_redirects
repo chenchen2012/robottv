@@ -1,3 +1,10 @@
+# Obsolete WordPress system endpoints
+/wp-admin/*    /404.html  410
+/wp-content/*  /404.html  410
+/wp-includes/* /404.html  410
+/wp-json/*     /404.html  410
+/xmlrpc.php    /404.html  410
+
 # Legacy WordPress date permalink migration
 /:year/:month/:day/:slug  /post/:slug  301!
 /:year/:month/:slug       /post/:slug  301!
@@ -9,20 +16,13 @@
 /page/*      /  301!
 /post        /  301!
 
-# Obsolete WordPress system endpoints
-/wp-admin/*    /404.html  410
-/wp-content/*  /404.html  410
-/wp-includes/* /404.html  410
-/wp-json/*     /404.html  410
-/xmlrpc.php    /404.html  410
+# Keep robots + sitemap direct
+/robots.txt  /robots.txt  200
+/sitemap.xml /sitemap.xml 200
 
 # SPA routes
 /post/*  /index.html  200
 /        /index.html  200
-
-# Keep robots + sitemap direct
-/robots.txt  /robots.txt  200
-/sitemap.xml /sitemap.xml 200
 
 # 404 fallback
 /*  /404.html  404

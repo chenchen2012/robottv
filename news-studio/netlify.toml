@@ -26,6 +26,32 @@
   status = 200
   force = true
 
+# Hard-drop obsolete WordPress system endpoints first.
+[[redirects]]
+  from = "/wp-admin/*"
+  to = "/static/404.html"
+  status = 410
+
+[[redirects]]
+  from = "/wp-content/*"
+  to = "/static/404.html"
+  status = 410
+
+[[redirects]]
+  from = "/wp-includes/*"
+  to = "/static/404.html"
+  status = 410
+
+[[redirects]]
+  from = "/wp-json/*"
+  to = "/static/404.html"
+  status = 410
+
+[[redirects]]
+  from = "/xmlrpc.php"
+  to = "/static/404.html"
+  status = 410
+
 # Legacy WordPress date-style permalinks to current article route.
 [[redirects]]
   from = "/:year/:month/:day/:slug"
@@ -69,32 +95,6 @@
   to = "/"
   status = 301
   force = true
-
-# Hard-drop obsolete WordPress system endpoints.
-[[redirects]]
-  from = "/wp-admin/*"
-  to = "/static/404.html"
-  status = 410
-
-[[redirects]]
-  from = "/wp-content/*"
-  to = "/static/404.html"
-  status = 410
-
-[[redirects]]
-  from = "/wp-includes/*"
-  to = "/static/404.html"
-  status = 410
-
-[[redirects]]
-  from = "/wp-json/*"
-  to = "/static/404.html"
-  status = 410
-
-[[redirects]]
-  from = "/xmlrpc.php"
-  to = "/static/404.html"
-  status = 410
 
 # SPA routes.
 [[redirects]]
