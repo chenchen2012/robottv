@@ -88,19 +88,12 @@
             <h1 class="live-title">robot.tv Live Now</h1>
             <p class="live-sub">
                 Real-time robotics coverage across multiple feeds: robot competitions,
-                space robotics operations, and frontier engineering streams. The live desk auto-rotates sources.
+                space robotics operations, and frontier engineering streams.
+                The live desk auto-skips unavailable feeds.
             </p>
 
             <div class="live-embed">
-                <iframe
-                    id="live-frame"
-                    src=""
-                    title="robot.tv live feed"
-                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-                    loading="lazy"
-                    referrerpolicy="strict-origin-when-cross-origin"
-                    allowfullscreen>
-                </iframe>
+                <div id="live-player"></div>
             </div>
 
             <p class="live-meta" id="live-meta">Loading robot livestream...</p>
@@ -113,47 +106,108 @@
     <script data-cfasync="false">
       const streamCandidates = [
         {
-          label: "NASA live operations stream",
-          url: "https://www.youtube.com/watch?v=21X5lGlDOfg",
-          embed: "https://www.youtube-nocookie.com/embed/21X5lGlDOfg?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
-        },
-        {
+          id: "C_eFt1Rdy6U",
           label: "BattleBots livestream",
-          url: "https://www.youtube.com/watch?v=C_eFt1Rdy6U",
-          embed: "https://www.youtube-nocookie.com/embed/C_eFt1Rdy6U?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+          url: "https://www.youtube.com/watch?v=C_eFt1Rdy6U"
         },
         {
+          id: "21X5lGlDOfg",
+          label: "NASA live operations stream",
+          url: "https://www.youtube.com/watch?v=21X5lGlDOfg"
+        },
+        {
+          id: "DDU-rZs-Ic4",
           label: "ISS live Earth and station feed",
-          url: "https://www.youtube.com/watch?v=DDU-rZs-Ic4",
-          embed: "https://www.youtube-nocookie.com/embed/DDU-rZs-Ic4?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+          url: "https://www.youtube.com/watch?v=DDU-rZs-Ic4"
         }
       ];
 
-      const frame = document.getElementById("live-frame");
       const meta = document.getElementById("live-meta");
       const prevBtn = document.getElementById("live-prev");
       const nextBtn = document.getElementById("live-next");
       let currentIndex = 0;
+      let player = null;
       let rotationTimer = null;
+      let startupTimer = null;
+      let attemptsThisCycle = 0;
 
-      const render = (index) => {
+      const setMeta = (item, note = "") => {
+        if (!item) return;
+        meta.innerHTML = `Source: <a href="${item.url}" target="_blank" rel="noopener">${item.label}</a>. ${note || "Auto-rotating live desk is enabled."}`;
+      };
+
+      const activate = (index) => {
         currentIndex = (index + streamCandidates.length) % streamCandidates.length;
         const item = streamCandidates[currentIndex];
-        frame.src = item.embed;
-        meta.innerHTML = `Source: <a href="${item.url}" target="_blank" rel="noopener">${item.label}</a>. Auto-rotating live desk is enabled.`;
+        setMeta(item);
+        if (!player || typeof player.loadVideoById !== "function") return;
+        player.loadVideoById(item.id);
+        clearTimeout(startupTimer);
+        startupTimer = setTimeout(() => {
+          try {
+            const state = player.getPlayerState();
+            if (state === -1 || state === 5) failover();
+          } catch (_) {}
+        }, 9000);
       };
 
-      const rotate = (step) => {
-        render(currentIndex + step);
+      const resetRotationTimer = () => {
         clearInterval(rotationTimer);
-        rotationTimer = setInterval(() => render(currentIndex + 1), 90000);
+        rotationTimer = setInterval(() => {
+          attemptsThisCycle = 0;
+          activate(currentIndex + 1);
+        }, 90000);
       };
 
-      prevBtn.addEventListener("click", () => rotate(-1));
-      nextBtn.addEventListener("click", () => rotate(1));
-      render(0);
-      rotationTimer = setInterval(() => render(currentIndex + 1), 90000);
+      const failover = () => {
+        attemptsThisCycle += 1;
+        if (attemptsThisCycle >= streamCandidates.length) {
+          const current = streamCandidates[currentIndex];
+          setMeta(current, "All feeds look unavailable right now. Try again in a few minutes.");
+          return;
+        }
+        activate(currentIndex + 1);
+      };
+
+      prevBtn.addEventListener("click", () => {
+        attemptsThisCycle = 0;
+        activate(currentIndex - 1);
+        resetRotationTimer();
+      });
+
+      nextBtn.addEventListener("click", () => {
+        attemptsThisCycle = 0;
+        activate(currentIndex + 1);
+        resetRotationTimer();
+      });
+
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player("live-player", {
+          videoId: streamCandidates[0].id,
+          playerVars: {
+            autoplay: 1,
+            mute: 1,
+            rel: 0,
+            playsinline: 1
+          },
+          events: {
+            onReady: () => {
+              attemptsThisCycle = 0;
+              activate(0);
+              resetRotationTimer();
+            },
+            onStateChange: (event) => {
+              if (event.data === YT.PlayerState.ENDED) failover();
+              if (event.data === YT.PlayerState.PLAYING) attemptsThisCycle = 0;
+            },
+            onError: () => failover()
+          }
+        });
+      }
+
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
     </script>
+    <script data-cfasync="false" src="https://www.youtube.com/iframe_api"></script>
     <script data-cfasync="false" src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
