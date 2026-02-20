@@ -52,6 +52,31 @@
   to = "/static/404.html"
   status = 410
 
+# Legacy theme/template URLs from old WordPress news stack.
+[[redirects]]
+  from = "/index.php"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/tdb_templates/*"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/tds-switching-plans-wizard"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/tds-switching-plans-wizard/"
+  to = "/"
+  status = 301
+  force = true
+
 # Legacy WordPress date-style permalinks to current article route.
 [[redirects]]
   from = "/:year/:month/:day/:slug"

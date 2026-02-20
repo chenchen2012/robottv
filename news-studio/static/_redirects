@@ -5,6 +5,12 @@
 /wp-json/*     /404.html  410
 /xmlrpc.php    /404.html  410
 
+# Legacy theme/template URLs from old WordPress news stack
+/index.php                    /  301!
+/tdb_templates/*              /  301!
+/tds-switching-plans-wizard   /  301!
+/tds-switching-plans-wizard/  /  301!
+
 # Legacy WordPress date permalink migration
 /:year/:month/:day/:slug  /post/:slug  301!
 /:year/:month/:slug       /post/:slug  301!
