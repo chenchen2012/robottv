@@ -36,6 +36,11 @@
     '/about.html': 'about.html',
     '/partner': 'partner.html',
     '/partner.html': 'partner.html',
+    '/media-kit': 'partner.html',
+    '/mediakit': 'partner.html',
+    '/mediakit.html': 'partner.html',
+    '/pricing': 'partner.html',
+    '/pricing.html': 'partner.html',
     '/news': 'https://news.robot.tv',
     '/news.html': 'https://news.robot.tv'
   };
