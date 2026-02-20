@@ -6,6 +6,18 @@ const maxPosts = Number(process.env.SOCIAL_PUBLISH_COUNT || process.env.PUBLISH_
 const postNow = process.env.BUFFER_POST_NOW !== '0'
 const dryRun = process.env.BUFFER_DRY_RUN === '1'
 const outReport = process.env.BUFFER_REPORT_JSON || 'news-studio/social-drafts/latest-buffer-publish-report.json'
+const disableIfXDirect = process.env.BUFFER_DISABLE_IF_X_DIRECT !== '0'
+const hasXDirectSecrets = Boolean(
+  (process.env.X_API_KEY || '') &&
+  (process.env.X_API_KEY_SECRET || '') &&
+  (process.env.X_ACCESS_TOKEN || '') &&
+  (process.env.X_ACCESS_TOKEN_SECRET || '')
+)
+
+if (disableIfXDirect && hasXDirectSecrets) {
+  console.log('Direct X secrets detected; skipping Buffer publish to avoid duplicate posting.')
+  process.exit(0)
+}
 
 if (!token) {
   console.log('BUFFER_ACCESS_TOKEN not set; skipping Buffer publish step.')
