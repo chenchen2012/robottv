@@ -1,4 +1,6 @@
 # Host canonicalization
+https://www.robot.tv/index.php  https://robot.tv/         301!
+http://www.robot.tv/index.php   https://robot.tv/         301!
 https://www.robot.tv/*  https://robot.tv/:splat  301!
 http://www.robot.tv/*   https://robot.tv/:splat  301!
 
