@@ -133,6 +133,16 @@
     const path = window.location.pathname.replace(/\/$/, "") || "/";
     const canonical = document.getElementById("canonical-link");
     if (canonical) canonical.setAttribute("href", `https://news.robot.tv${path === "/" ? "/" : path}`);
+    const setRobots = (content) => {
+      let tag = document.querySelector('meta[name="robots"]');
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.setAttribute("name", "robots");
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute("content", content);
+    };
+    setRobots("index,follow");
 
     const esc = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
     const videoId = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
@@ -196,6 +206,8 @@
     };
 
     const renderList = (posts) => {
+      document.title = "robot.tv News";
+      setRobots("index,follow");
       app.innerHTML = `
         <section class="panel hero">
           <p class="kicker">ROBOTICS NEWSROOM</p>
@@ -286,6 +298,9 @@
 
     const renderArticle = (post) => {
       if (!post) {
+        document.title = "Article Not Found | robot.tv News";
+        setRobots("noindex,follow");
+        if (canonical) canonical.setAttribute("href", "https://news.robot.tv/");
         app.innerHTML = `
           <section class="panel hero">
             <p class="kicker">NOT FOUND</p>
@@ -302,6 +317,7 @@
       const ytId = videoId(post.youtubeUrl);
       const embed = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1` : "";
       document.title = `${post.title} | robot.tv News`;
+      setRobots("index,follow");
       setArticleJsonLd(post);
 
       app.innerHTML = `
