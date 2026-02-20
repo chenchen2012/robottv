@@ -43,7 +43,12 @@
         .faq-item h3 { margin: 0; font-size: 0.95rem; }
         .faq-item p { margin: 0.4rem 0 0; font-size: 0.9rem; }
         .status-line { margin-top: 0.65rem; color: #9fb2d4; font-size: 0.85rem; }
+        .signal-grid { margin-top: 0.7rem; display: grid; gap: 0.65rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .signal-card { border: 1px solid #2f4566; border-radius: 10px; padding: 0.72rem; background: rgba(13, 22, 35, 0.72); }
+        .signal-card h3 { margin: 0; font-size: 0.9rem; }
+        .signal-card p { margin: 0.35rem 0 0; color: #c6d2e8; font-size: 0.86rem; line-height: 1.55; }
         @media (max-width: 980px) { .reference-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 980px) { .signal-grid { grid-template-columns: 1fr; } }
     </style>
 
     <script type="application/ld+json">
@@ -159,13 +164,14 @@
             <section class="panel detail-hero">
                 <p class="kicker">COMPANY PROFILE</p>
                 <h1>Boston Dynamics</h1>
-                <p class="hero-copy">Reference-style profile covering Boston Dynamics' mobility platforms, deployment signals, and video-backed capability updates for operators and investors.</p>
+                <p class="hero-copy">Boston Dynamics remains a benchmark brand in field robotics, with Atlas, Spot, and Stretch setting the pace for mobility, reliability, and real-world deployment readiness.</p>
                 <div class="hero-actions">
                     <a class="btn btn-primary" href="companies.html">Back to Companies</a>
                     <a class="btn btn-ghost" href="home.html">Open Boston Dynamics Robot Index Entries</a>
                 </div>
                 <div class="toc" aria-label="Section navigation">
                     <a href="#snapshot">Snapshot</a>
+                    <a href="#signals">Key Signals</a>
                     <a href="#products">Products</a>
                     <a href="#milestones">Milestones</a>
                     <a href="#faq">FAQ</a>
@@ -180,8 +186,8 @@
                         <li><strong>Legal/brand name:</strong> Boston Dynamics, Inc.</li>
                         <li><strong>Headquarters:</strong> Waltham, Massachusetts, United States<sup>[1]</sup></li>
                         <li><strong>Founded:</strong> 1992<sup>[1]</sup></li>
-                        <li><strong>Core robotics categories:</strong> Humanoid, quadruped, and warehouse automation platforms<sup>[2][3]</sup></li>
-                        <li><strong>robot.tv coverage focus:</strong> Product launches, field deployments, and capability progress</li>
+                        <li><strong>Core robotics categories:</strong> Humanoid, quadruped, and warehouse automation platforms<sup>[2][3][4]</sup></li>
+                        <li><strong>robot.tv coverage focus:</strong> Commercial operations signals, mobility quality, and autonomy maturity</li>
                     </ul>
 
                     <p class="status-line">Last reviewed by robot.tv: February 20, 2026</p>
@@ -196,8 +202,26 @@
                 </article>
             </section>
 
-            <section class="reference-wrap" id="products">
-                <article class="panel reference-panel">
+            <section class="reference-wrap">
+                <article class="panel reference-panel" id="signals">
+                    <h2>Key Signals (2026 View)</h2>
+                    <div class="signal-grid">
+                        <div class="signal-card">
+                            <h3>Commercial Footprint</h3>
+                            <p>Spot and Stretch represent the strongest field and warehouse signal inside current Boston Dynamics coverage.</p>
+                        </div>
+                        <div class="signal-card">
+                            <h3>Technology Position</h3>
+                            <p>Atlas continues to anchor perception of technical leadership in dynamic mobility and manipulation.</p>
+                        </div>
+                        <div class="signal-card">
+                            <h3>Operator Relevance</h3>
+                            <p>robot.tv tracks Boston Dynamics as a practical benchmark for safety, uptime expectations, and deployment confidence.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel reference-panel" id="products">
                     <h2>Published Product Lineup</h2>
                     <p>robot.tv tracks Boston Dynamics' major platforms across mobility and operations workflows.<sup>[2][3]</sup></p>
                     <table class="products-table" aria-label="Boston Dynamics products table">
@@ -214,19 +238,19 @@
                                 <td>Atlas</td>
                                 <td>Humanoid</td>
                                 <td><a href="atlas.html">atlas.html</a></td>
-                                <td>Dynamic locomotion and manipulation signal coverage.</td>
+                                <td>Focus: high-dexterity mobility, dynamic balance, and next-generation electric architecture.</td>
                             </tr>
                             <tr>
                                 <td>Spot</td>
                                 <td>Quadruped</td>
                                 <td><a href="spot.html">spot.html</a></td>
-                                <td>Field mobility and industrial inspection use-case tracking.</td>
+                                <td>Focus: repeatable inspection, remote operations, and enterprise fleet use.</td>
                             </tr>
                             <tr>
                                 <td>Stretch</td>
                                 <td>Warehouse automation</td>
                                 <td><a href="home.html">home.html (Robot Index)</a></td>
-                                <td>Warehouse deployment signal tracked in Robot Index.</td>
+                                <td>Focus: box handling and logistics throughput in warehouse environments.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -237,8 +261,9 @@
                         <h2>Milestones (Source-Backed)</h2>
                         <ul class="ref-list">
                             <li><strong>1992:</strong> Boston Dynamics founded and established in advanced mobility robotics research.<sup>[1]</sup></li>
-                            <li><strong>2010s-2020s:</strong> Atlas and Spot became global reference platforms for dynamic robotics demos and operations.<sup>[2][3]</sup></li>
-                            <li><strong>Current:</strong> Stretch and newer Atlas updates continue to shape industry capability expectations.<sup>[3][4]</sup></li>
+                            <li><strong>2019-2020:</strong> Spot moved from high-visibility demonstrations toward broad commercial field deployment signals.<sup>[2]</sup></li>
+                            <li><strong>2021:</strong> Stretch emerged as a dedicated warehouse logistics platform in public robotics coverage.<sup>[3]</sup></li>
+                            <li><strong>2024:</strong> Atlas shifted to a newer electric generation, raising expectations for humanoid performance.<sup>[4]</sup></li>
                         </ul>
                     </article>
 
