@@ -87,77 +87,73 @@
             <p class="kicker">LIVE BROADCAST</p>
             <h1 class="live-title">robot.tv Live Now</h1>
             <p class="live-sub">
-                Real-time robotics coverage, launches, demos, and industry updates.
-                Live robot combat coverage from BattleBots on YouTube.
+                Real-time robotics coverage across multiple feeds: competition arenas,
+                student robotics events, and frontier operations. The live desk auto-rotates sources.
             </p>
 
             <div class="live-embed">
-                <div id="live-player"></div>
+                <iframe
+                    id="live-frame"
+                    src=""
+                    title="robot.tv live feed"
+                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
             </div>
 
             <p class="live-meta" id="live-meta">Loading robot livestream...</p>
+            <div class="hero-actions" style="margin-top:0.85rem;">
+                <button id="live-prev" type="button" class="btn btn-ghost">Previous Feed</button>
+                <button id="live-next" type="button" class="btn btn-primary">Next Feed</button>
+            </div>
         </main>
     </div>
-    <script>
+    <script data-cfasync="false">
       const streamCandidates = [
-        { id: "G6ERanEbzEE", label: "BattleBots livestream", url: "https://www.youtube.com/watch?v=G6ERanEbzEE" },
-        { id: "xk-6syjmGa8", label: "Robotic sci-fi live feed", url: "https://www.youtube.com/watch?v=xk-6syjmGa8" },
-        { id: "Hag52ouCzJs", label: "Robot animation livestream", url: "https://www.youtube.com/watch?v=Hag52ouCzJs" }
+        {
+          label: "FIRST Robotics competition stream",
+          url: "https://www.twitch.tv/firstinspires",
+          embed: "https://player.twitch.tv/?channel=firstinspires&parent=robot.tv&autoplay=true&muted=true"
+        },
+        {
+          label: "BattleBots livestream",
+          url: "https://www.youtube.com/watch?v=C_eFt1Rdy6U",
+          embed: "https://www.youtube-nocookie.com/embed/C_eFt1Rdy6U?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+        },
+        {
+          label: "NASA live operations stream",
+          url: "https://www.youtube.com/watch?v=21X5lGlDOfg",
+          embed: "https://www.youtube-nocookie.com/embed/21X5lGlDOfg?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+        }
       ];
 
+      const frame = document.getElementById("live-frame");
       const meta = document.getElementById("live-meta");
-      let player;
+      const prevBtn = document.getElementById("live-prev");
+      const nextBtn = document.getElementById("live-next");
       let currentIndex = 0;
-      let startupTimer = null;
+      let rotationTimer = null;
 
-      const setMeta = (text, link) => {
-        meta.innerHTML = link
-          ? `Source: <a href="${link}" target="_blank" rel="noopener">${text}</a>. Auto-fallback is enabled.`
-          : text;
-      };
-
-      const activateCandidate = (index) => {
+      const render = (index) => {
         currentIndex = (index + streamCandidates.length) % streamCandidates.length;
         const item = streamCandidates[currentIndex];
-        setMeta(item.label, item.url);
-        if (player && typeof player.loadVideoById === "function") {
-          player.loadVideoById(item.id);
-        }
+        frame.src = item.embed;
+        meta.innerHTML = `Source: <a href="${item.url}" target="_blank" rel="noopener">${item.label}</a>. Auto-rotating live desk is enabled.`;
       };
 
-      const nextCandidate = () => activateCandidate(currentIndex + 1);
+      const rotate = (step) => {
+        render(currentIndex + step);
+        clearInterval(rotationTimer);
+        rotationTimer = setInterval(() => render(currentIndex + 1), 90000);
+      };
 
-      function onYouTubeIframeAPIReady() {
-        const first = streamCandidates[0];
-        setMeta(first.label, first.url);
-        player = new YT.Player("live-player", {
-          videoId: first.id,
-          playerVars: {
-            autoplay: 1,
-            mute: 1,
-            rel: 0,
-            playsinline: 1
-          },
-          events: {
-            onReady: () => {
-              player.playVideo();
-              clearTimeout(startupTimer);
-              startupTimer = setTimeout(() => {
-                const state = player.getPlayerState();
-                if (state === -1) nextCandidate();
-              }, 9000);
-            },
-            onStateChange: (event) => {
-              if (event.data === YT.PlayerState.ENDED) nextCandidate();
-            },
-            onError: () => nextCandidate()
-          }
-        });
-      }
-
-      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+      prevBtn.addEventListener("click", () => rotate(-1));
+      nextBtn.addEventListener("click", () => rotate(1));
+      render(0);
+      rotationTimer = setInterval(() => render(currentIndex + 1), 90000);
     </script>
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
+    <script data-cfasync="false" src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
