@@ -87,99 +87,23 @@
             <p class="kicker">LIVE BROADCAST</p>
             <h1 class="live-title">robot.tv Live Now</h1>
             <p class="live-sub">
-                Real-time robotics coverage with the Robot.tv livestream as the default source.
+                Real-time robotics coverage with Robot.tv livestream.
             </p>
 
             <div class="live-embed">
-                <div id="live-player"></div>
+                <iframe
+                    src="https://www.youtube-nocookie.com/embed/C_eFt1Rdy6U?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+                    title="Robot.tv livestream"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
             </div>
 
-            <p class="live-meta" id="live-meta">Loading robot livestream...</p>
-            <div class="hero-actions" id="live-fallback-wrap" style="margin-top:0.65rem; display:none;">
-                <a id="live-open-direct" class="btn btn-primary" href="#" target="_blank" rel="noopener">Open Feed on YouTube</a>
-            </div>
-            <div class="hero-actions" style="margin-top:0.85rem;">
-                <a class="btn btn-primary" href="https://www.youtube.com/watch?v=C_eFt1Rdy6U" target="_blank" rel="noopener">Open on YouTube</a>
-            </div>
+            <p class="live-meta">Source: <strong>Robot.tv livestream</strong></p>
         </main>
     </div>
-    <script data-cfasync="false">
-      const streamCandidates = [
-        {
-          id: "C_eFt1Rdy6U",
-          label: "Robot.tv livestream",
-          url: "https://www.youtube.com/watch?v=C_eFt1Rdy6U"
-        }
-      ];
-
-      const meta = document.getElementById("live-meta");
-      const fallbackWrap = document.getElementById("live-fallback-wrap");
-      const fallbackLink = document.getElementById("live-open-direct");
-      let currentIndex = 0;
-      let player = null;
-      let startupTimer = null;
-      let attemptsThisCycle = 0;
-
-      const setMeta = (item, note = "") => {
-        if (!item) return;
-        meta.innerHTML = `Source: <a href="${item.url}" target="_blank" rel="noopener">${item.label}</a>. ${note || "Auto-rotating live desk is enabled."}`;
-      };
-
-      const activate = (index) => {
-        currentIndex = (index + streamCandidates.length) % streamCandidates.length;
-        const item = streamCandidates[currentIndex];
-        setMeta(item);
-        fallbackWrap.style.display = "none";
-        fallbackLink.href = item.url;
-        if (!player || typeof player.loadVideoById !== "function") return;
-        player.loadVideoById(item.id);
-        clearTimeout(startupTimer);
-        startupTimer = setTimeout(() => {
-          try {
-            const state = player.getPlayerState();
-            if (state === -1 || state === 5) failover();
-          } catch (_) {}
-        }, 9000);
-      };
-
-      const failover = () => {
-        attemptsThisCycle += 1;
-        if (attemptsThisCycle >= streamCandidates.length) {
-          const current = streamCandidates[currentIndex];
-          setMeta(current, "All feeds look unavailable right now. Try again in a few minutes.");
-          fallbackWrap.style.display = "flex";
-          fallbackLink.href = current.url;
-          return;
-        }
-        activate(currentIndex + 1);
-      };
-
-      function onYouTubeIframeAPIReady() {
-        player = new YT.Player("live-player", {
-          videoId: streamCandidates[0].id,
-          playerVars: {
-            autoplay: 1,
-            mute: 1,
-            rel: 0,
-            playsinline: 1
-          },
-          events: {
-            onReady: () => {
-              attemptsThisCycle = 0;
-              activate(0);
-            },
-            onStateChange: (event) => {
-              if (event.data === YT.PlayerState.ENDED) failover();
-              if (event.data === YT.PlayerState.PLAYING) attemptsThisCycle = 0;
-            },
-            onError: () => failover()
-          }
-        });
-      }
-
-      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-    </script>
-    <script data-cfasync="false" src="https://www.youtube.com/iframe_api"></script>
     <script data-cfasync="false" src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
