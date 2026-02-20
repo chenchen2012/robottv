@@ -87,9 +87,7 @@
             <p class="kicker">LIVE BROADCAST</p>
             <h1 class="live-title">robot.tv Live Now</h1>
             <p class="live-sub">
-                Real-time robotics coverage across multiple feeds: robot competitions,
-                space robotics operations, and frontier engineering streams.
-                The live desk auto-skips unavailable feeds.
+                Real-time robotics coverage with BattleBots as the default live source.
             </p>
 
             <div class="live-embed">
@@ -97,9 +95,11 @@
             </div>
 
             <p class="live-meta" id="live-meta">Loading robot livestream...</p>
+            <div class="hero-actions" id="live-fallback-wrap" style="margin-top:0.65rem; display:none;">
+                <a id="live-open-direct" class="btn btn-primary" href="#" target="_blank" rel="noopener">Open Feed on YouTube</a>
+            </div>
             <div class="hero-actions" style="margin-top:0.85rem;">
-                <button id="live-prev" type="button" class="btn btn-ghost">Previous Feed</button>
-                <button id="live-next" type="button" class="btn btn-primary">Next Feed</button>
+                <a class="btn btn-primary" href="https://www.youtube.com/watch?v=C_eFt1Rdy6U" target="_blank" rel="noopener">Open on YouTube</a>
             </div>
         </main>
     </div>
@@ -109,25 +109,14 @@
           id: "C_eFt1Rdy6U",
           label: "BattleBots livestream",
           url: "https://www.youtube.com/watch?v=C_eFt1Rdy6U"
-        },
-        {
-          id: "21X5lGlDOfg",
-          label: "NASA live operations stream",
-          url: "https://www.youtube.com/watch?v=21X5lGlDOfg"
-        },
-        {
-          id: "DDU-rZs-Ic4",
-          label: "ISS live Earth and station feed",
-          url: "https://www.youtube.com/watch?v=DDU-rZs-Ic4"
         }
       ];
 
       const meta = document.getElementById("live-meta");
-      const prevBtn = document.getElementById("live-prev");
-      const nextBtn = document.getElementById("live-next");
+      const fallbackWrap = document.getElementById("live-fallback-wrap");
+      const fallbackLink = document.getElementById("live-open-direct");
       let currentIndex = 0;
       let player = null;
-      let rotationTimer = null;
       let startupTimer = null;
       let attemptsThisCycle = 0;
 
@@ -140,6 +129,8 @@
         currentIndex = (index + streamCandidates.length) % streamCandidates.length;
         const item = streamCandidates[currentIndex];
         setMeta(item);
+        fallbackWrap.style.display = "none";
+        fallbackLink.href = item.url;
         if (!player || typeof player.loadVideoById !== "function") return;
         player.loadVideoById(item.id);
         clearTimeout(startupTimer);
@@ -151,35 +142,17 @@
         }, 9000);
       };
 
-      const resetRotationTimer = () => {
-        clearInterval(rotationTimer);
-        rotationTimer = setInterval(() => {
-          attemptsThisCycle = 0;
-          activate(currentIndex + 1);
-        }, 90000);
-      };
-
       const failover = () => {
         attemptsThisCycle += 1;
         if (attemptsThisCycle >= streamCandidates.length) {
           const current = streamCandidates[currentIndex];
           setMeta(current, "All feeds look unavailable right now. Try again in a few minutes.");
+          fallbackWrap.style.display = "flex";
+          fallbackLink.href = current.url;
           return;
         }
         activate(currentIndex + 1);
       };
-
-      prevBtn.addEventListener("click", () => {
-        attemptsThisCycle = 0;
-        activate(currentIndex - 1);
-        resetRotationTimer();
-      });
-
-      nextBtn.addEventListener("click", () => {
-        attemptsThisCycle = 0;
-        activate(currentIndex + 1);
-        resetRotationTimer();
-      });
 
       function onYouTubeIframeAPIReady() {
         player = new YT.Player("live-player", {
@@ -194,7 +167,6 @@
             onReady: () => {
               attemptsThisCycle = 0;
               activate(0);
-              resetRotationTimer();
             },
             onStateChange: (event) => {
               if (event.data === YT.PlayerState.ENDED) failover();
