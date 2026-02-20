@@ -149,7 +149,20 @@
     <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
 
     <div class="container">
-        <div data-include="site-header"></div>
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="contact.html">Submit Video</a>
+        </header>
 
         <main class="sales-stage">
             <section class="panel sales-panel">
@@ -205,7 +218,15 @@
                 <p class="sales-note">Tip: include your target price range, transfer registrar preference (GoDaddy/Aliyun), and purchase timeline for faster response.</p>
             </aside>
         </main>
-        <div data-include="site-footer"></div>
+
+        <footer class="site-footer">
+            <p>robot.tv | Premium robotics media and digital assets</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="contact.html">Contact</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -251,7 +272,6 @@
       if (offer) offer.addEventListener("click", () => track("make_offer"));
       if (ask) ask.addEventListener("click", () => track("ask_questions"));
     </script>
-    <script src="scripts/shared-layout.js?v=20260220-layout1"></script>
-    <script src="scripts/nav-active.js?v=20260220-navfix2"></script>
+    <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
