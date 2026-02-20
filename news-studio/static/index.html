@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="robot.tv News: video-first robotics intelligence covering humanoids, quadrupeds, and startup execution.">
+  <link rel="canonical" id="canonical-link" href="https://news.robot.tv/">
   <title>robot.tv News</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
   <script>
@@ -130,6 +131,8 @@
     const dataset = "production";
     const app = document.getElementById("app");
     const path = window.location.pathname.replace(/\/$/, "") || "/";
+    const canonical = document.getElementById("canonical-link");
+    if (canonical) canonical.setAttribute("href", `https://news.robot.tv${path === "/" ? "/" : path}`);
 
     const esc = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
     const videoId = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
