@@ -1094,6 +1094,14 @@ a {
     background: #000;
 }
 
+.thumb-wrap.previewing img {
+    opacity: 0;
+}
+
+.thumb-wrap.previewing iframe {
+    opacity: 1;
+}
+
 .preview-chip {
     position: absolute;
     right: 0.45rem;
