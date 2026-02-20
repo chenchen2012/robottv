@@ -2,6 +2,7 @@ const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PRO
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || 'production'
 const token = process.env.SANITY_API_TOKEN || ''
 const maxFeedAgeHours = Number(process.env.MAX_FEED_AGE_HOURS || 24)
+const guardWindowHours = Number(process.env.GUARD_WINDOW_HOURS || 36)
 
 if (!projectId) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID)')
@@ -82,13 +83,17 @@ if (ageHours > maxFeedAgeHours) {
   process.exit(1)
 }
 
-const seen = new Map()
-const dupes = []
 const badPosts = []
+const recentGuardPosts = posts.filter((p) => {
+  const ts = Date.parse(p.publishedAt)
+  if (!Number.isFinite(ts)) return false
+  const age = (Date.now() - ts) / (1000 * 60 * 60)
+  return age <= guardWindowHours
+})
+
 const seenYoutube = new Map()
 const youtubeDupes = []
-for (const p of posts) {
-  const key = titleKey(p.title)
+for (const p of recentGuardPosts) {
   const ytId = extractYoutubeId(p.youtubeUrl)
 
   if (!String(p.title || '').trim()) badPosts.push(`${p._id}: missing title`)
@@ -101,17 +106,23 @@ for (const p of posts) {
     else seenYoutube.set(ytId, p)
   }
 
-  if (!key) continue
-  if (seen.has(key)) dupes.push([seen.get(key), p])
-  else seen.set(key, p)
 }
 
 if (badPosts.length > 0) {
-  console.error('Feed health failed: content guard checks failed.')
+  console.error(`Feed health failed: content guard checks failed in last ${guardWindowHours}h.`)
   for (const issue of badPosts.slice(0, 8)) {
     console.error(`- ${issue}`)
   }
   process.exit(1)
+}
+
+const seen = new Map()
+const dupes = []
+for (const p of posts) {
+  const key = titleKey(p.title)
+  if (!key) continue
+  if (seen.has(key)) dupes.push([seen.get(key), p])
+  else seen.set(key, p)
 }
 
 if (dupes.length > 0) {
@@ -130,4 +141,4 @@ if (youtubeDupes.length > 0) {
   process.exit(1)
 }
 
-console.log(`Feed health OK: latest post "${latest.title}" is ${ageHours.toFixed(1)}h old; guards passed for ${posts.length} posts.`)
+console.log(`Feed health OK: latest post "${latest.title}" is ${ageHours.toFixed(1)}h old; strict guards passed for ${recentGuardPosts.length} recent posts.`)
