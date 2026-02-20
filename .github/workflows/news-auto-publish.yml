@@ -46,18 +46,6 @@ jobs:
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SOCIAL_DRAFT_COUNT: 2
 
-      - name: Auto publish X directly (optional, preferred)
-        run: node news-studio/scripts/publish-x-direct.mjs
-        continue-on-error: true
-        env:
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
-          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
-          SOCIAL_DRAFT_JSON: news-studio/social-drafts/latest-social-drafts.json
-          X_REPORT_JSON: news-studio/social-drafts/latest-x-publish-report.json
-          SOCIAL_PUBLISH_COUNT: 2
-
       - name: Upload social draft artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -66,5 +54,4 @@ jobs:
           path: |
             news-studio/social-drafts/latest-social-drafts.json
             news-studio/social-drafts/latest-social-drafts.md
-            news-studio/social-drafts/latest-x-publish-report.json
           if-no-files-found: warn
