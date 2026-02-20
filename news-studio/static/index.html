@@ -157,6 +157,43 @@
     };
 
     const blockToText = (block) => (block.children || []).map((c) => c.text || "").join("").trim();
+    const toPlain = (s) => String(s || "").replace(/\s+/g, " ").trim();
+
+    const setArticleJsonLd = (post) => {
+      if (!post) return;
+      const canonicalUrl = `https://news.robot.tv/post/${post.slug || ""}`;
+      const json = {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": toPlain(post.title || ""),
+        "description": toPlain(post.excerpt || ""),
+        "datePublished": post.publishedAt || new Date().toISOString(),
+        "dateModified": post.publishedAt || new Date().toISOString(),
+        "mainEntityOfPage": canonicalUrl,
+        "url": canonicalUrl,
+        "publisher": {
+          "@type": "Organization",
+          "name": "robot.tv",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://robot.tv/images/robot_logo.png"
+          }
+        },
+        "author": {
+          "@type": "Person",
+          "name": toPlain(post.author || "robot.tv")
+        },
+        "image": [thumb(post.youtubeUrl)]
+      };
+
+      const existing = document.getElementById("article-jsonld");
+      if (existing) existing.remove();
+      const script = document.createElement("script");
+      script.id = "article-jsonld";
+      script.type = "application/ld+json";
+      script.textContent = JSON.stringify(json);
+      document.head.appendChild(script);
+    };
 
     const renderList = (posts) => {
       app.innerHTML = `
@@ -265,6 +302,7 @@
       const ytId = videoId(post.youtubeUrl);
       const embed = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1` : "";
       document.title = `${post.title} | robot.tv News`;
+      setArticleJsonLd(post);
 
       app.innerHTML = `
         <section class="section-head" style="margin-top:1rem;">
@@ -296,7 +334,7 @@
 
     if (path.startsWith("/post/")) {
       const slug = path.replace("/post/", "").trim();
-      const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,publishedAt,youtubeUrl,body,"author":author->name,"categories":categories[]->title}`;
+      const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->name,"categories":categories[]->title}`;
       fetch(sanityQuery(query) + `&$slug=${sanityParam(slug)}`)
         .then((r) => r.json())
         .then((d) => renderArticle(d.result || null))
