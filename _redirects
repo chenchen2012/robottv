@@ -8,6 +8,13 @@
 /sales       /sales.html       301!
 /news        https://news.robot.tv/ 301!
 
+# Retire obsolete WordPress internals quickly from index
+/wp-admin/*    /404.html  410
+/wp-content/*  /404.html  410
+/wp-includes/* /404.html  410
+/wp-json/*     /404.html  410
+/xmlrpc.php    /404.html  410
+
 # Legacy WordPress/article URLs should point to the new news site
 /:year/:month/:day/:slug  https://news.robot.tv/post/:slug  301!
 /:year/:month/:slug       https://news.robot.tv/post/:slug  301!
@@ -15,13 +22,6 @@
 /tag/*                    https://news.robot.tv/            301!
 /author/*                 https://news.robot.tv/            301!
 /page/*                   https://news.robot.tv/            301!
-
-# Retire obsolete WordPress internals quickly from index
-/wp-admin/*    /404.html  410
-/wp-content/*  /404.html  410
-/wp-includes/* /404.html  410
-/wp-json/*     /404.html  410
-/xmlrpc.php    /404.html  410
 
 # Keep machine endpoints explicit
 /robots.txt  /robots.txt  200
