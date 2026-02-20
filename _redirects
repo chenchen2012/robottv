@@ -10,6 +10,8 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /about       /about.html       301!
 /live        /live.html        301!
 /companies   /companies.html   301!
+/robot-companies /robot-companies.html 301!
+/companies-hub /robot-companies.html 301!
 /humanoid-robots /humanoid-robots.html 301!
 /humanoids /humanoid-robots.html 301!
 /boston-dynamics /company-boston-dynamics.html 301!
