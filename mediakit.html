@@ -34,8 +34,21 @@
         .workflow-item { border: 1px solid #2f4566; border-radius: 10px; padding: 0.7rem; background: rgba(13, 22, 35, 0.72); }
         .workflow-item strong { color: #f0f5ff; }
         .meta-note { margin-top: 0.7rem; color: #9eb2d5; font-size: 0.86rem; }
+        .sponsor-form-panel { margin-top: 1rem; padding: 1rem; }
+        .sponsor-form-grid { margin-top: 0.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .sponsor-form-grid input, .sponsor-form-grid select, .sponsor-form-grid textarea {
+            width: 100%;
+            border: 1px solid #2f4465;
+            border-radius: 9px;
+            background: #0b1421;
+            color: #e9f1ff;
+            font: inherit;
+            padding: 0.62rem 0.7rem;
+        }
+        .sponsor-form-grid textarea { min-height: 110px; resize: vertical; }
+        .sponsor-form-grid .full { grid-column: 1 / -1; }
         @media (max-width: 980px) { .kit-grid { grid-template-columns: 1fr; } .proof-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 760px) { .proof-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 760px) { .proof-grid { grid-template-columns: 1fr; } .sponsor-form-grid { grid-template-columns: 1fr; } }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
@@ -71,8 +84,9 @@
                 <h1>Video-First Sponsorships For Robotics Brands</h1>
                 <p class="hero-copy">robot.tv combines a flagship homepage, robot index, and newsroom coverage to place your brand in front of high-intent robotics audiences.</p>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="pricing.html">View Pricing</a>
-                    <a class="btn btn-ghost" href="contact.html?topic=sponsor-inquiry&source=media-kit">Talk To robot.tv</a>
+                    <a class="btn btn-primary" href="contact.html?topic=sponsor-inquiry&source=media-kit">Book Sponsor Call</a>
+                    <a class="btn btn-ghost" href="pricing.html">View Live Pricing</a>
+                    <a class="btn btn-ghost" href="mediakit-print.html" target="_blank" rel="noopener">Download PDF Version</a>
                 </div>
             </section>
 
@@ -118,6 +132,35 @@
                         <a class="btn btn-ghost" href="contact.html?topic=sponsor-inquiry&source=media-kit">Request Proposal</a>
                     </div>
                 </aside>
+            </section>
+
+            <section class="panel sponsor-form-panel" aria-label="Quick sponsor inquiry">
+                <p class="kicker">2-MINUTE BRIEF</p>
+                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif; font-size:1.2rem;">Start Your Sponsorship Request</h2>
+                <p class="meta-note">Send your target timeline and budget. We reply with the best-fit package and inventory window.</p>
+                <form method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" class="sponsor-form-grid">
+                    <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
+                    <input type="hidden" name="_subject" value="robot.tv sponsor inquiry from media kit">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
+                    <input type="hidden" name="topic" value="sponsor-inquiry">
+                    <input type="hidden" name="source" value="media-kit-quick-form">
+                    <input type="text" name="name" placeholder="Your name" required>
+                    <input type="email" name="email" placeholder="Work email" required>
+                    <input type="text" name="company" placeholder="Company name" required>
+                    <select name="budget_range" required>
+                        <option value="">Budget range</option>
+                        <option value="<1000">Under $1,000</option>
+                        <option value="1000-3000">$1,000-$3,000</option>
+                        <option value="3000-10000">$3,000-$10,000</option>
+                        <option value="10000+">$10,000+</option>
+                    </select>
+                    <textarea class="full" name="brief" placeholder="Campaign goal, launch date, and preferred package"></textarea>
+                    <div class="full hero-actions" style="margin-top:0;">
+                        <button class="btn btn-primary" type="submit">Send Sponsorship Brief</button>
+                        <a class="btn btn-ghost" href="contact.html?topic=sponsor-inquiry&source=media-kit">Open Full Contact Form</a>
+                    </div>
+                </form>
             </section>
         </main>
 

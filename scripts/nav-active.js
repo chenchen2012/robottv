@@ -39,6 +39,8 @@
     '/media-kit': 'partner.html',
     '/mediakit': 'partner.html',
     '/mediakit.html': 'partner.html',
+    '/mediakit-print': 'partner.html',
+    '/mediakit-print.html': 'partner.html',
     '/pricing': 'partner.html',
     '/pricing.html': 'partner.html',
     '/news': 'https://news.robot.tv',

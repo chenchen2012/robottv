@@ -13,6 +13,7 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /contact     /contact.html     301!
 /partner     /partner.html     301!
 /media-kit  /mediakit.html    301!
+/media-kit-pdf /mediakit-print.html 301!
 /pricing    /pricing.html     301!
 /sales       /sales.html       301!
 /news        https://news.robot.tv/ 301!

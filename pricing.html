@@ -35,7 +35,21 @@
         .addons-table th { color: #dce8ff; font-weight: 700; }
         .addons-table td { color: #bfd0ec; }
         .pricing-note { margin-top: 0.7rem; color: #9eb2d5; font-size: 0.86rem; }
+        .sponsor-form-panel { margin-top: 1rem; padding: 1rem; }
+        .sponsor-form-grid { margin-top: 0.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .sponsor-form-grid input, .sponsor-form-grid select, .sponsor-form-grid textarea {
+            width: 100%;
+            border: 1px solid #2f4465;
+            border-radius: 9px;
+            background: #0b1421;
+            color: #e9f1ff;
+            font: inherit;
+            padding: 0.62rem 0.7rem;
+        }
+        .sponsor-form-grid textarea { min-height: 110px; resize: vertical; }
+        .sponsor-form-grid .full { grid-column: 1 / -1; }
         @media (max-width: 980px) { .price-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 760px) { .sponsor-form-grid { grid-template-columns: 1fr; } }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
@@ -71,8 +85,9 @@
                 <h1>Simple Packages, Clear Deliverables</h1>
                 <p class="hero-copy">Pricing is designed for early-stage and growth-stage robotics teams that want visible, credible coverage placement.</p>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="contact.html?topic=sponsor-inquiry&source=pricing-page">Request Availability</a>
+                    <a class="btn btn-primary" href="contact.html?topic=sponsor-inquiry&source=pricing-page">Check Availability</a>
                     <a class="btn btn-ghost" href="mediakit.html">Back to Media Kit</a>
+                    <a class="btn btn-ghost" href="mediakit-print.html" target="_blank" rel="noopener">Download PDF Version</a>
                 </div>
             </section>
 
@@ -125,6 +140,35 @@
                     </tbody>
                 </table>
                 <p class="pricing-note">All pricing is indicative and may vary by timing, inventory, and custom production requirements.</p>
+            </section>
+
+            <section class="panel sponsor-form-panel" aria-label="Quick sponsorship request">
+                <p class="kicker">FAST BOOKING</p>
+                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif; font-size:1.2rem;">Lock A Sponsorship Window</h2>
+                <p class="pricing-note">Share your ideal package and launch date. We confirm placement availability quickly.</p>
+                <form method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" class="sponsor-form-grid">
+                    <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
+                    <input type="hidden" name="_subject" value="robot.tv sponsor inquiry from pricing page">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
+                    <input type="hidden" name="topic" value="sponsor-inquiry">
+                    <input type="hidden" name="source" value="pricing-quick-form">
+                    <input type="text" name="name" placeholder="Your name" required>
+                    <input type="email" name="email" placeholder="Work email" required>
+                    <input type="text" name="company" placeholder="Company name" required>
+                    <select name="package_interest" required>
+                        <option value="">Package interest</option>
+                        <option value="starter-brief">Starter Brief</option>
+                        <option value="launch-package">Launch Package</option>
+                        <option value="category-takeover">Category Takeover</option>
+                        <option value="custom">Custom package</option>
+                    </select>
+                    <textarea class="full" name="brief" placeholder="Target dates, budget range, and campaign objective"></textarea>
+                    <div class="full hero-actions" style="margin-top:0;">
+                        <button class="btn btn-primary" type="submit">Request Proposal</button>
+                        <a class="btn btn-ghost" href="contact.html?topic=sponsor-inquiry&source=pricing-page">Open Full Contact Form</a>
+                    </div>
+                </form>
             </section>
         </main>
 
