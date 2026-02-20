@@ -11,8 +11,18 @@ const outReport = process.env.X_REPORT_JSON || 'news-studio/social-drafts/latest
 const maxPosts = Number(process.env.SOCIAL_PUBLISH_COUNT || process.env.PUBLISH_COUNT || 2)
 const dryRun = process.env.X_DRY_RUN === '1'
 
+const writeReport = async (payload) => {
+  await fs.writeFile(outReport, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
+}
+
 if (!apiKey || !apiKeySecret || !accessToken || !accessTokenSecret) {
   console.log('X API secrets are not fully set; skipping direct X publish step.')
+  await writeReport({
+    publishedAt: new Date().toISOString(),
+    dryRun,
+    posted: [],
+    skipped: 'missing_x_secrets'
+  })
   process.exit(0)
 }
 
@@ -87,91 +97,105 @@ const tighten = (s, n) => {
   return `${t.slice(0, Math.max(0, n - 1)).trim()}…`
 }
 
-const draftsRaw = await fs.readFile(draftsPath, 'utf8')
-const drafts = JSON.parse(draftsRaw)
-const items = Array.isArray(drafts?.items) ? drafts.items : []
-if (!items.length) {
-  console.log('No social draft items found; nothing to publish to X.')
-  process.exit(0)
-}
-
-let me = null
-let recentUrls = new Set()
 try {
-  me = await xFetch({ method: 'GET', url: 'https://api.x.com/2/users/me' })
-  const userId = me?.data?.id
-  if (userId) {
-    const recent = await xFetch({
-      method: 'GET',
-      url: `https://api.x.com/2/users/${userId}/tweets`,
-      query: {
-        max_results: 20,
-        exclude: 'retweets,replies',
-        'tweet.fields': 'created_at,text'
-      }
+  const draftsRaw = await fs.readFile(draftsPath, 'utf8')
+  const drafts = JSON.parse(draftsRaw)
+  const items = Array.isArray(drafts?.items) ? drafts.items : []
+  if (!items.length) {
+    console.log('No social draft items found; nothing to publish to X.')
+    await writeReport({
+      publishedAt: new Date().toISOString(),
+      dryRun,
+      posted: [],
+      skipped: 'no_social_drafts'
     })
-    const tweets = Array.isArray(recent?.data) ? recent.data : []
-    recentUrls = new Set(tweets.map((t) => urlFromText(t.text)).filter(Boolean))
+    process.exit(0)
   }
-} catch (e) {
-  console.warn(`X dedupe precheck failed; continuing without recent URL filter: ${e.message}`)
-}
 
-const queue = []
-for (const item of items) {
-  const text = tighten(item?.x?.text || '', 280)
-  if (!text) continue
-  const articleUrl = urlFromText(text)
-  if (articleUrl && recentUrls.has(articleUrl)) continue
-  queue.push({
-    title: item?.title || '',
-    text,
-    articleUrl
-  })
-  if (queue.length >= Math.max(1, maxPosts)) break
-}
+  let me = null
+  let recentUrls = new Set()
+  try {
+    me = await xFetch({ method: 'GET', url: 'https://api.x.com/2/users/me' })
+    const userId = me?.data?.id
+    if (userId) {
+      const recent = await xFetch({
+        method: 'GET',
+        url: `https://api.x.com/2/users/${userId}/tweets`,
+        query: {
+          max_results: 20,
+          exclude: 'retweets,replies',
+          'tweet.fields': 'created_at,text'
+        }
+      })
+      const tweets = Array.isArray(recent?.data) ? recent.data : []
+      recentUrls = new Set(tweets.map((t) => urlFromText(t.text)).filter(Boolean))
+    }
+  } catch (e) {
+    console.warn(`X dedupe precheck failed; continuing without recent URL filter: ${e.message}`)
+  }
 
-if (!queue.length) {
-  const report = {
+  const queue = []
+  for (const item of items) {
+    const text = tighten(item?.x?.text || '', 280)
+    if (!text) continue
+    const articleUrl = urlFromText(text)
+    if (articleUrl && recentUrls.has(articleUrl)) continue
+    queue.push({
+      title: item?.title || '',
+      text,
+      articleUrl
+    })
+    if (queue.length >= Math.max(1, maxPosts)) break
+  }
+
+  if (!queue.length) {
+    await writeReport({
+      publishedAt: new Date().toISOString(),
+      dryRun,
+      account: me?.data || null,
+      posted: [],
+      skipped: 'all_duplicates_or_empty'
+    })
+    console.log('No new X posts to publish after duplicate guard.')
+    process.exit(0)
+  }
+
+  const posted = []
+  for (const q of queue) {
+    if (dryRun) {
+      posted.push({ title: q.title, dryRun: true, text: q.text })
+      continue
+    }
+
+    const created = await xFetch({
+      method: 'POST',
+      url: 'https://api.x.com/2/tweets',
+      jsonBody: { text: q.text }
+    })
+
+    posted.push({
+      title: q.title,
+      articleUrl: q.articleUrl,
+      tweetId: created?.data?.id || null,
+      text: q.text
+    })
+  }
+
+  await writeReport({
     publishedAt: new Date().toISOString(),
     dryRun,
     account: me?.data || null,
+    requested: queue.length,
+    posted
+  })
+  console.log(`Direct X publish complete. Posted ${posted.length} tweet(s).`)
+} catch (e) {
+  console.error(`Direct X publish error: ${e.message}`)
+  await writeReport({
+    publishedAt: new Date().toISOString(),
+    dryRun,
     posted: [],
-    skipped: 'all duplicates or empty drafts'
-  }
-  await fs.writeFile(outReport, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
-  console.log('No new X posts to publish after duplicate guard.')
+    error: e.message
+  })
   process.exit(0)
 }
-
-const posted = []
-for (const q of queue) {
-  if (dryRun) {
-    posted.push({ title: q.title, dryRun: true, text: q.text })
-    continue
-  }
-
-  const created = await xFetch({
-    method: 'POST',
-    url: 'https://api.x.com/2/tweets',
-    jsonBody: { text: q.text }
-  })
-
-  posted.push({
-    title: q.title,
-    articleUrl: q.articleUrl,
-    tweetId: created?.data?.id || null,
-    text: q.text
-  })
-}
-
-const report = {
-  publishedAt: new Date().toISOString(),
-  dryRun,
-  account: me?.data || null,
-  requested: queue.length,
-  posted
-}
-
-await fs.writeFile(outReport, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
-console.log(`Direct X publish complete. Posted ${posted.length} tweet(s).`)

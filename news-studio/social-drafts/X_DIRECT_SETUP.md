@@ -24,12 +24,9 @@ The workflow will:
 1. publish news
 2. generate social drafts
 3. auto-post up to 2 X posts directly via X API
-4. fallback to Buffer only if direct X secrets are missing
 
 ## 4) Verify posting
 
 Download `social-drafts` artifact and check:
 
 - `latest-x-publish-report.json`
-
-If direct posting succeeds, Buffer step is skipped to avoid duplicates.

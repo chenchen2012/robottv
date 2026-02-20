@@ -48,6 +48,7 @@ jobs:
 
       - name: Auto publish X directly (optional, preferred)
         run: node news-studio/scripts/publish-x-direct.mjs
+        continue-on-error: true
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
@@ -57,21 +58,8 @@ jobs:
           X_REPORT_JSON: news-studio/social-drafts/latest-x-publish-report.json
           SOCIAL_PUBLISH_COUNT: 2
 
-      - name: Auto publish X via Buffer (optional)
-        run: node news-studio/scripts/publish-x-via-buffer.mjs
-        env:
-          BUFFER_ACCESS_TOKEN: ${{ secrets.BUFFER_ACCESS_TOKEN }}
-          BUFFER_DISABLE_IF_X_DIRECT: 1
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
-          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
-          SOCIAL_DRAFT_JSON: news-studio/social-drafts/latest-social-drafts.json
-          BUFFER_REPORT_JSON: news-studio/social-drafts/latest-buffer-publish-report.json
-          SOCIAL_PUBLISH_COUNT: 2
-          BUFFER_POST_NOW: 1
-
       - name: Upload social draft artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: social-drafts
@@ -79,5 +67,4 @@ jobs:
             news-studio/social-drafts/latest-social-drafts.json
             news-studio/social-drafts/latest-social-drafts.md
             news-studio/social-drafts/latest-x-publish-report.json
-            news-studio/social-drafts/latest-buffer-publish-report.json
-          if-no-files-found: error
+          if-no-files-found: warn
