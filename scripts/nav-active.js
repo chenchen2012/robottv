@@ -34,6 +34,8 @@
     '/live.html': 'live.html',
     '/about': 'about.html',
     '/about.html': 'about.html',
+    '/partner': 'partner.html',
+    '/partner.html': 'partner.html',
     '/news': 'https://news.robot.tv',
     '/news.html': 'https://news.robot.tv'
   };

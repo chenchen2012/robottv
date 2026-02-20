@@ -903,6 +903,60 @@ a {
     margin-top: 0.62rem;
 }
 
+.newsletter-form {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.newsletter-form input[type="email"] {
+    flex: 1 1 260px;
+    border: 1px solid #2f4465;
+    border-radius: 9px;
+    background: #0b1421;
+    color: #e9f1ff;
+    font: inherit;
+    padding: 0.6rem 0.7rem;
+}
+
+.newsletter-note {
+    margin-top: 0.5rem;
+    color: #9cb0d2;
+    font-size: 0.82rem;
+}
+
+.hidden-field {
+    position: absolute;
+    left: -5000px;
+}
+
+.partner-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.partner-card {
+    border: 1px solid #314a6d;
+    border-radius: 12px;
+    padding: 0.85rem;
+    background: linear-gradient(165deg, #0f1826, #0c141f);
+}
+
+.partner-card h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.partner-card p {
+    margin: 0.5rem 0 0;
+    color: #c3d0e8;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
 .site-footer {
     margin-top: 1.6rem;
     border-top: 1px solid var(--line);
