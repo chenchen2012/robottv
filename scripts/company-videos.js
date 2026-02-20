@@ -103,13 +103,9 @@
       iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
       iframe.setAttribute('tabindex', '-1');
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.addEventListener('load', () => {
-        // Delay the crossfade slightly to avoid dark flashes before first frame paint.
-        setTimeout(() => {
-          wrap.classList.add('preview-ready');
-        }, 140);
-      }, { once: true });
       wrap.appendChild(iframe);
+      // Make preview visible immediately; some browsers/extensions delay or block iframe load events.
+      wrap.classList.add('preview-ready');
     };
 
     const stop = () => {
