@@ -64,6 +64,34 @@ const normalizeText = (s) => String(s || '')
   .replace(/\s+/g, ' ')
   .trim()
 
+const wordCount = (s) => String(s || '').trim().split(/\s+/).filter(Boolean).length
+
+const extractYoutubeId = (url) => {
+  const value = String(url || '').trim()
+  if (!value) return ''
+  const short = value.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/)
+  if (short) return short[1]
+  const watch = value.match(/[?&]v=([a-zA-Z0-9_-]{11})/)
+  if (watch) return watch[1]
+  const embed = value.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/)
+  if (embed) return embed[1]
+  return ''
+}
+
+const buildExcerpt = (headline, source) => {
+  const title = String(headline || '').trim()
+  const outlet = String(source || 'industry source').trim()
+  return `${outlet} reports ${title}. Why it matters: this update may change near-term robotics deployment decisions and market momentum.`
+}
+
+const isExcerptStrong = (excerpt) => {
+  const text = String(excerpt || '').trim()
+  if (text.length < 110 || text.length > 240) return false
+  if (wordCount(text) < 16) return false
+  const lower = text.toLowerCase()
+  return lower.includes('why it matters:')
+}
+
 const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'for', 'to', 'of', 'in', 'on', 'with', 'after', 'than', 'into', 'from'])
 
 const titleKey = (s) => normalizeText(s)
@@ -148,24 +176,59 @@ if (!selected.length) {
 }
 
 const docs = []
+const skipped = []
+const usedYoutubeIds = new Set()
+const usedTitleKeys = new Set()
 for (let i = 0; i < selected.length; i += 1) {
   const h = selected[i]
   const slug = slugify(h.title)
   const yt = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
+  const ytId = extractYoutubeId(yt)
   const category = sourceToCategory(h.source, h.title)
+  const excerpt = buildExcerpt(h.title, h.source)
+  const key = titleKey(h.title)
 
-  const lowConfidence = !h.topCompany || !yt
+  const hasGuardIssue =
+    !h.title ||
+    !slug ||
+    !key ||
+    !h.link ||
+    !isExcerptStrong(excerpt) ||
+    !ytId ||
+    usedYoutubeIds.has(ytId) ||
+    usedTitleKeys.has(key)
+
+  if (hasGuardIssue) {
+    skipped.push({
+      title: h.title,
+      reason: !ytId
+        ? 'missing/invalid YouTube video'
+        : !isExcerptStrong(excerpt)
+          ? 'excerpt quality below threshold'
+          : usedYoutubeIds.has(ytId)
+            ? 'duplicate YouTube video in batch'
+            : usedTitleKeys.has(key)
+              ? 'duplicate headline in batch'
+              : 'required field guard failed'
+    })
+    continue
+  }
+
+  const lowConfidence = !h.topCompany
   const idBase = `post-auto-${slotStamp}-${i + 1}`
   const docId = lowConfidence ? `drafts.${idBase}` : idBase
+
+  usedYoutubeIds.add(ytId)
+  usedTitleKeys.add(key)
 
   docs.push({
     _id: docId,
     _type: 'post',
     title: h.title,
     slug: { _type: 'slug', current: slug || `news-${slotStamp}-${i + 1}` },
-    excerpt: `${h.title} (${h.source})`,
+    excerpt,
     publishedAt: new Date().toISOString(),
-    youtubeUrl: yt || 'https://www.youtube.com/watch?v=jfKfPfyJRdk',
+    youtubeUrl: `https://www.youtube.com/watch?v=${ytId}`,
     author: { _type: 'reference', _ref: authorId },
     categories: [{ _type: 'reference', _ref: category }],
     body: [
@@ -188,10 +251,20 @@ for (let i = 0; i < selected.length; i += 1) {
         _key: `b${i}c`,
         style: 'normal',
         markDefs: [],
-        children: [{ _type: 'span', _key: `s${i}c`, text: lowConfidence ? 'Status: queued as draft for review.' : 'Status: auto-published.' }]
+        children: [{ _type: 'span', _key: `s${i}c`, text: lowConfidence ? 'Status: queued as draft for review (company-signal guard).' : 'Status: auto-published.' }]
       }
     ]
   })
+}
+
+if (skipped.length) {
+  console.log('Guard skipped items:')
+  skipped.forEach((x) => console.log(`- ${x.title}: ${x.reason}`))
+}
+
+if (!docs.length) {
+  console.error('Publish guard blocked all candidate posts. Nothing was published.')
+  process.exit(1)
 }
 
 if (dryRun) {
