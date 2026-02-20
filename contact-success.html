@@ -25,18 +25,7 @@
     <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
 
     <div class="container">
-        <header class="site-header">
-            <a class="brand" href="index.html" aria-label="robot.tv home"><img src="images/robot_logo.png" alt="robot.tv"></a>
-            <nav class="site-nav" aria-label="Primary navigation">
-                <a href="index.html">Home</a>
-                <a href="home.html">Robot Index</a>
-                <a href="companies.html">Companies</a>
-                <a href="live.html">Live Now</a>
-                <a href="https://news.robot.tv">News</a>
-                <a href="about.html">About</a>
-            </nav>
-            <a class="nav-cta" href="contact.html">Submit Video</a>
-        </header>
+        <div data-include="site-header"></div>
 
         <main class="panel" style="margin-top:1rem; padding:1.2rem;">
             <p class="kicker">CONFIRMED</p>
@@ -47,8 +36,10 @@
                 <a class="btn btn-ghost" href="contact.html">Send Another</a>
             </div>
         </main>
+        <div data-include="site-footer"></div>
     </div>
 
-    <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
+    <script src="scripts/shared-layout.js?v=20260220-layout1"></script>
+    <script src="scripts/nav-active.js?v=20260220-navfix2"></script>
 </body>
 </html>
