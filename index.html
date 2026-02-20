@@ -85,7 +85,7 @@
                 <a href="partner.html">Partner</a>
                 <a href="about.html">About</a>
             </nav>
-            <a class="nav-cta" href="contact.html">Submit Video</a>
+            <a class="nav-cta" href="contact.html" data-analytics-click="submit_video_nav" data-analytics-location="home_header">Submit Video</a>
         </header>
 
         <main>
@@ -103,8 +103,8 @@
                         <span>Deployment Signals</span>
                     </div>
                     <div class="hero-actions">
-                        <a class="btn btn-primary" href="home.html">Open Robot Index</a>
-                        <a class="btn btn-ghost" href="https://news.robot.tv">Enter Newsroom</a>
+                        <a class="btn btn-primary" href="home.html" data-analytics-click="open_robot_index_hero" data-analytics-location="home_hero">Open Robot Index</a>
+                        <a class="btn btn-ghost" href="https://news.robot.tv" data-analytics-click="enter_newsroom_hero" data-analytics-location="home_hero">Enter Newsroom</a>
                     </div>
                     <div class="signal-grid" aria-label="Network highlights">
                         <div class="signal-item">
@@ -141,7 +141,7 @@
                         <p class="live-spotlight-desc">Live preview is muted and auto-plays inline for faster scanning.</p>
                         <p class="live-source-line">Source: <strong>BattleBots livestream</strong></p>
                         <div class="hero-actions">
-                            <a class="btn btn-primary" href="live.html">Open Live Room</a>
+                            <a class="btn btn-primary" href="live.html" data-analytics-click="open_live_room_spotlight" data-analytics-location="live_spotlight">Open Live Room</a>
                         </div>
                     </div>
                 </aside>
@@ -166,8 +166,8 @@
                     <p class="index-spotlight-copy">Compare humanoids, quadrupeds, and top company platforms in one structured index with videos and specs.</p>
                 </div>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="home.html">Go to Robot Index</a>
-                    <a class="btn btn-ghost" href="live.html">Watch Live Feed</a>
+                    <a class="btn btn-primary" href="home.html" data-analytics-click="go_to_robot_index_spotlight" data-analytics-location="index_spotlight">Go to Robot Index</a>
+                    <a class="btn btn-ghost" href="live.html" data-analytics-click="watch_live_feed_spotlight" data-analytics-location="index_spotlight">Watch Live Feed</a>
                 </div>
             </section>
 
@@ -227,7 +227,7 @@
                     <a href="home.html">Open full Robot Index</a>
                 </div>
                 <div class="channel-grid">
-                    <a class="channel-card" href="home.html">
+                    <a class="channel-card" href="humanoid-robots.html" data-analytics-click="open_humanoid_hub_channel" data-analytics-location="home_channels">
                         <img src="images/unitreeg1.jpg" alt="Humanoid highlights">
                         <h3>Humanoid Highlights</h3>
                         <p>Track top biped platforms and fast-moving capability jumps.</p>
@@ -254,7 +254,7 @@
                 <p class="kicker">NEWSLETTER</p>
                 <h2>Get The Weekly Robot Brief</h2>
                 <p>One concise email with the top robotics videos, deployment moves, and company signals.</p>
-                <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com">
+                <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" data-analytics-submit="newsletter_subscribe" data-analytics-location="home_newsletter">
                     <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
                     <input type="hidden" name="_subject" value="robot.tv newsletter signup">
                     <input type="hidden" name="_captcha" value="false">
@@ -266,7 +266,7 @@
                 </form>
                 <p class="newsletter-note">No spam. Unsubscribe any time.</p>
                 <div class="hero-actions" style="margin-top:0.7rem;">
-                    <a class="btn btn-ghost" href="partner.html">Sponsorship & Partnerships</a>
+                    <a class="btn btn-ghost" href="partner.html" data-analytics-click="open_partner_from_home" data-analytics-location="home_newsletter">Sponsorship & Partnerships</a>
                 </div>
             </section>
         </main>
@@ -378,6 +378,7 @@
         });
       }
     </script>
+    <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>

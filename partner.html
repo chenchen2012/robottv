@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Partner with robot.tv through sponsorships, branded segments, and launch coverage.">
+    <meta name="description" content="Partner with robot.tv through sponsorships, launch-week packages, and premium robotics audience placements.">
         <meta property="og:title" content="Partner | robot.tv">
-    <meta property="og:description" content="Partner with robot.tv through sponsorships, branded segments, and launch coverage.">
+    <meta property="og:description" content="Partner with robot.tv through sponsorships, launch-week packages, and premium robotics audience placements.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://robot.tv/partner.html">
     <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Partner | robot.tv">
-    <meta name="twitter:description" content="Partner with robot.tv through sponsorships, branded segments, and launch coverage.">
+    <meta name="twitter:description" content="Partner with robot.tv through sponsorships, launch-week packages, and premium robotics audience placements.">
     <meta name="twitter:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:url" content="https://robot.tv/partner.html">
 <link rel="canonical" href="https://robot.tv/partner.html">
@@ -21,6 +21,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=20260220-partner1">
+    <style>
+        .reference-panel { margin-top: 1rem; padding: 1rem; }
+        .quick-links { margin-top: 0.82rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
+        .quick-link-card { border: 1px solid #304968; border-radius: 10px; padding: 0.72rem; background: rgba(12, 21, 34, 0.72); }
+        .quick-link-card h3 { margin: 0; font-size: 0.95rem; }
+        .quick-link-card p { margin: 0.42rem 0 0; font-size: 0.86rem; color: #bfd0ec; line-height: 1.55; }
+        @media (max-width: 980px) { .quick-links { grid-template-columns: 1fr; } }
+    </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -48,17 +56,17 @@
                 <a href="partner.html">Partner</a>
                 <a href="about.html">About</a>
             </nav>
-            <a class="nav-cta" href="contact.html">Submit Video</a>
+            <a class="nav-cta" href="contact.html" data-analytics-click="submit_video_nav" data-analytics-location="partner_header">Submit Video</a>
         </header>
 
         <main>
             <section class="panel hero">
                 <p class="kicker">PARTNER WITH ROBOT.TV</p>
                 <h1>Sponsorships Built For Robotics Brands</h1>
-                <p class="hero-copy">Reach operators, builders, and robotics-curious audiences across robot.tv and news.robot.tv with premium video-first placements.</p>
+                <p class="hero-copy">Reach operators, builders, and robotics-curious audiences across robot.tv and news.robot.tv with premium video-first placements built for robotics launches.</p>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="mediakit.html">Open Media Kit</a>
-                    <a class="btn btn-ghost" href="pricing.html">View Pricing</a>
+                    <a class="btn btn-primary" href="mediakit.html" data-analytics-click="open_media_kit_hero" data-analytics-location="partner_hero">Open Media Kit</a>
+                    <a class="btn btn-ghost" href="pricing.html" data-analytics-click="view_pricing_hero" data-analytics-location="partner_hero">View Pricing</a>
                 </div>
             </section>
 
@@ -82,19 +90,42 @@
                 </article>
             </section>
 
+            <section class="panel reference-panel" aria-label="Partnership fit">
+                <h2>Best Fit Partners</h2>
+                <p>robot.tv partnership programs work best for robotics companies launching products, recruiting operators, or building category visibility with high-intent audiences.</p>
+                <div class="quick-links">
+                    <article class="quick-link-card">
+                        <h3>Launch Campaigns</h3>
+                        <p>New humanoid, quadruped, or industrial platform announcements.</p>
+                    </article>
+                    <article class="quick-link-card">
+                        <h3>Enterprise Solutions</h3>
+                        <p>Inspection, logistics, and manufacturing robotics solutions seeking buyers.</p>
+                    </article>
+                    <article class="quick-link-card">
+                        <h3>Investors & Ecosystem</h3>
+                        <p>Funds, incubators, and infra providers that support robotics growth.</p>
+                    </article>
+                </div>
+            </section>
+
             <section class="section panel newsletter" aria-label="Partner lead capture">
                 <p class="kicker">GET THE MEDIA KIT</p>
                 <h2>Receive Partnership Options By Email</h2>
-                <p>Share your work email and we will respond with available packages and scheduling windows.</p>
-                <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com">
+                <p>Share your details and we will reply with package options, timeline guidance, and next steps.</p>
+                <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" data-analytics-submit="partner_inquiry" data-analytics-location="partner_page">
                     <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
                     <input type="hidden" name="_subject" value="robot.tv partner inquiry">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
                     <input type="hidden" name="topic" value="sponsor-inquiry">
                     <input type="hidden" name="source" value="partner-page">
+                    <input type="text" name="name" placeholder="Your name" required>
+                    <input type="text" name="company" placeholder="Company name" required>
                     <input type="email" name="email" placeholder="name@company.com" required>
-                    <button class="btn btn-primary" type="submit">Request Media Kit</button>
+                    <input type="text" name="budget" placeholder="Budget range (e.g. $3k-$8k)">
+                    <input type="text" name="timeline" placeholder="Target timing (e.g. March launch)">
+                    <button class="btn btn-primary" type="submit" data-analytics-click="request_media_kit_submit" data-analytics-location="partner_form">Request Media Kit</button>
                 </form>
                 <p class="newsletter-note">Prefer direct messaging? Use the contact page and include budget/timeline.</p>
             </section>
@@ -113,6 +144,7 @@
         </footer>
     </div>
 
+    <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
