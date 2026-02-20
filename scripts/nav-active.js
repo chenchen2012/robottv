@@ -48,8 +48,8 @@
   };
 
   const robotDetailSlugs = new Set([
-    '/anymal', '/apollo', '/asimo', '/atlas', '/digit', '/handle', '/spot', '/thr3', '/unitreeg1', '/unitreeh1', '/unitreeh2', '/unitreego2', '/unitreeb2', '/yumi',
-    '/anymal.html', '/apollo.html', '/asimo.html', '/atlas.html', '/digit.html', '/handle.html', '/spot.html', '/thr3.html', '/unitreeg1.html', '/unitreeh1.html', '/unitreeh2.html', '/unitreego2.html', '/unitreeb2.html', '/yumi.html'
+    '/anymal', '/apollo', '/asimo', '/atlas', '/digit', '/handle', '/spot', '/stretch', '/thr3', '/unitreeg1', '/unitreeh1', '/unitreeh2', '/unitreego2', '/unitreeb2', '/yumi',
+    '/anymal.html', '/apollo.html', '/asimo.html', '/atlas.html', '/digit.html', '/handle.html', '/spot.html', '/stretch.html', '/thr3.html', '/unitreeg1.html', '/unitreeh1.html', '/unitreeh2.html', '/unitreego2.html', '/unitreeb2.html', '/yumi.html'
   ]);
 
   let targetHref = byPath[current] || '';
