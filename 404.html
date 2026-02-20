@@ -3,82 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Page not found on robot.tv - Explore the world of robotics.">
-    <meta name="robots" content="noindex,nofollow">
-    <title>404 - Page Not Found | robot.tv</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Page not found on robot.tv. Return to the Robot Index, Companies, Live room, or Newsroom.">
+    <meta name="robots" content="noindex,follow">
+    <meta property="og:title" content="404 | robot.tv">
+    <meta property="og:description" content="This page does not exist. Continue exploring robot.tv coverage.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/404.html">
+    <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="404 | robot.tv">
+    <meta name="twitter:description" content="This page does not exist. Continue exploring robot.tv coverage.">
+    <meta name="twitter:image" content="https://robot.tv/images/robot_logo.png">
+    <meta name="twitter:url" content="https://robot.tv/404.html">
+    <link rel="canonical" href="https://robot.tv/404.html">
+    <title>404 | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
     <style>
-        body {
+        .error-stage {
+            margin-top: 1rem;
+            padding: 1.4rem;
+            display: grid;
+            gap: 1rem;
+        }
+        .error-code {
             margin: 0;
-            padding: 0;
-            background-color: #0a0a0a;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(2.2rem, 7vw, 4.8rem);
+            line-height: 1;
+            color: #f4f8ff;
+            letter-spacing: 0.04em;
         }
-
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .error-copy {
+            margin: 0.5rem 0 0;
+            color: #c5d2e8;
+            line-height: 1.65;
+            max-width: 62ch;
         }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            color: #ff8c00;
+        .error-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-top: 0.8rem;
+        }
+        .error-suggestions {
+            margin-top: 0.2rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .error-card {
+            border: 1px solid #2a3d5a;
+            border-radius: 10px;
+            padding: 0.75rem;
+            background: rgba(10, 17, 29, 0.72);
+        }
+        .error-card h2 {
             margin: 0;
-            letter-spacing: 5px;
+            font-size: 1rem;
         }
-
-        p {
-            font-size: 1.5rem;
-            color: #fff;
-            margin-top: 20px;
-            max-width: 600px;
-            line-height: 1.8;
+        .error-card p {
+            margin: 0.42rem 0 0;
+            color: #b9c9e3;
+            font-size: 0.9rem;
+            line-height: 1.55;
         }
-
-        .cta-button {
-            margin-top: 40px;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, #00d9ff, #ff8c00);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-size: 1.2rem;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3rem;
-            }
-
-            p {
-                font-size: 1.2rem;
-            }
-
-            .cta-button {
-                padding: 10px 30px;
-                font-size: 1rem;
+        @media (max-width: 900px) {
+            .error-suggestions {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -91,10 +86,60 @@
     </script>
 </head>
 <body>
-    <div class="content-container">
-        <h1>404 - Not Found</h1>
-        <p>Oops! It looks like the page you're looking for doesn't exist. But don’t worry, there’s plenty to explore in the world of robotics!</p>
-        <a href="index.html" class="cta-button">Go Home</a>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="contact.html">Submit Video</a>
+        </header>
+
+        <main>
+            <section class="panel error-stage">
+                <p class="kicker">PAGE NOT FOUND</p>
+                <h1 class="error-code">404</h1>
+                <p class="error-copy">The page you requested is unavailable or has moved. Continue from one of the core destinations below.</p>
+                <div class="error-links">
+                    <a class="btn btn-primary" href="home.html">Open Robot Index</a>
+                    <a class="btn btn-ghost" href="companies.html">Open Companies</a>
+                    <a class="btn btn-ghost" href="live.html">Open Live Room</a>
+                    <a class="btn btn-ghost" href="https://news.robot.tv">Open Newsroom</a>
+                </div>
+                <div class="error-suggestions">
+                    <article class="error-card">
+                        <h2>Looking for a company page?</h2>
+                        <p>Try <a href="company-boston-dynamics.html">Boston Dynamics</a>, <a href="company-tesla.html">Tesla</a>, or <a href="company-unitree.html">Unitree</a>.</p>
+                    </article>
+                    <article class="error-card">
+                        <h2>Looking for robot profiles?</h2>
+                        <p>Go to <a href="home.html">Robot Index</a> and filter by company, type, and use case.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+            </div>
+        </footer>
     </div>
+
+    <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>
