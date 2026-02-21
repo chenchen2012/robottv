@@ -23,6 +23,71 @@
     return `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${playlist}`;
   };
 
+  const queuedPlayers = [];
+
+  const ensureYouTubeApi = () => {
+    if (window.YT && window.YT.Player) {
+      initQueuedPlayers();
+      return;
+    }
+    if (!document.querySelector('script[data-youtube-iframe-api="1"]')) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      tag.async = true;
+      tag.dataset.youtubeIframeApi = "1";
+      document.head.appendChild(tag);
+    }
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof prev === "function") prev();
+      initQueuedPlayers();
+    };
+  };
+
+  const queuePlayer = (selector, ids) => {
+    const frame = document.querySelector(selector);
+    if (!frame || !ids.length) return;
+    if (!frame.id) frame.id = `robot-tv-live-${selector.replace(/[^a-z0-9]/gi, "")}`;
+    queuedPlayers.push({ id: frame.id, ids });
+  };
+
+  const initQueuedPlayers = () => {
+    if (!(window.YT && window.YT.Player)) return;
+    queuedPlayers.forEach(({ id, ids }) => {
+      const frame = document.getElementById(id);
+      if (!frame || frame.dataset.playerReady === "1") return;
+      frame.dataset.playerReady = "1";
+      const first = ids[0];
+      const playlist = ids.join(",");
+      frame.src = `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&playlist=${playlist}`;
+
+      const player = new window.YT.Player(id, {
+        events: {
+          onReady: (event) => {
+            try {
+              event.target.mute();
+              event.target.loadPlaylist(ids, 0, 0, "default");
+              event.target.playVideo();
+            } catch (_) {}
+          },
+          onStateChange: (event) => {
+            if (event.data !== window.YT.PlayerState.ENDED) return;
+            try {
+              const list = event.target.getPlaylist() || ids;
+              const idx = Number(event.target.getPlaylistIndex() || 0);
+              if (idx >= list.length - 1) {
+                event.target.playVideoAt(0);
+              } else {
+                event.target.nextVideo();
+              }
+            } catch (_) {}
+          }
+        }
+      });
+      void player;
+    });
+  };
+
   const setFrame = (selector, src, title) => {
     const frame = document.querySelector(selector);
     if (!frame || !src) return;
@@ -79,6 +144,9 @@
 
     setFrame("[data-live-preview-frame]", embed, `${headline} live preview`);
     setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
+    queuePlayer("[data-live-preview-frame]", ids);
+    queuePlayer("[data-live-main-frame]", ids);
+    ensureYouTubeApi();
     setText("[data-live-spotlight-title]", headline);
     setText("[data-live-spotlight-desc]", "Playing the robot.tv newsroom feed.");
     setLink("[data-live-source-link]", sourceHref, sourceText);
