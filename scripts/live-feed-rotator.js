@@ -4,13 +4,6 @@
   const SANITY_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2023-10-01/data/query/${SANITY_DATASET}`;
   const QUERY = '*[_type=="post" && defined(youtubeUrl)] | order(publishedAt desc)[0...10]{title,excerpt,youtubeUrl,"slug":slug.current,publishedAt}';
 
-  const FALLBACK = {
-    title: "Robot.tv livestream",
-    excerpt: "BattleBots stream is currently featured as fallback.",
-    youtubeUrl: "https://www.youtube.com/watch?v=G6ERanEbzEE",
-    slug: null
-  };
-
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv/";
 
   const videoIdFromUrl = (url) => {
@@ -22,9 +15,12 @@
     );
   };
 
-  const toEmbedUrl = (url) => {
-    const id = videoIdFromUrl(url);
-    return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1` : "";
+  const toPlaylistEmbedUrl = (ids) => {
+    const cleanIds = Array.from(new Set((ids || []).filter(Boolean)));
+    if (!cleanIds.length) return "";
+    const first = cleanIds[0];
+    const playlist = cleanIds.join(",");
+    return `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${playlist}`;
   };
 
   const setFrame = (selector, src, title) => {
@@ -63,16 +59,28 @@
   };
 
   const hydrate = (items) => {
-    const primary = items[0] || FALLBACK;
-    const embed = toEmbedUrl(primary.youtubeUrl) || toEmbedUrl(FALLBACK.youtubeUrl);
+    if (!items.length) {
+      setText("[data-live-spotlight-title]", "Robot.tv Live Feed");
+      setText("[data-live-spotlight-desc]", "No newsroom video is available yet. Check back shortly.");
+      setText("[data-live-main-title]", "robot.tv Live Feed");
+      setText("[data-live-main-sub]", "No newsroom video is available yet. Check back shortly.");
+      setLink("[data-live-source-link]", "https://news.robot.tv/", "news.robot.tv");
+      setLink("[data-live-main-source-link]", "https://news.robot.tv/", "news.robot.tv");
+      setNextUp([]);
+      return;
+    }
+
+    const ids = items.map((item) => videoIdFromUrl(item.youtubeUrl)).filter(Boolean);
+    const embed = toPlaylistEmbedUrl(ids);
+    const primary = items[0];
     const headline = primary.title || "Robot.tv Live Feed";
-    const sourceHref = primary.slug ? toPostUrl(primary.slug) : FALLBACK.youtubeUrl;
-    const sourceText = primary.slug ? "Latest video from news.robot.tv" : "Robot.tv livestream";
+    const sourceHref = primary.slug ? toPostUrl(primary.slug) : "https://news.robot.tv/";
+    const sourceText = primary.slug ? "Latest video from news.robot.tv" : "news.robot.tv";
 
     setFrame("[data-live-preview-frame]", embed, `${headline} live preview`);
     setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
     setText("[data-live-spotlight-title]", headline);
-    setText("[data-live-spotlight-desc]", "Auto-rotating from the latest newsroom videos.");
+    setText("[data-live-spotlight-desc]", "Playing the robot.tv newsroom feed.");
     setLink("[data-live-source-link]", sourceHref, sourceText);
     setText("[data-live-main-title]", "robot.tv Live Feed");
     setText("[data-live-main-sub]", "This feed rotates through the latest YouTube videos published in the robot.tv newsroom.");
@@ -85,7 +93,7 @@
     .then((d) => {
       const rows = Array.isArray(d?.result) ? d.result : [];
       const withVideo = rows.filter((item) => videoIdFromUrl(item?.youtubeUrl));
-      hydrate(withVideo.length ? withVideo : [FALLBACK]);
+      hydrate(withVideo);
     })
-    .catch(() => hydrate([FALLBACK]));
+    .catch(() => hydrate([]));
 })();
