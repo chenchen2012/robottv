@@ -95,9 +95,10 @@
     .video-poster-btn img {
       width:100%;
       aspect-ratio:16/9;
-      object-fit:cover;
+      object-fit:contain;
       display:block;
       filter:saturate(1.02) contrast(1.03);
+      background:#000;
     }
     .video-poster-btn::after {
       content:"";
@@ -208,7 +209,13 @@
 
     const esc = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
     const videoId = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
-    const thumb = (u) => { const id = videoId(u); return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "https://robot.tv/images/robot_logo.png"; };
+    const thumb = (u, quality = "hq") => {
+      const id = videoId(u);
+      if (!id) return "https://robot.tv/images/robot_logo.png";
+      return quality === "max"
+        ? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
+        : `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    };
     const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"});
     const sanityQuery = (q) => `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(q)}`;
     const sanityParam = (value) => encodeURIComponent(JSON.stringify(value));
@@ -312,7 +319,7 @@
       grid.innerHTML = uniquePosts.map((p, i) => `
         <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
           <span class="thumb-shell">
-            <img class="thumb" src="${esc(thumb(p.youtubeUrl))}" alt="${esc(p.title)} thumbnail" loading="lazy">
+            <img class="thumb" src="${esc(thumb(p.youtubeUrl, "max"))}" alt="${esc(p.title)} thumbnail" loading="lazy" onerror="this.onerror=null;this.src='${esc(thumb(p.youtubeUrl, "hq"))}'">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -395,7 +402,7 @@
             <p class="copy" style="max-width:none;">${esc(post.excerpt || "")}</p>
             ${ytId ? `<div class="video-wrap" data-yt-id="${esc(ytId)}">
               <button class="video-poster-btn" type="button" data-play-article-video aria-label="Play video">
-                <img src="${esc(thumb(post.youtubeUrl))}" alt="${esc(post.title)} video thumbnail" loading="lazy">
+                <img src="${esc(thumb(post.youtubeUrl, "max"))}" alt="${esc(post.title)} video thumbnail" loading="lazy" onerror="this.onerror=null;this.src='${esc(thumb(post.youtubeUrl, "hq"))}'">
                 <span class="video-play-badge">Play Video</span>
               </button>
             </div>
