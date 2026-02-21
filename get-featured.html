@@ -216,6 +216,33 @@
         </footer>
     </div>
 
-    <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
+    <script>
+      (() => {
+        const form = document.querySelector('form[name="robottv-featured"]');
+        const source = (new URLSearchParams(window.location.search).get('source') || 'direct').trim() || 'direct';
+        if (form) {
+          const sourceInput = form.querySelector('input[name="source"]');
+          if (sourceInput) sourceInput.value = source;
+        }
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'get_featured_view', {
+            source,
+            page_path: window.location.pathname
+          });
+        }
+        document.addEventListener('submit', (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLFormElement)) return;
+          if (target.getAttribute('name') !== 'robottv-featured') return;
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'get_featured_submit', {
+              source,
+              form_name: 'robottv-featured'
+            });
+          }
+        });
+      })();
+    </script>
+    <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
 </html>

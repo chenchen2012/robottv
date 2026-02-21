@@ -79,4 +79,22 @@
 
     if (active) a.classList.add('is-active');
   });
+
+  // Attribution helper: append source=<current page> to Get Featured links.
+  const sourceFromPath = (() => {
+    const p = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+    if (p === '/' || p === '/index.html') return 'home';
+    return p.replace(/^\//, '').replace(/\.html$/, '') || 'unknown';
+  })();
+  document.querySelectorAll('a[href*="get-featured"]').forEach((a) => {
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) return;
+    try {
+      const u = new URL(href, window.location.origin);
+      if (!u.searchParams.get('source')) u.searchParams.set('source', sourceFromPath);
+      a.setAttribute('href', `${u.pathname}${u.search}${u.hash}`);
+    } catch {
+      // Ignore invalid URLs
+    }
+  });
 })();
