@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Contact robot.tv and submit robotics videos without opening an email app.">
+    <meta name="description" content="Contact robot.tv for general questions, partnerships, and support.">
     <meta property="og:title" content="Contact | robot.tv">
-    <meta property="og:description" content="Send robot.tv a message or submit a video link through a fast web form.">
+    <meta property="og:description" content="Send robot.tv a message through a fast web form.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://robot.tv/contact">
     <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Contact | robot.tv">
-    <meta name="twitter:description" content="Contact robot.tv and submit robotics videos without opening an email app.">
+    <meta name="twitter:description" content="Contact robot.tv for general questions, partnerships, and support.">
     <meta name="twitter:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:url" content="https://robot.tv/contact">
     <title>Contact | robot.tv</title>
@@ -131,24 +131,25 @@
                 <a href="https://news.robot.tv">News</a>
                 <a href="about.html">About</a>
             </nav>
-            <a class="nav-cta" href="contact.html">Submit Video</a>
+            <a class="nav-cta" href="get-featured.html">Get Featured</a>
         </header>
 
         <main class="contact-layout">
             <section class="panel contact-panel">
                 <p class="kicker">CONTACT DESK</p>
-                <h1>Text Us Directly, No Email App Needed</h1>
-                <p>Use this form to send tips, ask questions, or submit a robot video. We review submissions and contact you directly through your preferred channel.</p>
+                <h1>Contact robot.tv</h1>
+                <p>Use this form for general questions, partnership follow-up, and operational support.</p>
                 <ul class="contact-list">
                     <li>No email app required.</li>
-                    <li>Submit YouTube links and context in one step.</li>
+                    <li>Fast message intake with direct reply path.</li>
                     <li>Choose your best contact channel (WhatsApp, Telegram, phone, or email).</li>
                 </ul>
+                <p class="contact-note">For editorial submissions and video review, use <a href="get-featured.html">Get Featured</a>.</p>
             </section>
 
             <section class="panel contact-panel">
                 <p class="kicker">SUBMIT</p>
-                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Send Message / Video</h2>
+                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Send Message</h2>
 
                 <form name="robottv-contact" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" class="contact-form">
                     <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
@@ -188,17 +189,6 @@
                         </label>
                     </div>
 
-                    <div class="grid">
-                        <label>
-                            YouTube Video URL (Optional)
-                            <input type="url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=...">
-                        </label>
-                        <label>
-                            Robot / Company (Optional)
-                            <input type="text" name="robot_company" placeholder="e.g. Unitree G1 / Tesla Optimus">
-                        </label>
-                    </div>
-
                     <label>
                         Message
                         <textarea name="message" placeholder="Tell us what you want to share or ask..." required></textarea>
@@ -219,8 +209,6 @@
             <input type="text" name="organization">
             <input type="text" name="contact_channel">
             <input type="text" name="contact_value">
-            <input type="text" name="youtube_url">
-            <input type="text" name="robot_company">
             <input type="text" name="topic">
             <input type="text" name="domain">
             <input type="text" name="source">
@@ -259,7 +247,7 @@
             const fd = new FormData(form);
             const payload = new URLSearchParams();
             payload.set("form-name", "robottv-contact-backup");
-            ["name", "organization", "contact_channel", "contact_value", "youtube_url", "robot_company", "topic", "domain", "source", "message"]
+            ["name", "organization", "contact_channel", "contact_value", "topic", "domain", "source", "message"]
                 .forEach((key) => payload.set(key, String(fd.get(key) || "")));
 
             fetch("/", {

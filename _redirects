@@ -27,6 +27,8 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /media-kit-pdf /mediakit-print.html 301!
 /pricing    /pricing.html     301!
 /sales       /sales.html       301!
+/get-featured /get-featured.html 301!
+/submit-video /get-featured.html 301!
 /test        /                 301!
 /test.html   /                 301!
 /news        https://news.robot.tv/ 301!
