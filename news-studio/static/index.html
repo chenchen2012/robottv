@@ -375,7 +375,7 @@
       const tags = Array.isArray(post.categories) ? post.categories : [];
       const paragraphs = (post.body || []).filter((b) => b._type === "block").map(blockToText).filter(Boolean);
       const ytId = videoId(post.youtubeUrl);
-      const embed = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&playsinline=1` : "";
+      const embed = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1` : "";
       document.title = `${post.title} | robot.tv News`;
       setRobots("index,follow");
       setArticleJsonLd(post);
@@ -391,13 +391,7 @@
             <h1>${esc(post.title)}</h1>
             <p class="meta" style="margin-top:.55rem;">${esc(formatDate(post.publishedAt))} | ${esc(post.author || "robot.tv")}</p>
             <p class="copy" style="max-width:none;">${esc(post.excerpt || "")}</p>
-            ${ytId ? `<div class="video-wrap" data-yt-id="${esc(ytId)}">
-              <button class="video-poster-btn" type="button" data-play-article-video aria-label="Play video">
-                <span class="video-play-badge">Play Video</span>
-                <span class="video-poster-label">Robot.tv video briefing</span>
-              </button>
-            </div>
-            <p class="video-hint">Press play to start the YouTube video.</p>` : ""}
+            ${ytId ? `<div class="video-wrap"><iframe src="${esc(embed)}" title="${esc(post.title)} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : ""}
             <div class="article-body">
               ${paragraphs.length ? paragraphs.map((p) => `<p>${esc(p)}</p>`).join("") : '<p>Content will be added soon.</p>'}
             </div>
@@ -413,19 +407,6 @@
         </section>
       `;
 
-      const playBtn = app.querySelector("[data-play-article-video]");
-      if (playBtn) {
-        playBtn.addEventListener("click", () => {
-          const wrap = app.querySelector(".video-wrap[data-yt-id]");
-          if (!wrap) return;
-          const id = wrap.getAttribute("data-yt-id") || "";
-          if (!id) return;
-          const url = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-          wrap.innerHTML = `<iframe src="${esc(url)}" title="${esc(post.title)} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-          const hint = app.querySelector(".video-hint");
-          if (hint) hint.remove();
-        }, { once: true });
-      }
     };
 
     if (path.startsWith("/post/")) {
