@@ -111,11 +111,22 @@
   const setNextUp = (items) => {
     const list = document.querySelector("[data-live-next-up]");
     if (!list) return;
-    const picks = items.slice(1, 4);
+    const section = list.closest(".live-next");
+    const seen = new Set();
+    const picks = [];
+    for (let i = 1; i < items.length; i += 1) {
+      const item = items[i];
+      const key = `${String(item?.slug || "")}|${videoIdFromUrl(item?.youtubeUrl || "")}`;
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      picks.push(item);
+      if (picks.length >= 3) break;
+    }
     if (!picks.length) {
-      list.innerHTML = '<li><a href="https://news.robot.tv/">Open latest robotics briefings</a></li>';
+      if (section) section.hidden = true;
       return;
     }
+    if (section) section.hidden = false;
     list.innerHTML = picks.map((item) => {
       const title = String(item.title || "Latest robotics update");
       const href = toPostUrl(item.slug);
@@ -160,7 +171,13 @@
     .then((r) => r.json())
     .then((d) => {
       const rows = Array.isArray(d?.result) ? d.result : [];
-      const withVideo = rows.filter((item) => videoIdFromUrl(item?.youtubeUrl));
+      const seen = new Set();
+      const withVideo = rows.filter((item) => {
+        const key = `${String(item?.slug || "")}|${videoIdFromUrl(item?.youtubeUrl || "")}`;
+        if (!videoIdFromUrl(item?.youtubeUrl) || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       hydrate(withVideo);
     })
     .catch(() => hydrate([]));
