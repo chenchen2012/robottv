@@ -60,14 +60,17 @@
     .row { margin-top:.7rem; display:flex; gap:.6rem; flex-wrap:wrap; }
     .empty { margin-top:1rem; padding:1rem; color:var(--muted); }
 
-    .article { margin-top:1rem; display:grid; grid-template-columns:1fr; gap:.9rem; }
-    .article-main,.article-side { padding:1rem; }
+    .article { margin-top:1rem; display:grid; grid-template-columns:1fr; gap:.9rem; min-width:0; }
+    .article-main,.article-side { padding:1rem; min-width:0; }
     .article h1 {
       font-family:'Space Grotesk',sans-serif;
       font-size:clamp(1.2rem,2.7vw,1.95rem);
       font-weight:700;
       line-height:1.2;
       letter-spacing:.01em;
+      white-space:normal;
+      max-width:100%;
+      overflow:hidden;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
@@ -87,32 +90,17 @@
       margin:0;
       padding:0;
       width:100%;
-      display:block;
-      position:relative;
-      cursor:pointer;
-      background:#000;
-    }
-    .video-poster-btn img {
-      width:100%;
       aspect-ratio:16/9;
-      object-fit:cover;
-      display:block;
-      filter:saturate(1.02) contrast(1.03);
-      background:#000;
-    }
-    .video-poster-btn::after {
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, rgba(4,8,14,0.08), rgba(4,8,14,0.42));
-      pointer-events:none;
+      display:grid;
+      place-items:center;
+      gap:.55rem;
+      cursor:pointer;
+      background:
+        radial-gradient(120% 120% at 16% 10%, rgba(94,132,255,.28), transparent 55%),
+        radial-gradient(120% 120% at 82% 86%, rgba(239,45,82,.2), transparent 58%),
+        linear-gradient(160deg, #0a111c, #050a12);
     }
     .video-play-badge {
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%, -50%);
-      z-index:2;
       border:1px solid #5d79ad;
       border-radius:999px;
       background:rgba(8,14,24,0.86);
@@ -122,6 +110,11 @@
       padding:.48rem .84rem;
       letter-spacing:.03em;
       box-shadow:0 8px 24px rgba(2,6,12,0.45);
+    }
+    .video-poster-label {
+      color:#c3d4f1;
+      font-size:.9rem;
+      letter-spacing:.03em;
     }
     .video-hint {
       margin:.5rem 0 0;
@@ -400,8 +393,8 @@
             <p class="copy" style="max-width:none;">${esc(post.excerpt || "")}</p>
             ${ytId ? `<div class="video-wrap" data-yt-id="${esc(ytId)}">
               <button class="video-poster-btn" type="button" data-play-article-video aria-label="Play video">
-                <img src="${esc(thumb(post.youtubeUrl, "hq"))}" alt="${esc(post.title)} video thumbnail" loading="lazy">
                 <span class="video-play-badge">Play Video</span>
+                <span class="video-poster-label">Robot.tv video briefing</span>
               </button>
             </div>
             <p class="video-hint">Press play to start the YouTube video.</p>` : ""}
