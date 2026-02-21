@@ -64,6 +64,36 @@
             color: var(--muted);
             font-size: 0.95rem;
         }
+
+        .live-next {
+            margin-top: 1rem;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: linear-gradient(160deg, #0f1724, #0d1522);
+            padding: 0.9rem;
+        }
+
+        .live-next h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+        }
+
+        .live-next-list {
+            margin: 0.6rem 0 0;
+            padding-left: 1rem;
+            display: grid;
+            gap: 0.48rem;
+        }
+
+        .live-next-list a {
+            color: #c7d6ee;
+            text-decoration: none;
+        }
+
+        .live-next-list a:hover {
+            text-decoration: underline;
+        }
     </style>
         <script type="application/ld+json">
     {
@@ -115,14 +145,14 @@
 
         <main class="panel live-page">
             <p class="kicker">LIVE BROADCAST</p>
-            <h1 class="live-title">robot.tv Live Now</h1>
-            <p class="live-sub">
-                Real-time robotics coverage, launches, demos, and industry updates.
-                Live robot combat coverage from BattleBots on YouTube.
+            <h1 class="live-title" data-live-main-title>robot.tv Live Feed</h1>
+            <p class="live-sub" data-live-main-sub>
+                Loading the latest robotics video from news.robot.tv...
             </p>
 
             <div class="live-embed">
                 <iframe
+                    data-live-main-frame
                     src="https://www.youtube.com/embed/G6ERanEbzEE?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
                     title="robot.tv livestream"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -132,7 +162,14 @@
                 </iframe>
             </div>
 
-            <p class="live-meta" id="live-meta">Source: <a href="https://www.youtube.com/watch?v=G6ERanEbzEE" target="_blank" rel="noopener">Robot.tv livestream</a>.</p>
+            <p class="live-meta" id="live-meta">Source: <a data-live-main-source-link href="https://news.robot.tv/" target="_blank" rel="noopener">news.robot.tv</a>.</p>
+
+            <section class="live-next" aria-label="Next up from newsroom">
+                <h2>Next Up</h2>
+                <ul class="live-next-list" data-live-next-up>
+                    <li><a href="https://news.robot.tv/">Loading latest briefings...</a></li>
+                </ul>
+            </section>
         </main>
         <footer class="site-footer">
             <p>robot.tv | Global robotics media network</p>
@@ -146,6 +183,7 @@
             </div>
         </footer>
     </div>
+    <script src="scripts/live-feed-rotator.js?v=20260221-livefeed1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
 </html>

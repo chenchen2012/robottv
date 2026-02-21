@@ -126,6 +126,7 @@
                     <a class="live-preview" href="live.html">
                         <iframe
                             id="live-preview-frame"
+                            data-live-preview-frame
                             src="https://www.youtube.com/embed/G6ERanEbzEE?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
                             title="robot.tv live preview"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -137,9 +138,9 @@
                     </a>
                     <div class="live-spotlight-copy">
                         <p class="kicker">LIVE SPOTLIGHT</p>
-                        <h2 class="live-spotlight-title">BattleBots livestream is on now</h2>
-                        <p class="live-spotlight-desc">Live preview is muted and auto-plays inline for faster scanning.</p>
-                        <p class="live-source-line">Source: <strong>BattleBots livestream</strong></p>
+                        <h2 class="live-spotlight-title" data-live-spotlight-title>Robot.tv Live Feed</h2>
+                        <p class="live-spotlight-desc" data-live-spotlight-desc>Loading latest robotics video from the newsroom...</p>
+                        <p class="live-source-line">Source: <a data-live-source-link href="https://news.robot.tv" target="_blank" rel="noopener">news.robot.tv</a></p>
                         <div class="hero-actions">
                             <a class="btn btn-primary" href="live.html" data-analytics-click="open_live_room_spotlight" data-analytics-location="live_spotlight">Open Live Room</a>
                         </div>
@@ -387,6 +388,7 @@
         });
       }
     </script>
+    <script src="scripts/live-feed-rotator.js?v=20260221-livefeed1"></script>
     <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix1"></script>
 </body>
