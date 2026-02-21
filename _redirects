@@ -37,6 +37,7 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /xmlrpc.php    /404.html  410
 
 # Legacy WordPress/article URLs should point to the new news site
+/images/*                 /images/:splat                    200
 /:year/:month/:day/:slug  https://news.robot.tv/post/:slug  301!
 /:year/:month/:slug       https://news.robot.tv/post/:slug  301!
 /category/*               https://news.robot.tv/            301!
