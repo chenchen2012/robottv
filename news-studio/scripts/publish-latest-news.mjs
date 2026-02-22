@@ -244,14 +244,7 @@ for (let i = 0; i < selected.length; i += 1) {
         _key: `b${i}b`,
         style: 'normal',
         markDefs: [],
-        children: [{ _type: 'span', _key: `s${i}b`, text: `Original coverage link: ${h.link}` }]
-      },
-      {
-        _type: 'block',
-        _key: `b${i}c`,
-        style: 'normal',
-        markDefs: [],
-        children: [{ _type: 'span', _key: `s${i}c`, text: lowConfidence ? 'Status: queued as draft for review (company-signal guard).' : 'Status: auto-published.' }]
+        children: [{ _type: 'span', _key: `s${i}b`, text: lowConfidence ? 'Status: queued as draft for review (company-signal guard).' : 'Status: auto-published.' }]
       }
     ]
   })

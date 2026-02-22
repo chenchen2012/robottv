@@ -227,6 +227,13 @@
     };
 
     const blockToText = (block) => (block.children || []).map((c) => c.text || "").join("").trim();
+    const shouldRenderParagraph = (text) => {
+      const t = String(text || "").trim();
+      if (!t) return false;
+      if (/^original coverage link:/i.test(t)) return false;
+      if (/news\.google\.com\/rss\/articles/i.test(t)) return false;
+      return true;
+    };
     const toPlain = (s) => String(s || "").replace(/\s+/g, " ").trim();
 
     const setArticleJsonLd = (post) => {
@@ -373,7 +380,10 @@
       }
 
       const tags = Array.isArray(post.categories) ? post.categories : [];
-      const paragraphs = (post.body || []).filter((b) => b._type === "block").map(blockToText).filter(Boolean);
+      const paragraphs = (post.body || [])
+        .filter((b) => b._type === "block")
+        .map(blockToText)
+        .filter(shouldRenderParagraph);
       const ytId = videoId(post.youtubeUrl);
       const embed = ytId ? `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1&vq=small` : "";
       document.title = `${post.title} | robot.tv News`;
