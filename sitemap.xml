@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://robot.tv/</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://robot.tv/index.html</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://robot.tv/home.html</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>0.95</priority></url>
   <url><loc>https://robot.tv/humanoid-robots.html</loc><lastmod>2026-02-20</lastmod><changefreq>daily</changefreq><priority>0.92</priority></url>
   <url><loc>https://robot.tv/robot-companies.html</loc><lastmod>2026-02-20</lastmod><changefreq>daily</changefreq><priority>0.91</priority></url>
