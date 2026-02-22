@@ -21,10 +21,11 @@
     return `${post?.title || ""} ${post?.excerpt || ""} ${cats}`.toLowerCase();
   };
 
-  const findMatches = (posts, keywords) => {
+  const findMatches = (posts, keywords, limit) => {
     if (!keywords.length) return [];
     const picks = [];
     const seen = new Set();
+    const max = Number.isFinite(limit) && limit > 0 ? limit : 4;
     for (const post of posts) {
       if (!post?.slug || seen.has(post.slug)) continue;
       const hay = textOfPost(post);
@@ -32,7 +33,7 @@
       if (!matched) continue;
       seen.add(post.slug);
       picks.push(post);
-      if (picks.length >= 4) break;
+      if (picks.length >= max) break;
     }
     return picks;
   };
@@ -64,7 +65,8 @@
       blocks.forEach((block) => {
         const raw = String(block.getAttribute("data-keywords") || "");
         const keywords = raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
-        const matches = findMatches(posts, keywords);
+        const configuredLimit = Number.parseInt(block.getAttribute("data-limit") || "", 10);
+        const matches = findMatches(posts, keywords, configuredLimit);
         render(block, matches);
       });
     })
