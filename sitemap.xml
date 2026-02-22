@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://robot.tv/</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://robot.tv/home</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>0.95</priority></url>
+  <url><loc>https://robot.tv/home.html</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>0.95</priority></url>
   <url><loc>https://robot.tv/humanoid-robots.html</loc><lastmod>2026-02-20</lastmod><changefreq>daily</changefreq><priority>0.92</priority></url>
   <url><loc>https://robot.tv/robot-companies.html</loc><lastmod>2026-02-20</lastmod><changefreq>daily</changefreq><priority>0.91</priority></url>
-  <url><loc>https://robot.tv/companies</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://robot.tv/live</loc><lastmod>2026-02-20</lastmod><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://robot.tv/about</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://robot.tv/partner</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robot.tv/companies.html</loc><lastmod>2026-02-22</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://robot.tv/live.html</loc><lastmod>2026-02-20</lastmod><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://robot.tv/about.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robot.tv/partner.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://robot.tv/mediakit.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>
   <url><loc>https://robot.tv/pricing.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>
-  <url><loc>https://robot.tv/contact</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://robot.tv/get-featured</loc><lastmod>2026-02-21</lastmod><changefreq>weekly</changefreq><priority>0.78</priority></url>
+  <url><loc>https://robot.tv/contact.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://robot.tv/get-featured.html</loc><lastmod>2026-02-21</lastmod><changefreq>weekly</changefreq><priority>0.78</priority></url>
   <url><loc>https://robot.tv/sales.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
-  <url><loc>https://robot.tv/company-unitree</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.82</priority></url>
-  <url><loc>https://robot.tv/unitree-robots</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.78</priority></url>
+  <url><loc>https://robot.tv/company-unitree.html</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.82</priority></url>
+  <url><loc>https://robot.tv/unitree-robots.html</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.78</priority></url>
   <url><loc>https://robot.tv/company-boston-dynamics.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>
   <url><loc>https://robot.tv/company-tesla.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.75</priority></url>
   <url><loc>https://robot.tv/company-figure.html</loc><lastmod>2026-02-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -26,13 +26,13 @@
   <url><loc>https://robot.tv/spot.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.65</priority></url>
   <url><loc>https://robot.tv/stretch.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.64</priority></url>
   <url><loc>https://robot.tv/handle.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://robot.tv/unitreeg1</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.68</priority></url>
-  <url><loc>https://robot.tv/unitreeh1</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.67</priority></url>
-  <url><loc>https://robot.tv/unitreeh2</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.67</priority></url>
-  <url><loc>https://robot.tv/unitreego2</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.66</priority></url>
-  <url><loc>https://robot.tv/unitreeb2</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.66</priority></url>
-  <url><loc>https://robot.tv/tesla-optimus</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.74</priority></url>
-  <url><loc>https://robot.tv/figure-02</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.73</priority></url>
+  <url><loc>https://robot.tv/unitreeg1.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.68</priority></url>
+  <url><loc>https://robot.tv/unitreeh1.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.67</priority></url>
+  <url><loc>https://robot.tv/unitreeh2.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.67</priority></url>
+  <url><loc>https://robot.tv/unitreego2.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.66</priority></url>
+  <url><loc>https://robot.tv/unitreeb2.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.66</priority></url>
+  <url><loc>https://robot.tv/tesla-optimus.html</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.74</priority></url>
+  <url><loc>https://robot.tv/figure-02.html</loc><lastmod>2026-02-22</lastmod><changefreq>weekly</changefreq><priority>0.73</priority></url>
   <url><loc>https://robot.tv/digit.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://robot.tv/apollo.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://robot.tv/anymal.html</loc><lastmod>2026-02-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
