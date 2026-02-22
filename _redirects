@@ -16,6 +16,8 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /humanoids /humanoid-robots.html 301!
 /boston-dynamics /company-boston-dynamics.html 301!
 /unitree /company-unitree.html 301!
+/unitree-robots /unitree-robots.html 301!
+/unitree-g1 /unitreeg1.html 301!
 /stretch /stretch.html 301!
 /unitree-h1 /unitreeh1.html 301!
 /unitree-h2 /unitreeh2.html 301!
