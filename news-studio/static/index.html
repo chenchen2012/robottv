@@ -132,6 +132,9 @@
     .newsletter-form { margin-top:.75rem; display:flex; gap:.55rem; flex-wrap:wrap; }
     .newsletter-form input[type="email"] { flex:1 1 240px; border:1px solid #2f4465; border-radius:9px; background:#0b1421; color:#e9f1ff; font:inherit; padding:.58rem .62rem; }
     .newsletter-note { margin-top:.45rem; color:#9cb0d2; font-size:.82rem; }
+    .pagination { margin-top:.85rem; display:flex; justify-content:center; gap:.5rem; flex-wrap:wrap; }
+    .pagination .btn[aria-disabled="true"] { opacity:.45; pointer-events:none; }
+    .pagination-status { color:#9cb0d2; font-size:.88rem; align-self:center; }
 
     @media (max-width:980px){ .grid{grid-template-columns:1fr 1fr;} .card.featured{grid-column:span 2;} .article{grid-template-columns:1fr;} }
     @media (max-width:760px){ .header{flex-direction:column; align-items:flex-start;} .grid{grid-template-columns:1fr;} .card.featured{grid-column:auto;} }
@@ -185,10 +188,16 @@
 
     const projectId = "lumv116w";
     const dataset = "production";
+    const PAGE_SIZE = 12;
     const app = document.getElementById("app");
     const path = window.location.pathname.replace(/\/$/, "") || "/";
+    const params = new URLSearchParams(window.location.search || "");
+    const requestedPage = Math.max(1, parseInt(params.get("page") || "1", 10) || 1);
     const canonical = document.getElementById("canonical-link");
-    if (canonical) canonical.setAttribute("href", `https://news.robot.tv${path === "/" ? "/" : path}`);
+    if (canonical) {
+      const search = path === "/" && requestedPage > 1 ? `?page=${requestedPage}` : "";
+      canonical.setAttribute("href", `https://news.robot.tv${path === "/" ? "/" : path}${search}`);
+    }
     const setRobots = (content) => {
       let tag = document.querySelector('meta[name="robots"]');
       if (!tag) {
@@ -314,7 +323,12 @@
       if (!posts.length) { empty.hidden = false; return; }
       const uniquePosts = dedupePosts(posts);
       if (!uniquePosts.length) { empty.hidden = false; return; }
-      grid.innerHTML = uniquePosts.map((p, i) => `
+      const totalPages = Math.max(1, Math.ceil(uniquePosts.length / PAGE_SIZE));
+      const page = Math.min(requestedPage, totalPages);
+      const from = (page - 1) * PAGE_SIZE;
+      const pagePosts = uniquePosts.slice(from, from + PAGE_SIZE);
+      if (!pagePosts.length) { empty.hidden = false; return; }
+      grid.innerHTML = pagePosts.map((p, i) => `
         <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
           <span class="thumb-shell">
             <img class="thumb" src="${esc(thumb(p.youtubeUrl, "hq"))}" alt="${esc(p.title)} thumbnail" loading="lazy">
@@ -330,6 +344,19 @@
           </div>
         </article>
       `).join("");
+
+      if (totalPages > 1) {
+        const section = grid.closest(".section");
+        const pager = document.createElement("div");
+        pager.className = "pagination";
+        const mkUrl = (n) => (n <= 1 ? "/" : `/?page=${n}`);
+        pager.innerHTML = `
+          <a class="btn btn-ghost" href="${mkUrl(page - 1)}" aria-disabled="${page <= 1 ? "true" : "false"}">Previous</a>
+          <span class="pagination-status">Page ${page} of ${totalPages}</span>
+          <a class="btn btn-ghost" href="${mkUrl(page + 1)}" aria-disabled="${page >= totalPages ? "true" : "false"}">Next</a>
+        `;
+        section.appendChild(pager);
+      }
 
       const canHoverPreview = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
       if (!canHoverPreview) return;
@@ -427,7 +454,7 @@
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
     } else {
-      const query = `*[_type=="post"] | order(publishedAt desc)[0...12]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
+      const query = `*[_type=="post"] | order(publishedAt desc)[0...120]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
       fetch(sanityQuery(query))
         .then((r) => r.json())
         .then((d) => renderList(Array.isArray(d.result) ? d.result : []))
