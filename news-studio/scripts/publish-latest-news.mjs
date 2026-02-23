@@ -78,6 +78,12 @@ const extractYoutubeId = (url) => {
   return ''
 }
 
+const normalizeUrl = (url) => String(url || '')
+  .trim()
+  .toLowerCase()
+  .replace(/^https?:\/\//, '')
+  .replace(/\/+$/, '')
+
 const buildExcerpt = (headline, source) => {
   const title = String(headline || '').trim()
   const outlet = String(source || 'industry source').trim()
@@ -133,15 +139,13 @@ const parseRssItems = (xml) => {
   })
 }
 
-const now = new Date()
-const slotHour = now.getUTCHours() < 12 ? '00' : '12'
-const slotStamp = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}${String(now.getUTCDate()).padStart(2, '0')}${slotHour}`
-
-const existingQuery = encodeURIComponent(`*[_type=="post" && publishedAt > dateTime(now()) - 60*60*24*21]{"title":title,"slug":slug.current}`)
+const existingQuery = encodeURIComponent(`*[_type=="post"]{"title":title,"slug":slug.current,"youtubeUrl":youtubeUrl,"sourceUrl":sourceUrl}`)
 const existingResp = await fetch(`https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${existingQuery}`)
 const existingJson = await existingResp.json()
 const existingTitleKeys = new Set((existingJson?.result || []).map((p) => titleKey(p.title)).filter(Boolean))
 const existingSlugs = new Set((existingJson?.result || []).map((p) => String(p.slug || '').trim()).filter(Boolean))
+const existingYoutubeIds = new Set((existingJson?.result || []).map((p) => extractYoutubeId(p.youtubeUrl)).filter(Boolean))
+const existingSourceUrls = new Set((existingJson?.result || []).map((p) => normalizeUrl(p.sourceUrl)).filter(Boolean))
 
 const xml = await fetch(rssUrl).then((r) => r.text())
 const parsed = parseRssItems(xml)
@@ -161,13 +165,17 @@ const scored = parsed
 
 const selected = []
 const seen = new Set(existingTitleKeys)
+const seenSourceUrls = new Set(existingSourceUrls)
 for (const item of scored) {
   if (!item.titleKey || seen.has(item.titleKey)) continue
   const slug = slugify(item.title)
+  const sourceUrl = normalizeUrl(item.link)
   if (!slug || existingSlugs.has(slug)) continue
+  if (sourceUrl && seenSourceUrls.has(sourceUrl)) continue
   seen.add(item.titleKey)
+  if (sourceUrl) seenSourceUrls.add(sourceUrl)
   selected.push(item)
-  if (selected.length >= maxPosts) break
+  if (selected.length >= maxPosts * 8) break
 }
 
 if (!selected.length) {
@@ -177,9 +185,10 @@ if (!selected.length) {
 
 const docs = []
 const skipped = []
-const usedYoutubeIds = new Set()
+const usedYoutubeIds = new Set(existingYoutubeIds)
 const usedTitleKeys = new Set()
 for (let i = 0; i < selected.length; i += 1) {
+  if (docs.length >= maxPosts) break
   const h = selected[i]
   const slug = slugify(h.title)
   const yt = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
@@ -215,7 +224,7 @@ for (let i = 0; i < selected.length; i += 1) {
   }
 
   const lowConfidence = !h.topCompany
-  const idBase = `post-auto-${slotStamp}-${i + 1}`
+  const idBase = `post-auto-${slug}`
   const docId = lowConfidence ? `drafts.${idBase}` : idBase
 
   usedYoutubeIds.add(ytId)
@@ -225,10 +234,11 @@ for (let i = 0; i < selected.length; i += 1) {
     _id: docId,
     _type: 'post',
     title: h.title,
-    slug: { _type: 'slug', current: slug || `news-${slotStamp}-${i + 1}` },
+    slug: { _type: 'slug', current: slug || `news-${Date.now()}-${i + 1}` },
     excerpt,
     publishedAt: new Date().toISOString(),
     youtubeUrl: `https://www.youtube.com/watch?v=${ytId}`,
+    sourceUrl: h.link,
     author: { _type: 'reference', _ref: authorId },
     categories: [{ _type: 'reference', _ref: category }],
     body: [
@@ -267,7 +277,7 @@ if (dryRun) {
 }
 
 const mutateUrl = `https://${projectId}.api.sanity.io/v2023-10-01/data/mutate/${dataset}`
-const body = { mutations: docs.map((doc) => ({ createOrReplace: doc })) }
+const body = { mutations: docs.map((doc) => ({ createIfNotExists: doc })) }
 
 const resp = await fetch(mutateUrl, {
   method: 'POST',

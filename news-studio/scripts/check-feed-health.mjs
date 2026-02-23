@@ -118,7 +118,7 @@ if (badPosts.length > 0) {
 
 const seen = new Map()
 const dupes = []
-for (const p of posts) {
+for (const p of recentGuardPosts) {
   const key = titleKey(p.title)
   if (!key) continue
   if (seen.has(key)) dupes.push([seen.get(key), p])
@@ -126,7 +126,7 @@ for (const p of posts) {
 }
 
 if (dupes.length > 0) {
-  console.error('Feed health failed: duplicate-like headlines found in recent posts.')
+  console.error(`Feed health failed: duplicate-like headlines found in last ${guardWindowHours}h.`)
   for (const [a, b] of dupes.slice(0, 5)) {
     console.error(`- ${a.title} | ${b.title}`)
   }
