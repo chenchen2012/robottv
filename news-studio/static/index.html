@@ -189,6 +189,7 @@
     const projectId = "lumv116w";
     const dataset = "production";
     const PAGE_SIZE = 12;
+    const CACHE_KEY = "robot_tv_news_cache_v1";
     const app = document.getElementById("app");
     const path = window.location.pathname.replace(/\/$/, "") || "/";
     const params = new URLSearchParams(window.location.search || "");
@@ -281,7 +282,30 @@
       document.head.appendChild(script);
     };
 
-    const renderList = (posts) => {
+    const getCachedPosts = () => {
+      try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.posts)) return [];
+        return parsed.posts;
+      } catch (_) {
+        return [];
+      }
+    };
+
+    const cachePosts = (posts) => {
+      try {
+        if (!Array.isArray(posts) || !posts.length) return;
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          savedAt: new Date().toISOString(),
+          posts
+        }));
+      } catch (_) {}
+    };
+
+    const renderList = (posts, options = {}) => {
+      const { warning = "", emptyMessage = "No published posts yet. Check back soon for updates." } = options;
       document.title = "robot.tv News";
       setRobots("index,follow");
       app.innerHTML = `
@@ -297,8 +321,9 @@
         <div class="section-head">
           <h2>Latest News</h2>
         </div>
+        ${warning ? `<div class="panel empty" style="margin-bottom:.7rem;">${esc(warning)}</div>` : ""}
           <div id="grid" class="grid"></div>
-        <div id="empty" class="panel empty" hidden>No published posts yet. Check back soon for updates.</div>
+        <div id="empty" class="panel empty" hidden>${esc(emptyMessage)}</div>
       </section>
       <section class="panel newsletter">
         <p class="kicker">NEWSLETTER</p>
@@ -457,8 +482,19 @@
       const query = `*[_type=="post"] | order(publishedAt desc)[0...120]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
       fetch(sanityQuery(query))
         .then((r) => r.json())
-        .then((d) => renderList(Array.isArray(d.result) ? d.result : []))
-        .catch(() => renderList([]));
+        .then((d) => {
+          const posts = Array.isArray(d.result) ? d.result : [];
+          if (posts.length) cachePosts(posts);
+          renderList(posts);
+        })
+        .catch(() => {
+          const cached = getCachedPosts();
+          if (cached.length) {
+            renderList(cached, { warning: "Live feed is temporarily unavailable. Showing recently cached stories." });
+          } else {
+            renderList([], { emptyMessage: "Live feed is temporarily unavailable. Please refresh shortly." });
+          }
+        });
     }
   </script>
 </body>
