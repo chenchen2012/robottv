@@ -187,6 +187,10 @@ const docs = []
 const skipped = []
 const usedYoutubeIds = new Set(existingYoutubeIds)
 const usedTitleKeys = new Set()
+const hasTopCompanyCandidate = selected.some((x) => x.topCompany)
+if (!hasTopCompanyCandidate) {
+  console.log('No top-company candidate found in this cycle; allowing vetted fallback stories to publish.')
+}
 for (let i = 0; i < selected.length; i += 1) {
   if (docs.length >= maxPosts) break
   const h = selected[i]
@@ -223,7 +227,7 @@ for (let i = 0; i < selected.length; i += 1) {
     continue
   }
 
-  const lowConfidence = !h.topCompany
+  const lowConfidence = !h.topCompany && hasTopCompanyCandidate
   const idBase = `post-auto-${slug}`
   const docId = lowConfidence ? `drafts.${idBase}` : idBase
 
