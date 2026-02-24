@@ -185,7 +185,7 @@ a {
 .ticker-track {
     display: inline-block;
     min-width: 200%;
-    animation: tickerMove 28s linear infinite;
+    animation: tickerMove var(--ticker-duration, 28s) linear infinite;
 }
 
 .ticker-track span {

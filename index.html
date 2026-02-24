@@ -296,6 +296,18 @@
         const id = videoIdFromUrl(u);
         return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
       };
+      const tuneRailSpeed = () => {
+        const rail = document.getElementById("intelligence-rail");
+        const wrap = rail?.closest(".ticker-track-wrap");
+        if (!rail || !wrap) return;
+        const totalWidth = rail.scrollWidth;
+        if (!totalWidth) return;
+        const distance = totalWidth / 2;
+        const pxPerSecond = 72;
+        const rawSeconds = distance / pxPerSecond;
+        const durationSeconds = Math.max(22, Math.min(rawSeconds, 58));
+        rail.style.setProperty("--ticker-duration", `${durationSeconds.toFixed(1)}s`);
+      };
       const setRail = (posts) => {
         const rail = document.getElementById("intelligence-rail");
         if (!rail) return;
@@ -303,6 +315,7 @@
         if (!picks.length) return;
         const items = picks.map((p) => `<span><a href="${toPostUrl(p.slug)}">${escapeHtml(p.title)}</a></span>`).join("");
         rail.innerHTML = items + items;
+        tuneRailSpeed();
       };
 
       const setCard = (prefix, post) => {
@@ -317,6 +330,8 @@
         if (thumb) thumb.src = thumbFromVideo(post.youtubeUrl);
         if (prefix === "top" && desc) desc.textContent = post.excerpt || desc.textContent;
       };
+
+      tuneRailSpeed();
 
       fetch(`${sanityUrl}?query=${encodeURIComponent(q)}`)
         .then((r) => r.json())
@@ -348,6 +363,7 @@
           ));
         })
         .catch(() => {});
+      window.addEventListener("resize", tuneRailSpeed);
 
       const toEmbedUrl = (u) => {
         const id = videoIdFromUrl(u);
