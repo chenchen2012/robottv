@@ -219,7 +219,26 @@
       return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
     };
     const formatDate = (iso) => new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"});
-    const sanityQuery = (q) => `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(q)}`;
+    const sanityUrls = (q) => {
+      const enc = encodeURIComponent(q);
+      return [
+        `https://${projectId}.apicdn.sanity.io/v2023-10-01/data/query/${dataset}?query=${enc}`,
+        `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${enc}`
+      ];
+    };
+    const fetchJsonWithFallback = async (urls) => {
+      let lastErr = null;
+      for (const u of urls) {
+        try {
+          const r = await fetch(u, { cache: "no-store" });
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return await r.json();
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error("Feed fetch failed");
+    };
     const sanityParam = (value) => encodeURIComponent(JSON.stringify(value));
     const normalizeTitle = (s) => String(s || "")
       .toLowerCase()
@@ -475,8 +494,7 @@
     if (path.startsWith("/post/")) {
       const slug = path.replace("/post/", "").trim();
       const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->name,"categories":categories[]->title}`;
-      fetch(sanityQuery(query) + `&$slug=${sanityParam(slug)}`)
-        .then((r) => r.json())
+      fetchJsonWithFallback(sanityUrls(query).map((u) => `${u}&$slug=${sanityParam(slug)}`))
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
     } else {
@@ -488,8 +506,7 @@
       }
 
       const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
-      fetch(sanityQuery(query))
-        .then((r) => r.json())
+      fetchJsonWithFallback(sanityUrls(query))
         .then((d) => {
           const posts = Array.isArray(d.result) ? d.result : [];
           if (posts.length) cachePosts(posts);
