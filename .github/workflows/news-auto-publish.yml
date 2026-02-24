@@ -12,6 +12,9 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      SANITY_PROJECT_ID: lumv116w
+      SANITY_DATASET: production
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,8 +27,6 @@ jobs:
       - name: Publish latest robotics posts to Sanity
         run: node news-studio/scripts/publish-latest-news.mjs
         env:
-          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-          SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SANITY_AUTHOR_ID: ${{ secrets.SANITY_AUTHOR_ID }}
           PUBLISH_COUNT: 2
@@ -33,16 +34,12 @@ jobs:
       - name: Verify feed freshness and duplicate guard
         run: node news-studio/scripts/check-feed-health.mjs
         env:
-          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-          SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           MAX_FEED_AGE_HOURS: 24
 
       - name: Generate social drafts (X / LinkedIn / Reddit)
         run: node news-studio/scripts/generate-social-drafts.mjs
         env:
-          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-          SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SOCIAL_DRAFT_COUNT: 2
 

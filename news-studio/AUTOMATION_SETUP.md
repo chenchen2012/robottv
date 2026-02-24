@@ -6,10 +6,11 @@ A GitHub Actions workflow is included at `.github/workflows/news-auto-publish.ym
 
 Set these secrets in your repository settings (`Settings -> Secrets and variables -> Actions`):
 
-- `SANITY_PROJECT_ID` = `lumv116w`
-- `SANITY_DATASET` = `production`
 - `SANITY_API_TOKEN` = Sanity write token
 - `SANITY_AUTHOR_ID` = `author-chen-chen` (optional)
+
+Note:
+- Workflow is pinned to project `lumv116w` and dataset `production` directly in `.github/workflows/news-auto-publish.yml` to avoid secret drift.
 
 ## Create Sanity API Token
 
