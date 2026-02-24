@@ -189,6 +189,7 @@
     const projectId = "lumv116w";
     const dataset = "production";
     const PAGE_SIZE = 12;
+    const FETCH_DEPTH = 60;
     const CACHE_KEY = "robot_tv_news_cache_v1";
     const app = document.getElementById("app");
     const path = window.location.pathname.replace(/\/$/, "") || "/";
@@ -479,7 +480,14 @@
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
     } else {
-      const query = `*[_type=="post"] | order(publishedAt desc)[0...120]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
+      const cached = getCachedPosts();
+      if (cached.length) {
+        renderList(cached, { warning: "Loading latest updates..." });
+      } else {
+        renderList([], { emptyMessage: "Loading latest stories..." });
+      }
+
+      const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
       fetch(sanityQuery(query))
         .then((r) => r.json())
         .then((d) => {
