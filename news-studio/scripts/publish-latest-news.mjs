@@ -179,8 +179,8 @@ for (const item of scored) {
 }
 
 if (!selected.length) {
-  console.error('No trusted non-duplicate headlines found in RSS feed')
-  process.exit(1)
+  console.log('No trusted non-duplicate headlines found in RSS feed. No-op for this cycle.')
+  process.exit(0)
 }
 
 const docs = []
@@ -270,8 +270,8 @@ if (skipped.length) {
 }
 
 if (!docs.length) {
-  console.error('Publish guard blocked all candidate posts. Nothing was published.')
-  process.exit(1)
+  console.log('Publish guard blocked all candidate posts. No-op for this cycle.')
+  process.exit(0)
 }
 
 if (dryRun) {
