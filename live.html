@@ -46,6 +46,7 @@
             border-radius: 12px;
             overflow: hidden;
             background: #000;
+            position: relative;
         }
 
         .live-embed iframe {
@@ -54,6 +55,35 @@
             border: 0;
             display: block;
         }
+
+        .live-main-cta {
+            position: absolute;
+            left: 50%;
+            bottom: 0.8rem;
+            transform: translateX(-50%);
+            border: 1px solid #4d628b;
+            border-radius: 999px;
+            background: rgba(7, 11, 18, 0.84);
+            color: #edf4ff;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+            padding: 0.42rem 0.8rem;
+            font-weight: 700;
+            display: none;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            .live-main-cta {
+                display: inline-flex;
+            }
+
+            .live-embed.is-playing .live-main-cta {
+                display: none;
+            }
+        }
+
         #live-player {
             width: 100%;
             aspect-ratio: 16/9;
@@ -160,6 +190,7 @@
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
                 </iframe>
+                <span class="live-main-cta" data-live-main-tap-play role="button" tabindex="0" aria-label="Tap to play live">Tap to play live</span>
             </div>
 
             <section class="live-next" aria-label="Next up from newsroom">
@@ -181,7 +212,7 @@
             </div>
         </footer>
     </div>
-    <script src="scripts/live-feed-rotator.js?v=20260224-livefeed3"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260224-livefeed4"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
 </html>

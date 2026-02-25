@@ -186,8 +186,36 @@
       queuePlayer("[data-live-preview-frame]", ids);
     }
 
-    setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
-    queuePlayer("[data-live-main-frame]", ids);
+    const mainFrame = document.querySelector("[data-live-main-frame]");
+    const mainEmbedWrap = mainFrame?.closest(".live-embed");
+    const mainTapCta = document.querySelector("[data-live-main-tap-play]");
+    const useTapToPlayMain = Boolean(mainFrame && mainEmbedWrap && mainTapCta && TOUCH_FIRST_DEVICE);
+
+    if (useTapToPlayMain) {
+      mainFrame.src = "about:blank";
+      mainFrame.title = `${headline} livestream`;
+      mainEmbedWrap.classList.remove("is-playing");
+
+      const startMainPlayback = (event) => {
+        event.preventDefault();
+        if (mainEmbedWrap.classList.contains("is-playing")) return;
+        mainEmbedWrap.classList.add("is-playing");
+        mainFrame.src = embed;
+        queuePlayer("[data-live-main-frame]", ids);
+        ensureYouTubeApi();
+      };
+
+      mainTapCta.addEventListener("click", startMainPlayback);
+      mainTapCta.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          startMainPlayback(event);
+        }
+      });
+    } else {
+      setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
+      queuePlayer("[data-live-main-frame]", ids);
+    }
+
     ensureYouTubeApi();
     setText("[data-live-spotlight-title]", headline);
     setText("[data-live-spotlight-desc]", "Playing the robot.tv newsroom feed.");
