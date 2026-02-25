@@ -3,6 +3,7 @@
   const SANITY_DATASET = "production";
   const SANITY_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2023-10-01/data/query/${SANITY_DATASET}`;
   const QUERY = '*[_type=="post" && defined(youtubeUrl)] | order(publishedAt desc)[0...10]{title,excerpt,youtubeUrl,"slug":slug.current,publishedAt}';
+  const TOUCH_FIRST_DEVICE = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv/";
 
@@ -153,9 +154,39 @@
     const sourceHref = primary.slug ? toPostUrl(primary.slug) : "https://news.robot.tv/";
     const sourceText = primary.slug ? "Latest video from news.robot.tv" : "news.robot.tv";
 
-    setFrame("[data-live-preview-frame]", embed, `${headline} live preview`);
+    const previewFrame = document.querySelector("[data-live-preview-frame]");
+    const previewLink = previewFrame?.closest(".live-preview");
+    const previewTapCta = document.querySelector("[data-live-preview-tap-play]");
+    const useTapToPlayPreview = Boolean(previewFrame && previewLink && previewTapCta && TOUCH_FIRST_DEVICE);
+
+    if (useTapToPlayPreview) {
+      previewFrame.src = "about:blank";
+      previewFrame.title = `${headline} live preview`;
+      previewLink.classList.add("tap-ready");
+      previewLink.classList.remove("is-playing");
+
+      const startPreviewPlayback = (event) => {
+        if (previewLink.classList.contains("is-playing")) return;
+        event.preventDefault();
+        previewLink.classList.add("is-playing");
+        previewFrame.src = embed;
+        queuePlayer("[data-live-preview-frame]", ids);
+        ensureYouTubeApi();
+      };
+
+      previewLink.addEventListener("click", startPreviewPlayback);
+      previewTapCta.addEventListener("click", startPreviewPlayback);
+      previewTapCta.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          startPreviewPlayback(event);
+        }
+      });
+    } else {
+      setFrame("[data-live-preview-frame]", embed, `${headline} live preview`);
+      queuePlayer("[data-live-preview-frame]", ids);
+    }
+
     setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
-    queuePlayer("[data-live-preview-frame]", ids);
     queuePlayer("[data-live-main-frame]", ids);
     ensureYouTubeApi();
     setText("[data-live-spotlight-title]", headline);

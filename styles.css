@@ -290,6 +290,32 @@ a {
     font-weight: 700;
 }
 
+.live-preview-cta {
+    position: absolute;
+    left: 50%;
+    bottom: 0.7rem;
+    transform: translateX(-50%);
+    border: 1px solid #4d628b;
+    border-radius: 999px;
+    background: rgba(7, 11, 18, 0.84);
+    color: #edf4ff;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    padding: 0.34rem 0.72rem;
+    font-weight: 700;
+    display: none;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.live-preview.tap-ready .live-preview-cta {
+    display: inline-flex;
+}
+
+.live-preview.is-playing .live-preview-cta {
+    display: none;
+}
+
 .live-spotlight-copy {
     display: grid;
     align-content: start;
