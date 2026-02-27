@@ -59,7 +59,9 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /wp-json/*     /404.html  410
 /xmlrpc.php    /404.html  410
 /xy-gf/*       /404.html  410
-/cn/*          /404.html  410
+/cn            /index.html 301!
+/cn/           /index.html 301!
+/cn/*          /index.html 301!
 /geeni-camera/* /404.html 410
 
 # Legacy WordPress/article URLs should point to the new news site
