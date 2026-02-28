@@ -1,0 +1,35 @@
+name: Weekly SEO Check
+
+on:
+  schedule:
+    - cron: "15 9 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: weekly-seo-check
+  cancel-in-progress: false
+
+jobs:
+  seo-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run weekly SEO checks
+        run: node scripts/seo-weekly-check.mjs
+
+      - name: Upload SEO check artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-seo-check
+          path: |
+            ops-private/reports/seo/weekly-seo-check.json
+            ops-private/reports/seo/weekly-seo-check.md
+          if-no-files-found: warn
