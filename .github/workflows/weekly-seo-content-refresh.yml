@@ -1,0 +1,76 @@
+name: Weekly SEO Content Refresh
+
+on:
+  schedule:
+    - cron: "20 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: weekly-seo-content-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build content refresh report
+        run: node scripts/seo-content-refresh-report.mjs
+
+      - name: Upsert tracker issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const path = "ops-private/reports/seo/weekly-content-refresh-report.md";
+            const title = "Weekly SEO Content Refresh Tracker";
+            const body = fs.readFileSync(path, "utf8");
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: "open",
+              per_page: 100
+            });
+
+            const existing = issues.find((i) => i.title === title);
+            if (existing) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body
+              });
+              core.info(`Updated issue #${existing.number}`);
+            } else {
+              const created = await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body
+              });
+              core.info(`Created issue #${created.data.number}`);
+            }
+
+      - name: Upload report artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-seo-content-refresh
+          path: |
+            ops-private/reports/seo/weekly-content-refresh-report.json
+            ops-private/reports/seo/weekly-content-refresh-report.md
+          if-no-files-found: warn
