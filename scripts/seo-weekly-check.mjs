@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const ROOT = "/Users/cc801/Documents/New project/robottv";
+const ROOT = process.env.ROBOTTV_ROOT || process.cwd();
 const REPORT_DIR = path.join(ROOT, "ops-private", "reports", "seo");
 const REPORT_JSON = path.join(REPORT_DIR, "weekly-seo-check.json");
 const REPORT_MD = path.join(REPORT_DIR, "weekly-seo-check.md");
