@@ -22,7 +22,27 @@ jobs:
           node-version: "20"
 
       - name: Run weekly SEO checks
+        id: run_seo_check
+        continue-on-error: true
         run: node scripts/seo-weekly-check.mjs
+
+      - name: Build weekly SEO email content
+        if: always()
+        run: node scripts/build-seo-email-report.mjs
+
+      - name: Send weekly SEO email
+        if: always()
+        env:
+          EMAIL_TO: chenchen2012@hotmail.com
+        run: |
+          SUBJECT="$(cat ops-private/reports/seo/weekly-seo-email-subject.txt)"
+          BODY_FILE="ops-private/reports/seo/weekly-seo-email-body.txt"
+          curl -sS -X POST "https://formsubmit.co/${EMAIL_TO}" \
+            -F "_subject=${SUBJECT}" \
+            -F "_captcha=false" \
+            -F "_template=table" \
+            -F "message=<${BODY_FILE}" > /tmp/formsubmit_response.txt
+          echo "FormSubmit response saved to /tmp/formsubmit_response.txt"
 
       - name: Upload SEO check artifacts
         if: always()
@@ -32,4 +52,12 @@ jobs:
           path: |
             ops-private/reports/seo/weekly-seo-check.json
             ops-private/reports/seo/weekly-seo-check.md
+            ops-private/reports/seo/weekly-seo-email-subject.txt
+            ops-private/reports/seo/weekly-seo-email-body.txt
           if-no-files-found: warn
+
+      - name: Fail job if SEO check failed
+        if: steps.run_seo_check.outcome == 'failure'
+        run: |
+          echo "Weekly SEO check reported failure."
+          exit 1
