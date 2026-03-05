@@ -130,6 +130,44 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /post/:slug               https://news.robot.tv/post/:slug  301!
 /post/*                   https://news.robot.tv/            301!
 
+# Legacy recovery: trailing-slash variants for canonical static pages
+/about/             /about.html             301!
+/home/              /home.html              301!
+/live/              /live.html              301!
+/companies/         /companies.html         301!
+/robot-companies/   /robot-companies.html   301!
+/humanoid-robots/   /humanoid-robots.html   301!
+/contact/           /contact.html           301!
+/partner/           /partner.html           301!
+/pricing/           /pricing.html           301!
+/sales/             /sales.html             301!
+/get-featured/      /get-featured.html      301!
+/privacy/           /privacy.html           301!
+/terms/             /terms.html             301!
+/mediakit/          /mediakit.html          301!
+/mediakit-print/    /mediakit-print.html    301!
+/news/              https://news.robot.tv/  301!
+
+# Legacy recovery: common company/profile aliases from older structures
+/boston-dynamics.html       /company-boston-dynamics.html  301!
+/unitree.html               /company-unitree.html          301!
+/tesla.html                 /company-tesla.html            301!
+/figure.html                /company-figure.html           301!
+/agility.html               /company-agility.html          301!
+/apptronik.html             /company-apptronik.html        301!
+/company/boston-dynamics    /company-boston-dynamics.html  301!
+/company/boston-dynamics/   /company-boston-dynamics.html  301!
+/company/unitree            /company-unitree.html          301!
+/company/unitree/           /company-unitree.html          301!
+/company/tesla              /company-tesla.html            301!
+/company/tesla/             /company-tesla.html            301!
+/company/figure             /company-figure.html           301!
+/company/figure/            /company-figure.html           301!
+/company/agility            /company-agility.html          301!
+/company/agility/           /company-agility.html          301!
+/company/apptronik          /company-apptronik.html        301!
+/company/apptronik/         /company-apptronik.html        301!
+
 # Keep machine endpoints explicit
 /robots.txt  /robots.txt  200
 /sitemap.xml /sitemap.xml 200
