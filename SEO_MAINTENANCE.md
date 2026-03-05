@@ -108,4 +108,4 @@ node scripts/seo-weekly-check.mjs
 1. Frequent updates help only when quality stays high.
 2. Avoid thin or duplicate edits just to change timestamps.
 3. Keep the current guardrail: if feed/source validation fails, skip publish.
-4. Intentional `noindex` set for the weekly checker: `404.html`, `contact-success.html`, `mediakit-print.html`, `news.html`, `sales.html`, `aild.html`, `chenchen.html`, `wooshe.html`.
+4. Intentional `noindex` set for the weekly checker: `404.html`, `contact-success.html`, `mediakit-print.html`, `news.html`, `sales.html`, `chenchen.html`, `wooshe.html`.

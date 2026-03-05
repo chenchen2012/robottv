@@ -1,0 +1,56 @@
+[
+  {
+    "_id": "post-manual-20260218-3",
+    "_type": "post",
+    "title": "Unitree momentum signals China is becoming a serious global robotics competitor",
+    "slug": {"_type": "slug", "current": "unitree-china-global-robotics-competitor-momentum"},
+    "excerpt": "Recent market coverage highlights Unitree's rising visibility in humanoid and quadruped robotics, with cost and scale as key competitive levers.",
+    "publishedAt": "2026-02-18T22:05:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=LPEGve_U1cY",
+    "author": {"_type": "reference", "_ref": "author-chen-chen"},
+    "categories": [{"_type": "reference", "_ref": "category-humanoid-robots"}],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "m3a",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m3as", "text": "Source trend: Barron's and broader industry commentary on February 18, 2026."}]
+      },
+      {
+        "_type": "block",
+        "_key": "m3b",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m3bs", "text": "robot.tv angle: The core story is no longer just demos. It is cost-performance at shipment scale and how quickly platforms move into repeat deployments."}]
+      }
+    ]
+  },
+  {
+    "_id": "post-manual-20260218-4",
+    "_type": "post",
+    "title": "Amazon's Blue Jay halt shows warehouse robotics programs are being held to tighter ROI standards",
+    "slug": {"_type": "slug", "current": "amazon-blue-jay-halt-warehouse-robotics-roi-standards"},
+    "excerpt": "Multiple outlets report Amazon halted Blue Jay after a short prototyping window, signaling stricter deployment economics for warehouse robotics bets.",
+    "publishedAt": "2026-02-18T22:10:00.000Z",
+    "youtubeUrl": "https://www.youtube.com/watch?v=e2z1WU9qvik",
+    "author": {"_type": "reference", "_ref": "author-chen-chen"},
+    "categories": [{"_type": "reference", "_ref": "category-robotics-startups"}],
+    "body": [
+      {
+        "_type": "block",
+        "_key": "m4a",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m4as", "text": "Source trend: TechCrunch and Business Insider coverage on February 17-18, 2026."}]
+      },
+      {
+        "_type": "block",
+        "_key": "m4b",
+        "style": "normal",
+        "markDefs": [],
+        "children": [{"_type": "span", "_key": "m4bs", "text": "robot.tv angle: In logistics robotics, capital now follows measurable throughput and reliability gains, not prototype novelty."}]
+      }
+    ]
+  }
+]

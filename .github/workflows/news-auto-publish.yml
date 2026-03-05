@@ -1,20 +1,16 @@
 name: Auto Publish Robot News
 
 on:
-  schedule:
-    - cron: '0 */12 * * *'
   workflow_dispatch:
-
-concurrency:
-  group: news-auto-publish
-  cancel-in-progress: false
+  schedule:
+    - cron: "15 */6 * * *"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env:
-      SANITY_PROJECT_ID: lumv116w
-      SANITY_DATASET: production
+    defaults:
+      run:
+        working-directory: news-studio
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,26 +18,38 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: news-studio/package-lock.json
 
-      - name: Publish latest robotics posts to Sanity
-        run: node news-studio/scripts/publish-latest-news.mjs
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish latest trusted stories
         env:
+          SANITY_PROJECT_ID: lumv116w
+          SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SANITY_AUTHOR_ID: ${{ secrets.SANITY_AUTHOR_ID }}
-          PUBLISH_COUNT: 2
+          NETLIFY_BUILD_HOOK_URL: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+          PUBLISH_COUNT: "2"
+        run: node scripts/publish-latest-news.mjs
 
       - name: Verify feed freshness and duplicate guard
-        run: node news-studio/scripts/check-feed-health.mjs
         env:
+          SANITY_PROJECT_ID: lumv116w
+          SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-          MAX_FEED_AGE_HOURS: 24
+          MAX_FEED_AGE_HOURS: "24"
+        run: node scripts/check-feed-health.mjs
 
       - name: Generate social drafts (X / LinkedIn / Reddit)
-        run: node news-studio/scripts/generate-social-drafts.mjs
         env:
+          SANITY_PROJECT_ID: lumv116w
+          SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-          SOCIAL_DRAFT_COUNT: 2
+          SOCIAL_DRAFT_COUNT: "2"
+        run: node scripts/generate-social-drafts.mjs
 
       - name: Upload social draft artifacts
         if: always()

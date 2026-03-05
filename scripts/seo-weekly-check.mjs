@@ -25,7 +25,6 @@ const HIGH_VALUE_PAGES = [
 ];
 const ALLOWED_NOINDEX_PAGES = new Set([
   "404.html",
-  "aild.html",
   "chenchen.html",
   "contact-success.html",
   "mediakit-print.html",

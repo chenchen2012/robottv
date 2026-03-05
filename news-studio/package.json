@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "build:seo": "node scripts/build-static-news-seo.mjs",
+    "build:dist": "node scripts/sync-static-seo-to-dist.mjs",
+    "build:netlify": "npm run build:seo && npm run build && npm run build:dist",
     "dev": "sanity dev",
     "build": "sanity build",
     "deploy": "sanity deploy"

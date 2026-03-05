@@ -54,7 +54,6 @@ Disallow: /404.html
 Disallow: /contact-success.html
 Disallow: /contact-success/
 Disallow: /test.html
-Disallow: /aild.html
 Disallow: /chenchen.html
 Disallow: /wooshe.html
 

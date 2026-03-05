@@ -1,0 +1,21 @@
+NO_THUMB Optimus_(robot)
+OK universal-robots-ur20.jpg <- Universal_Robots
+MISS_API FANUC
+OK figure-02.jpg <- Figure_02
+NO_THUMB KUKA
+MISS_API GR-2
+MISS_API Unitree_H1
+MISS_API UBTECH_Robotics
+MISS_API CyberOne
+MISS_API HRP-5P
+MISS_API Toyota_T-HR3
+MISS_API Unitree_B2
+MISS_API Unitree_Go2
+MISS_API Unitree_Go1
+MISS_API Boston_Dynamics_Stretch
+MISS_API Mobile_industrial_robot
+NO_THUMB Autonomous_mobile_robot
+MISS_API OTTO_Motors
+OK universal-robots-ur20.jpg <- Universal_Robots
+OK fanuc-crx.jpg <- FANUC
+NO_THUMB KUKA

@@ -4,6 +4,7 @@ const token = process.env.SANITY_API_TOKEN
 const authorId = process.env.SANITY_AUTHOR_ID || 'author-chen-chen'
 const maxPosts = Number(process.env.PUBLISH_COUNT || 2)
 const dryRun = process.env.DRY_RUN === '1'
+const netlifyBuildHookUrl = String(process.env.NETLIFY_BUILD_HOOK_URL || '').trim()
 
 if (!projectId || !token) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID) and SANITY_API_TOKEN')
@@ -252,13 +253,6 @@ for (let i = 0; i < selected.length; i += 1) {
         style: 'normal',
         markDefs: [],
         children: [{ _type: 'span', _key: `s${i}a`, text: `Source: ${h.source}. Published: ${h.pubDate || 'n/a'}.` }]
-      },
-      {
-        _type: 'block',
-        _key: `b${i}b`,
-        style: 'normal',
-        markDefs: [],
-        children: [{ _type: 'span', _key: `s${i}b`, text: lowConfidence ? 'Status: queued as draft for review (company-signal guard).' : 'Status: auto-published.' }]
       }
     ]
   })
@@ -305,4 +299,20 @@ console.log('Created docs:', docs.map((d) => d._id).join(', '))
 console.log(`Published: ${published}, Drafted: ${drafted}`)
 if (result?.results) {
   console.log('Mutation results:', result.results.length)
+}
+
+if (netlifyBuildHookUrl) {
+  try {
+    const hookResp = await fetch(netlifyBuildHookUrl, { method: 'POST' })
+    if (!hookResp.ok) {
+      const hookText = await hookResp.text()
+      console.warn(`Netlify build hook failed: HTTP ${hookResp.status} ${hookText}`.trim())
+    } else {
+      console.log('Triggered Netlify rebuild via build hook.')
+    }
+  } catch (err) {
+    console.warn(`Netlify build hook request failed: ${err?.message || err}`)
+  }
+} else {
+  console.log('NETLIFY_BUILD_HOOK_URL not set; skipped automatic news site redeploy trigger.')
 }

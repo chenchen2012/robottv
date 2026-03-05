@@ -6,6 +6,48 @@
   <meta name="description" content="robot.tv News: video-first robotics intelligence covering humanoids, quadrupeds, and startup execution.">
   <link rel="canonical" id="canonical-link" href="https://news.robot.tv/">
   <title>robot.tv News</title>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "robot.tv",
+      "url": "https://robot.tv/",
+      "logo": "https://robot.tv/images/robot_logo.png",
+      "sameAs": ["https://news.robot.tv/"]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "robot.tv News",
+      "url": "https://news.robot.tv/",
+      "publisher": {
+        "@type": "Organization",
+        "name": "robot.tv"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "robot.tv",
+          "item": "https://robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "News",
+          "item": "https://news.robot.tv/"
+        }
+      ]
+    }
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -260,6 +302,7 @@
     const shouldRenderParagraph = (text) => {
       const t = String(text || "").trim();
       if (!t) return false;
+      if (/^status:/i.test(t)) return false;
       if (/^original coverage link:/i.test(t)) return false;
       if (/news\.google\.com\/rss\/articles/i.test(t)) return false;
       return true;
@@ -380,7 +423,7 @@
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">${esc(formatDate(p.publishedAt))} | ${esc(p.author || "robot.tv")}</p>
+            <p class="meta">${esc(formatDate(p.publishedAt))}</p>
             <h3><a href="/post/${esc(p.slug)}">${esc(p.title)}</a></h3>
             <p>${esc(p.excerpt || "Latest robotics intelligence from robot.tv.")}</p>
             <div class="row">
@@ -471,7 +514,7 @@
           <article class="panel article-main">
             <p class="kicker">ARTICLE</p>
             <h1>${esc(post.title)}</h1>
-            <p class="meta" style="margin-top:.55rem;">${esc(formatDate(post.publishedAt))} | ${esc(post.author || "robot.tv")}</p>
+            <p class="meta" style="margin-top:.55rem;">${esc(formatDate(post.publishedAt))}</p>
             <p class="copy" style="max-width:none;">${esc(post.excerpt || "")}</p>
             ${ytId ? `<div class="video-wrap"><iframe src="${esc(embed)}" title="${esc(post.title)} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : ""}
             <div class="article-body">

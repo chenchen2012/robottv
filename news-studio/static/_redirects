@@ -26,7 +26,7 @@
 /robots.txt  /robots.txt  200
 /sitemap.xml /sitemap.xml 200
 
-# SPA routes
+# SPA fallback for article paths; static files will shadow this rule.
 /post/*  /index.html  200
 /        /index.html  200
 
