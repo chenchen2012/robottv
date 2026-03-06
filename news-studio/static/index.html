@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="robot.tv News: video-first robotics intelligence covering humanoids, quadrupeds, and startup execution.">
+  <meta name="description" content="Robot news and robotics news from robot.tv: daily video-first coverage of humanoid robot news, AI robotics news, quadrupeds, and startup execution.">
   <link rel="canonical" id="canonical-link" href="https://news.robot.tv/">
-  <title>robot.tv News</title>
+  <title>Robot News & Robotics News | robot.tv</title>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -369,20 +369,20 @@
 
     const renderList = (posts, options = {}) => {
       const { warning = "", emptyMessage = "No published posts yet. Check back soon for updates." } = options;
-      document.title = "robot.tv News";
+      document.title = "Robot News & Robotics News | robot.tv";
       setRobots("index,follow");
       app.innerHTML = `
         <section class="panel hero">
           <p class="kicker">ROBOTICS NEWSROOM</p>
-          <h1>Breaking Robotics, Everywhere</h1>
-        <p class="copy">From humanoid deployment signals to startup execution velocity, robot.tv News tracks what matters with video-first reporting.</p>
+          <h1>Robot News and Robotics News, Daily</h1>
+        <p class="copy">From humanoid robot news to AI robotics news and startup execution velocity, robot.tv News tracks the biggest robot news stories with video-first reporting.</p>
         <div class="actions">
             <a class="btn btn-ghost" href="https://robot.tv">Back to robot.tv</a>
         </div>
       </section>
       <section class="section">
         <div class="section-head">
-          <h2>Latest News</h2>
+	          <h2>Latest Robot News</h2>
         </div>
         ${warning ? `<div class="panel empty" style="margin-bottom:.7rem;">${esc(warning)}</div>` : ""}
           <div id="grid" class="grid"></div>
@@ -391,7 +391,7 @@
       <section class="panel newsletter">
         <p class="kicker">NEWSLETTER</p>
         <h2>Get The Weekly Robot Brief</h2>
-        <p class="copy">One concise email with the biggest robotics signals from robot.tv News.</p>
+	        <p class="copy">One concise email with the biggest robot news and robotics market signals from robot.tv News.</p>
         <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com">
           <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
           <input type="hidden" name="_subject" value="robot.tv newsletter signup from news">
@@ -427,7 +427,7 @@
             <h3><a href="/post/${esc(p.slug)}">${esc(p.title)}</a></h3>
             <p>${esc(p.excerpt || "Latest robotics intelligence from robot.tv.")}</p>
             <div class="row">
-              <a class="btn btn-primary" href="/post/${esc(p.slug)}">Open Briefing</a>
+	              <a class="btn btn-primary" href="/post/${esc(p.slug)}">Read Robot News</a>
             </div>
           </div>
         </article>
