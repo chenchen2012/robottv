@@ -22,6 +22,8 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /index.html   /                 301!
 /index.php    /                 301!
 /index        /                 301!
+/homepage     /                 301!
+/homepage/    /                 301!
 /home        /home.html        301!
 /about       /about.html       301!
 /live        /live.html        301!
@@ -109,6 +111,9 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /wp-json/*     /404.html  410
 /xmlrpc.php    /404.html  410
 /xy-gf/*       /404.html  410
+/xdog          /404.html  410
+/xdog.html     /404.html  410
+/cn/2016/*     /404.html  410
 /cn            / 301!
 /cn/           / 301!
 /cn/*          / 301!
