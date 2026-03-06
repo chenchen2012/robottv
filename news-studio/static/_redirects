@@ -26,9 +26,11 @@
 /robots.txt  /robots.txt  200
 /sitemap.xml /sitemap.xml 200
 
-# SPA fallback for article paths; static files will shadow this rule.
-/post/:slug.html  /post/:slug  301!
-/post/*  /404.html  404
+# Canonicalize legacy ".html" article URLs and map canonical article URLs to static files.
+/post/*.html    /post/:splat                    301!
+/post/:slug     /static/post/:slug/index.html   200
+/post/:slug/    /static/post/:slug/index.html   200
+/post/*         /404.html                        404
 /        /index.html  200
 
 # 404 fallback

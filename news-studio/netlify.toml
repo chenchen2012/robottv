@@ -123,10 +123,21 @@
 
 # Canonicalize legacy ".html" article URLs to canonical slug URLs.
 [[redirects]]
-  from = "/post/:slug.html"
-  to = "/post/:slug"
+  from = "/post/*.html"
+  to = "/post/:splat"
   status = 301
   force = true
+
+# Canonical article route should serve the generated static article HTML.
+[[redirects]]
+  from = "/post/:slug"
+  to = "/static/post/:slug/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/post/:slug/"
+  to = "/static/post/:slug/index.html"
+  status = 200
 
 # SPA routes.
 [[redirects]]
