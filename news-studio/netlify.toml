@@ -121,6 +121,13 @@
   status = 301
   force = true
 
+# Canonicalize legacy ".html" article URLs to canonical slug URLs.
+[[redirects]]
+  from = "/post/:slug.html"
+  to = "/post/:slug"
+  status = 301
+  force = true
+
 # SPA routes.
 [[redirects]]
   from = "/"
@@ -128,11 +135,11 @@
   status = 200
   force = true
 
-# Fallback to SPA rendering for article paths; static files will shadow this rule.
+# Unknown article paths should return 404 (real static article files are served first).
 [[redirects]]
   from = "/post/*"
-  to = "/static/index.html"
-  status = 200
+  to = "/static/404.html"
+  status = 404
 
 [[redirects]]
   from = "/*"

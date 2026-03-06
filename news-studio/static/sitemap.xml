@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://news.robot.tv/</loc><lastmod>2026-03-03</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://news.robot.tv/</loc><lastmod>2026-03-06</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://news.robot.tv/post/11-women-shaping-the-future-of-robotics</loc><lastmod>2026-03-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://news.robot.tv/post/amazon-cuts-jobs-in-strategically-important-robotics-division</loc><lastmod>2026-03-05</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://news.robot.tv/post/amazon-cuts-more-jobs-this-time-in-robotics-unit</loc><lastmod>2026-03-05</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://news.robot.tv/post/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation</loc><lastmod>2026-03-05</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://news.robot.tv/post/breakingviews-hyundai-motors-robots-herald-hardware-reboot</loc><lastmod>2026-03-04</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside</loc><lastmod>2026-03-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market</loc><lastmod>2026-03-02</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://news.robot.tv/post/the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp</loc><lastmod>2026-03-01</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>

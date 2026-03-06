@@ -27,7 +27,8 @@
 /sitemap.xml /sitemap.xml 200
 
 # SPA fallback for article paths; static files will shadow this rule.
-/post/*  /index.html  200
+/post/:slug.html  /post/:slug  301!
+/post/*  /404.html  404
 /        /index.html  200
 
 # 404 fallback

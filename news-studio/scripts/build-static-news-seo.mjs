@@ -312,11 +312,8 @@ const writePosts = async (posts) => {
     const slug = normalizeSlug(post.slug);
     const html = buildArticleHtml(post);
     const primaryDir = path.join(postDir, slug);
-    const htmlAliasDir = path.join(postDir, `${slug}.html`);
     await fs.mkdir(primaryDir, { recursive: true });
-    await fs.mkdir(htmlAliasDir, { recursive: true });
     await fs.writeFile(path.join(primaryDir, "index.html"), html, "utf8");
-    await fs.writeFile(path.join(htmlAliasDir, "index.html"), html, "utf8");
   }
 };
 
