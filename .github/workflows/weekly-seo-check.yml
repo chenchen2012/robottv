@@ -26,6 +26,13 @@ jobs:
         continue-on-error: true
         run: node scripts/seo-weekly-check.mjs
 
+      - name: Build GSC keyword map (optional)
+        if: always() && env.GSC_TOKEN != ''
+        env:
+          GSC_TOKEN: ${{ secrets.GSC_TOKEN }}
+          GSC_QUOTA_PROJECT: ebuyesell
+        run: node scripts/gsc-keyword-map.mjs
+
       - name: Build weekly SEO email content
         if: always()
         run: node scripts/build-seo-email-report.mjs
@@ -54,6 +61,8 @@ jobs:
             ops-private/reports/seo/weekly-seo-check.md
             ops-private/reports/seo/weekly-seo-email-subject.txt
             ops-private/reports/seo/weekly-seo-email-body.txt
+            ops-private/reports/seo/keyword-map-*.json
+            ops-private/reports/seo/keyword-map-*.md
           if-no-files-found: warn
 
       - name: Fail job if SEO check failed
