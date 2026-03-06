@@ -26,10 +26,33 @@ jobs:
         continue-on-error: true
         run: node scripts/seo-weekly-check.mjs
 
+      - name: Mint Google access token for GSC
+        if: always()
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+        run: |
+          if [ -z "${GOOGLE_OAUTH_CLIENT_ID}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN}" ]; then
+            echo "Google OAuth refresh credentials are not configured; skipping keyword map."
+            exit 0
+          fi
+          RESP=$(curl -sS https://oauth2.googleapis.com/token \
+            -d "client_id=${GOOGLE_OAUTH_CLIENT_ID}" \
+            -d "client_secret=${GOOGLE_OAUTH_CLIENT_SECRET}" \
+            -d "refresh_token=${GOOGLE_OAUTH_REFRESH_TOKEN}" \
+            -d "grant_type=refresh_token")
+          ACCESS_TOKEN=$(echo "$RESP" | jq -r '.access_token // empty')
+          if [ -z "$ACCESS_TOKEN" ]; then
+            echo "Failed to mint Google access token."
+            echo "$RESP" | jq -c .
+            exit 1
+          fi
+          echo "GSC_TOKEN=$ACCESS_TOKEN" >> "$GITHUB_ENV"
+
       - name: Build GSC keyword map (optional)
         if: always() && env.GSC_TOKEN != ''
         env:
-          GSC_TOKEN: ${{ secrets.GSC_TOKEN }}
           GSC_QUOTA_PROJECT: ebuyesell
         run: node scripts/gsc-keyword-map.mjs
 
