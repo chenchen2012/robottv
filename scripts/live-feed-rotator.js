@@ -8,10 +8,13 @@
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv/";
 
   const videoIdFromUrl = (url) => {
-    const text = String(url || "");
+    const text = String(url || "").trim();
     return (
-      (text.match(/[?&]v=([^&]+)/) || [])[1] ||
-      (text.match(/youtu\.be\/([^?&]+)/) || [])[1] ||
+      (text.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || [])[1] ||
+      (text.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+      (text.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+      (text.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+      (text.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
       ""
     );
   };
@@ -21,7 +24,7 @@
     if (!cleanIds.length) return "";
     const first = cleanIds[0];
     const playlist = cleanIds.join(",");
-    return `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${playlist}`;
+    return `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1&loop=1&playlist=${playlist}`;
   };
 
   const queuedPlayers = [];
@@ -60,7 +63,7 @@
       frame.dataset.playerReady = "1";
       const first = ids[0];
       const playlist = ids.join(",");
-      frame.src = `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&playlist=${playlist}`;
+      frame.src = `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&playlist=${playlist}`;
 
       const player = new window.YT.Player(id, {
         events: {
