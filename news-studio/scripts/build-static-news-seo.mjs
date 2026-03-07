@@ -7,6 +7,9 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const postDir = path.join(staticDir, "post");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
+const videoOverridesBySlug = {
+  "11-women-shaping-the-future-of-robotics": "https://www.youtube.com/watch?v=uVJeI60glTE",
+};
 
 const escapeHtml = (value) =>
   String(value ?? "").replace(/[&<>"']/g, (ch) => {
@@ -267,7 +270,8 @@ const fetchPosts = async () => {
     const slug = normalizeSlug(post.slug);
     if (!slug || seen.has(slug)) continue;
     seen.add(slug);
-    unique.push({ ...post, slug });
+    const overrideYoutubeUrl = videoOverridesBySlug[slug];
+    unique.push({ ...post, slug, youtubeUrl: overrideYoutubeUrl || post.youtubeUrl });
   }
   return unique;
 };
