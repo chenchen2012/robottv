@@ -7,6 +7,9 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const postDir = path.join(staticDir, "post");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
+const retiredLegacyRedirects = {
+  "china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots": "robot-news",
+};
 const legacyHtmlAliasSlugs = new Set([
   "chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications",
 ]);
@@ -236,34 +239,6 @@ const editorialPinnedPosts = [
     categories: ["Robotics News", "Roundup"],
   },
   {
-    title: "China rolls out world's first military-proof 5G that can connect 10,000 army robots",
-    excerpt:
-      "China’s robotics and communications stack is being positioned for large-scale connected autonomy scenarios, with high device-density claims around military-grade 5G resilience.",
-    publishedAt: "2025-01-05T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=W7kqiLFIgzU",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy post tracks claims around high-density robotics connectivity and practical implications for real-world autonomous coordination.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: communications reliability is a core bottleneck in multi-robot deployment at operational scale.",
-          },
-        ],
-      },
-    ],
-    slug: "china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots",
-    author: "Chen Chen",
-    categories: ["Robotics News", "Infrastructure", "China"],
-  },
-  {
     title: "Chinese robotics firms showcase advanced quadruped robots for practical applications",
     excerpt:
       "Chinese robotics firms are showing advanced quadruped robots in practical industrial and field scenarios, signaling stronger real-world deployment readiness.",
@@ -347,7 +322,6 @@ const escapeHtml = (value) =>
 const toPlainText = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
 
 const normalizeSlug = (slug) => String(slug || "").trim().replace(/^\/+|\/+$/g, "");
-
 const videoIdFromUrl = (url) => {
   const value = String(url || "").trim();
   if (!value) return "";
@@ -590,7 +564,7 @@ const fetchPosts = async () => {
   const seen = new Set();
   for (const post of merged) {
     const slug = normalizeSlug(post.slug);
-    if (!slug || seen.has(slug)) continue;
+    if (!slug || retiredLegacyRedirects[slug] || seen.has(slug)) continue;
     seen.add(slug);
     const overrideYoutubeUrl = videoOverridesBySlug[slug];
     unique.push({ ...post, slug, youtubeUrl: overrideYoutubeUrl || post.youtubeUrl });
@@ -631,6 +605,9 @@ ${items
 const ensureCleanPostDir = async () => {
   await fs.rm(postDir, { recursive: true, force: true });
   await fs.mkdir(postDir, { recursive: true });
+  for (const year of ["2024", "2025"]) {
+    await fs.rm(path.join(staticDir, year), { recursive: true, force: true });
+  }
 };
 
 const writePosts = async (posts) => {

@@ -242,6 +242,11 @@
     const PAGE_SIZE = 12;
     const FETCH_DEPTH = 60;
     const CACHE_KEY = "robot_tv_news_cache_v1";
+    const hiddenListingSlugs = new Set([
+      "biggest-ai-news-today",
+      "the-biggest-robot-news-today",
+      "robots-learn-faster-with-new-ai-techniques"
+    ]);
     const editorialPinnedPosts = [
       {
         title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
@@ -328,6 +333,8 @@
         return true;
       });
     };
+    const filterVisibleListingPosts = (posts) =>
+      posts.filter((p) => !hiddenListingSlugs.has(String(p.slug || "").trim()));
 
     const blockToText = (block) => (block.children || []).map((c) => c.text || "").join("").trim();
     const shouldRenderParagraph = (text) => {
@@ -440,7 +447,7 @@
       const grid = document.getElementById("grid");
       const empty = document.getElementById("empty");
       if (!posts.length) { empty.hidden = false; return; }
-      const uniquePosts = dedupePosts([...editorialPinnedPosts, ...posts]);
+      const uniquePosts = dedupePosts(filterVisibleListingPosts([...editorialPinnedPosts, ...posts]));
       if (!uniquePosts.length) { empty.hidden = false; return; }
       const totalPages = Math.max(1, Math.ceil(uniquePosts.length / PAGE_SIZE));
       const page = Math.min(requestedPage, totalPages);
@@ -584,7 +591,7 @@
       fetchJsonWithFallback(sanityUrls(query))
         .then((d) => {
           const fetchedPosts = Array.isArray(d.result) ? d.result : [];
-          const posts = dedupePosts([...editorialPinnedPosts, ...fetchedPosts]);
+          const posts = dedupePosts(filterVisibleListingPosts([...editorialPinnedPosts, ...fetchedPosts]));
           if (posts.length) cachePosts(posts);
           renderList(posts);
         })

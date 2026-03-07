@@ -27,6 +27,9 @@
 /sitemap.xml /sitemap.xml 200
 
 # Canonicalize legacy ".html" article URLs and map canonical article URLs to static files.
+/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots  /post/robot-news  301!
+/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots/  /post/robot-news  301!
+/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots.html  /post/robot-news  301!
 /post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications.html  /post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications  301!
 /post/:slug     /static/post/:slug/index.html   200
 /post/:slug/    /static/post/:slug/index.html   200
