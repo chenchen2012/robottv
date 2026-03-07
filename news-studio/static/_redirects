@@ -27,6 +27,7 @@
 /sitemap.xml /sitemap.xml 200
 
 # Canonicalize legacy ".html" article URLs and map canonical article URLs to static files.
+/post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications.html  /post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications  301!
 /post/*.html    /post/:splat                    301!
 /post/:slug     /static/post/:slug/index.html   200
 /post/:slug/    /static/post/:slug/index.html   200

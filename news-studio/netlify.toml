@@ -123,6 +123,12 @@
 
 # Canonicalize legacy ".html" article URLs to canonical slug URLs.
 [[redirects]]
+  from = "/post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications.html"
+  to = "/post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/post/*.html"
   to = "/post/:splat"
   status = 301

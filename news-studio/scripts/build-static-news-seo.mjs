@@ -7,7 +7,38 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const postDir = path.join(staticDir, "post");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
+const legacyHtmlAliasSlugs = new Set([
+  "chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications",
+]);
 const editorialPinnedPosts = [
+  {
+    title: "Chinese robotics firms showcase advanced quadruped robots for practical applications",
+    excerpt:
+      "Chinese robotics firms are showing advanced quadruped robots in practical industrial and field scenarios, signaling stronger real-world deployment readiness.",
+    publishedAt: "2025-01-01T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=X2UxtKLZnNo",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored briefing tracks how Chinese robotics firms are positioning quadruped platforms for practical applications beyond demonstrations.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: commercialization momentum depends on reliability, uptime, and repeatable task performance in real operating environments.",
+          },
+        ],
+      },
+    ],
+    slug: "chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications",
+    author: "Chen Chen",
+    categories: ["Quadrupeds", "Robotics News", "Operations"],
+  },
   {
     title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
     excerpt:
@@ -357,6 +388,12 @@ const writePosts = async (posts) => {
     const primaryDir = path.join(postDir, slug);
     await fs.mkdir(primaryDir, { recursive: true });
     await fs.writeFile(path.join(primaryDir, "index.html"), html, "utf8");
+
+    if (legacyHtmlAliasSlugs.has(slug)) {
+      const aliasDir = path.join(postDir, `${slug}.html`);
+      await fs.mkdir(aliasDir, { recursive: true });
+      await fs.writeFile(path.join(aliasDir, "index.html"), html, "utf8");
+    }
   }
 };
 
