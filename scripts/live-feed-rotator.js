@@ -3,6 +3,16 @@
   const SANITY_DATASET = "production";
   const SANITY_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2023-10-01/data/query/${SANITY_DATASET}`;
   const QUERY = '*[_type=="post" && defined(youtubeUrl)] | order(publishedAt desc)[0...10]{title,excerpt,youtubeUrl,"slug":slug.current,publishedAt}';
+  const PINNED_LIVE_ITEMS = [
+    {
+      title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
+      excerpt:
+        "A growing share of warehouse humanoid programs are moving from proof-of-concept demos to measured operational deployment plans in 2026.",
+      youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
+      slug: "humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026",
+      publishedAt: "2026-03-07T08:30:00.000Z",
+    },
+  ];
   const TOUCH_FIRST_DEVICE = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv/";
@@ -234,7 +244,8 @@
     .then((d) => {
       const rows = Array.isArray(d?.result) ? d.result : [];
       const seen = new Set();
-      const withVideo = rows.filter((item) => {
+      const merged = [...PINNED_LIVE_ITEMS, ...rows];
+      const withVideo = merged.filter((item) => {
         const key = `${String(item?.slug || "")}|${videoIdFromUrl(item?.youtubeUrl || "")}`;
         if (!videoIdFromUrl(item?.youtubeUrl) || seen.has(key)) return false;
         seen.add(key);
