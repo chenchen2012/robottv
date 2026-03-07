@@ -12,6 +12,258 @@ const legacyHtmlAliasSlugs = new Set([
 ]);
 const editorialPinnedPosts = [
   {
+    title: "NVIDIA bets on robotics to drive future growth",
+    excerpt:
+      "NVIDIA is positioning robotics as a major long-term growth driver, with accelerated compute and software stacks aimed at real deployment workloads.",
+    publishedAt: "2025-01-31T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=XGcfdbOu_uc",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy post tracks how NVIDIA's robotics strategy links AI models, simulation, and edge deployment hardware.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: compute availability and software tooling are still major constraints for scaling robot deployments.",
+          },
+        ],
+      },
+    ],
+    slug: "nvidia-bets-on-robotics-to-drive-future-growth",
+    author: "Chen Chen",
+    categories: ["Robotics News", "AI", "NVIDIA"],
+  },
+  {
+    title: "Robot news: weekly robotics signals to watch",
+    excerpt:
+      "A compact roundup of notable robotics developments across humanoids, autonomy, industrial deployments, and AI software tools.",
+    publishedAt: "2025-01-31T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy roundup page summarizes practical signals that matter for robotics builders and operators.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Coverage focus includes deployment proof points, reliability progress, and commercialization milestones.",
+          },
+        ],
+      },
+    ],
+    slug: "robot-news",
+    author: "Chen Chen",
+    categories: ["Robotics News", "Roundup"],
+  },
+  {
+    title: "Robots learn faster with new AI techniques",
+    excerpt:
+      "New AI training approaches are reducing iteration time for robot learning and improving transfer from simulation to physical systems.",
+    publishedAt: "2025-01-26T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=sa2qSF9f9Ks",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy post highlights how faster robot learning loops can accelerate time-to-deployment.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: reducing training and integration cycles can materially improve robotics program ROI.",
+          },
+        ],
+      },
+    ],
+    slug: "robots-learn-faster-with-new-ai-techniques",
+    author: "Chen Chen",
+    categories: ["AI", "Robotics News", "Research"],
+  },
+  {
+    title: "NVIDIA readies Jetson Thor computers for humanoid robots in 2025",
+    excerpt:
+      "NVIDIA's Jetson Thor roadmap is aimed at bringing higher-performance onboard compute to next-wave humanoid robot platforms.",
+    publishedAt: "2025-01-21T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=EwMH8-JKm3k",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy post follows the Jetson Thor timeline and what it could unlock for humanoid perception and control stacks.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: on-robot compute limits often define practical autonomy boundaries in production settings.",
+          },
+        ],
+      },
+    ],
+    slug: "nvidia-readies-jetson-thor-computers-for-humanoid-robots-in-2025",
+    author: "Chen Chen",
+    categories: ["Humanoid Robots", "NVIDIA", "Robotics News"],
+  },
+  {
+    title: "Chinese EV manufacturers enter the humanoid robot market",
+    excerpt:
+      "Major Chinese EV players are extending manufacturing and supply-chain capabilities into humanoid robotics programs.",
+    publishedAt: "2025-01-17T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=s4SmxpIO2qk",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy post tracks automotive-to-robotics convergence and the strategic push from EV manufacturers.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: EV-scale production discipline could accelerate cost-down curves for humanoid components.",
+          },
+        ],
+      },
+    ],
+    slug: "chinese-ev-manufacturers-enter-humanoid-robot-market",
+    author: "Chen Chen",
+    categories: ["Humanoid Robots", "China", "Robotics News"],
+  },
+  {
+    title: "Boston Dynamics unveils a new Atlas chapter",
+    excerpt:
+      "Boston Dynamics' Atlas updates reflect a shift toward more practical, product-aligned humanoid capabilities.",
+    publishedAt: "2024-12-23T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=h3iT9oUUZx0",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy post captures market reaction to the latest Atlas direction and deployment expectations.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: hardware announcements now face stronger scrutiny on manufacturability and operational readiness.",
+          },
+        ],
+      },
+    ],
+    slug: "boston-dynamics-new-atlas",
+    author: "Chen Chen",
+    categories: ["Humanoid Robots", "Boston Dynamics", "Robotics News"],
+  },
+  {
+    title: "Biggest AI news today in robotics",
+    excerpt:
+      "A fast briefing on the day's most important AI developments that impact robotics software and real-world autonomy.",
+    publishedAt: "2024-11-26T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=NL2zbYhC5Z4",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy page provides a concise AI-focused view of developments relevant to robotics teams.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Coverage centers on model capability, deployment constraints, and measurable operational impact.",
+          },
+        ],
+      },
+    ],
+    slug: "biggest-ai-news-today",
+    author: "Chen Chen",
+    categories: ["AI", "Robotics News"],
+  },
+  {
+    title: "The biggest robot news today",
+    excerpt:
+      "A daily robotics snapshot covering notable launches, deployments, funding moves, and industrial signals.",
+    publishedAt: "2024-11-22T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=LPEGve_U1cY",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy page summarizes high-signal robotics updates for operators, builders, and investors.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Focus remains on practical evidence of adoption and progress beyond demo-stage announcements.",
+          },
+        ],
+      },
+    ],
+    slug: "the-biggest-robot-news-today",
+    author: "Chen Chen",
+    categories: ["Robotics News", "Roundup"],
+  },
+  {
+    title: "China rolls out world's first military-proof 5G that can connect 10,000 army robots",
+    excerpt:
+      "China’s robotics and communications stack is being positioned for large-scale connected autonomy scenarios, with high device-density claims around military-grade 5G resilience.",
+    publishedAt: "2025-01-05T00:00:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=W7kqiLFIgzU",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This restored legacy post tracks claims around high-density robotics connectivity and practical implications for real-world autonomous coordination.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: communications reliability is a core bottleneck in multi-robot deployment at operational scale.",
+          },
+        ],
+      },
+    ],
+    slug: "china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots",
+    author: "Chen Chen",
+    categories: ["Robotics News", "Infrastructure", "China"],
+  },
+  {
     title: "Chinese robotics firms showcase advanced quadruped robots for practical applications",
     excerpt:
       "Chinese robotics firms are showing advanced quadruped robots in practical industrial and field scenarios, signaling stronger real-world deployment readiness.",
@@ -393,11 +645,28 @@ const writePosts = async (posts) => {
       const d = new Date(post.publishedAt || "");
       return Number.isNaN(d.getTime()) ? null : d.getUTCFullYear();
     })();
-    const needsLegacyHtmlAlias = legacyHtmlAliasSlugs.has(slug) || publishedYear === 2025;
+    const needsLegacyHtmlAlias = legacyHtmlAliasSlugs.has(slug) || (publishedYear !== null && publishedYear <= 2025);
     if (needsLegacyHtmlAlias) {
       const aliasDir = path.join(postDir, `${slug}.html`);
       await fs.mkdir(aliasDir, { recursive: true });
       await fs.writeFile(path.join(aliasDir, "index.html"), html, "utf8");
+
+      // Restore old WordPress-style dated permalink paths:
+      // /YYYY/MM/DD/slug.html and /YYYY/MM/slug.html
+      const d = new Date(post.publishedAt || "");
+      if (!Number.isNaN(d.getTime())) {
+        const yyyy = String(d.getUTCFullYear());
+        const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+        const dd = String(d.getUTCDate()).padStart(2, "0");
+
+        const datedDir = path.join(staticDir, yyyy, mm, dd, `${slug}.html`);
+        await fs.mkdir(datedDir, { recursive: true });
+        await fs.writeFile(path.join(datedDir, "index.html"), html, "utf8");
+
+        const datedShortDir = path.join(staticDir, yyyy, mm, `${slug}.html`);
+        await fs.mkdir(datedShortDir, { recursive: true });
+        await fs.writeFile(path.join(datedShortDir, "index.html"), html, "utf8");
+      }
     }
   }
 };

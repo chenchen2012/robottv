@@ -79,6 +79,18 @@
 
 # Legacy WordPress date-style permalinks to current article route.
 [[redirects]]
+  from = "/:year/:month/:day/*"
+  to = "/post/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/:year/:month/*"
+  to = "/post/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/:year/:month/:day/:slug"
   to = "/post/:slug"
   status = 301
