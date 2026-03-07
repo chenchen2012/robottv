@@ -233,6 +233,17 @@
     const PAGE_SIZE = 12;
     const FETCH_DEPTH = 60;
     const CACHE_KEY = "robot_tv_news_cache_v1";
+    const editorialPinnedPosts = [
+      {
+        title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
+        excerpt:
+          "A growing share of warehouse humanoid programs are moving from proof-of-concept demos to measured operational deployment plans in 2026.",
+        publishedAt: "2026-03-07T08:30:00.000Z",
+        youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
+        slug: "humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026",
+        author: "Chen Chen"
+      }
+    ];
     const app = document.getElementById("app");
     const path = window.location.pathname.replace(/\/$/, "") || "/";
     const params = new URLSearchParams(window.location.search || "");
@@ -420,7 +431,7 @@
       const grid = document.getElementById("grid");
       const empty = document.getElementById("empty");
       if (!posts.length) { empty.hidden = false; return; }
-      const uniquePosts = dedupePosts(posts);
+      const uniquePosts = dedupePosts([...editorialPinnedPosts, ...posts]);
       if (!uniquePosts.length) { empty.hidden = false; return; }
       const totalPages = Math.max(1, Math.ceil(uniquePosts.length / PAGE_SIZE));
       const page = Math.min(requestedPage, totalPages);
@@ -563,7 +574,8 @@
       const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
       fetchJsonWithFallback(sanityUrls(query))
         .then((d) => {
-          const posts = Array.isArray(d.result) ? d.result : [];
+          const fetchedPosts = Array.isArray(d.result) ? d.result : [];
+          const posts = dedupePosts([...editorialPinnedPosts, ...fetchedPosts]);
           if (posts.length) cachePosts(posts);
           renderList(posts);
         })

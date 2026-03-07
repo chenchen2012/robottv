@@ -7,6 +7,44 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const postDir = path.join(staticDir, "post");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
+const editorialPinnedPosts = [
+  {
+    title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
+    excerpt:
+      "A growing share of warehouse humanoid programs are moving from proof-of-concept demos to measured operational deployment plans in 2026.",
+    publishedAt: "2026-03-07T08:30:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Editorial brief: 2026 deployment signals suggest warehouse humanoids are being evaluated against throughput, safety, and task reliability metrics rather than demo novelty.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "Why it matters: this shift from pilot headlines to operations benchmarks is where long-term robotics adoption and recurring budget decisions are made.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "robot.tv will continue tracking execution milestones, site-level rollout pacing, and clear evidence of repeatable workflow impact.",
+          },
+        ],
+      },
+    ],
+    slug: "humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026",
+    author: "Chen Chen",
+    categories: ["Humanoid Robots", "Operations", "Robotics News"],
+  },
+];
 const videoOverridesBySlug = {
   "11-women-shaping-the-future-of-robotics": "https://www.youtube.com/watch?v=uVJeI60glTE",
 };
@@ -264,9 +302,10 @@ const fetchPosts = async () => {
   if (!resp.ok) throw new Error(`Failed to fetch posts from Sanity: HTTP ${resp.status}`);
   const json = await resp.json();
   const posts = Array.isArray(json.result) ? json.result : [];
+  const merged = [...editorialPinnedPosts, ...posts];
   const unique = [];
   const seen = new Set();
-  for (const post of posts) {
+  for (const post of merged) {
     const slug = normalizeSlug(post.slug);
     if (!slug || seen.has(slug)) continue;
     seen.add(slug);
