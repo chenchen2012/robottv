@@ -254,7 +254,18 @@
     setRobots("index,follow");
 
     const esc = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
-    const videoId = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
+    const videoId = (u) => {
+      const text = String(u || "").trim();
+      if (!text) return "";
+      return (
+        (text.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || [])[1] ||
+        (text.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+        (text.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+        (text.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+        (text.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+        ""
+      );
+    };
     const thumb = (u, quality = "hq") => {
       const id = videoId(u);
       if (!id) return "https://robot.tv/images/robot_logo.png";
@@ -451,14 +462,14 @@
 
       const toEmbed = (u) => {
         const id = videoId(u);
-        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&vq=small` : "";
+        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&vq=small` : "";
       };
 
       const startPreview = (card) => {
         const slot = card.querySelector(".thumb-preview");
         const embed = toEmbed(card.dataset.video);
         if (!slot || !embed || slot.dataset.active === "1") return;
-        slot.innerHTML = `<iframe src="${esc(embed)}" title="Article preview" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        slot.innerHTML = `<iframe src="${esc(embed)}" title="Article preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
         slot.dataset.active = "1";
         card.classList.add("previewing");
       };
@@ -474,6 +485,7 @@
       grid.querySelectorAll(".card").forEach((card) => {
         card.addEventListener("mouseenter", () => startPreview(card));
         card.addEventListener("mouseleave", () => stopPreview(card));
+        card.addEventListener("focusin", () => startPreview(card));
         card.addEventListener("blur", () => stopPreview(card));
       });
     };

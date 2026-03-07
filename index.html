@@ -347,7 +347,18 @@
       const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv";
       const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
       const hasCat = (post, name) => Array.isArray(post?.cats) && post.cats.some((c) => String(c || "").toLowerCase().includes(name));
-      const videoIdFromUrl = (u) => (String(u || "").match(/[?&]v=([^&]+)/) || String(u || "").match(/youtu\.be\/([^?&]+)/) || [])[1] || "";
+      const videoIdFromUrl = (u) => {
+        const text = String(u || "").trim();
+        if (!text) return "";
+        return (
+          (text.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || [])[1] ||
+          (text.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+          (text.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+          (text.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+          (text.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+          ""
+        );
+      };
       const thumbFromVideo = (u) => {
         const id = videoIdFromUrl(u);
         return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
@@ -423,14 +434,14 @@
 
       const toEmbedUrl = (u) => {
         const id = videoIdFromUrl(u);
-        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1` : "";
+        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&vq=small` : "";
       };
 
       const startPreview = (card) => {
         const slot = card.querySelector(".story-preview-layer");
         const embed = toEmbedUrl(card.dataset.video);
         if (!slot || !embed || slot.dataset.active === "1") return;
-        slot.innerHTML = `<iframe class="story-preview-frame" src="${embed}" title="Story preview" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        slot.innerHTML = `<iframe class="story-preview-frame" src="${embed}" title="Story preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
         slot.dataset.active = "1";
         card.classList.add("previewing");
       };
@@ -447,6 +458,7 @@
         document.querySelectorAll(".story-card").forEach((card) => {
           card.addEventListener("mouseenter", () => startPreview(card));
           card.addEventListener("mouseleave", () => stopPreview(card));
+          card.addEventListener("focusin", () => startPreview(card));
           card.addEventListener("blur", () => stopPreview(card));
         });
       }
