@@ -389,7 +389,12 @@ const writePosts = async (posts) => {
     await fs.mkdir(primaryDir, { recursive: true });
     await fs.writeFile(path.join(primaryDir, "index.html"), html, "utf8");
 
-    if (legacyHtmlAliasSlugs.has(slug)) {
+    const publishedYear = (() => {
+      const d = new Date(post.publishedAt || "");
+      return Number.isNaN(d.getTime()) ? null : d.getUTCFullYear();
+    })();
+    const needsLegacyHtmlAlias = legacyHtmlAliasSlugs.has(slug) || publishedYear === 2025;
+    if (needsLegacyHtmlAlias) {
       const aliasDir = path.join(postDir, `${slug}.html`);
       await fs.mkdir(aliasDir, { recursive: true });
       await fs.writeFile(path.join(aliasDir, "index.html"), html, "utf8");
