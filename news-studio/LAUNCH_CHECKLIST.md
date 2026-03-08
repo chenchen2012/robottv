@@ -26,6 +26,10 @@ Use this checklist to replace WordPress with Sanity Studio safely.
   - `excerpt`
   - `publishedAt`
   - `youtubeUrl`
+  - `videoSummary`
+  - `sourceName`
+  - `sourceUrl`
+  - `sourceSiteUrl` when only the publisher domain is available
   - `body`
 - Confirm each post has a working YouTube URL.
 
@@ -56,4 +60,3 @@ Use this checklist to replace WordPress with Sanity Studio safely.
 
 - Disable public WordPress site after successful cutover.
 - Keep backup archive for rollback/emergency reference.
-

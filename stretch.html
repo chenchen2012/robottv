@@ -122,8 +122,14 @@
 
             <section class="panel entity-news" data-entity-news data-keywords="stretch,boston dynamics,warehouse robot" data-limit="5">
                 <h2>Last 5 Stretch Updates</h2>
-                <p class="status-line">Auto-refreshed from recent newsroom posts to keep this page fresh each week.</p>
-                <div class="entity-news-list" data-entity-news-list></div>
+                <p class="status-line">Generated from recent newsroom posts to keep this page connected to current coverage.</p>
+                <div class="entity-news-list" data-entity-news-list data-static-entity-news="true">
+                    <article class="entity-news-item">
+                        <h3><a href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/">Amazon's Blue Jay halt shows warehouse robotics programs are being held to tighter ROI standards</a></h3>
+                        <p class="entity-news-date">Feb 19, 2026</p>
+                        <p class="entity-news-excerpt">Multiple outlets report Amazon halted Blue Jay after a short prototyping window, signaling stricter deployment economics for warehouse robotics bets.</p>
+                    </article>
+                </div>
             </section>
         </main>
 
@@ -153,8 +159,7 @@
         });
       })();
     </script>
-    <script src="scripts/entity-latest-news.js?v=20260222-entity5"></script>
-    <script data-cfasync="false" src="scripts/related-news-links.js?v=20260220-seo1"></script>
+    <script src="scripts/entity-latest-news.js?v=20260307-static1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
 </html>

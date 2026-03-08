@@ -28,9 +28,16 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /about       /about.html       301!
 /live        /live.html        301!
 /companies   /companies.html   301!
-/robot-companies /robot-companies.html 301!
-/companies-hub /robot-companies.html 301!
+/robot-companies /companies.html 301!
+/robot-companies.html /companies.html 301!
+/companies-hub /companies.html 301!
 /humanoid-robots /humanoid-robots.html 301!
+/china-humanoid-robots /china-humanoid-robots.html 301!
+/warehouse-humanoid-robots /warehouse-humanoid-robots.html 301!
+/industrial-inspection-robots /industrial-inspection-robots.html 301!
+/robotics-startup-execution /robotics-startup-execution.html 301!
+/physical-ai-robot-learning /physical-ai-robot-learning.html 301!
+/collaborative-robot-integration /collaborative-robot-integration.html 301!
 /humanoids /humanoid-robots.html 301!
 /boston-dynamics /company-boston-dynamics.html 301!
 /company-boston-dynamics /company-boston-dynamics.html 301!
@@ -121,18 +128,18 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 
 # Legacy WordPress/article URLs should point to the new news site
 /images/*                 /images/:splat                    200
-/2026/02/17/unitree-robots-stun-at-spring-festival-gala.html  https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime  301!
-/2026/02/17/unitree-spring-festival-gala-robots-a-full-release-of-additional-details.html  https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime  301!
-/:year/:month/:day/*.html      https://news.robot.tv/post/:splat  301!
-/:year/:month/*.html           https://news.robot.tv/post/:splat  301!
-/:year/:month/:day/:slug  https://news.robot.tv/post/:slug  301!
-/:year/:month/:slug       https://news.robot.tv/post/:slug  301!
-/post/*.html             https://news.robot.tv/post/:splat  301!
+/2026/02/17/unitree-robots-stun-at-spring-festival-gala.html  https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/  301!
+/2026/02/17/unitree-spring-festival-gala-robots-a-full-release-of-additional-details.html  https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/  301!
+/:year/:month/:day/*.html      https://news.robot.tv/post/:splat/  301!
+/:year/:month/*.html           https://news.robot.tv/post/:splat/  301!
+/:year/:month/:day/:slug  https://news.robot.tv/post/:slug/  301!
+/:year/:month/:slug       https://news.robot.tv/post/:slug/  301!
+/post/*.html             https://news.robot.tv/post/:splat/  301!
 /category/*               https://news.robot.tv/            301!
 /tag/*                    https://news.robot.tv/            301!
 /author/*                 https://news.robot.tv/            301!
 /page/*                   https://news.robot.tv/            301!
-/post/:slug               https://news.robot.tv/post/:slug  301!
+/post/:slug               https://news.robot.tv/post/:slug/  301!
 /post/*                   https://news.robot.tv/            301!
 
 # Legacy recovery: trailing-slash variants for canonical static pages
@@ -140,8 +147,14 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /home/              /home.html              301!
 /live/              /live.html              301!
 /companies/         /companies.html         301!
-/robot-companies/   /robot-companies.html   301!
+/robot-companies/   /companies.html         301!
 /humanoid-robots/   /humanoid-robots.html   301!
+/china-humanoid-robots/ /china-humanoid-robots.html 301!
+/warehouse-humanoid-robots/ /warehouse-humanoid-robots.html 301!
+/industrial-inspection-robots/ /industrial-inspection-robots.html 301!
+/robotics-startup-execution/ /robotics-startup-execution.html 301!
+/physical-ai-robot-learning/ /physical-ai-robot-learning.html 301!
+/collaborative-robot-integration/ /collaborative-robot-integration.html 301!
 /contact/           /contact.html           301!
 /partner/           /partner.html           301!
 /pricing/           /pricing.html           301!

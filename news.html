@@ -101,7 +101,10 @@
                 <p class="hero-copy">Daily intelligence on humanoids, quadrupeds, and robotics startups, built around video-first reporting and deployment context.</p>
                 <div class="hero-actions">
                     <a class="btn btn-primary" href="https://news.robot.tv">Open Newsroom</a>
-                    <a class="btn btn-ghost" href="index.html">Back to Homepage</a>
+                    <a class="btn btn-ghost" href="china-humanoid-robots.html">China Humanoid Hub</a>
+                    <a class="btn btn-ghost" href="warehouse-humanoid-robots.html">Warehouse Humanoid Hub</a>
+                    <a class="btn btn-ghost" href="industrial-inspection-robots.html">Inspection Robots Hub</a>
+                    <a class="btn btn-ghost" href="collaborative-robot-integration.html">Cobot Integration Guide</a>
                 </div>
             </section>
 
@@ -117,11 +120,19 @@
             <section class="section panel index-spotlight" aria-label="Latest direct news links">
                 <div>
                     <p class="kicker">DIRECT LINKS</p>
-                    <h2>Priority article URLs</h2>
+                    <h2>Priority topic hubs, guides, and article URLs</h2>
                     <p class="index-spotlight-copy">
-                        <a href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market">Why China's humanoid robot industry is winning the early market</a> |
-                        <a href="https://news.robot.tv/post/chinas-dancing-robots-how-worried-should-we-be">China's dancing robots: how worried should we be?</a> |
-                        <a href="https://news.robot.tv/post/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids">Toyota manufacturing Canada deploys Agility Digit humanoids</a>
+                        <a href="china-humanoid-robots.html">China Humanoid Robots Hub</a> |
+                        <a href="warehouse-humanoid-robots.html">Warehouse Humanoid Robots Hub</a> |
+                        <a href="industrial-inspection-robots.html">Industrial Inspection Robots Hub</a> |
+                        <a href="physical-ai-robot-learning.html">Physical AI &amp; Robot Learning Hub</a> |
+                        <a href="robotics-startup-execution.html">Robotics Startup Execution Guide</a> |
+                        <a href="collaborative-robot-integration.html">Collaborative Robot Integration Guide</a> |
+                        <a href="company-unitree.html">Unitree Company Guide</a> |
+                        <a href="company-tesla.html">Tesla Optimus Guide</a> |
+                        <a href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China's humanoid robot industry is winning the early market</a> |
+                        <a href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a> |
+                        <a href="https://news.robot.tv/post/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/">Toyota manufacturing Canada deploys Agility Digit humanoids</a>
                     </p>
                 </div>
                 <div class="hero-actions">
@@ -145,7 +156,23 @@
     <script>
         const projectId = "lumv116w";
         const dataset = "production";
-        const query = `*[_type=="post"] | order(publishedAt desc)[0...12]{
+        const hiddenNewsSlugs = new Set([
+          "alphabet-owned-robotics-software-company-intrinsic-joins-google",
+          "amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
+          "11-women-shaping-the-future-of-robotics",
+          "2026-robotics-summit-early-bird-registration-ends-march-2",
+          "amazon-cuts-jobs-in-strategically-important-robotics-division",
+          "amazon-cuts-more-jobs-this-time-in-robotics-unit",
+          "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
+          "breakingviews-hyundai-motors-robots-herald-hardware-reboot",
+          "chinas-dancing-robots-how-worried-should-we-be",
+          "dancing-robots-bring-support-company-to-barcelona-elderly",
+          "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
+          "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
+          "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
+          "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp"
+        ]);
+        const query = `*[_type=="post"] | order(publishedAt desc)[0...24]{
           _id,title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,
           "author": author->name,
           "categories": categories[]->title
@@ -153,6 +180,21 @@
         const endpoint = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`;
         const grid = document.getElementById("news-grid");
         const empty = document.getElementById("news-empty");
+        const excerptOverrides = {
+            "why-chinas-humanoid-robot-industry-is-winning-the-early-market": "China's early lead in humanoid robotics is starting to look structural: dense supply chains, faster hardware iteration, and public pilot visibility are helping local teams move faster than many rivals.",
+            "humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026": "Warehouse humanoids are entering a stricter phase in 2026: operators are moving beyond pilot headlines and starting to judge programs on throughput, intervention rate, safety, and real workflow fit.",
+            "humanoid-deployments-factory-proof-stage-2026": "Humanoid deployments are entering the factory-proof stage, where performance has to survive real operating constraints instead of presentation-stage conditions.",
+            "toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids": "Toyota's planned Digit deployment matters because warehouse humanoids only become durable market signals when serious industrial operators are willing to test them inside production environments.",
+            "amazon-blue-jay-halt-warehouse-robotics-roi-standards": "Amazon's Blue Jay halt is a useful reality check for the warehouse robotics market: large operators are tightening ROI expectations and dropping programs that cannot prove practical value quickly enough.",
+            "unitree-china-global-robotics-competitor-momentum": "Unitree is becoming one of the clearest signals that China's robotics sector can compete globally on speed, visibility, and cost-aware product iteration.",
+            "china-humanoid-robots-lunar-new-year-showtime": "Humanoid appearances during Lunar New Year programming were more than a novelty moment. They showed how China's robot makers are using mass-audience visibility to normalize the category and build confidence around domestic progress.",
+            "chinese-ev-manufacturers-enter-humanoid-robot-market": "Chinese EV manufacturers moving into humanoids could reshape the category because automotive supply chains, manufacturing discipline, and cost-down instincts map naturally onto the next stage of robot commercialization.",
+            "how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption": "Collaborative robot integration works best when teams redesign flow, safety, and operator handoffs around a real bottleneck instead of dropping a cobot into the line as a stand-alone demo.",
+            "6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside": "Robotics startup failure stories matter because execution risk in this industry usually comes from focus, deployment discipline, and operating burn, not from a lack of technical ambition alone.",
+            "startup-velocity-brief-robotics-teams-that-ship": "Robotics startup velocity only matters when teams narrow scope, learn from real deployments, and turn each release into stronger product discipline instead of faster narrative churn.",
+            "vdma-warns-germany-is-losing-ground-in-global-robotics-race": "VDMA's warning matters because Germany's robotics position now depends on whether engineering strength can still convert into faster investment, commercialization, and industrial demand as global competitors accelerate.",
+            "ais-role-in-the-future-of-robotics-insights-from-3laws": "AI only becomes valuable in robotics when it reduces brittle task engineering, improves deployment speed, and gives operators more reliable behavior outside controlled demos."
+        };
 
         const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
         const videoIdFromUrl = (url) => {
@@ -167,7 +209,8 @@
             try { return new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"}); }
             catch { return "Recent"; }
         };
-        const postUrl = (post) => post && post.slug ? `https://news.robot.tv/post/${post.slug}` : "https://news.robot.tv";
+        const postUrl = (post) => post && post.slug ? `https://news.robot.tv/post/${post.slug}/` : "https://news.robot.tv/";
+        const postExcerpt = (post) => excerptOverrides[String(post?.slug || "").trim()] || post?.excerpt || "Read the latest robotics intelligence from robot.tv newsroom.";
 
         const render = (posts) => {
             if (!posts.length) {
@@ -182,7 +225,7 @@
                     <div class="news-content">
                         <p class="news-meta">${escapeHtml(postDate(post.publishedAt))} | ${escapeHtml(post.author || "robot.tv")}</p>
                         <h3>${escapeHtml(post.title)}</h3>
-                        <p>${escapeHtml(post.excerpt || "Read the latest robotics intelligence from robot.tv newsroom.")}</p>
+                        <p>${escapeHtml(postExcerpt(post))}</p>
                         <div class="news-actions">
                             <a class="btn btn-primary" href="${escapeHtml(postUrl(post))}">Open Briefing</a>
                         </div>
@@ -193,7 +236,10 @@
 
         fetch(endpoint)
             .then((res) => res.json())
-            .then((data) => render(Array.isArray(data.result) ? data.result : []))
+            .then((data) => {
+                const posts = Array.isArray(data.result) ? data.result : [];
+                render(posts.filter((post) => !hiddenNewsSlugs.has(String(post?.slug || "").trim())).slice(0, 12));
+            })
             .catch(() => {
                 empty.hidden = false;
                 empty.textContent = "Unable to load posts right now. You can still publish from Sanity Studio.";

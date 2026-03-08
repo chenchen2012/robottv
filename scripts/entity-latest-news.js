@@ -1,14 +1,19 @@
 (function () {
   const blocks = Array.from(document.querySelectorAll("[data-entity-news]"));
   if (!blocks.length) return;
+  const pendingBlocks = blocks.filter((block) => {
+    const list = block.querySelector("[data-entity-news-list]");
+    return list && !list.querySelector(".entity-news-item");
+  });
+  if (!pendingBlocks.length) return;
 
   const sanityProjectId = "lumv116w";
   const sanityDataset = "production";
   const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
-  const query = '*[_type == "post"] | order(publishedAt desc)[0...40]{title,excerpt,publishedAt,"slug":slug.current,youtubeUrl,categories[]->title}';
+  const query = '*[_type == "post"] | order(publishedAt desc)[0...200]{title,excerpt,publishedAt,"slug":slug.current,youtubeUrl,categories[]->title}';
 
   const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
-  const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv/";
+  const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/";
   const toDate = (iso) => {
     if (!iso) return "";
     const d = new Date(iso);
@@ -45,6 +50,7 @@
       block.hidden = true;
       return;
     }
+    block.hidden = false;
     list.innerHTML = posts.map((post) => {
       const title = escapeHtml(post.title || "Latest robotics update");
       const href = toPostUrl(post.slug);
@@ -62,7 +68,7 @@
     .then((r) => r.json())
     .then((d) => {
       const posts = Array.isArray(d?.result) ? d.result : [];
-      blocks.forEach((block) => {
+      pendingBlocks.forEach((block) => {
         const raw = String(block.getAttribute("data-keywords") || "");
         const keywords = raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
         const configuredLimit = Number.parseInt(block.getAttribute("data-limit") || "", 10);
@@ -71,6 +77,6 @@
       });
     })
     .catch(() => {
-      blocks.forEach((block) => { block.hidden = true; });
+      pendingBlocks.forEach((block) => { block.hidden = true; });
     });
 })();

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track physical AI, robot learning, VLA models, simulation, compute, and robotics software stack signals with robot.tv briefings and guide pages.">
+    <meta property="og:title" content="Physical AI &amp; Robot Learning Hub: VLA Models, Simulation, Compute | robot.tv">
+    <meta property="og:description" content="Track physical AI, robot learning, VLA models, simulation, compute, and robotics software stack signals with robot.tv briefings and guide pages.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/physical-ai-robot-learning.html">
+    <meta property="og:image" content="https://img.youtube.com/vi/qtzA0lG8cEU/hqdefault.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Physical AI &amp; Robot Learning Hub: VLA Models, Simulation, Compute | robot.tv">
+    <meta name="twitter:description" content="Track physical AI, robot learning, VLA models, simulation, compute, and robotics software stack signals with robot.tv briefings and guide pages.">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/qtzA0lG8cEU/hqdefault.jpg">
+    <meta name="twitter:url" content="https://robot.tv/physical-ai-robot-learning.html">
+    <link rel="canonical" href="https://robot.tv/physical-ai-robot-learning.html">
+    <title>Physical AI &amp; Robot Learning Hub: VLA Models, Simulation, Compute | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+    <style>
+        .hub-grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .hub-panel {
+            padding: 0.95rem;
+        }
+        .hub-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.03em;
+        }
+        .hub-panel p {
+            margin: 0.58rem 0 0;
+            color: #c4d2e8;
+            line-height: 1.62;
+        }
+        .hub-list {
+            margin: 0.7rem 0 0;
+            padding-left: 1.05rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+        .hub-list li {
+            color: #c6d2e8;
+            line-height: 1.58;
+        }
+        .briefings-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .briefings-panel h2 {
+            margin: 0.4rem 0 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.12rem;
+        }
+        .briefing-grid {
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .briefing-card {
+            border: 1px solid #2f4566;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, #101926, #0c131f);
+        }
+        .briefing-card h3 {
+            margin: 0.52rem 0 0;
+            font-size: 1rem;
+            line-height: 1.34;
+        }
+        .briefing-card p {
+            margin: 0.5rem 0 0;
+            color: #c1d0e7;
+            line-height: 1.56;
+            font-size: 0.92rem;
+        }
+        .briefing-meta {
+            margin: 0;
+            color: #9fb2d4;
+            font-size: 0.78rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .briefing-actions {
+            margin-top: 0.72rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        .faq-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .faq-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.08rem;
+        }
+        .faq-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            gap: 0.7rem;
+        }
+        .faq-item {
+            border: 1px solid #2d4262;
+            border-radius: 10px;
+            padding: 0.8rem;
+            background: rgba(8, 14, 24, 0.74);
+        }
+        .faq-item h3 {
+            margin: 0;
+            font-size: 0.98rem;
+        }
+        .faq-item p {
+            margin: 0.45rem 0 0;
+            color: #c4d2e8;
+            line-height: 1.58;
+            font-size: 0.92rem;
+        }
+        .link-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .link-card {
+            border: 1px solid #304968;
+            border-radius: 10px;
+            padding: 0.78rem;
+            background: rgba(12, 21, 34, 0.72);
+        }
+        .link-card h3 {
+            margin: 0;
+            font-size: 0.96rem;
+        }
+        .link-card p {
+            margin: 0.42rem 0 0;
+            color: #bfd0ec;
+            line-height: 1.55;
+            font-size: 0.9rem;
+        }
+        .status-line {
+            margin-top: 0.7rem;
+            color: #9fb2d4;
+            font-size: 0.86rem;
+        }
+        @media (max-width: 980px) {
+            .hub-grid,
+            .briefing-grid,
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Physical AI & Robot Learning Hub",
+      "url": "https://robot.tv/physical-ai-robot-learning.html",
+      "description": "A robot.tv topic hub for physical AI, robot learning, simulation, compute, and robotics software stack signals.",
+      "about": [
+        { "@type": "Thing", "name": "Physical AI" },
+        { "@type": "Thing", "name": "Robot learning" },
+        { "@type": "Thing", "name": "Vision-language-action models" },
+        { "@type": "Thing", "name": "Robotics software" },
+        { "@type": "Thing", "name": "Simulation and digital twins" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Physical AI and robot learning briefings on robot.tv",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Vision-language-action models are the next leap in autonomous robotics", "url": "https://news.robot.tv/post/vision-language-action-models-are-the-next-leap-in-autonomous-robotics/" },
+        { "@type": "ListItem", "position": 2, "name": "Intrinsic is joining Google to advance physical AI in robotics", "url": "https://news.robot.tv/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/" },
+        { "@type": "ListItem", "position": 3, "name": "Robots learn faster with new AI techniques", "url": "https://news.robot.tv/post/robots-learn-faster-with-new-ai-techniques/" },
+        { "@type": "ListItem", "position": 4, "name": "NVIDIA readies Jetson Thor computers for humanoid robots in 2025", "url": "https://news.robot.tv/post/nvidia-readies-jetson-thor-computers-for-humanoid-robots-in-2025/" },
+        { "@type": "ListItem", "position": 5, "name": "NORD releases digital twin simulation platform for robotics developers", "url": "https://news.robot.tv/post/nord-releases-digital-twin-simulation-platform-for-robotics-developers/" },
+        { "@type": "ListItem", "position": 6, "name": "Ottonomy launches Ottumn.AI to orchestrate robots, drones, and smart infrastructure", "url": "https://news.robot.tv/post/ottonomy-ottumn-ai-orchestrates-robots-drones-smart-infrastructure/" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Physical AI & Robot Learning",
+          "item": "https://robot.tv/physical-ai-robot-learning.html"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does physical AI deserve its own hub on robot.tv?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "robot.tv groups these stories together because model advances, simulation, orchestration, and edge compute are starting to act like one stack. Readers need a connected view rather than scattered short posts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is physical AI just another name for robot learning?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not exactly. robot learning is part of physical AI, but the broader stack also includes simulation, orchestration, edge compute, infrastructure, and developer tooling needed to deploy robots in the real world."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why are NVIDIA, Intrinsic, and digital twins in the same hub?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because robot.tv treats them as connected layers in one deployment stack: models, tools, simulation, orchestration, and onboard compute all affect whether physical AI can actually ship."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should readers watch next in this topic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Look for evidence that these tools shorten deployment time, reduce integration cost, improve policy reliability, and make robotics teams faster after the demo stage."
+          }
+        }
+      ]
+    }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-WC8XB1DN1E");
+    </script>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home"><img src="images/robot_logo.png" alt="robot.tv"></a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="get-featured.html">Get Featured</a>
+        </header>
+
+        <main>
+            <section class="panel detail-hero">
+                <p class="kicker">TOPIC HUB</p>
+                <h1>Physical AI &amp; Robot Learning</h1>
+                <p class="hero-copy">Use this hub to track the robotics software stack that sits between promising demos and real deployment: VLA models, simulation, orchestration, developer tooling, and edge compute.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv">Open Newsroom</a>
+                    <a class="btn btn-ghost" href="news.html">Open robot.tv News Entry</a>
+                </div>
+            </section>
+
+            <section class="hub-grid">
+                <article class="panel hub-panel">
+                    <p class="kicker">WHY THIS PAGE EXISTS</p>
+                    <h2>Physical AI is becoming a stack story</h2>
+                    <p>Robotics teams no longer just need better robots. They need better learning loops, stronger models, usable simulation, reliable orchestration, and deployable compute that can survive real operating constraints.</p>
+                    <p>That is why robot.tv groups these stories together. The search intent is not one headline at a time. It is the bigger question of how physical AI becomes shippable.</p>
+                </article>
+                <article class="panel hub-panel">
+                    <p class="kicker">WHAT BUILDERS CARE ABOUT</p>
+                    <h2>Deployment speed, not just model quality</h2>
+                    <ul class="hub-list">
+                        <li>Can new model approaches reduce custom task engineering?</li>
+                        <li>Do simulation and digital twins shorten validation cycles?</li>
+                        <li>Can orchestration layers make mixed fleets easier to run?</li>
+                        <li>Does edge compute support richer policies without breaking deployment economics?</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="panel briefings-panel" aria-label="Physical AI briefings">
+                <p class="kicker">PRIORITY BRIEFINGS</p>
+                <h2>Start with the strongest feed-in stories</h2>
+                <div class="briefing-grid">
+                    <article class="briefing-card">
+                        <p class="briefing-meta">MODELS</p>
+                        <h3>Vision-language-action models are the next leap in autonomous robotics</h3>
+                        <p>A cleaner bridge between perception, language, and control could reduce brittle task-specific engineering across physical AI systems.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/vision-language-action-models-are-the-next-leap-in-autonomous-robotics/">Open Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">PLATFORMS</p>
+                        <h3>Intrinsic is joining Google to advance physical AI in robotics</h3>
+                        <p>This matters because physical AI may be moving into a bigger tooling and infrastructure platform story, not just a robotics niche.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/">Open Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">LEARNING</p>
+                        <h3>Robots learn faster with new AI techniques</h3>
+                        <p>Faster iteration loops matter because deployment speed often depends on how quickly teams can improve behavior after the first test.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/robots-learn-faster-with-new-ai-techniques/">Open Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">COMPUTE</p>
+                        <h3>NVIDIA readies Jetson Thor computers for humanoid robots in 2025</h3>
+                        <p>Edge compute quality will shape what physical AI systems can actually run once they leave the cloud and enter live environments.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/nvidia-readies-jetson-thor-computers-for-humanoid-robots-in-2025/">Open Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">SIMULATION</p>
+                        <h3>NORD releases digital twin simulation platform for robotics developers</h3>
+                        <p>Simulation quality increasingly determines how cheaply teams can validate layouts, controls, and workflow changes before hardware risk shows up.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/nord-releases-digital-twin-simulation-platform-for-robotics-developers/">Open Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">ORCHESTRATION</p>
+                        <h3>Ottonomy launches Ottumn.AI to orchestrate robots, drones, and smart infrastructure</h3>
+                        <p>As fleets grow more mixed, the stack advantage may come from the control layer that keeps multiple systems coordinated and usable.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/ottonomy-ottumn-ai-orchestrates-robots-drones-smart-infrastructure/">Open Briefing</a>
+                        </div>
+                    </article>
+                </div>
+                <p class="status-line">Supporting stories in this cluster also include NVIDIA's broader robotics stack push, AI2 Robotics funding, outdoor robotics infrastructure, and developer-platform improvements.</p>
+            </section>
+
+            <section class="panel briefings-panel">
+                <p class="kicker">RELATED ROBOT.TV PAGES</p>
+                <h2>Use the right internal path for the right question</h2>
+                <div class="link-grid">
+                    <article class="link-card">
+                        <h3><a href="news.html">robot.tv News Entry</a></h3>
+                        <p>Start here if you want the clean internal entry point to the newsroom and the major topic hubs.</p>
+                    </article>
+                    <article class="link-card">
+                        <h3><a href="humanoid-robots.html">Humanoid Robots Hub</a></h3>
+                        <p>Use this when the physical AI question is really about which humanoid platforms may benefit first.</p>
+                    </article>
+                    <article class="link-card">
+                        <h3><a href="company-tesla.html">Tesla Optimus Guide</a></h3>
+                        <p>Connect the software-stack story to one of the highest-attention humanoid deployment narratives.</p>
+                    </article>
+                    <article class="link-card">
+                        <h3><a href="warehouse-humanoid-robots.html">Warehouse Humanoid Robots Hub</a></h3>
+                        <p>Compare software-stack optimism against the stricter deployment and ROI standards of real warehouse operations.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel faq-panel" id="faq">
+                <h2>FAQ</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>Why does physical AI deserve its own hub?</h3>
+                        <p>Because the software stack is becoming part of the search intent. Readers want to understand how models, simulation, tooling, and compute connect to real robot deployments.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Is this only about humanoids?</h3>
+                        <p>No. Humanoids are one visible beneficiary, but the hub is broader than that. It covers robotics software and AI infrastructure that can matter across multiple robot categories.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Why include tooling and marketplaces here?</h3>
+                        <p>Because developer velocity often starts lower in the stack than headlines suggest. Better sourcing, simulation, orchestration, and compute can all change how fast teams ship.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What should readers watch next?</h3>
+                        <p>Look for evidence that these tools shorten deployment cycles, reduce operator friction, and improve reliability outside demo environments.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
+</body>
+</html>

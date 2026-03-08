@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Use robot.tv's robotics startup execution guide to evaluate shipping velocity, deployment proof, capital discipline, and the habits that keep hard-tech teams alive.">
+    <meta property="og:title" content="Robotics Startup Execution Guide: What Separates Teams That Ship | robot.tv">
+    <meta property="og:description" content="Use robot.tv's robotics startup execution guide to evaluate shipping velocity, deployment proof, capital discipline, and the habits that keep hard-tech teams alive.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/robotics-startup-execution.html">
+    <meta property="og:image" content="https://img.youtube.com/vi/lQsvTrRTBRs/hqdefault.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Robotics Startup Execution Guide: What Separates Teams That Ship | robot.tv">
+    <meta name="twitter:description" content="Use robot.tv's robotics startup execution guide to evaluate shipping velocity, deployment proof, capital discipline, and the habits that keep hard-tech teams alive.">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/lQsvTrRTBRs/hqdefault.jpg">
+    <meta name="twitter:url" content="https://robot.tv/robotics-startup-execution.html">
+    <link rel="canonical" href="https://robot.tv/robotics-startup-execution.html">
+    <title>Robotics Startup Execution Guide: What Separates Teams That Ship | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+    <style>
+        .guide-grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .guide-panel,
+        .briefings-panel,
+        .checklist-panel,
+        .faq-panel {
+            padding: 1rem;
+        }
+        .guide-panel h2,
+        .briefings-panel h2,
+        .checklist-panel h2,
+        .faq-panel h2 {
+            margin: 0.42rem 0 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+        }
+        .guide-panel p,
+        .briefing-card p,
+        .link-card p,
+        .faq-item p {
+            color: #c4d2e8;
+            line-height: 1.62;
+        }
+        .guide-list {
+            margin: 0.75rem 0 0;
+            padding-left: 1.05rem;
+            display: grid;
+            gap: 0.48rem;
+        }
+        .guide-list li {
+            color: #c7d4e9;
+            line-height: 1.58;
+        }
+        .briefing-grid,
+        .link-grid {
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.82rem;
+        }
+        .briefing-card,
+        .link-card,
+        .faq-item {
+            border: 1px solid #304764;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, #101926, #0c131f);
+        }
+        .briefing-meta,
+        .status-line {
+            margin: 0;
+            color: #9fb2d4;
+            font-size: 0.79rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .briefing-card h3,
+        .link-card h3,
+        .faq-item h3 {
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
+            line-height: 1.34;
+        }
+        .briefing-actions {
+            margin-top: 0.72rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        .faq-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            gap: 0.72rem;
+        }
+        @media (max-width: 980px) {
+            .guide-grid,
+            .briefing-grid,
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Robotics Startup Execution Guide",
+      "url": "https://robot.tv/robotics-startup-execution.html",
+      "description": "A robot.tv guide for evaluating robotics startup execution, shipping velocity, deployment proof, capital discipline, and commercialization habits.",
+      "about": [
+        { "@type": "Thing", "name": "Robotics startups" },
+        { "@type": "Thing", "name": "Startup execution" },
+        { "@type": "Thing", "name": "Deployment discipline" },
+        { "@type": "Thing", "name": "Capital efficiency" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Robotics startup execution resources on robot.tv",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startup Velocity Brief: What Separates Robotics Teams That Ship", "url": "https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship/" },
+        { "@type": "ListItem", "position": 2, "name": "6 lessons I learned watching a robotics startup die from the inside", "url": "https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/" },
+        { "@type": "ListItem", "position": 3, "name": "AI2 Robotics raises Series B funding to advance AlphaBot embodied AI", "url": "https://news.robot.tv/post/ai2-robotics-raises-series-b-funding-to-advance-alphabot-embodied-ai/" },
+        { "@type": "ListItem", "position": 4, "name": "Collaborative Robot Integration Guide", "url": "https://robot.tv/collaborative-robot-integration.html" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Robotics Startup Execution",
+          "item": "https://robot.tv/robotics-startup-execution.html"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What matters more for a robotics startup: speed or discipline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "robot.tv treats speed as valuable only when it stays attached to scope control, deployment proof, and customer learning. Fast demo cycles alone do not build durable companies."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does deployment proof matter so much in robotics startups?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because hardware and autonomy companies often look strongest before they enter messy real environments. Deployment proof shows whether the product survives operations, support, and workflow constraints."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How should investors evaluate robotics startup momentum?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Look for repeatable workflow wins, measured customer value, tighter scope, and evidence that capital is improving productization and deployment support rather than only extending narrative runway."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does robot.tv group startup stories into a guide page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because startup search intent is recurring and evergreen. Readers want the operating principles that explain which robotics teams ship, scale, or stall, not only a series of isolated funding or failure headlines."
+          }
+        }
+      ]
+    }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-WC8XB1DN1E");
+    </script>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="partner.html">Partner</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="get-featured.html">Get Featured</a>
+        </header>
+
+        <main>
+            <section class="panel hero">
+                <p class="kicker">EXECUTION GUIDE</p>
+                <h1>Robotics Startup Execution</h1>
+                <p class="hero-copy">Use this robot.tv guide to evaluate shipping velocity, deployment proof, capital discipline, and the habits that separate robotics startups that learn quickly from those that burn time on narrative momentum alone.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship/">Open lead briefing</a>
+                    <a class="btn btn-ghost" href="https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">Read startup post-mortem</a>
+                </div>
+                <p class="status-line">Best used when the question is not whether a robotics startup sounds exciting, but whether it is building repeatable customer value, tighter systems, and better operating judgment over time.</p>
+            </section>
+
+            <section class="guide-grid">
+                <section class="panel guide-panel">
+                    <p class="kicker">WHY THIS PAGE EXISTS</p>
+                    <h2>Robotics startup search intent is evergreen</h2>
+                    <p>Robotics startup coverage often swings between funding hype and failure drama. But the real search intent is steadier: readers want to know which operating habits help hard-tech teams ship, survive hardware cycles, and turn capital into real deployment progress.</p>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">WHAT SERIOUS TEAMS TRACK</p>
+                    <h2>Shipping velocity only matters when it compounds</h2>
+                    <ul class="guide-list">
+                        <li>Scope discipline around one workflow or customer bottleneck.</li>
+                        <li>Deployment learning that improves the product after contact with real sites.</li>
+                        <li>Burn rate and hiring choices that match the actual shipping plan.</li>
+                        <li>Evidence that each release makes the system easier to sell, support, and repeat.</li>
+                    </ul>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">WHERE TEAMS LOSE</p>
+                    <h2>Narrative can hide execution drift</h2>
+                    <p>Robotics startups usually break down when they chase too many markets, confuse technical ambition with commercial proof, or stretch support and product scope faster than the team can actually ship. The biggest risk is often not lack of talent, but weak prioritization.</p>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">WHAT INVESTORS SHOULD WATCH</p>
+                    <h2>Deployment proof beats announcement cadence</h2>
+                    <p>Strong teams usually show a pattern: narrower workflows, clearer customer evidence, better integration support, and fewer gaps between what the company promises and what operators can actually use. That pattern matters more than announcement volume by itself.</p>
+                </section>
+            </section>
+
+            <section class="panel checklist-panel">
+                <p class="kicker">EXECUTION CHECKLIST</p>
+                <h2>What to validate before calling a robotics startup healthy</h2>
+                <ul class="guide-list">
+                    <li>Identify the exact workflow the startup is trying to win and whether it has narrowed the problem enough to ship repeatedly.</li>
+                    <li>Check if customer feedback changes the roadmap or if the company is still mostly shipping for demo optics.</li>
+                    <li>Measure whether capital is improving deployment quality, support capacity, and productization rather than extending unreconciled ambition.</li>
+                    <li>Look for signs that the team can say no to adjacent opportunities that would dilute the core system.</li>
+                    <li>Watch whether each release makes the robot easier to integrate, maintain, and explain to real operators.</li>
+                </ul>
+            </section>
+
+            <section class="panel briefings-panel">
+                <p class="kicker">PRIORITY RESOURCES</p>
+                <h2>Start with the strongest linked pages</h2>
+                <div class="briefing-grid">
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Lead briefing</p>
+                        <h3>Startup Velocity Brief: What Separates Robotics Teams That Ship</h3>
+                        <p>The clearest companion piece for this guide. It reframes velocity as customer learning, deployment proof, and tighter operating rhythm instead of raw announcement pace.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship/">Open article</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Post-mortem lesson</p>
+                        <h3>6 lessons I learned watching a robotics startup die from the inside</h3>
+                        <p>Useful for understanding how scope drift, deployment friction, and weak operating choices can kill technically ambitious teams long before the market closes.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">Open article</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Capital and execution</p>
+                        <h3>AI2 Robotics raises Series B funding to advance AlphaBot embodied AI</h3>
+                        <p>Use this as the capital side of the startup story: funding only matters if it shortens productization time and turns technical promise into repeatable operator value.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/ai2-robotics-raises-series-b-funding-to-advance-alphabot-embodied-ai/">Open article</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Deployment reality</p>
+                        <h3>Collaborative Robot Integration Guide</h3>
+                        <p>Useful whenever startup execution questions collide with the reality of shipping into factory or operations workflows instead of demo environments.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="collaborative-robot-integration.html">Open guide</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel briefings-panel">
+                <p class="kicker">RELATED ROBOT.TV PAGES</p>
+                <h2>Use the right internal path for the right question</h2>
+                <div class="link-grid">
+                    <article class="link-card">
+                        <h3><a href="companies.html">Companies Hub</a></h3>
+                        <p>Use this when the startup discussion becomes a vendor-comparison question across the broader robotics field.</p>
+                    </article>
+                    <article class="link-card">
+                        <h3><a href="physical-ai-robot-learning.html">Physical AI &amp; Robot Learning Hub</a></h3>
+                        <p>Useful when startup coverage needs to connect back to the software stack and platform layers behind product execution.</p>
+                    </article>
+                    <article class="link-card">
+                        <h3><a href="news.html">robot.tv News Entry</a></h3>
+                        <p>Start here for the broader newsroom entry point and the current topic-hub structure.</p>
+                    </article>
+                    <article class="link-card">
+                        <h3><a href="https://news.robot.tv/">Newsroom</a></h3>
+                        <p>Follow short-term founder, funding, and deployment stories without expecting this guide to carry every fresh brief on its own.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel faq-panel">
+                <p class="kicker">FAQ</p>
+                <h2>Common robotics startup questions</h2>
+                <div class="faq-grid">
+                    <article class="faq-item">
+                        <h3>What matters more: speed or discipline?</h3>
+                        <p>robot.tv treats speed as useful only when it stays attached to scope control, customer learning, and better deployment proof. Otherwise it is just faster drift.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Why does deployment proof matter so much?</h3>
+                        <p>Because robots usually look strongest before they enter messy environments. Real sites reveal the product, support, and workflow gaps that determine whether a company can scale credibly.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>How should investors read momentum?</h3>
+                        <p>Look for repeatable workflow wins, clearer product boundaries, better support, and evidence that capital is making the company easier to ship and harder to derail.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Why did robot.tv build a startup guide?</h3>
+                        <p>Because startup execution is one of the most repeated and useful search intents in robotics. Readers need operating principles, not only isolated funding headlines or failure stories.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="about.html">About</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+                <a href="partner.html">Partner</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+    <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
+</body>
+</html>

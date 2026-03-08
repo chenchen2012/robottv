@@ -67,6 +67,50 @@ export const postType = defineType({
       validation: (rule) => rule.max(32),
     }),
     defineField({
+      name: 'videoSummary',
+      title: 'Video Summary',
+      type: 'text',
+      rows: 4,
+      description:
+        'Short, accurate summary of what the embedded video adds. Keep it specific to this post and avoid title-only boilerplate.',
+      hidden: ({document}) => !document?.youtubeUrl,
+      validation: (rule) =>
+        rule.max(360).custom((value, context) => {
+          const hasYoutube = Boolean(context.document?.youtubeUrl)
+          if (hasYoutube && !String(value || '').trim()) {
+            return 'Add a short summary for the embedded video.'
+          }
+          return true
+        }).warning(),
+    }),
+    defineField({
+      name: 'sourceName',
+      title: 'Primary Source Name',
+      type: 'string',
+      description: 'Outlet or publication behind the original reporting, for example Reuters or The Robot Report.',
+      validation: (rule) => rule.max(120),
+    }),
+    defineField({
+      name: 'sourceUrl',
+      title: 'Primary Source URL',
+      type: 'url',
+      description: 'Direct link to the original article or reporting behind this post.',
+      validation: (rule) => rule.uri({allowRelative: false, scheme: ['http', 'https']}),
+    }),
+    defineField({
+      name: 'sourceSiteUrl',
+      title: 'Primary Source Site URL',
+      type: 'url',
+      description: 'Optional publisher homepage used when a direct article URL is unavailable.',
+      validation: (rule) => rule.uri({allowRelative: false, scheme: ['http', 'https']}),
+    }),
+    defineField({
+      name: 'sourcePublishedAt',
+      title: 'Primary Source Publish Time',
+      type: 'datetime',
+      description: 'Optional original publication time for the cited source.',
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'reference',

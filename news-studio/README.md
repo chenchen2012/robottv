@@ -49,7 +49,7 @@ Then set your DNS/CNAME for `news.robot.tv` to the deployed Studio endpoint.
 
 ## Content model
 
-- `post`: title, slug, excerpt, publish date, hero image, YouTube URL, optional YouTube video ID override, author, categories, body.
+- `post`: title, slug, excerpt, publish date, hero image, YouTube URL, optional YouTube video ID override, video summary, primary source name, primary source URL, optional source site URL, optional source publish time, author, categories, body.
 - `author`: name, slug, image, bio.
 - `category`: title, slug, description.
 
@@ -69,10 +69,15 @@ For each article, populate `youtubeUrl` with a full URL like:
   title,
   "slug": slug.current,
   excerpt,
+  videoSummary,
+  sourceName,
+  sourceUrl,
+  sourceSiteUrl,
+  sourcePublishedAt,
   publishedAt,
   youtubeUrl,
   youtubeVideoId,
-  "author": author->name,
+  "author": author->{name, bio, "slug": slug.current},
   "categories": categories[]->title
 }
 ```

@@ -9,12 +9,23 @@ const REPORT_MD = path.join(REPORT_DIR, "weekly-seo-check.md");
 
 const REQUIRED_FILES = ["robots.txt", "sitemap.xml", "_redirects", "404.html", "index.html"];
 const HIGH_VALUE_PAGES = [
+  "home.html",
+  "humanoid-robots.html",
   "companies.html",
-  "robot-companies.html",
+  "china-humanoid-robots.html",
+  "warehouse-humanoid-robots.html",
+  "industrial-inspection-robots.html",
+  "robotics-startup-execution.html",
+  "physical-ai-robot-learning.html",
+  "collaborative-robot-integration.html",
   "company-unitree.html",
+  "unitree-robots.html",
   "company-boston-dynamics.html",
   "company-figure.html",
   "company-tesla.html",
+  "tesla-optimus.html",
+  "company-agility.html",
+  "company-apptronik.html",
   "get-featured.html",
   "partner.html",
   "pricing.html",
@@ -25,12 +36,24 @@ const HIGH_VALUE_PAGES = [
 ];
 const ALLOWED_NOINDEX_PAGES = new Set([
   "404.html",
+  "anymal.html",
+  "apollo.html",
   "chenchen.html",
   "contact-success.html",
+  "digit.html",
+  "handle.html",
   "mediakit-print.html",
   "news.html",
   "sales.html",
+  "thr3.html",
+  "unitreeb2.html",
+  "unitreeg1.html",
+  "unitreego2.html",
+  "unitreeh1.html",
+  "unitreeh2.html",
   "wooshe.html"
+  ,
+  "yumi.html"
 ]);
 
 function toIsoNow() {

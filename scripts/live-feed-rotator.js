@@ -15,7 +15,7 @@
   ];
   const TOUCH_FIRST_DEVICE = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
-  const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}` : "https://news.robot.tv/";
+  const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/";
 
   const videoIdFromUrl = (url) => {
     const text = String(url || "").trim();

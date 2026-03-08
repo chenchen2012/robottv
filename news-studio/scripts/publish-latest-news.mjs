@@ -91,6 +91,15 @@ const buildExcerpt = (headline, source) => {
   return `${outlet} reports ${title}. Why it matters: this update may change near-term robotics deployment decisions and market momentum.`
 }
 
+const buildVideoSummary = (headline, excerpt) => {
+  const cleanHeadline = String(headline || '').trim()
+  const cleanExcerpt = String(excerpt || '').trim()
+  const lead = cleanExcerpt || `This embedded video supports robot.tv's coverage of ${cleanHeadline}.`
+  const suffix = 'The video adds visual context for the robotics capability, deployment signal, or market move behind this story.'
+  const combined = `${lead} ${suffix}`.trim()
+  return combined.length > 320 ? `${combined.slice(0, 317).trimEnd()}...` : combined
+}
+
 const isExcerptStrong = (excerpt) => {
   const text = String(excerpt || '').trim()
   if (text.length < 110 || text.length > 240) return false
@@ -134,9 +143,10 @@ const parseRssItems = (xml) => {
     const titleRaw = (itemXml.match(/<title>([\s\S]*?)<\/title>/) || [, ''])[1]
     const link = stripHtml((itemXml.match(/<link>([\s\S]*?)<\/link>/) || [, ''])[1])
     const pubDate = stripHtml((itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [, ''])[1])
+    const sourceUrl = stripHtml((itemXml.match(/<source[^>]*url="([^"]+)"/) || [, ''])[1])
     const source = stripHtml((itemXml.match(/<source[^>]*>([\s\S]*?)<\/source>/) || [, 'Unknown'])[1])
     const title = stripHtml(titleRaw).replace(/\s+-\s+[^-]+$/, '').trim()
-    return { title, link, pubDate, source }
+    return { title, link, pubDate, source, sourceSiteUrl: sourceUrl }
   })
 }
 
@@ -200,7 +210,12 @@ for (let i = 0; i < selected.length; i += 1) {
   const ytId = extractYoutubeId(yt)
   const category = sourceToCategory(h.source, h.title)
   const excerpt = buildExcerpt(h.title, h.source)
+  const videoSummary = buildVideoSummary(h.title, excerpt)
   const key = titleKey(h.title)
+  const sourcePublishedAt = (() => {
+    const parsed = new Date(h.pubDate || '')
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString()
+  })()
 
   const hasGuardIssue =
     !h.title ||
@@ -241,9 +256,13 @@ for (let i = 0; i < selected.length; i += 1) {
     title: h.title,
     slug: { _type: 'slug', current: slug || `news-${Date.now()}-${i + 1}` },
     excerpt,
+    videoSummary,
     publishedAt: new Date().toISOString(),
     youtubeUrl: `https://www.youtube.com/watch?v=${ytId}`,
+    sourceName: h.source,
     sourceUrl: h.link,
+    sourceSiteUrl: h.sourceSiteUrl,
+    sourcePublishedAt,
     author: { _type: 'reference', _ref: authorId },
     categories: [{ _type: 'reference', _ref: category }],
     body: [
