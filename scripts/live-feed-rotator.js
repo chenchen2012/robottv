@@ -220,6 +220,13 @@
     if (title) frame.title = title;
   };
 
+  const loadWatchedFrame = (frame, wrap, src, title, onFail) => {
+    if (!frame || !src) return;
+    if (title) frame.title = title;
+    watchEmbedLoad(frame, wrap, onFail);
+    frame.src = src;
+  };
+
   const setText = (selector, text) => {
     const el = document.querySelector(selector);
     if (!el || !text) return;
@@ -390,8 +397,7 @@
         event.preventDefault();
         if (mainEmbedWrap.classList.contains("is-playing")) return;
         mainEmbedWrap.classList.add("is-playing");
-        mainFrame.src = embed;
-        watchEmbedLoad(mainFrame, mainEmbedWrap);
+        loadWatchedFrame(mainFrame, mainEmbedWrap, embed, `${headline} livestream`);
         queuePlayer("[data-live-main-frame]", ids);
         ensureYouTubeApi();
       };
@@ -403,8 +409,7 @@
         }
       });
     } else {
-      setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
-      watchEmbedLoad(mainFrame, mainEmbedWrap);
+      loadWatchedFrame(mainFrame, mainEmbedWrap, embed, `${headline} livestream`);
       queuePlayer("[data-live-main-frame]", ids);
     }
 
