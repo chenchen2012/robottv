@@ -266,6 +266,71 @@ a {
     box-shadow: inset 0 0 0 1px rgba(120, 154, 220, 0.22);
 }
 
+.live-preview iframe {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+}
+
+.live-preview.embed-loaded iframe,
+.live-preview.is-playing iframe {
+    opacity: 1;
+}
+
+.live-preview-poster {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    align-items: end;
+    padding: 1rem;
+    background:
+        radial-gradient(circle at top right, rgba(94, 132, 255, 0.22), transparent 42%),
+        radial-gradient(circle at top left, rgba(239, 45, 82, 0.22), transparent 46%),
+        linear-gradient(180deg, rgba(8, 12, 18, 0.24), rgba(8, 12, 18, 0.86));
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.live-preview.embed-loaded .live-preview-poster,
+.live-preview.is-playing.embed-loaded .live-preview-poster {
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+}
+
+.live-preview-poster-copy {
+    display: grid;
+    gap: 0.35rem;
+    max-width: 22rem;
+}
+
+.live-preview-poster-kicker {
+    display: inline-flex;
+    width: fit-content;
+    border: 1px solid rgba(148, 174, 223, 0.42);
+    border-radius: 999px;
+    padding: 0.18rem 0.48rem;
+    color: #d8e6ff;
+    background: rgba(8, 14, 24, 0.72);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.live-preview-poster-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.05rem, 2.1vw, 1.38rem);
+    line-height: 1.16;
+}
+
+.live-preview-poster-note {
+    color: #cad9f3;
+    line-height: 1.45;
+    font-size: 0.9rem;
+}
+
 .live-preview img,
 .live-preview iframe {
     width: 100%;
@@ -757,6 +822,12 @@ a {
     background: #0b121d;
 }
 
+.story-media.is-fallback,
+.channel-card img.is-fallback {
+    object-fit: cover;
+    background: linear-gradient(145deg, #09111c, #14253b);
+}
+
 .story-media-shell {
     position: relative;
     display: block;
@@ -771,6 +842,7 @@ a {
     border-radius: 10px;
     overflow: hidden;
     pointer-events: none;
+    background: linear-gradient(180deg, rgba(7, 11, 18, 0.02), rgba(7, 11, 18, 0.2));
 }
 
 .story-preview-frame {
@@ -2080,6 +2152,10 @@ a {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.45rem;
+    }
+
+    .live-preview-poster {
+        padding: 0.82rem;
     }
 
     .ticker-track span {

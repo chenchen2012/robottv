@@ -38,6 +38,57 @@
   };
 
   const queuedPlayers = [];
+  const embedWatchers = new WeakMap();
+
+  const setPreviewPoster = (title, note) => {
+    const titleEl = document.querySelector("[data-live-preview-poster-title]");
+    const noteEl = document.querySelector("[data-live-preview-poster-note]");
+    if (titleEl && title) titleEl.textContent = title;
+    if (noteEl && note) noteEl.textContent = note;
+  };
+
+  const setEmbedState = (wrap, state) => {
+    if (!wrap) return;
+    wrap.classList.remove("embed-loading", "embed-loaded", "embed-failed");
+    if (state) wrap.classList.add(state);
+  };
+
+  const clearEmbedWatcher = (frame) => {
+    const cleanup = embedWatchers.get(frame);
+    if (cleanup) {
+      cleanup();
+      embedWatchers.delete(frame);
+    }
+  };
+
+  const watchEmbedLoad = (frame, wrap, onFail) => {
+    if (!frame || !wrap) return;
+    clearEmbedWatcher(frame);
+    setEmbedState(wrap, "embed-loading");
+    let settled = false;
+    const onLoad = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeoutId);
+      setEmbedState(wrap, "embed-loaded");
+      frame.removeEventListener("load", onLoad);
+      embedWatchers.delete(frame);
+    };
+    const timeoutId = window.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      setEmbedState(wrap, "embed-failed");
+      frame.removeEventListener("load", onLoad);
+      embedWatchers.delete(frame);
+      if (typeof onFail === "function") onFail();
+    }, 4500);
+    frame.addEventListener("load", onLoad, { once: true });
+    embedWatchers.set(frame, () => {
+      settled = true;
+      window.clearTimeout(timeoutId);
+      frame.removeEventListener("load", onLoad);
+    });
+  };
 
   const ensureYouTubeApi = () => {
     if (window.YT && window.YT.Player) {
@@ -150,6 +201,7 @@
 
   const hydrate = (items) => {
     if (!items.length) {
+      setPreviewPoster("robot.tv live room", "Open the live room if the inline player is slow or unavailable.");
       setText("[data-live-spotlight-title]", "Robot.tv Live Feed");
       setText("[data-live-spotlight-desc]", "No newsroom video is available yet. Check back shortly.");
       setText("[data-live-main-title]", "robot.tv Live Feed");
@@ -171,18 +223,23 @@
     const previewLink = previewFrame?.closest(".live-preview");
     const previewTapCta = document.querySelector("[data-live-preview-tap-play]");
     const useTapToPlayPreview = Boolean(previewFrame && previewLink && previewTapCta && TOUCH_FIRST_DEVICE);
+    setPreviewPoster(headline, "Open the live room if the inline player is slow or unavailable.");
 
     if (useTapToPlayPreview) {
       previewFrame.src = "about:blank";
       previewFrame.title = `${headline} live preview`;
       previewLink.classList.add("tap-ready");
       previewLink.classList.remove("is-playing");
+      setEmbedState(previewLink, "");
 
       const startPreviewPlayback = (event) => {
         if (previewLink.classList.contains("is-playing")) return;
         event.preventDefault();
         previewLink.classList.add("is-playing");
         previewFrame.src = embed;
+        watchEmbedLoad(previewFrame, previewLink, () => {
+          setPreviewPoster(headline, "Inline preview unavailable here. Open Live Room for the full stream.");
+        });
         queuePlayer("[data-live-preview-frame]", ids);
         ensureYouTubeApi();
       };
@@ -196,6 +253,9 @@
       });
     } else {
       setFrame("[data-live-preview-frame]", embed, `${headline} live preview`);
+      watchEmbedLoad(previewFrame, previewLink, () => {
+        setPreviewPoster(headline, "Inline preview unavailable here. Open Live Room for the full stream.");
+      });
       queuePlayer("[data-live-preview-frame]", ids);
     }
 
@@ -214,6 +274,7 @@
         if (mainEmbedWrap.classList.contains("is-playing")) return;
         mainEmbedWrap.classList.add("is-playing");
         mainFrame.src = embed;
+        watchEmbedLoad(mainFrame, mainEmbedWrap);
         queuePlayer("[data-live-main-frame]", ids);
         ensureYouTubeApi();
       };
@@ -226,6 +287,7 @@
       });
     } else {
       setFrame("[data-live-main-frame]", embed, `${headline} livestream`);
+      watchEmbedLoad(mainFrame, mainEmbedWrap);
       queuePlayer("[data-live-main-frame]", ids);
     }
 

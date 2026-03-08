@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional"></noscript>
-<link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+<link rel="stylesheet" href="styles.css?v=20260308-homefix1">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -154,6 +154,13 @@
 
                 <aside class="live-spotlight panel" aria-label="Live stream spotlight">
                     <a class="live-preview" href="live.html">
+                        <span class="live-preview-poster" data-live-preview-poster aria-hidden="true">
+                            <span class="live-preview-poster-copy">
+                                <span class="live-preview-poster-kicker">Inline Preview</span>
+                                <strong class="live-preview-poster-title" data-live-preview-poster-title>robot.tv live room</strong>
+                                <span class="live-preview-poster-note" data-live-preview-poster-note>Open the live room if the inline player is slow or unavailable.</span>
+                            </span>
+                        </span>
                         <iframe
                             id="live-preview-frame"
                             data-live-preview-frame
@@ -538,33 +545,90 @@
         return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&vq=small` : "";
       };
 
+      const previewTimers = new WeakMap();
+      const placeholderSvg = (title) => {
+        const safeTitle = String(title || "robot.tv")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="${safeTitle}"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#08101b"/><stop offset="55%" stop-color="#13233a"/><stop offset="100%" stop-color="#30101b"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/><circle cx="170" cy="120" r="170" fill="rgba(94,132,255,0.18)"/><circle cx="1040" cy="120" r="190" fill="rgba(239,45,82,0.18)"/><text x="78" y="300" fill="#f3f6fb" font-family="Arial, sans-serif" font-size="52" font-weight="700">robot.tv</text><text x="78" y="370" fill="#c2d2ee" font-family="Arial, sans-serif" font-size="28">${safeTitle}</text></svg>`;
+        return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+      };
+
+      const fallbackLabelForImage = (img) => {
+        const card = img.closest(".story-card, .channel-card, .live-preview");
+        const heading = card?.querySelector("h3");
+        return heading?.textContent?.trim() || img.alt || "robot.tv";
+      };
+
+      const armImageFallbacks = () => {
+        document.querySelectorAll(".story-media, .channel-card img").forEach((img) => {
+          if (img.dataset.fallbackBound === "1") return;
+          img.dataset.fallbackBound = "1";
+          img.addEventListener("error", () => {
+            if (img.dataset.fallbackApplied === "1") return;
+            img.dataset.fallbackApplied = "1";
+            img.classList.add("is-fallback");
+            img.src = placeholderSvg(fallbackLabelForImage(img));
+          });
+        });
+      };
+
+      const clearPreviewTimer = (card) => {
+        const timer = previewTimers.get(card);
+        if (timer) {
+          window.clearTimeout(timer);
+          previewTimers.delete(card);
+        }
+      };
+
       const startPreview = (card) => {
         const slot = card.querySelector(".story-preview-layer");
         const embed = toEmbedUrl(card.dataset.video);
         if (!slot || !embed || slot.dataset.active === "1") return;
-        slot.innerHTML = `<iframe class="story-preview-frame" src="${embed}" title="Story preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        clearPreviewTimer(card);
+        const frame = document.createElement("iframe");
+        frame.className = "story-preview-frame";
+        frame.src = embed;
+        frame.title = "Story preview";
+        frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        frame.allowFullscreen = true;
+        frame.referrerPolicy = "strict-origin-when-cross-origin";
+        frame.addEventListener("load", () => {
+          if (slot.dataset.active !== "1") return;
+          clearPreviewTimer(card);
+          card.classList.add("previewing");
+        }, { once: true });
+        slot.replaceChildren(frame);
         slot.dataset.active = "1";
-        card.classList.add("previewing");
+        card.classList.remove("previewing");
+        const timer = window.setTimeout(() => {
+          if (slot.dataset.active !== "1") return;
+          stopPreview(card);
+        }, 2600);
+        previewTimers.set(card, timer);
       };
 
       const stopPreview = (card) => {
         const slot = card.querySelector(".story-preview-layer");
         if (!slot) return;
+        clearPreviewTimer(card);
         slot.innerHTML = "";
         slot.dataset.active = "0";
         card.classList.remove("previewing");
       };
 
+      armImageFallbacks();
       if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         document.querySelectorAll(".story-card").forEach((card) => {
           card.addEventListener("mouseenter", () => startPreview(card));
           card.addEventListener("mouseleave", () => stopPreview(card));
           card.addEventListener("focusin", () => startPreview(card));
-          card.addEventListener("blur", () => stopPreview(card));
+          card.addEventListener("focusout", () => stopPreview(card));
         });
       }
     </script>
-    <script src="scripts/live-feed-rotator.js?v=20260224-livefeed4"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260308-homefix1"></script>
     <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
