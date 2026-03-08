@@ -19,7 +19,8 @@
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional"></noscript>
 <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
     <script type="application/ld+json">
     {
@@ -94,13 +95,6 @@
       ]
     }
     </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-WC8XB1DN1E');
-    </script>
 </head>
 <body>
     <div class="bg-grid" aria-hidden="true"></div>
@@ -110,7 +104,7 @@
     <div class="container">
         <header class="site-header">
             <a class="brand" href="/" aria-label="robot.tv home">
-                <img src="images/robot_logo.png" alt="robot.tv">
+                <img src="images/robot_logo.png" alt="robot.tv" width="300" height="74" fetchpriority="high" decoding="async">
             </a>
             <nav class="site-nav" aria-label="Primary navigation">
                 <a href="/">Home</a>
@@ -254,7 +248,7 @@
                 <div class="story-grid">
                     <a id="story-top" class="story-card story-large" href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/" data-video="https://www.youtube.com/watch?v=2zCh_6GO49c">
                         <span class="story-media-shell">
-                            <img id="story-top-thumb" class="story-media" src="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg" alt="Top story video thumbnail" loading="lazy">
+                            <img id="story-top-thumb" class="story-media" src="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg" alt="Top story video thumbnail" loading="lazy" width="1600" height="860" decoding="async">
                             <span id="story-top-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Top Story</span>
@@ -263,7 +257,7 @@
                     </a>
                     <a id="story-humanoid" class="story-card" href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/" data-video="https://www.youtube.com/watch?v=s4SmxpIO2qk">
                         <span class="story-media-shell">
-                            <img id="story-humanoid-thumb" class="story-media" src="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg" alt="Humanoid story video thumbnail" loading="lazy">
+                            <img id="story-humanoid-thumb" class="story-media" src="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg" alt="Humanoid story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-humanoid-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Humanoids</span>
@@ -271,7 +265,7 @@
                     </a>
                     <a id="story-quadruped" class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale/" data-video="https://www.youtube.com/watch?v=zFUHi3_oiXk">
                         <span class="story-media-shell">
-                            <img id="story-quadruped-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Quadruped story video thumbnail" loading="lazy">
+                            <img id="story-quadruped-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Quadruped story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-quadruped-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Quadrupeds</span>
@@ -279,7 +273,7 @@
                     </a>
                     <a id="story-startup" class="story-card" href="https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/" data-video="https://www.youtube.com/watch?v=b8BDUa-xbyA">
                         <span class="story-media-shell">
-                            <img id="story-startup-thumb" class="story-media" src="https://img.youtube.com/vi/b8BDUa-xbyA/hqdefault.jpg" alt="Startup story video thumbnail" loading="lazy">
+                            <img id="story-startup-thumb" class="story-media" src="https://img.youtube.com/vi/b8BDUa-xbyA/hqdefault.jpg" alt="Startup story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-startup-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Startups</span>
@@ -288,7 +282,7 @@
                     </a>
                     <a id="story-operations" class="story-card" href="collaborative-robot-integration.html" data-video="https://www.youtube.com/watch?v=sa2qSF9f9Ks">
                         <span class="story-media-shell">
-                            <img id="story-operations-thumb" class="story-media" src="https://img.youtube.com/vi/sa2qSF9f9Ks/hqdefault.jpg" alt="Operations story video thumbnail" loading="lazy">
+                            <img id="story-operations-thumb" class="story-media" src="https://img.youtube.com/vi/sa2qSF9f9Ks/hqdefault.jpg" alt="Operations story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-operations-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Operations</span>
@@ -305,27 +299,27 @@
                 </div>
                 <div class="channel-grid">
                     <a class="channel-card" href="humanoid-robots.html" data-analytics-click="open_humanoid_hub_channel" data-analytics-location="home_channels">
-                        <img src="images/unitreeg1.jpg" alt="Humanoid highlights">
+                        <img src="images/unitreeg1.jpg" alt="Humanoid highlights" width="1600" height="1000" loading="lazy" decoding="async">
                         <h3>Humanoid Highlights</h3>
                         <p>Track top biped platforms and fast-moving capability jumps.</p>
                     </a>
                     <a class="channel-card" href="china-humanoid-robots.html">
-                        <img src="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg" alt="China humanoid market analysis">
+                        <img src="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg" alt="China humanoid market analysis" width="1600" height="1000" loading="lazy" decoding="async">
                         <h3>China Market Analysis</h3>
                         <p>Supply chains, Unitree momentum, EV crossover, and the signals shaping the early humanoid market.</p>
                     </a>
                     <a class="channel-card" href="industrial-inspection-robots.html">
-                        <img src="images/spot.jpg" alt="Quadruped highlights">
+                        <img src="images/spot.jpg" alt="Quadruped highlights" width="1600" height="1000" loading="lazy" decoding="async">
                         <h3>Inspection Robot Signals</h3>
                         <p>Quadruped patrol, outdoor autonomy, and field-operations context in one hub.</p>
                     </a>
                     <a class="channel-card" href="warehouse-humanoid-robots.html">
-                        <img src="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg" alt="Warehouse humanoid operations">
+                        <img src="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg" alt="Warehouse humanoid operations" width="1600" height="1000" loading="lazy" decoding="async">
                         <h3>Warehouse Deployment Watch</h3>
                         <p>Track Digit, rollout proof, and the tighter ROI standards shaping warehouse humanoid adoption.</p>
                     </a>
                     <a class="channel-card" href="https://news.robot.tv">
-                        <img src="https://img.youtube.com/vi/e2z1WU9qvik/hqdefault.jpg" alt="Daily briefings">
+                        <img src="https://img.youtube.com/vi/e2z1WU9qvik/hqdefault.jpg" alt="Daily briefings" width="1600" height="1000" loading="lazy" decoding="async">
                         <h3>Daily Briefings</h3>
                         <p>Open the newsroom for latest robotics intelligence and context.</p>
                     </a>
@@ -373,6 +367,52 @@
         </footer>
     </div>
     <script>
+      const loadAnalytics = (() => {
+        let started = false;
+
+        return () => {
+          if (started) return;
+          started = true;
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = window.gtag || function gtag(){window.dataLayer.push(arguments);};
+
+          const script = document.createElement("script");
+          script.src = "https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E";
+          script.async = true;
+          script.onload = () => {
+            window.gtag("js", new Date());
+            window.gtag("config", "G-WC8XB1DN1E");
+          };
+          document.head.appendChild(script);
+        };
+      })();
+
+      const scheduleAnalyticsLoad = () => {
+        const kickoff = () => {
+          window.setTimeout(() => {
+            if ("requestIdleCallback" in window) {
+              window.requestIdleCallback(() => loadAnalytics(), { timeout: 12000 });
+            } else {
+              loadAnalytics();
+            }
+          }, 8000);
+        };
+
+        if (document.readyState === "complete") {
+          window.setTimeout(kickoff, 1200);
+          return;
+        }
+
+        window.addEventListener("load", () => {
+          window.setTimeout(kickoff, 1200);
+        }, { once: true });
+      };
+
+      ["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
+        window.addEventListener(eventName, loadAnalytics, { once: true, passive: true });
+      });
+      scheduleAnalyticsLoad();
+
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
@@ -441,46 +481,57 @@
         if (prefix === "top" && desc) desc.textContent = post.excerpt || desc.textContent;
       };
 
+      const hydrateHomepageFeed = () => {
+        fetch(`${sanityUrl}?query=${encodeURIComponent(q)}`)
+          .then((r) => r.json())
+          .then((d) => {
+            const fetchedPosts = Array.isArray(d?.result) ? d.result : [];
+            const seen = new Set();
+            const posts = [...editorialPinnedPosts, ...fetchedPosts].filter((p) => {
+              const slug = String(p?.slug || "");
+              if (!slug || seen.has(slug)) return false;
+              seen.add(slug);
+              return true;
+            });
+            if (!posts.length) return;
+            setRail(posts);
+            const used = new Set();
+            const pickUnique = (matcher) => {
+              const match = posts.find((p) => p?.slug && !used.has(p.slug) && matcher(p));
+              if (match) {
+                used.add(match.slug);
+                return match;
+              }
+              const fallback = posts.find((p) => p?.slug && !used.has(p.slug));
+              if (fallback) used.add(fallback.slug);
+              return fallback;
+            };
+
+            setCard("top", pickUnique(() => true));
+            setCard("humanoid", pickUnique((p) => hasCat(p, "humanoid")));
+            setCard("quadruped", pickUnique((p) => hasCat(p, "quadruped")));
+            setCard("startup", pickUnique((p) => hasCat(p, "startup")));
+            setCard("operations", pickUnique((p) =>
+              hasCat(p, "operation") ||
+              hasCat(p, "industrial") ||
+              hasCat(p, "manufactur") ||
+              hasCat(p, "logistics")
+            ));
+          })
+          .catch(() => {});
+      };
+
       tuneRailSpeed();
-
-      fetch(`${sanityUrl}?query=${encodeURIComponent(q)}`)
-        .then((r) => r.json())
-        .then((d) => {
-          const fetchedPosts = Array.isArray(d?.result) ? d.result : [];
-          const seen = new Set();
-          const posts = [...editorialPinnedPosts, ...fetchedPosts].filter((p) => {
-            const slug = String(p?.slug || "");
-            if (!slug || seen.has(slug)) return false;
-            seen.add(slug);
-            return true;
-          });
-          if (!posts.length) return;
-          setRail(posts);
-          const used = new Set();
-          const pickUnique = (matcher) => {
-            const match = posts.find((p) => p?.slug && !used.has(p.slug) && matcher(p));
-            if (match) {
-              used.add(match.slug);
-              return match;
-            }
-            const fallback = posts.find((p) => p?.slug && !used.has(p.slug));
-            if (fallback) used.add(fallback.slug);
-            return fallback;
-          };
-
-          setCard("top", pickUnique(() => true));
-          setCard("humanoid", pickUnique((p) => hasCat(p, "humanoid")));
-          setCard("quadruped", pickUnique((p) => hasCat(p, "quadruped")));
-          setCard("startup", pickUnique((p) => hasCat(p, "startup")));
-          setCard("operations", pickUnique((p) =>
-            hasCat(p, "operation") ||
-            hasCat(p, "industrial") ||
-            hasCat(p, "manufactur") ||
-            hasCat(p, "logistics")
-          ));
-        })
-        .catch(() => {});
       window.addEventListener("resize", tuneRailSpeed);
+      window.addEventListener("load", () => {
+        window.setTimeout(() => {
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(hydrateHomepageFeed, { timeout: 4000 });
+          } else {
+            hydrateHomepageFeed();
+          }
+        }, 300);
+      }, { once: true });
 
       const toEmbedUrl = (u) => {
         const id = videoIdFromUrl(u);

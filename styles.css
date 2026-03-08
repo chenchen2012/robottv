@@ -26,6 +26,7 @@ body {
     color: var(--text);
     background: var(--bg);
     overflow-x: hidden;
+    text-rendering: optimizeLegibility;
 }
 
 a {
@@ -88,6 +89,7 @@ a {
 
 .brand img {
     width: 150px;
+    aspect-ratio: 300 / 74;
     height: auto;
     display: block;
 }
@@ -254,6 +256,7 @@ a {
 
 .live-preview {
     position: relative;
+    aspect-ratio: 16 / 9;
     border: 1px solid #2e405f;
     border-radius: 10px;
     overflow: hidden;
@@ -757,6 +760,7 @@ a {
 .story-media-shell {
     position: relative;
     display: block;
+    aspect-ratio: 16 / 9;
 }
 
 .story-preview-layer {
@@ -785,6 +789,10 @@ a {
 }
 
 .story-large .story-media {
+    aspect-ratio: 16 / 8.6;
+}
+
+.story-large .story-media-shell {
     aspect-ratio: 16 / 8.6;
 }
 
