@@ -45,6 +45,7 @@
   const queuedPlayers = [];
   const embedWatchers = new WeakMap();
   let cleanupHomepagePreview = null;
+  let liveFallbackTimer = null;
 
   const setPreviewPoster = (title, note) => {
     const titleEl = document.querySelector("[data-live-preview-poster-title]");
@@ -204,6 +205,9 @@
             const advanced = skipToNextPlayableVideo(event.target);
             if (advanced) return;
             try {
+              frame.dispatchEvent(new CustomEvent("robot-tv-live-exhausted"));
+            } catch (_) {}
+            try {
               event.target.stopVideo();
             } catch (_) {}
           }
@@ -331,6 +335,43 @@
     if (text) link.textContent = text;
   };
 
+  const clearLiveFallbackRotation = () => {
+    if (liveFallbackTimer) {
+      window.clearInterval(liveFallbackTimer);
+      liveFallbackTimer = null;
+    }
+  };
+
+  const renderLiveFallbackItem = (items, index) => {
+    if (!Array.isArray(items) || !items.length) return;
+    const item = items[index % items.length];
+    const title = String(item?.title || "Latest robot.tv newsroom update");
+    const excerpt = String(item?.excerpt || "Showing the latest newsroom story cards because the embedded video stream is currently unavailable.");
+    const href = toPostUrl(item?.slug);
+    const image = thumbFromVideo(item?.youtubeUrl);
+
+    setImage("[data-live-fallback-image]", image, title);
+    setText("[data-live-fallback-title]", title);
+    setText("[data-live-fallback-copy]", excerpt);
+    setLink("[data-live-fallback-link]", href, "Open Story");
+    setText("[data-live-fallback-note]", `Auto-rotating newsroom item ${index + 1} of ${items.length}.`);
+  };
+
+  const activateLiveFallback = (items, startIndex = 0) => {
+    const wrap = document.querySelector(".live-embed");
+    if (!wrap || !Array.isArray(items) || !items.length) return;
+    clearLiveFallbackRotation();
+    wrap.classList.add("fallback-mode");
+    renderLiveFallbackItem(items, startIndex);
+    if (items.length > 1) {
+      let index = startIndex;
+      liveFallbackTimer = window.setInterval(() => {
+        index = (index + 1) % items.length;
+        renderLiveFallbackItem(items, index);
+      }, 7000);
+    }
+  };
+
   const setNextUp = (items) => {
     const list = document.querySelector("[data-live-next-up]");
     if (!list) return;
@@ -387,17 +428,24 @@
     const mainEmbedWrap = mainFrame?.closest(".live-embed");
     const mainTapCta = document.querySelector("[data-live-main-tap-play]");
     const useTapToPlayMain = Boolean(mainFrame && mainEmbedWrap && mainTapCta && TOUCH_FIRST_DEVICE);
+    const activateMainFallback = () => activateLiveFallback(items);
+
+    if (mainFrame && mainFrame.dataset.fallbackBound !== "1") {
+      mainFrame.dataset.fallbackBound = "1";
+      mainFrame.addEventListener("robot-tv-live-exhausted", activateMainFallback);
+    }
 
     if (useTapToPlayMain) {
       mainFrame.src = "about:blank";
       mainFrame.title = `${headline} livestream`;
       mainEmbedWrap.classList.remove("is-playing");
+      mainEmbedWrap.classList.remove("fallback-mode");
 
       const startMainPlayback = (event) => {
         event.preventDefault();
         if (mainEmbedWrap.classList.contains("is-playing")) return;
         mainEmbedWrap.classList.add("is-playing");
-        loadWatchedFrame(mainFrame, mainEmbedWrap, embed, `${headline} livestream`);
+        loadWatchedFrame(mainFrame, mainEmbedWrap, embed, `${headline} livestream`, activateMainFallback);
         queuePlayer("[data-live-main-frame]", ids);
         ensureYouTubeApi();
       };
@@ -409,7 +457,8 @@
         }
       });
     } else {
-      loadWatchedFrame(mainFrame, mainEmbedWrap, embed, `${headline} livestream`);
+      mainEmbedWrap.classList.remove("fallback-mode");
+      loadWatchedFrame(mainFrame, mainEmbedWrap, embed, `${headline} livestream`, activateMainFallback);
       queuePlayer("[data-live-main-frame]", ids);
     }
 

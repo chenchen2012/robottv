@@ -56,6 +56,102 @@
             display: block;
         }
 
+        .live-fallback {
+            position: relative;
+            aspect-ratio: 16/9;
+            display: none;
+            background: #09111a;
+            color: #edf4ff;
+        }
+
+        .live-embed.fallback-mode iframe,
+        .live-embed.fallback-mode .live-main-cta {
+            display: none;
+        }
+
+        .live-embed.fallback-mode .live-fallback {
+            display: block;
+        }
+
+        .live-fallback img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.42;
+        }
+
+        .live-fallback-overlay {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            align-content: end;
+            gap: 0.7rem;
+            padding: 1.1rem;
+            background:
+                linear-gradient(180deg, rgba(5, 8, 14, 0.08), rgba(5, 8, 14, 0.86)),
+                radial-gradient(circle at top right, rgba(94, 132, 255, 0.18), transparent 38%);
+        }
+
+        .live-fallback-kicker {
+            display: inline-flex;
+            width: fit-content;
+            border: 1px solid #46608a;
+            border-radius: 999px;
+            padding: 0.2rem 0.55rem;
+            background: rgba(7, 11, 18, 0.74);
+            color: #dbe8ff;
+            font-size: 0.76rem;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .live-fallback-title {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.15rem, 2.6vw, 1.8rem);
+            line-height: 1.18;
+            max-width: 22ch;
+        }
+
+        .live-fallback-copy {
+            margin: 0;
+            color: #cad9f3;
+            max-width: 64ch;
+            line-height: 1.55;
+            font-size: 0.96rem;
+        }
+
+        .live-fallback-actions {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .live-fallback-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #4f678f;
+            border-radius: 999px;
+            padding: 0.55rem 0.95rem;
+            background: rgba(10, 16, 26, 0.76);
+            color: #edf4ff;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .live-fallback-btn:hover {
+            background: rgba(18, 28, 43, 0.9);
+        }
+
+        .live-fallback-note {
+            margin: 0;
+            color: #aebfe0;
+            font-size: 0.88rem;
+        }
+
         .live-main-cta {
             position: absolute;
             left: 50%;
@@ -227,6 +323,19 @@
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
                 </iframe>
+                <div class="live-fallback" data-live-fallback>
+                    <img data-live-fallback-image src="images/robot_logo.png" alt="robot.tv live fallback" width="1600" height="900" loading="lazy" decoding="async">
+                    <div class="live-fallback-overlay">
+                        <span class="live-fallback-kicker">Live Fallback</span>
+                        <h2 class="live-fallback-title" data-live-fallback-title>Latest robot.tv newsroom update</h2>
+                        <p class="live-fallback-copy" data-live-fallback-copy>Showing the latest newsroom story cards because the embedded video stream is currently unavailable.</p>
+                        <div class="live-fallback-actions">
+                            <a class="live-fallback-btn" data-live-fallback-link href="https://news.robot.tv/">Open Story</a>
+                            <a class="live-fallback-btn" href="https://news.robot.tv/">Open Newsroom</a>
+                        </div>
+                        <p class="live-fallback-note" data-live-fallback-note>Auto-rotating the latest newsroom items.</p>
+                    </div>
+                </div>
                 <span class="live-main-cta" data-live-main-tap-play role="button" tabindex="0" aria-label="Tap to play live">Tap to play live</span>
             </div>
 
@@ -260,7 +369,7 @@
             </div>
         </footer>
     </div>
-    <script src="scripts/live-feed-rotator.js?v=20260308-livefix1"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260308-livefix2"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
 </html>
