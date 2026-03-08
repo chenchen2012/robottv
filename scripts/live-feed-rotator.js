@@ -16,6 +16,10 @@
   const TOUCH_FIRST_DEVICE = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/";
+  const thumbFromVideo = (url) => {
+    const id = videoIdFromUrl(url);
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+  };
 
   const videoIdFromUrl = (url) => {
     const text = String(url || "").trim();
@@ -166,6 +170,13 @@
     el.textContent = text;
   };
 
+  const setImage = (selector, src, alt) => {
+    const img = document.querySelector(selector);
+    if (!img || !src) return;
+    img.src = src;
+    if (alt) img.alt = alt;
+  };
+
   const setLink = (selector, href, text) => {
     const link = document.querySelector(selector);
     if (!link || !href) return;
@@ -218,46 +229,10 @@
     const headline = primary.title || "Robot.tv Live Feed";
     const sourceHref = primary.slug ? toPostUrl(primary.slug) : "https://news.robot.tv/";
     const sourceText = primary.slug ? "Latest video from news.robot.tv" : "news.robot.tv";
+    const coverImage = thumbFromVideo(primary.youtubeUrl);
 
-    const previewFrame = document.querySelector("[data-live-preview-frame]");
-    const previewLink = previewFrame?.closest(".live-preview");
-    const previewTapCta = document.querySelector("[data-live-preview-tap-play]");
-    const useTapToPlayPreview = Boolean(previewFrame && previewLink && previewTapCta && TOUCH_FIRST_DEVICE);
-    setPreviewPoster(headline, "Open the live room if the inline player is slow or unavailable.");
-
-    if (useTapToPlayPreview) {
-      previewFrame.src = "about:blank";
-      previewFrame.title = `${headline} live preview`;
-      previewLink.classList.add("tap-ready");
-      previewLink.classList.remove("is-playing");
-      setEmbedState(previewLink, "");
-
-      const startPreviewPlayback = (event) => {
-        if (previewLink.classList.contains("is-playing")) return;
-        event.preventDefault();
-        previewLink.classList.add("is-playing");
-        previewFrame.src = embed;
-        watchEmbedLoad(previewFrame, previewLink, () => {
-          setPreviewPoster(headline, "Inline preview unavailable here. Open Live Room for the full stream.");
-        });
-        queuePlayer("[data-live-preview-frame]", ids);
-        ensureYouTubeApi();
-      };
-
-      previewLink.addEventListener("click", startPreviewPlayback);
-      previewTapCta.addEventListener("click", startPreviewPlayback);
-      previewTapCta.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          startPreviewPlayback(event);
-        }
-      });
-    } else {
-      setFrame("[data-live-preview-frame]", embed, `${headline} live preview`);
-      watchEmbedLoad(previewFrame, previewLink, () => {
-        setPreviewPoster(headline, "Inline preview unavailable here. Open Live Room for the full stream.");
-      });
-      queuePlayer("[data-live-preview-frame]", ids);
-    }
+    setImage("[data-live-preview-image]", coverImage, headline);
+    setPreviewPoster(headline, "Open the live room for the full stream and latest newsroom video rotation.");
 
     const mainFrame = document.querySelector("[data-live-main-frame]");
     const mainEmbedWrap = mainFrame?.closest(".live-embed");

@@ -266,16 +266,10 @@ a {
     box-shadow: inset 0 0 0 1px rgba(120, 154, 220, 0.22);
 }
 
+.live-preview img,
 .live-preview iframe {
     position: relative;
     z-index: 1;
-    opacity: 0;
-    transition: opacity 0.22s ease;
-}
-
-.live-preview.embed-loaded iframe,
-.live-preview.is-playing iframe {
-    opacity: 1;
 }
 
 .live-preview-poster {
@@ -290,13 +284,6 @@ a {
         radial-gradient(circle at top left, rgba(239, 45, 82, 0.22), transparent 46%),
         linear-gradient(180deg, rgba(8, 12, 18, 0.24), rgba(8, 12, 18, 0.86));
     transition: opacity 0.22s ease, transform 0.22s ease;
-}
-
-.live-preview.embed-loaded .live-preview-poster,
-.live-preview.is-playing.embed-loaded .live-preview-poster {
-    opacity: 0;
-    transform: translateY(6px);
-    pointer-events: none;
 }
 
 .live-preview-poster-copy {
@@ -329,6 +316,16 @@ a {
     color: #cad9f3;
     line-height: 1.45;
     font-size: 0.9rem;
+}
+
+.live-preview::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 45%;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(5, 8, 14, 0), rgba(5, 8, 14, 0.76));
+    pointer-events: none;
 }
 
 .live-preview img,
@@ -371,17 +368,9 @@ a {
     letter-spacing: 0.03em;
     padding: 0.34rem 0.72rem;
     font-weight: 700;
-    display: none;
-    z-index: 2;
-    cursor: pointer;
-}
-
-.live-preview.tap-ready .live-preview-cta {
     display: inline-flex;
-}
-
-.live-preview.is-playing .live-preview-cta {
-    display: none;
+    z-index: 3;
+    cursor: pointer;
 }
 
 .live-spotlight-copy {
@@ -928,8 +917,9 @@ a {
 
 .channel-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 0.85rem;
+    align-items: stretch;
 }
 
 .channel-card {
@@ -938,6 +928,9 @@ a {
     padding: 0.72rem;
     background: linear-gradient(160deg, #0f1826, #0b131f);
     transition: transform 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
 }
 
 .channel-card:hover {
@@ -947,7 +940,7 @@ a {
 
 .channel-card img {
     width: 100%;
-    aspect-ratio: 16/10;
+    height: clamp(168px, 18vw, 220px);
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #28405f;
@@ -2156,6 +2149,10 @@ a {
 
     .live-preview-poster {
         padding: 0.82rem;
+    }
+
+    .channel-card img {
+        height: 200px;
     }
 
     .ticker-track span {

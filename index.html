@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional"></noscript>
-<link rel="stylesheet" href="styles.css?v=20260308-homefix1">
+<link rel="stylesheet" href="styles.css?v=20260308-homefix2">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -156,23 +156,21 @@
                     <a class="live-preview" href="live.html">
                         <span class="live-preview-poster" data-live-preview-poster aria-hidden="true">
                             <span class="live-preview-poster-copy">
-                                <span class="live-preview-poster-kicker">Inline Preview</span>
+                                <span class="live-preview-poster-kicker">Live Preview</span>
                                 <strong class="live-preview-poster-title" data-live-preview-poster-title>robot.tv live room</strong>
-                                <span class="live-preview-poster-note" data-live-preview-poster-note>Open the live room if the inline player is slow or unavailable.</span>
+                                <span class="live-preview-poster-note" data-live-preview-poster-note>Open the live room for the full stream and latest newsroom video rotation.</span>
                             </span>
                         </span>
-                        <iframe
-                            id="live-preview-frame"
-                            data-live-preview-frame
-                            src="about:blank"
-                            title="robot.tv live preview"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        <img
+                            data-live-preview-image
+                            src="images/robot_logo.png"
+                            alt="robot.tv live preview"
+                            width="1600"
+                            height="900"
                             loading="lazy"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            allowfullscreen>
-                        </iframe>
+                            decoding="async">
                         <span class="live-preview-badge"><span class="live-dot" aria-hidden="true"></span>On Air</span>
-                        <span class="live-preview-cta" data-live-preview-tap-play role="button" tabindex="0" aria-label="Tap to play live preview">Tap to play live</span>
+                        <span class="live-preview-cta">Open live room</span>
                     </a>
                     <div class="live-spotlight-copy">
                         <p class="kicker">LIVE SPOTLIGHT</p>
@@ -540,12 +538,6 @@
         }, 300);
       }, { once: true });
 
-      const toEmbedUrl = (u) => {
-        const id = videoIdFromUrl(u);
-        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&vq=small` : "";
-      };
-
-      const previewTimers = new WeakMap();
       const placeholderSvg = (title) => {
         const safeTitle = String(title || "robot.tv")
           .replace(/&/g, "&amp;")
@@ -574,61 +566,9 @@
         });
       };
 
-      const clearPreviewTimer = (card) => {
-        const timer = previewTimers.get(card);
-        if (timer) {
-          window.clearTimeout(timer);
-          previewTimers.delete(card);
-        }
-      };
-
-      const startPreview = (card) => {
-        const slot = card.querySelector(".story-preview-layer");
-        const embed = toEmbedUrl(card.dataset.video);
-        if (!slot || !embed || slot.dataset.active === "1") return;
-        clearPreviewTimer(card);
-        const frame = document.createElement("iframe");
-        frame.className = "story-preview-frame";
-        frame.src = embed;
-        frame.title = "Story preview";
-        frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        frame.allowFullscreen = true;
-        frame.referrerPolicy = "strict-origin-when-cross-origin";
-        frame.addEventListener("load", () => {
-          if (slot.dataset.active !== "1") return;
-          clearPreviewTimer(card);
-          card.classList.add("previewing");
-        }, { once: true });
-        slot.replaceChildren(frame);
-        slot.dataset.active = "1";
-        card.classList.remove("previewing");
-        const timer = window.setTimeout(() => {
-          if (slot.dataset.active !== "1") return;
-          stopPreview(card);
-        }, 2600);
-        previewTimers.set(card, timer);
-      };
-
-      const stopPreview = (card) => {
-        const slot = card.querySelector(".story-preview-layer");
-        if (!slot) return;
-        clearPreviewTimer(card);
-        slot.innerHTML = "";
-        slot.dataset.active = "0";
-        card.classList.remove("previewing");
-      };
-
       armImageFallbacks();
-      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-        document.querySelectorAll(".story-card").forEach((card) => {
-          card.addEventListener("mouseenter", () => startPreview(card));
-          card.addEventListener("mouseleave", () => stopPreview(card));
-          card.addEventListener("focusin", () => startPreview(card));
-          card.addEventListener("focusout", () => stopPreview(card));
-        });
-      }
     </script>
-    <script src="scripts/live-feed-rotator.js?v=20260308-homefix1"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260308-homefix2"></script>
     <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
