@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track China humanoid robot news, Unitree momentum, EV maker entries, public showcase signals, and deployment context with robot.tv briefings.">
+    <meta property="og:title" content="China Humanoid Robots Hub: Unitree, EV Makers, Market Signals | robot.tv">
+    <meta property="og:description" content="Track China humanoid robot news, Unitree momentum, EV maker entries, public showcase signals, and deployment context with robot.tv briefings.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/china-humanoid-robots.html">
+    <meta property="og:image" content="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="China Humanoid Robots Hub: Unitree, EV Makers, Market Signals | robot.tv">
+    <meta name="twitter:description" content="Track China humanoid robot news, Unitree momentum, EV maker entries, public showcase signals, and deployment context with robot.tv briefings.">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg">
+    <meta name="twitter:url" content="https://robot.tv/china-humanoid-robots.html">
+    <link rel="canonical" href="https://robot.tv/china-humanoid-robots.html">
+    <title>China Humanoid Robots Hub: Unitree, EV Makers, Market Signals | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+    <style>
+        .hub-grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .hub-panel {
+            padding: 0.95rem;
+        }
+        .hub-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.03em;
+        }
+        .hub-panel p {
+            margin: 0.58rem 0 0;
+            color: #c4d2e8;
+            line-height: 1.62;
+        }
+        .hub-list {
+            margin: 0.7rem 0 0;
+            padding-left: 1.05rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+        .hub-list li {
+            color: #c6d2e8;
+            line-height: 1.58;
+        }
+        .briefings-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .briefings-panel h2 {
+            margin: 0.4rem 0 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.12rem;
+        }
+        .briefing-grid {
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .briefing-card {
+            border: 1px solid #2f4566;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, #101926, #0c131f);
+        }
+        .briefing-card h3 {
+            margin: 0.52rem 0 0;
+            font-size: 1rem;
+            line-height: 1.34;
+        }
+        .briefing-card p {
+            margin: 0.5rem 0 0;
+            color: #c1d0e7;
+            line-height: 1.56;
+            font-size: 0.92rem;
+        }
+        .briefing-meta {
+            margin: 0;
+            color: #9fb2d4;
+            font-size: 0.78rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .briefing-actions {
+            margin-top: 0.72rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        .faq-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .faq-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.08rem;
+        }
+        .faq-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            gap: 0.7rem;
+        }
+        .faq-item {
+            border: 1px solid #2d4262;
+            border-radius: 10px;
+            padding: 0.8rem;
+            background: rgba(8, 14, 24, 0.74);
+        }
+        .faq-item h3 {
+            margin: 0;
+            font-size: 0.98rem;
+        }
+        .faq-item p {
+            margin: 0.45rem 0 0;
+            color: #c4d2e8;
+            line-height: 1.58;
+            font-size: 0.92rem;
+        }
+        .link-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .link-card {
+            border: 1px solid #304968;
+            border-radius: 10px;
+            padding: 0.78rem;
+            background: rgba(12, 21, 34, 0.72);
+        }
+        .link-card h3 {
+            margin: 0;
+            font-size: 0.96rem;
+        }
+        .link-card p {
+            margin: 0.42rem 0 0;
+            color: #bfd0ec;
+            line-height: 1.55;
+            font-size: 0.9rem;
+        }
+        .status-line {
+            margin-top: 0.7rem;
+            color: #9fb2d4;
+            font-size: 0.86rem;
+        }
+        @media (max-width: 980px) {
+            .hub-grid,
+            .briefing-grid,
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "China Humanoid Robots Hub",
+      "url": "https://robot.tv/china-humanoid-robots.html",
+      "description": "A robot.tv topic hub for China humanoid robotics, including Unitree, EV maker entries, public showcases, and deployment signals.",
+      "about": [
+        { "@type": "Thing", "name": "China humanoid robots" },
+        { "@type": "Thing", "name": "Unitree" },
+        { "@type": "Thing", "name": "Humanoid robotics market" },
+        { "@type": "Thing", "name": "Chinese EV manufacturers" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "China humanoid robot briefings on robot.tv",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Why China's humanoid robot industry is winning the early market", "url": "https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/" },
+        { "@type": "ListItem", "position": 2, "name": "Unitree momentum signals China is becoming a serious global robotics competitor", "url": "https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum/" },
+        { "@type": "ListItem", "position": 3, "name": "China's humanoid robots take centre stage for Lunar New Year showtime", "url": "https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/" },
+        { "@type": "ListItem", "position": 4, "name": "Chinese EV manufacturers enter the humanoid robot market", "url": "https://news.robot.tv/post/chinese-ev-manufacturers-enter-humanoid-robot-market/" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "China Humanoid Robots",
+          "item": "https://robot.tv/china-humanoid-robots.html"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does China matter in humanoid robotics right now?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "robot.tv tracks China closely because supply-chain density, manufacturing speed, and growing public visibility may be giving local teams an early commercialization advantage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What signals does robot.tv watch on this topic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The site watches company iteration speed, cost-down pressure, EV-industry crossover, public showcase moments, and whether those signals convert into real deployment proof."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are stage appearances the same as deployment proof?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. robot.tv treats public showcases as visibility and confidence signals, not as proof of reliable factory or field performance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where should I start inside robot.tv?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with the market overview briefing, then use the Unitree guide and the broader humanoid robots hub to compare company and category context."
+          }
+        }
+      ]
+    }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-WC8XB1DN1E");
+    </script>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home"><img src="images/robot_logo.png" alt="robot.tv"></a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="get-featured.html">Get Featured</a>
+        </header>
+
+        <main>
+            <section class="panel companies-hero">
+                <p class="kicker">TOPIC HUB</p>
+                <h1>China Humanoid Robots</h1>
+                <p class="hero-copy">A focused robot.tv resource for tracking why China is becoming one of the most important humanoid ecosystems to watch. This page organizes the market story around Unitree, EV-manufacturer entry, public visibility, and the harder question of real deployment proof.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Open Market Briefing</a>
+                    <a class="btn btn-ghost" href="humanoid-robots.html">Open Humanoid Hub</a>
+                </div>
+            </section>
+
+            <section class="panel index-spotlight">
+                <div>
+                    <p class="kicker">WHY THIS PAGE EXISTS</p>
+                    <h2>China is no longer just part of the humanoid story. It is becoming one of the main arenas where cost, speed, and commercialization pressure are being set.</h2>
+                    <p class="index-spotlight-copy">robot.tv built this hub so recurring China-humanoid coverage does not stay scattered across short articles. Use it to understand how supply chains, company cadence, public showcases, and industrial crossover fit together.</p>
+                </div>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="company-unitree.html">See Unitree Guide</a>
+                    <a class="btn btn-ghost" href="https://news.robot.tv/">Open Newsroom</a>
+                </div>
+            </section>
+
+            <section class="hub-grid">
+                <article class="panel hub-panel">
+                    <h2>Why China is moving early</h2>
+                    <p>robot.tv is watching China closely because several advantages appear to reinforce each other instead of showing up in isolation.</p>
+                    <ul class="hub-list">
+                        <li>Dense hardware supply chains can shorten the loop between prototype revision, sourcing, and cost reduction.</li>
+                        <li>Companies can iterate visibly and frequently, which keeps public attention and recruiting momentum high.</li>
+                        <li>Lower-cost manufacturing pressure may matter as much as headline model quality in the early market.</li>
+                        <li>More companies are participating, which makes the ecosystem story stronger than any single launch cycle.</li>
+                    </ul>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>What robot.tv watches next</h2>
+                    <p>Public visibility is useful, but the long-term winners will still need to translate that momentum into operating proof.</p>
+                    <ul class="hub-list">
+                        <li>Whether Unitree and peers convert attention into repeatable commercial deployments.</li>
+                        <li>How much EV-industry manufacturing discipline transfers into humanoid hardware programs.</li>
+                        <li>Which companies show stable task performance instead of isolated demo clips.</li>
+                        <li>Whether China’s ecosystem advantage leads to global pricing and cadence pressure on rivals.</li>
+                    </ul>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>Why this is a market-structure page</h2>
+                    <p>robot.tv is not treating China humanoids as a single-company story. The stronger SEO opportunity is the broader market question: whether one ecosystem is starting to set the pace on cost, iteration, and commercial confidence.</p>
+                    <ul class="hub-list">
+                        <li>Supply-chain density can create a compounding advantage across multiple vendors at once.</li>
+                        <li>Public momentum can attract talent, capital, and customer curiosity even before deployments scale.</li>
+                        <li>EV crossover matters because manufacturing discipline can become a real competitive weapon.</li>
+                        <li>Global competitors may be forced to respond faster if China keeps compressing hardware cycles.</li>
+                    </ul>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>How to separate signal types</h2>
+                    <p>This topic gets noisy quickly, so robot.tv keeps several signals distinct instead of blending them into one hype story.</p>
+                    <ul class="hub-list">
+                        <li>Company cadence: how fast visible product iteration is happening.</li>
+                        <li>Manufacturing depth: how much cost and sourcing leverage the ecosystem really has.</li>
+                        <li>Public visibility: whether showcases are shaping confidence and attention.</li>
+                        <li>Deployment proof: whether any of that momentum survives contact with real operating environments.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="panel briefings-panel" aria-label="Priority briefings">
+                <p class="kicker">PRIORITY BRIEFINGS</p>
+                <h2>Start with the highest-signal robot.tv coverage</h2>
+                <p class="hero-copy">These pages work together: market structure, company momentum, public visibility, and industrial crossover.</p>
+                <div class="briefing-grid">
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Market Structure</p>
+                        <h3><a href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China's humanoid robot industry is winning the early market</a></h3>
+                        <p>Best starting point for the broad ecosystem argument: supply chains, iteration speed, and why China may be moving faster than many competitors.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Read Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Company Signal</p>
+                        <h3><a href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum/">Unitree momentum signals China is becoming a serious global robotics competitor</a></h3>
+                        <p>Use this briefing to connect one company's visible momentum with the broader question of whether China can compete globally on speed and cost.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/unitree-china-global-robotics-competitor-momentum/">Read Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Visibility Signal</p>
+                        <h3><a href="https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/">China's humanoid robots take centre stage for Lunar New Year showtime</a></h3>
+                        <p>This page explains why a public showcase matters even when it is not the same thing as deployment proof: attention can change confidence, recruiting, and investor interest.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/">Read Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Industrial Crossover</p>
+                        <h3><a href="https://news.robot.tv/post/chinese-ev-manufacturers-enter-humanoid-robot-market/">Chinese EV manufacturers enter the humanoid robot market</a></h3>
+                        <p>Track why EV-industry participation could matter for cost, manufacturing discipline, and the path from concept hardware to repeatable robot platforms.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/chinese-ev-manufacturers-enter-humanoid-robot-market/">Read Briefing</a>
+                        </div>
+                    </article>
+                </div>
+                <p class="status-line">Editorial note: robot.tv treats public spectacle, company cadence, and manufacturing depth as separate signals. This hub is designed to keep those signals connected without pretending they are the same thing.</p>
+            </section>
+
+            <section class="hub-grid">
+                <article class="panel hub-panel">
+                    <h2>Related robot.tv pages</h2>
+                    <p>Use these internal pages to move from topic-level context into company and category detail.</p>
+                    <div class="link-grid">
+                        <article class="link-card">
+                            <h3><a href="company-unitree.html">Unitree company guide</a></h3>
+                            <p>Deepen the China story with the strongest current company-specific profile on robot.tv.</p>
+                        </article>
+                        <article class="link-card">
+                            <h3><a href="humanoid-robots.html">Humanoid robots hub</a></h3>
+                            <p>Compare China-focused momentum against Tesla, Figure, Atlas, Digit, and Apollo coverage.</p>
+                        </article>
+                        <article class="link-card">
+                            <h3><a href="companies.html">Companies hub</a></h3>
+                            <p>Jump into the broader robotics company landscape and related profile pages.</p>
+                        </article>
+                        <article class="link-card">
+                            <h3><a href="https://news.robot.tv/">robot.tv newsroom</a></h3>
+                            <p>Open the live news feed for the latest robotics briefings across humanoids, warehouses, and AI.</p>
+                        </article>
+                    </div>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>How to use this hub</h2>
+                    <p>This page is meant to help searchers and repeat readers move from scattered updates into a clearer topic map.</p>
+                    <ul class="hub-list">
+                        <li>Start with the market overview if you want the big-picture explanation.</li>
+                        <li>Open the Unitree guide if you want the clearest company-level anchor inside the China cluster.</li>
+                        <li>Use the EV and Lunar New Year briefings to separate manufacturing signals from narrative signals.</li>
+                        <li>Return to the newsroom for fresh posts, but use this page when you want the topic organized in one place.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="panel faq-panel" id="faq">
+                <h2>FAQ</h2>
+                <div class="faq-grid">
+                    <article class="faq-item">
+                        <h3>Why does China matter so much in humanoid robotics right now?</h3>
+                        <p>robot.tv sees China as important because manufacturing speed, component access, and public momentum may be giving local teams a faster path into the early market.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Does this page claim China has already won the humanoid market?</h3>
+                        <p>No. The core question is still whether fast iteration and lower costs convert into reliable commercial deployments. This hub tracks the signals, not a final verdict.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Why include public showcase stories here?</h3>
+                        <p>Because visibility affects confidence, recruiting, and capital flow. robot.tv treats those as important market inputs even when they are not proof of factory-grade performance.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>What is the best next page after this one?</h3>
+                        <p>If you want company detail, open the <a href="company-unitree.html">Unitree guide</a>. If you want broader comparison across humanoid programs, open the <a href="humanoid-robots.html">humanoid robots hub</a>.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
+    <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
+</body>
+</html>

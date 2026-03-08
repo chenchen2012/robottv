@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track warehouse humanoid robots, Digit deployments, factory-proof signals, and logistics ROI pressure with robot.tv briefings and company context.">
+    <meta property="og:title" content="Warehouse Humanoid Robots Hub: Digit, Agility, Factory Proof | robot.tv">
+    <meta property="og:description" content="Track warehouse humanoid robots, Digit deployments, factory-proof signals, and logistics ROI pressure with robot.tv briefings and company context.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/warehouse-humanoid-robots.html">
+    <meta property="og:image" content="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Warehouse Humanoid Robots Hub: Digit, Agility, Factory Proof | robot.tv">
+    <meta name="twitter:description" content="Track warehouse humanoid robots, Digit deployments, factory-proof signals, and logistics ROI pressure with robot.tv briefings and company context.">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg">
+    <meta name="twitter:url" content="https://robot.tv/warehouse-humanoid-robots.html">
+    <link rel="canonical" href="https://robot.tv/warehouse-humanoid-robots.html">
+    <title>Warehouse Humanoid Robots Hub: Digit, Agility, Factory Proof | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+    <style>
+        .hub-grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .hub-panel {
+            padding: 0.95rem;
+        }
+        .hub-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.03em;
+        }
+        .hub-panel p {
+            margin: 0.58rem 0 0;
+            color: #c4d2e8;
+            line-height: 1.62;
+        }
+        .hub-list {
+            margin: 0.7rem 0 0;
+            padding-left: 1.05rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+        .hub-list li {
+            color: #c6d2e8;
+            line-height: 1.58;
+        }
+        .briefings-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .briefings-panel h2 {
+            margin: 0.4rem 0 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.12rem;
+        }
+        .briefing-grid {
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .briefing-card {
+            border: 1px solid #2f4566;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, #101926, #0c131f);
+        }
+        .briefing-card h3 {
+            margin: 0.52rem 0 0;
+            font-size: 1rem;
+            line-height: 1.34;
+        }
+        .briefing-card p {
+            margin: 0.5rem 0 0;
+            color: #c1d0e7;
+            line-height: 1.56;
+            font-size: 0.92rem;
+        }
+        .briefing-meta {
+            margin: 0;
+            color: #9fb2d4;
+            font-size: 0.78rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .briefing-actions {
+            margin-top: 0.72rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        .faq-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .faq-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.08rem;
+        }
+        .faq-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            gap: 0.7rem;
+        }
+        .faq-item {
+            border: 1px solid #2d4262;
+            border-radius: 10px;
+            padding: 0.8rem;
+            background: rgba(8, 14, 24, 0.74);
+        }
+        .faq-item h3 {
+            margin: 0;
+            font-size: 0.98rem;
+        }
+        .faq-item p {
+            margin: 0.45rem 0 0;
+            color: #c4d2e8;
+            line-height: 1.58;
+            font-size: 0.92rem;
+        }
+        .link-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .link-card {
+            border: 1px solid #304968;
+            border-radius: 10px;
+            padding: 0.78rem;
+            background: rgba(12, 21, 34, 0.72);
+        }
+        .link-card h3 {
+            margin: 0;
+            font-size: 0.96rem;
+        }
+        .link-card p {
+            margin: 0.42rem 0 0;
+            color: #bfd0ec;
+            line-height: 1.55;
+            font-size: 0.9rem;
+        }
+        .status-line {
+            margin-top: 0.7rem;
+            color: #9fb2d4;
+            font-size: 0.86rem;
+        }
+        @media (max-width: 980px) {
+            .hub-grid,
+            .briefing-grid,
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Warehouse Humanoid Robots Hub",
+      "url": "https://robot.tv/warehouse-humanoid-robots.html",
+      "description": "A robot.tv topic hub for warehouse humanoid robots, including Digit deployments, factory-proof signals, and logistics ROI pressure.",
+      "about": [
+        { "@type": "Thing", "name": "Warehouse humanoid robots" },
+        { "@type": "Thing", "name": "Agility Robotics Digit" },
+        { "@type": "Thing", "name": "Warehouse robotics ROI" },
+        { "@type": "Thing", "name": "Humanoid deployments" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Warehouse humanoid robot briefings on robot.tv",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Humanoid warehouse rollouts are shifting from pilot to operations in 2026", "url": "https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/" },
+        { "@type": "ListItem", "position": 2, "name": "Humanoid Deployments Enter the Factory Proof Stage in 2026", "url": "https://news.robot.tv/post/humanoid-deployments-factory-proof-stage-2026/" },
+        { "@type": "ListItem", "position": 3, "name": "Toyota Motor Manufacturing Canada to deploy Agility Robotics’ Digit humanoids", "url": "https://news.robot.tv/post/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/" },
+        { "@type": "ListItem", "position": 4, "name": "Amazon's Blue Jay halt shows warehouse robotics programs are being held to tighter ROI standards", "url": "https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Warehouse Humanoid Robots",
+          "item": "https://robot.tv/warehouse-humanoid-robots.html"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does warehouse humanoid robotics deserve its own hub?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "robot.tv groups these stories together because the category is being judged on repeatable warehouse outcomes like throughput, supervision load, integration effort, and ROI rather than on humanoid novelty alone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Digit the only company that matters here?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, but Digit is one of the clearest public deployment references right now, so robot.tv uses Agility Robotics as a practical anchor for the broader warehouse humanoid story."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why include Amazon Blue Jay in a humanoid hub?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because it shows how strict warehouse automation ROI standards have become. robot.tv treats category winners and failed or halted programs as part of the same market picture."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should readers watch next?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Look for named deployments, narrow task success, evidence of safe mixed human-robot workflows, and signs that rollout economics stay attractive after the pilot phase."
+          }
+        }
+      ]
+    }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-WC8XB1DN1E");
+    </script>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home"><img src="images/robot_logo.png" alt="robot.tv"></a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="get-featured.html">Get Featured</a>
+        </header>
+
+        <main>
+            <section class="panel companies-hero">
+                <p class="kicker">TOPIC HUB</p>
+                <h1>Warehouse Humanoid Robots</h1>
+                <p class="hero-copy">A focused robot.tv resource for the part of the humanoid market that now matters most for logistics and operations teams: real warehouse deployments, factory-proof signals, and the tightening ROI standards that decide whether programs survive.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Open Rollout Briefing</a>
+                    <a class="btn btn-ghost" href="company-agility.html">See Agility Guide</a>
+                </div>
+            </section>
+
+            <section class="panel index-spotlight">
+                <div>
+                    <p class="kicker">WHY THIS PAGE EXISTS</p>
+                    <h2>Warehouse humanoids are no longer only a humanoid story. They are becoming an operations story.</h2>
+                    <p class="index-spotlight-copy">robot.tv built this hub so deployment-stage warehouse coverage does not stay scattered across short posts. The category now deserves its own view because operators are starting to judge robots on measurable workflow value, not just broad platform ambition.</p>
+                </div>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv/post/humanoid-deployments-factory-proof-stage-2026/">See Factory-Proof Briefing</a>
+                    <a class="btn btn-ghost" href="humanoid-robots.html">Open Humanoid Hub</a>
+                </div>
+            </section>
+
+            <section class="hub-grid">
+                <article class="panel hub-panel">
+                    <h2>What buyers care about now</h2>
+                    <p>The warehouse humanoid conversation is maturing because operators are asking harder questions than they did during early pilot cycles.</p>
+                    <ul class="hub-list">
+                        <li>Whether robots improve throughput or remove a specific workflow bottleneck.</li>
+                        <li>How much supervision and exception handling the deployment still requires.</li>
+                        <li>How safely the system works inside mixed human-robot environments.</li>
+                        <li>How difficult integration is with existing warehouse processes and software.</li>
+                    </ul>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>What separates signal from hype</h2>
+                    <p>robot.tv treats the strongest warehouse-humanoid stories as the ones that move beyond demo novelty and survive operational scrutiny.</p>
+                    <ul class="hub-list">
+                        <li>Named deployment partners and real sites matter more than generic pilot language.</li>
+                        <li>Narrow, repeatable task wins are stronger signals than broad claims of generality.</li>
+                        <li>ROI pressure is part of the category story, which is why halted programs matter too.</li>
+                        <li>Rollout pacing, uptime, and workflow stability are better long-term indicators than one-off videos.</li>
+                    </ul>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>Where warehouse economics usually break</h2>
+                    <p>Warehouse humanoid programs often look strongest before they inherit the friction of live operations. The category stays thin unless coverage explains where the economics can fail.</p>
+                    <ul class="hub-list">
+                        <li>Supervision burden can erase labor savings if recovery is still manual and frequent.</li>
+                        <li>Integration complexity can overwhelm the value of a narrow task win.</li>
+                        <li>Safety and workflow redesign costs can slow rollout long after the pilot headline lands.</li>
+                        <li>Multi-shift uptime matters more than a short, carefully managed demo window.</li>
+                    </ul>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>How robot.tv reads the market</h2>
+                    <p>robot.tv treats warehouse humanoids as a market-analysis topic, not just a platform novelty topic. The question is whether deployments become repeatable enough to reset buyer expectations across logistics automation.</p>
+                    <ul class="hub-list">
+                        <li>Named operators matter because they expose the robots to real throughput pressure.</li>
+                        <li>Failed or paused programs matter because they reveal the ROI threshold buyers are enforcing.</li>
+                        <li>Factory-proof stories matter because they show whether the category can survive production-grade constraints.</li>
+                        <li>Company guides matter because the same deployment story looks different once vendor quality and support maturity are visible.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="panel briefings-panel" aria-label="Priority briefings">
+                <p class="kicker">PRIORITY BRIEFINGS</p>
+                <h2>Start with the warehouse-specific robot.tv briefings</h2>
+                <p class="hero-copy">These pages connect category maturity, factory-proof signals, named deployments, and the ROI pressure that shapes adoption.</p>
+                <div class="briefing-grid">
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Category Shift</p>
+                        <h3><a href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a></h3>
+                        <p>Use this briefing as the best overview of why warehouse humanoids are now being judged on repeatability and workflow metrics instead of on demo optics.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Read Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Factory Proof</p>
+                        <h3><a href="https://news.robot.tv/post/humanoid-deployments-factory-proof-stage-2026/">Humanoid Deployments Enter the Factory Proof Stage in 2026</a></h3>
+                        <p>This page explains why the category is moving into a tougher phase where buyers care about uptime, supervision, and integration cost.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/humanoid-deployments-factory-proof-stage-2026/">Read Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Deployment Signal</p>
+                        <h3><a href="https://news.robot.tv/post/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/">Toyota Motor Manufacturing Canada to deploy Agility Robotics' Digit humanoids</a></h3>
+                        <p>A high-value deployment signal because it ties Digit to a serious industrial operator instead of leaving the story at generic pilot language.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/">Read Briefing</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">ROI Pressure</p>
+                        <h3><a href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/">Amazon's Blue Jay halt shows warehouse robotics programs are being held to tighter ROI standards</a></h3>
+                        <p>This cautionary briefing matters because the warehouse market is defined by what gets cut as much as by what gets announced.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/">Read Briefing</a>
+                        </div>
+                    </article>
+                </div>
+                <p class="status-line">Editorial note: robot.tv treats deployment wins and deployment failures as part of the same market picture. A real category analysis needs both.</p>
+            </section>
+
+            <section class="hub-grid">
+                <article class="panel hub-panel">
+                    <h2>Related robot.tv pages</h2>
+                    <p>Use these internal pages to move from warehouse-hub context into company and category detail.</p>
+                    <div class="link-grid">
+                        <article class="link-card">
+                            <h3><a href="company-agility.html">Agility Robotics company guide</a></h3>
+                            <p>The clearest company-level anchor for warehouse-humanoid coverage on robot.tv.</p>
+                        </article>
+                        <article class="link-card">
+                            <h3><a href="humanoid-robots.html">Humanoid robots hub</a></h3>
+                            <p>Compare warehouse-focused coverage against the broader humanoid field.</p>
+                        </article>
+                        <article class="link-card">
+                            <h3><a href="companies.html">Companies hub</a></h3>
+                            <p>Open the broader robotics company landscape and related profile pages.</p>
+                        </article>
+                        <article class="link-card">
+                            <h3><a href="https://news.robot.tv/">robot.tv newsroom</a></h3>
+                            <p>Jump back into the live feed for fresh robotics briefings beyond the warehouse cluster.</p>
+                        </article>
+                    </div>
+                </article>
+                <article class="panel hub-panel">
+                    <h2>How to use this hub</h2>
+                    <p>This page is meant to help readers move from scattered headlines into a clearer warehouse-humanoid topic map.</p>
+                    <ul class="hub-list">
+                        <li>Start with the rollout and factory-proof briefings if you want the category overview.</li>
+                        <li>Use the Toyota/Digit story when you want a concrete deployment reference.</li>
+                        <li>Use the Blue Jay story to understand how strict logistics automation economics have become.</li>
+                        <li>Return to the Agility guide for company-level context around Digit and warehouse adoption.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="panel faq-panel" id="faq">
+                <h2>FAQ</h2>
+                <div class="faq-grid">
+                    <article class="faq-item">
+                        <h3>Why does warehouse humanoid robotics need its own hub?</h3>
+                        <p>Because the category now has its own repeated search intent and its own evaluation logic. Operators care about throughput, supervision, safety, and integration in ways that differ from broader humanoid hype cycles.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Does this hub claim warehouse humanoids are already proven?</h3>
+                        <p>No. robot.tv treats the category as promising but still under operational test. The point of the hub is to organize the strongest signals, not to declare the market solved.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Why include a halted Amazon program here?</h3>
+                        <p>Because failures and pullbacks reveal how buyers are setting the ROI bar. That context helps readers judge which warehouse-humanoid narratives are durable and which are fragile.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>What is the best next page after this one?</h3>
+                        <p>If you want company detail, open the <a href="company-agility.html">Agility Robotics guide</a>. If you want broader comparison across humanoid programs, open the <a href="humanoid-robots.html">humanoid robots hub</a>.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
+    <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
+</body>
+</html>

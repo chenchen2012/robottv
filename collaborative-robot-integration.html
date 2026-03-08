@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Use robot.tv's collaborative robot integration guide to plan line fit, safety, operator handoffs, and rollout KPIs before adding cobots to an existing production line.">
+    <meta property="og:title" content="Collaborative Robot Integration Guide: How to Add Cobots Without Production Disruption | robot.tv">
+    <meta property="og:description" content="Use robot.tv's collaborative robot integration guide to plan line fit, safety, operator handoffs, and rollout KPIs before adding cobots to an existing production line.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robot.tv/collaborative-robot-integration.html">
+    <meta property="og:image" content="https://img.youtube.com/vi/sa2qSF9f9Ks/hqdefault.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Collaborative Robot Integration Guide: How to Add Cobots Without Production Disruption | robot.tv">
+    <meta name="twitter:description" content="Use robot.tv's collaborative robot integration guide to plan line fit, safety, operator handoffs, and rollout KPIs before adding cobots to an existing production line.">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/sa2qSF9f9Ks/hqdefault.jpg">
+    <meta name="twitter:url" content="https://robot.tv/collaborative-robot-integration.html">
+    <link rel="canonical" href="https://robot.tv/collaborative-robot-integration.html">
+    <title>Collaborative Robot Integration Guide: How to Add Cobots Without Production Disruption | robot.tv</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+    <style>
+        .guide-grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .guide-panel {
+            padding: 0.95rem;
+        }
+        .guide-panel h2 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.04rem;
+            letter-spacing: 0.03em;
+        }
+        .guide-panel p {
+            margin: 0.55rem 0 0;
+            color: #c5d3e8;
+            line-height: 1.62;
+        }
+        .guide-list {
+            margin: 0.75rem 0 0;
+            padding-left: 1.05rem;
+            display: grid;
+            gap: 0.48rem;
+        }
+        .guide-list li {
+            color: #c7d4e9;
+            line-height: 1.58;
+        }
+        .briefings-panel,
+        .faq-panel,
+        .checklist-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+        .briefings-panel h2,
+        .faq-panel h2,
+        .checklist-panel h2 {
+            margin: 0.42rem 0 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+        }
+        .briefing-grid,
+        .link-grid {
+            margin-top: 0.85rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.82rem;
+        }
+        .briefing-card,
+        .link-card,
+        .faq-item {
+            border: 1px solid #304764;
+            border-radius: 12px;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, #101926, #0c131f);
+        }
+        .briefing-meta,
+        .status-line {
+            margin: 0;
+            color: #9fb2d4;
+            font-size: 0.79rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .briefing-card h3,
+        .link-card h3,
+        .faq-item h3 {
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
+            line-height: 1.34;
+        }
+        .briefing-card p,
+        .link-card p,
+        .faq-item p {
+            margin: 0.48rem 0 0;
+            color: #c2d0e6;
+            line-height: 1.58;
+            font-size: 0.92rem;
+        }
+        .briefing-actions {
+            margin-top: 0.72rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        .faq-grid {
+            margin-top: 0.8rem;
+            display: grid;
+            gap: 0.72rem;
+        }
+        @media (max-width: 980px) {
+            .guide-grid,
+            .briefing-grid,
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Collaborative Robot Integration Guide",
+      "url": "https://robot.tv/collaborative-robot-integration.html",
+      "description": "A robot.tv guide for planning collaborative robot rollout, line fit, safety, operator handoffs, and deployment KPIs.",
+      "about": [
+        { "@type": "Thing", "name": "Collaborative robots" },
+        { "@type": "Thing", "name": "Cobot integration" },
+        { "@type": "Thing", "name": "Manufacturing automation" },
+        { "@type": "Thing", "name": "Robot safety and operator workflows" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Collaborative robot rollout resources on robot.tv",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "How to integrate collaborative robots into existing production lines without disruption", "url": "https://news.robot.tv/post/how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption/" },
+        { "@type": "ListItem", "position": 2, "name": "6 lessons I learned watching a robotics startup die from the inside", "url": "https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/" },
+        { "@type": "ListItem", "position": 3, "name": "Companies hub", "url": "https://robot.tv/companies.html" },
+        { "@type": "ListItem", "position": 4, "name": "Physical AI & Robot Learning Hub", "url": "https://robot.tv/physical-ai-robot-learning.html" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Collaborative Robot Integration",
+          "item": "https://robot.tv/collaborative-robot-integration.html"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the best first collaborative robot use case?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with a narrow, repetitive bottleneck where handoffs are easy to observe and the expected gain can be measured with cycle time, intervention rate, and operator burden."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do cobots reduce the need for process redesign?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Cobots often succeed only when teams also redesign part presentation, exception handling, safety boundaries, and operator workflow around the cell."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which rollout KPIs matter most?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "robot.tv recommends tracking throughput contribution, intervention rate, safety incidents, training time, and whether the cell reduces total process friction rather than just moving labor to a new step."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should a team delay a cobot rollout?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Delay when the process is unstable, fixtures are inconsistent, the task has no clear owner, or the cell cannot be measured against a concrete bottleneck and business target."
+          }
+        }
+      ]
+    }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-WC8XB1DN1E");
+    </script>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-red" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-blue" aria-hidden="true"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="robot.tv home">
+                <img src="images/robot_logo.png" alt="robot.tv">
+            </a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="index.html">Home</a>
+                <a href="home.html">Robot Index</a>
+                <a href="companies.html">Companies</a>
+                <a href="live.html">Live Now</a>
+                <a href="https://news.robot.tv">News</a>
+                <a href="partner.html">Partner</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="nav-cta" href="get-featured.html">Get Featured</a>
+        </header>
+
+        <main>
+            <section class="panel hero">
+                <p class="kicker">OPERATIONS GUIDE</p>
+                <h1>Collaborative Robot Integration Guide</h1>
+                <p class="hero-copy">Use this robot.tv guide to plan line fit, safety, operator handoffs, and rollout KPIs before adding cobots to an existing production line.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://news.robot.tv/post/how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption/">Open the briefing</a>
+                    <a class="btn btn-ghost" href="companies.html">See company hub</a>
+                </div>
+                <p class="status-line">Best used when a team is deciding whether a cobot cell will remove a real bottleneck or simply move complexity elsewhere.</p>
+            </section>
+
+            <section class="guide-grid">
+                <section class="panel guide-panel">
+                    <p class="kicker">WHY THIS PAGE EXISTS</p>
+                    <h2>Integration is the real risk</h2>
+                    <p>Many cobot projects fail because the team buys the robot before it defines the task, line owner, exception path, or success metric. robot.tv treats integration as the main operating problem, not an afterthought.</p>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">START HERE</p>
+                    <h2>Choose the first cell carefully</h2>
+                    <ul class="guide-list">
+                        <li>Pick one repeatable bottleneck with stable part presentation.</li>
+                        <li>Define how people and the robot hand work off to each other.</li>
+                        <li>Measure improvement against one business target, not vague automation interest.</li>
+                    </ul>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">WHAT BUYERS MISS</p>
+                    <h2>Safety and flow are coupled</h2>
+                    <p>Guarding, reach, tray layout, recovery behavior, and operator movement shape the cell as much as the arm itself. A safe cell that breaks flow is still a weak deployment.</p>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">SUCCESS SIGNALS</p>
+                    <h2>Track rollout KPIs, not demo optics</h2>
+                    <ul class="guide-list">
+                        <li>Cycle contribution and throughput impact.</li>
+                        <li>Intervention rate and recovery time.</li>
+                        <li>Training time for supervisors and operators.</li>
+                        <li>Whether the robot removes friction or just relocates it.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section class="guide-grid">
+                <section class="panel guide-panel">
+                    <p class="kicker">WHERE MANUFACTURING TEAMS STALL</p>
+                    <h2>Most failures happen in the handoff layers</h2>
+                    <p>The arm or cobot demo is usually not the hardest part. Rollouts break when part presentation drifts, operators lose ownership, changeovers get messy, or exception handling depends on outside integrators instead of the line team.</p>
+                    <p>That is why robot.tv treats collaborative robot integration as a manufacturing-systems question. If upstream and downstream flow get worse after install, the robot has not really improved the line.</p>
+                </section>
+                <section class="panel guide-panel">
+                    <p class="kicker">BUYER FILTER</p>
+                    <h2>Use a bottleneck-first integration test</h2>
+                    <ul class="guide-list">
+                        <li>Name the exact station or repetitive task before comparing vendors.</li>
+                        <li>Check whether fixtures and part consistency are stable enough to automate repeatedly.</li>
+                        <li>Require a recovery plan that operators can execute without waiting for specialist support.</li>
+                        <li>Reject projects where ROI depends on vague future flexibility instead of one immediate workflow win.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section class="panel checklist-panel">
+                <p class="kicker">ROLLOUT CHECKLIST</p>
+                <h2>What operators should validate before launch</h2>
+                <ul class="guide-list">
+                    <li>Confirm part tolerances and presentation stay consistent enough for the planned task.</li>
+                    <li>Design the operator handoff so exceptions do not stop the entire line.</li>
+                    <li>Test recovery behavior, not just the happy path.</li>
+                    <li>Decide who owns cell uptime, maintenance, and retraining after initial install.</li>
+                    <li>Write down the KPI threshold that makes the deployment worth scaling.</li>
+                </ul>
+            </section>
+
+            <section class="panel briefings-panel">
+                <p class="kicker">PRIORITY RESOURCES</p>
+                <h2>Start with the strongest linked pages</h2>
+                <div class="briefing-grid">
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Operations briefing</p>
+                        <h3>How to integrate collaborative robots into existing production lines without disruption</h3>
+                        <p>The best supporting newsroom article for this guide. It frames cobot rollout as a workflow redesign problem rather than a hardware-only decision.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption/">Open article</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Execution lesson</p>
+                        <h3>6 lessons I learned watching a robotics startup die from the inside</h3>
+                        <p>Useful for teams that want the operating-discipline side of rollout planning, not just the automation thesis.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">Open article</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Site-wide hub</p>
+                        <h3>Companies hub</h3>
+                        <p>Compare robotics vendors and company pages when the integration plan needs a stronger view of supplier quality and product positioning.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="companies.html">Open companies</a>
+                        </div>
+                    </article>
+                    <article class="briefing-card">
+                        <p class="briefing-meta">Software context</p>
+                        <h3>Physical AI &amp; Robot Learning Hub</h3>
+                        <p>Use this when the integration question expands from the cell layout into software stack, simulation, or policy-improvement workflow.</p>
+                        <div class="briefing-actions">
+                            <a class="btn btn-primary" href="physical-ai-robot-learning.html">Open hub</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel briefings-panel">
+                <p class="kicker">RELATED PAGES</p>
+                <h2>Where this guide fits inside robot.tv</h2>
+                <div class="link-grid">
+                    <article class="link-card">
+                        <h3>Robot Index</h3>
+                        <p>Use the main index when you need profile-level navigation across robot types and company pages.</p>
+                        <a class="btn btn-ghost" href="home.html">Open Robot Index</a>
+                    </article>
+                    <article class="link-card">
+                        <h3>Newsroom</h3>
+                        <p>Follow ongoing robotics coverage without relying on this guide page for every short-term update.</p>
+                        <a class="btn btn-ghost" href="https://news.robot.tv/">Open Newsroom</a>
+                    </article>
+                    <article class="link-card">
+                        <h3>Companies</h3>
+                        <p>Use the companies hub when the integration decision becomes a vendor-selection decision.</p>
+                        <a class="btn btn-ghost" href="companies.html">Open Companies</a>
+                    </article>
+                    <article class="link-card">
+                        <h3>Industrial Inspection Robots</h3>
+                        <p>Use this when the workflow question shifts from fixed cells into patrol routes, remote operator recovery, and field alert quality.</p>
+                        <a class="btn btn-ghost" href="industrial-inspection-robots.html">Open Inspection Hub</a>
+                    </article>
+                    <article class="link-card">
+                        <h3>Get Featured</h3>
+                        <p>Useful if a robotics company wants to place a high-quality demo, deployment proof, or launch video in front of the robot.tv audience.</p>
+                        <a class="btn btn-ghost" href="get-featured.html">Get Featured</a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel faq-panel">
+                <p class="kicker">FAQ</p>
+                <h2>Common rollout questions</h2>
+                <div class="faq-grid">
+                    <article class="faq-item">
+                        <h3>What is the best first collaborative robot use case?</h3>
+                        <p>Start with one repetitive bottleneck that is easy to measure. The first win should prove whether the cell improves flow, not whether the robot can complete a staged demo.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Do cobots reduce the need for process redesign?</h3>
+                        <p>No. The better the cobot, the more clearly it exposes weak part presentation, unclear ownership, and messy exception handling.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Which KPIs matter most?</h3>
+                        <p>robot.tv recommends tracking throughput contribution, intervention rate, training time, safety events, and whether the line becomes easier to run at the end of the rollout.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>When should a team delay deployment?</h3>
+                        <p>Delay when the process is unstable, the success metric is vague, or the team cannot define who owns uptime and recovery after the installer leaves.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>robot.tv | Global robotics media network</p>
+            <div>
+                <a href="about.html">About</a>
+                <a href="https://news.robot.tv">Newsroom</a>
+                <a href="partner.html">Partner</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+    <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
+</body>
+</html>
