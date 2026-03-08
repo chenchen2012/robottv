@@ -31,6 +31,12 @@
         .products-table td { color: #bfd0ec; font-size: 0.92rem; }
         .citation-list { margin: 0.65rem 0 0; padding-left: 1.05rem; }
         .citation-list li { margin-top: 0.45rem; color: #c2d0e7; line-height: 1.5; font-size: 0.9rem; }
+        .ref-list { margin: 0.6rem 0 0; padding-left: 1.05rem; color: #c6d2e8; }
+        .ref-list li { margin-top: 0.35rem; line-height: 1.52; }
+        .faq-grid { margin-top: 0.7rem; display: grid; gap: 0.65rem; }
+        .faq-item { border: 1px solid #2f4566; border-radius: 10px; padding: 0.7rem; background: rgba(13, 22, 35, 0.72); }
+        .faq-item h3 { margin: 0; font-size: 0.95rem; }
+        .faq-item p { margin: 0.4rem 0 0; font-size: 0.9rem; color: #bfd0ec; line-height: 1.55; }
         .status-line { margin-top: 0.65rem; color: #9fb2d4; font-size: 0.85rem; }
         @media (max-width: 980px) { .reference-grid { grid-template-columns: 1fr; } }
     </style>
@@ -76,6 +82,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "No. This is a robot.tv editorial guide that links to source-backed coverage and official references."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What page should I open after this one for broader Unitree context?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the Unitree company guide for company-level context, the China humanoid hub for ecosystem analysis, and the humanoid robots hub for broader cross-company comparison."
           }
         }
       ]
@@ -132,6 +146,22 @@
                         <li>Use <a href="china-humanoid-robots.html">China Humanoid Robots Hub</a> for market structure and cross-company humanoid context.</li>
                         <li>Use the model pages when you only need one robot profile and a direct video-first snapshot.</li>
                         <li>Use <a href="humanoid-robots.html">Humanoid Robots Hub</a> when the real question is how Unitree compares with Tesla, Figure, or Atlas.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="reference-grid" aria-label="Unitree routing context">
+                <article class="panel reference-panel">
+                    <h2>Why this page should stay narrower than the company guide</h2>
+                    <p>The Unitree company guide is the canonical page for broad brand intent. This page works better as the fast model-comparison layer that helps readers branch into the right Unitree robot or the right broader market hub without repeating the full company story.</p>
+                    <p>That structure also helps robot.tv separate model-comparison intent from China humanoid market intent and from broader humanoid benchmark intent.</p>
+                </article>
+                <article class="panel reference-panel">
+                    <h2>How robot.tv reads Unitree model signals</h2>
+                    <ul class="ref-list">
+                        <li>Humanoid models matter for global comparison and China ecosystem momentum.</li>
+                        <li>Quadruped models matter for practical field operations and inspection-style workflows.</li>
+                        <li>The right next click depends on whether the user wants company context, category context, or a single-model snapshot.</li>
                     </ul>
                 </article>
             </section>
@@ -218,6 +248,35 @@
                         <li><a href="https://news.robot.tv">news.robot.tv</a></li>
                     </ol>
                     <p class="status-line">This page is the fastest side-by-side Unitree comparison. Use <a href="company-unitree.html">company-unitree.html</a> for company-wide context.</p>
+                </article>
+            </section>
+
+            <section class="reference-grid" aria-label="Unitree guide next steps">
+                <article class="panel reference-panel">
+                    <h2>Best next pages for serious readers</h2>
+                    <ul class="ref-list">
+                        <li><a href="company-unitree.html">Unitree company guide</a> for milestones, company-level framing, and the strongest official-source context.</li>
+                        <li><a href="china-humanoid-robots.html">China humanoid robots hub</a> for ecosystem pressure, market structure, and cross-company context.</li>
+                        <li><a href="humanoid-robots.html">Humanoid robots hub</a> when the real question is how Unitree stacks up against Tesla, Figure, and Atlas.</li>
+                        <li><a href="industrial-inspection-robots.html">Industrial inspection robots hub</a> if the quadruped/field-operations angle matters more than humanoids.</li>
+                    </ul>
+                </article>
+                <article class="panel reference-panel">
+                    <h2>FAQ</h2>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <h3>Where can I compare Unitree robots in one page?</h3>
+                            <p>This page is the fast side-by-side comparison for G1, H1, H2, Go2, and B2, with links into the dedicated robot profiles and broader topic hubs.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>What page should I open after this one for broader Unitree context?</h3>
+                            <p>Use <a href="company-unitree.html">Unitree company guide</a> for company-level context, <a href="china-humanoid-robots.html">China humanoid robots hub</a> for ecosystem analysis, and <a href="humanoid-robots.html">Humanoid robots hub</a> for broader comparison.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>Is this an official Unitree page?</h3>
+                            <p>No. This is a robot.tv editorial guide that links to official sources and related robot.tv comparison pages.</p>
+                        </div>
+                    </div>
                 </article>
             </section>
         </main>
