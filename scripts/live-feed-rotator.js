@@ -136,18 +136,59 @@
       frame.dataset.playerReady = "1";
       const first = ids[0];
       const playlist = ids.join(",");
+      const markPlayerHealthy = () => {
+        frame.dataset.errorAttempts = "0";
+      };
+      const skipToNextPlayableVideo = (player) => {
+        const list = Array.from(new Set((player.getPlaylist && player.getPlaylist()) || ids || [])).filter(Boolean);
+        if (!list.length) return false;
+
+        const rawAttempts = Number(frame.dataset.errorAttempts || "0");
+        const attempts = Number.isFinite(rawAttempts) ? rawAttempts + 1 : 1;
+        frame.dataset.errorAttempts = String(attempts);
+
+        if (attempts >= list.length) {
+          return false;
+        }
+
+        let currentIndex = 0;
+        try {
+          currentIndex = Number(player.getPlaylistIndex && player.getPlaylistIndex()) || 0;
+        } catch (_) {
+          currentIndex = 0;
+        }
+
+        const nextIndex = (currentIndex + 1) % list.length;
+        try {
+          player.playVideoAt(nextIndex);
+          return true;
+        } catch (_) {
+          try {
+            player.loadPlaylist(list, nextIndex, 0, "default");
+            player.playVideo();
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
+      };
       frame.src = `https://www.youtube.com/embed/${first}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&playlist=${playlist}`;
 
       const player = new window.YT.Player(id, {
         events: {
           onReady: (event) => {
             try {
+              markPlayerHealthy();
               event.target.mute();
               event.target.loadPlaylist(ids, 0, 0, "default");
               event.target.playVideo();
             } catch (_) {}
           },
           onStateChange: (event) => {
+            if (event.data === window.YT.PlayerState.PLAYING) {
+              markPlayerHealthy();
+              return;
+            }
             if (event.data !== window.YT.PlayerState.ENDED) return;
             try {
               const list = event.target.getPlaylist() || ids;
@@ -157,6 +198,13 @@
               } else {
                 event.target.nextVideo();
               }
+            } catch (_) {}
+          },
+          onError: (event) => {
+            const advanced = skipToNextPlayableVideo(event.target);
+            if (advanced) return;
+            try {
+              event.target.stopVideo();
             } catch (_) {}
           }
         }
