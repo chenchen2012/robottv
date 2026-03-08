@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional"></noscript>
-<link rel="stylesheet" href="styles.css?v=20260308-homefix2">
+<link rel="stylesheet" href="styles.css?v=20260308-homefix3">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -154,6 +154,16 @@
 
                 <aside class="live-spotlight panel" aria-label="Live stream spotlight">
                     <a class="live-preview" href="live.html">
+                        <iframe
+                            id="live-preview-frame"
+                            data-live-preview-frame
+                            src="about:blank"
+                            title="robot.tv live preview"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            loading="eager"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                        </iframe>
                         <span class="live-preview-poster" data-live-preview-poster aria-hidden="true">
                             <span class="live-preview-poster-copy">
                                 <span class="live-preview-poster-kicker">Live Preview</span>
@@ -568,7 +578,7 @@
 
       armImageFallbacks();
     </script>
-    <script src="scripts/live-feed-rotator.js?v=20260308-homefix2"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260308-homefix3"></script>
     <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>

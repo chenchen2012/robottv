@@ -14,6 +14,7 @@
     },
   ];
   const TOUCH_FIRST_DEVICE = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  const DESKTOP_AUTO_PREVIEW = !TOUCH_FIRST_DEVICE && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/";
   const thumbFromVideo = (url) => {
@@ -43,12 +44,19 @@
 
   const queuedPlayers = [];
   const embedWatchers = new WeakMap();
+  let cleanupHomepagePreview = null;
 
   const setPreviewPoster = (title, note) => {
     const titleEl = document.querySelector("[data-live-preview-poster-title]");
     const noteEl = document.querySelector("[data-live-preview-poster-note]");
     if (titleEl && title) titleEl.textContent = title;
     if (noteEl && note) noteEl.textContent = note;
+  };
+
+  const previewEmbedUrlFromVideo = (url) => {
+    const id = videoIdFromUrl(url);
+    if (!id) return "";
+    return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=${id}&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
   };
 
   const setEmbedState = (wrap, state) => {
@@ -177,6 +185,90 @@
     if (alt) img.alt = alt;
   };
 
+  const startHomepagePreview = (youtubeUrl, headline) => {
+    const frame = document.querySelector("[data-live-preview-frame]");
+    const wrap = frame?.closest(".live-preview");
+    if (!frame || !wrap) return;
+
+    if (typeof cleanupHomepagePreview === "function") {
+      cleanupHomepagePreview();
+      cleanupHomepagePreview = null;
+    }
+
+    if (!DESKTOP_AUTO_PREVIEW) {
+      frame.src = "about:blank";
+      setEmbedState(wrap, "");
+      return;
+    }
+
+    const embedUrl = previewEmbedUrlFromVideo(youtubeUrl);
+    if (!embedUrl) {
+      frame.src = "about:blank";
+      setEmbedState(wrap, "");
+      return;
+    }
+
+    setEmbedState(wrap, "embed-loading");
+
+    let settled = false;
+    const handleMessage = (event) => {
+      if (settled) return;
+      let hostname = "";
+      try {
+        hostname = new URL(event.origin).hostname;
+      } catch {
+        return;
+      }
+      if (!/(\.|^)youtube(-nocookie)?\.com$/.test(hostname)) return;
+
+      let payload = event.data;
+      if (typeof payload === "string") {
+        try {
+          payload = JSON.parse(payload);
+        } catch {
+          return;
+        }
+      }
+      if (!payload || payload.id !== frame.id) return;
+
+      if (payload.event === "onReady") {
+        settled = true;
+        cleanupHomepagePreview?.();
+        cleanupHomepagePreview = null;
+        setEmbedState(wrap, "embed-loaded");
+        setPreviewPoster(headline, "Muted autoplay preview on desktop. Open the live room for the full feed.");
+        return;
+      }
+
+      if (payload.event === "onError") {
+        settled = true;
+        cleanupHomepagePreview?.();
+        cleanupHomepagePreview = null;
+        frame.src = "about:blank";
+        setEmbedState(wrap, "embed-failed");
+        setPreviewPoster(headline, "Autoplay preview unavailable here. Open the live room for the full stream.");
+      }
+    };
+
+    const timeoutId = window.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      cleanupHomepagePreview?.();
+      cleanupHomepagePreview = null;
+      frame.src = "about:blank";
+      setEmbedState(wrap, "embed-failed");
+      setPreviewPoster(headline, "Autoplay preview unavailable here. Open the live room for the full stream.");
+    }, 5000);
+
+    cleanupHomepagePreview = () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener("message", handleMessage);
+    };
+
+    window.addEventListener("message", handleMessage);
+    frame.src = embedUrl;
+  };
+
   const setLink = (selector, href, text) => {
     const link = document.querySelector(selector);
     if (!link || !href) return;
@@ -212,6 +304,7 @@
 
   const hydrate = (items) => {
     if (!items.length) {
+      startHomepagePreview("", "");
       setPreviewPoster("robot.tv live room", "Open the live room if the inline player is slow or unavailable.");
       setText("[data-live-spotlight-title]", "Robot.tv Live Feed");
       setText("[data-live-spotlight-desc]", "No newsroom video is available yet. Check back shortly.");
@@ -233,6 +326,7 @@
 
     setImage("[data-live-preview-image]", coverImage, headline);
     setPreviewPoster(headline, "Open the live room for the full stream and latest newsroom video rotation.");
+    startHomepagePreview(primary.youtubeUrl, headline);
 
     const mainFrame = document.querySelector("[data-live-main-frame]");
     const mainEmbedWrap = mainFrame?.closest(".live-embed");
