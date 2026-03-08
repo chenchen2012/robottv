@@ -88,10 +88,11 @@ a {
 }
 
 .brand img {
-    width: 150px;
-    aspect-ratio: 300 / 74;
-    height: auto;
+    width: auto;
+    height: 38px;
+    max-width: 186px;
     display: block;
+    object-fit: contain;
 }
 
 .site-nav {
@@ -635,6 +636,7 @@ a {
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr;
     gap: 0.95rem;
+    align-items: start;
 }
 
 #latest .section-head {
@@ -823,7 +825,7 @@ a {
     border-radius: 12px;
     background: linear-gradient(165deg, #101a29, #0c1421);
     padding: 0.95rem;
-    min-height: 165px;
+    min-height: 0;
     transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
@@ -832,7 +834,7 @@ a {
 
 .story-media {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    height: 100%;
     object-fit: cover;
     border-radius: 10px;
     border: 1px solid #2b3f5f;
@@ -850,7 +852,11 @@ a {
 .story-media-shell {
     position: relative;
     display: block;
-    aspect-ratio: 16 / 9;
+    width: 100%;
+    aspect-ratio: 16 / 9.4;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #0b121d;
 }
 
 .story-preview-layer {
@@ -880,11 +886,11 @@ a {
 }
 
 .story-large .story-media {
-    aspect-ratio: 16 / 8.6;
+    height: 100%;
 }
 
 .story-large .story-media-shell {
-    aspect-ratio: 16 / 8.6;
+    aspect-ratio: 16 / 9.2;
 }
 
 .story-tag {
@@ -903,10 +909,13 @@ a {
 .story-card h3 {
     margin: 0.52rem 0 0;
     line-height: 1.32;
-    font-size: 1.04rem;
+    font-size: 0.99rem;
+    letter-spacing: -0.01em;
 }
 
 .story-card:not(.story-large) h3 {
+    font-size: 0.94rem;
+    line-height: 1.34;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -916,16 +925,17 @@ a {
 .story-card p {
     margin: 0.62rem 0 0;
     color: var(--muted);
-    line-height: 1.55;
-    font-size: 0.94rem;
+    line-height: 1.52;
+    font-size: 0.89rem;
 }
 
 .story-large h3 {
-    font-size: 1.18rem;
+    font-size: 1.1rem;
+    line-height: 1.28;
 }
 
 .story-large p {
-    font-size: 0.97rem;
+    font-size: 0.92rem;
 }
 
 .story-card:hover {
@@ -2136,6 +2146,11 @@ a {
 }
 
 @media (max-width: 760px) {
+    .brand img {
+        height: 34px;
+        max-width: 168px;
+    }
+
     .site-header {
         align-items: flex-start;
         flex-direction: column;
