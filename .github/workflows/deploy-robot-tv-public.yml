@@ -17,24 +17,42 @@ on:
 
 jobs:
   deploy:
-    if: ${{ secrets.CLOUDFLARE_API_KEY != '' && secrets.CLOUDFLARE_EMAIL != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_MAIN_PAGES_PROJECT_NAME != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect Cloudflare Pages configuration
+        id: cf
+        env:
+          CF_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CF_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PROJECT: ${{ secrets.CLOUDFLARE_MAIN_PAGES_PROJECT_NAME }}
+        run: |
+          if [ -n "$CF_API_KEY" ] && [ -n "$CF_EMAIL" ] && [ -n "$CF_ACCOUNT_ID" ] && [ -n "$CF_PROJECT" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare Pages secrets missing; skipping deploy."
+          fi
+
       - name: Setup Node
+        if: steps.cf.outputs.enabled == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Build root public site
+        if: steps.cf.outputs.enabled == 'true'
         run: node scripts/build-root-public-dist.mjs
 
       - name: Verify root public site
+        if: steps.cf.outputs.enabled == 'true'
         run: node scripts/check-root-public-build.mjs
 
       - name: Deploy root public site to Cloudflare Pages
+        if: steps.cf.outputs.enabled == 'true'
         env:
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
