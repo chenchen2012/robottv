@@ -1209,14 +1209,14 @@ const buildAuthorProfile = (post) => {
     authorValue && typeof authorValue === "object" ? toPlainText(authorValue.bio || "") : "";
   const normalizedName = normalizeCompareText(name);
   const isChenChen = normalizedName === "chen chen";
+  const chenChenBio = "Editor covering humanoids, autonomy, and robotics startup execution.";
   return {
     name,
-    role: isChenChen ? "Founder and editor, robot.tv" : "Contributor, robot.tv News",
+    role: isChenChen ? "Editor" : "Contributor, robot.tv News",
     bio:
+      (isChenChen && chenChenBio) ||
       explicitBio ||
-      (isChenChen
-        ? "Chen Chen leads robot.tv's robotics coverage, focusing on source-backed videos, deployment signals, and company execution."
-        : `${name} contributes to robot.tv's video-first robotics coverage and source-backed briefings.`),
+      `${name} contributes to robot.tv's video-first robotics coverage and source-backed briefings.`,
     url: editorialAboutUrl,
   };
 };
