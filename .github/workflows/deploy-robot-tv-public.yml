@@ -1,0 +1,42 @@
+name: Deploy robot.tv Public Site
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-robot-tv-public.yml"
+      - "_redirects"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "*.html"
+      - "styles.css"
+      - "images/**"
+      - "scripts/**"
+
+jobs:
+  deploy:
+    if: ${{ secrets.CLOUDFLARE_API_KEY != '' && secrets.CLOUDFLARE_EMAIL != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_MAIN_PAGES_PROJECT_NAME != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build root public site
+        run: node scripts/build-root-public-dist.mjs
+
+      - name: Verify root public site
+        run: node scripts/check-root-public-build.mjs
+
+      - name: Deploy root public site to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler@4 pages deploy dist-root-public --project-name="${{ secrets.CLOUDFLARE_MAIN_PAGES_PROJECT_NAME }}"
