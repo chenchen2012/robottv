@@ -877,6 +877,80 @@ const editorialEnhancementsBySlug = new Map([
       relatedResource: physicalAiHubResource,
     },
   ],
+  [
+    "openai-robotics-head-resigns-over-pentagon-deal",
+    {
+      excerpt:
+        "A senior robotics departure at OpenAI matters because leadership changes around defense-linked decisions can reshape how teams, partners, and observers read the company's priorities in physical AI.",
+      videoSummary:
+        "The story is notable less as personnel drama than as a signal about strategic direction. When a senior robotics leader exits after a Pentagon-related decision, the market starts asking whether research priorities, recruiting, and partner confidence will shift.",
+      bodyParagraphs: [
+        "Leadership exits matter in robotics because the category is still early enough that a small number of technical and strategic leaders can influence research direction, recruiting momentum, and how external partners read the seriousness of a program.",
+        "In this case, the bigger question is not only who left. It is whether defense-linked decisions change how OpenAI's robotics efforts are perceived by researchers, operators, and prospective hires who care about where embodied AI work is headed.",
+        "For robot.tv, the useful lens is strategic rather than sensational. Personnel changes become meaningful when they suggest a change in product ambition, a change in what kinds of deployments are acceptable, or a change in how the company balances research identity with commercial and government relationships.",
+        "That is also why this story deserves indexable context instead of a one-line brief. The market will keep watching whether the resignation remains an isolated personnel event or becomes part of a broader shift in OpenAI's robotics posture."
+      ],
+      categories: ["Robotics Startups", "Physical AI", "Defense"],
+      sourceName: "The Robot Report",
+      sourceSiteUrl: "https://www.therobotreport.com/",
+    },
+  ],
+  [
+    "plug-and-play-ai-transforming-robotics-with-modular-skills",
+    {
+      excerpt:
+        "Modular robotics skills matter because physical AI becomes more deployable when teams can reuse capabilities across tasks instead of rebuilding each workflow from scratch.",
+      videoSummary:
+        "The modular-skills story matters because the next phase of physical AI may depend less on one giant model and more on reusable capability blocks that speed up integration, testing, and deployment.",
+      bodyParagraphs: [
+        "Reusable skill modules matter in robotics because most deployments still break when teams have to rebuild perception, action sequencing, and recovery logic for every new workflow. A more modular stack can shorten that path.",
+        "That does not mean robotics becomes plug-and-play overnight. The real value appears only if modular skills reduce integration time, make task adaptation cheaper, and let operators combine proven behaviors without revalidating the whole system every time.",
+        "For robot.tv, this is a physical AI stack story. The market keeps looking for software patterns that make robotics easier to ship, and modular skill design is one of the clearest candidates because it sits between raw model capability and real deployment work.",
+        "The follow-up question is practical: which teams can turn modularity into faster customer outcomes, lower engineering overhead, and more reliable task expansion after the first workflow is live."
+      ],
+      categories: ["Physical AI", "Robot Learning", "Robotics Software"],
+      sourceName: "The Robot Report",
+      sourceSiteUrl: "https://www.therobotreport.com/",
+      relatedResource: physicalAiHubResource,
+    },
+  ],
+  [
+    "these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps",
+    {
+      excerpt:
+        "Workforce-gap robotics stories matter because automation wins fastest where jobs are repetitive, difficult to staff, or operationally unattractive rather than where robots chase the broadest labor replacement narrative.",
+      videoSummary:
+        "The labor-angle story matters because robotics adoption often starts in work humans avoid, not in the most symbolic white-collar-versus-machine debates. The real market question is where labor shortages and workflow structure line up well enough for deployment.",
+      bodyParagraphs: [
+        "Robotics tends to gain traction first in jobs that are hard to fill, physically demanding, repetitive, or undesirable over long shifts. That matters because the strongest early adoption cases are usually driven by labor friction, not by abstract automation ideology.",
+        "The important distinction is that filling workforce gaps is not the same thing as solving every labor problem. Deployments still need usable workflows, safe human handoffs, supervision models, and a clear economic case once setup and support are included.",
+        "For robot.tv, this kind of story is valuable because it shifts the conversation from headline-level fear about job replacement to the narrower operating question of where robots can actually help employers sustain throughput and service levels.",
+        "The ranking signal to watch next is whether these deployments stay concentrated in a few workflow types or begin to spread across more industries with repeatable proof on staffing relief, safety, and uptime."
+      ],
+      categories: ["Automation", "Workforce", "Robotics Markets"],
+      sourceName: "Business Insider",
+      sourceSiteUrl: "https://www.businessinsider.com/",
+    },
+  ],
+  [
+    "humanoid-developer-agility-robotics-rebrands",
+    {
+      excerpt:
+        "An Agility Robotics rebrand matters because company positioning in the humanoid market now affects recruiting, customer expectations, and how seriously operators interpret the path from pilot programs to scaled deployments.",
+      videoSummary:
+        "The rebrand story matters less as a logo change than as a signal about market positioning. As warehouse humanoid competition intensifies, branding and category framing start to shape who looks credible to customers, partners, and talent.",
+      bodyParagraphs: [
+        "Rebrands become strategically relevant in robotics when the category is moving from curiosity to competitive positioning. Companies are no longer only explaining what their robot is; they are also trying to define what market role they want to own as buyers become more selective.",
+        "For Agility Robotics, that matters because the company is tied closely to the warehouse humanoid conversation. Any shift in presentation, messaging, or company identity can influence how operators interpret maturity, specialization, and long-term deployment intent.",
+        "robot.tv treats this as more than cosmetic news because the humanoid market is now crowded enough that narrative clarity can affect commercial momentum. A company that positions itself well can make pilots easier to understand and category leadership easier to argue.",
+        "The deeper question is whether the new framing is matched by operating proof. In robotics, branding can sharpen attention, but durable advantage still comes from deployment results, support quality, and repeatable customer value."
+      ],
+      categories: ["Humanoid Robots", "Warehouse Robotics", "Robotics Startups"],
+      sourceName: "The Robot Report",
+      sourceSiteUrl: "https://www.therobotreport.com/",
+      relatedResource: warehouseHumanoidHubResource,
+    },
+  ],
 ]);
 
 const videoOverridesBySlug = {

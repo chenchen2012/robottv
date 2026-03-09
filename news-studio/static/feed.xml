@@ -5,8 +5,50 @@
     <link>https://news.robot.tv/</link>
     <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 07 Mar 2026 08:30:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 09 Mar 2026 19:11:03 GMT</lastBuildDate>
     <atom:link href="https://news.robot.tv/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenAI robotics head resigns over Pentagon deal</title>
+      <link>https://news.robot.tv/openai-robotics-head-resigns-over-pentagon-deal/</link>
+      <guid isPermaLink="true">https://news.robot.tv/openai-robotics-head-resigns-over-pentagon-deal/</guid>
+      <pubDate>Mon, 09 Mar 2026 19:11:03 GMT</pubDate>
+      <description>A senior robotics departure at OpenAI matters because leadership changes around defense-linked decisions can reshape how teams, partners, and observers read the company&#39;s priorities in physical AI.</description>
+      <category>Robotics Startups</category>
+      <category>Physical AI</category>
+      <category>Defense</category>
+    </item>
+    <item>
+      <title>Plug-and-Play AI: Transforming robotics with modular skills</title>
+      <link>https://news.robot.tv/plug-and-play-ai-transforming-robotics-with-modular-skills/</link>
+      <guid isPermaLink="true">https://news.robot.tv/plug-and-play-ai-transforming-robotics-with-modular-skills/</guid>
+      <pubDate>Sun, 08 Mar 2026 18:53:02 GMT</pubDate>
+      <description>Modular robotics skills matter because physical AI becomes more deployable when teams can reuse capabilities across tasks instead of rebuilding each workflow from scratch.</description>
+      <category>Robotics Startups</category>
+      <category>Physical AI</category>
+      <category>Robot Learning</category>
+      <category>Robotics Software</category>
+    </item>
+    <item>
+      <title>These robots are coming for the jobs no one wants — and could fill workforce gaps</title>
+      <link>https://news.robot.tv/these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps/</link>
+      <guid isPermaLink="true">https://news.robot.tv/these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps/</guid>
+      <pubDate>Sun, 08 Mar 2026 13:11:28 GMT</pubDate>
+      <description>Workforce-gap robotics stories matter because automation wins fastest where jobs are repetitive, difficult to staff, or operationally unattractive rather than where robots chase the broadest labor replacement narrative.</description>
+      <category>Robotics Startups</category>
+      <category>Automation</category>
+      <category>Workforce</category>
+      <category>Robotics Markets</category>
+    </item>
+    <item>
+      <title>Humanoid developer Agility Robotics rebrands</title>
+      <link>https://news.robot.tv/humanoid-developer-agility-robotics-rebrands/</link>
+      <guid isPermaLink="true">https://news.robot.tv/humanoid-developer-agility-robotics-rebrands/</guid>
+      <pubDate>Sat, 07 Mar 2026 18:51:24 GMT</pubDate>
+      <description>An Agility Robotics rebrand matters because company positioning in the humanoid market now affects recruiting, customer expectations, and how seriously operators interpret the path from pilot programs to scaled deployments.</description>
+      <category>Humanoid Robots</category>
+      <category>Warehouse Robotics</category>
+      <category>Robotics Startups</category>
+    </item>
     <item>
       <title>Humanoid warehouse rollouts are shifting from pilot to operations in 2026</title>
       <link>https://news.robot.tv/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/</link>
