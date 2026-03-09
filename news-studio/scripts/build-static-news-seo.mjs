@@ -9,7 +9,10 @@ const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
 const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
 const STATIC_RESERVED_DIRS = new Set(["scripts"]);
+const HOMEPAGE_PAGE_SIZE = 12;
 const HOMEPAGE_PRELOAD_DEPTH = 60;
+const HOMEPAGE_START_MARKER = "<!-- STATIC_NEWS_HOME_START -->";
+const HOMEPAGE_END_MARKER = "<!-- STATIC_NEWS_HOME_END -->";
 const RESERVED_ARTICLE_SLUGS = new Set([
   "",
   "404",
@@ -997,8 +1000,10 @@ const sortPostsByPublishedAtDesc = (posts) =>
   });
 const filterVisibleListingPosts = (posts) =>
   posts.filter((post) => !hiddenListingSlugs.has(normalizeSlug(post?.slug)));
+const getHomepageListingPosts = (posts) =>
+  dedupeListingPosts(sortPostsByPublishedAtDesc(filterVisibleListingPosts(posts)));
 const buildHomepagePreloadPosts = (posts) =>
-  dedupeListingPosts(sortPostsByPublishedAtDesc(filterVisibleListingPosts(posts)))
+  getHomepageListingPosts(posts)
     .slice(0, HOMEPAGE_PRELOAD_DEPTH)
     .map((post) => ({
       title: toPlainText(post.title || ""),
@@ -1568,6 +1573,95 @@ const writeHomepagePreloadScript = async (posts) => {
     "utf8"
   );
 };
+const buildHomepageStaticMarkup = (posts) => {
+  const listingPosts = getHomepageListingPosts(posts);
+  const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
+  const cardsHtml = pagePosts
+    .map((post, index) => {
+      const title = escapeHtml(toPlainText(post.title || "robot.tv News"));
+      const excerpt = escapeHtml(
+        toPlainText(post.excerpt || "Latest robotics intelligence from robot.tv.")
+      );
+      const date = escapeHtml(formatDisplayDate(post.publishedAt));
+      const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
+      const thumbUrl = escapeHtml(youtubeThumb(post.youtubeUrl));
+      return `        <article class="card ${index === 0 ? "featured" : ""}">
+          <span class="thumb-shell">
+            <img class="thumb" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
+            <span class="thumb-preview" aria-hidden="true"></span>
+          </span>
+          <div class="content">
+            <p class="meta">${date}</p>
+            <h3><a href="${articleUrl}">${title}</a></h3>
+            <p>${excerpt}</p>
+            <div class="row">
+              <a class="btn btn-primary" href="${articleUrl}">Read Robot News</a>
+            </div>
+          </div>
+        </article>`;
+    })
+    .join("\n");
+  return `      <section class="panel hero">
+        <p class="kicker">ROBOTICS NEWSROOM</p>
+        <h1>Robot News and Robotics News, Daily</h1>
+        <p class="copy">From humanoid robot news to AI robotics news and startup execution velocity, robot.tv News tracks the biggest robot news stories with video-first reporting.</p>
+        <div class="actions">
+          <a class="btn btn-ghost" href="https://robot.tv">Back to robot.tv</a>
+        </div>
+      </section>
+      <section class="section">
+        <div class="section-head">
+          <h2>Latest Robot News</h2>
+        </div>
+        <div class="grid">
+${cardsHtml}
+        </div>
+      </section>
+      <section class="panel topic-hub">
+        <p class="kicker">TOPIC HUB</p>
+        <h2>Topic Hubs and Guide Pages</h2>
+        <p class="copy">Track robot.tv's strongest structured resources for China humanoids, warehouse deployments, physical AI, industrial inspection robots, robotics startup execution, collaborative robot integration, and the canonical Unitree and Tesla guide pages instead of bouncing between isolated short posts.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://robot.tv/china-humanoid-robots.html">Open China Hub</a>
+          <a class="btn btn-ghost" href="https://robot.tv/warehouse-humanoid-robots.html">Open Warehouse Hub</a>
+          <a class="btn btn-ghost" href="https://robot.tv/physical-ai-robot-learning.html">Open Physical AI Hub</a>
+          <a class="btn btn-ghost" href="https://robot.tv/industrial-inspection-robots.html">Open Inspection Hub</a>
+          <a class="btn btn-ghost" href="https://robot.tv/robotics-startup-execution.html">Open Startup Guide</a>
+          <a class="btn btn-ghost" href="https://robot.tv/collaborative-robot-integration.html">Open Cobot Guide</a>
+          <a class="btn btn-ghost" href="https://robot.tv/company-unitree.html">See Unitree Guide</a>
+          <a class="btn btn-ghost" href="https://robot.tv/company-tesla.html">See Tesla Guide</a>
+        </div>
+      </section>
+      <section class="panel newsletter">
+        <p class="kicker">NEWSLETTER</p>
+        <h2>Get The Weekly Robot Brief</h2>
+        <p class="copy">One concise email with the biggest robot news and robotics market signals from robot.tv News.</p>
+        <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com">
+          <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
+          <input type="hidden" name="_subject" value="robot.tv newsletter signup from news">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" style="position:absolute;left:-5000px;" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="topic" value="newsletter-signup">
+          <input type="hidden" name="source" value="news-robot-tv">
+          <input type="email" name="email" placeholder="you@company.com" required>
+          <button class="btn btn-primary" type="submit">Subscribe</button>
+        </form>
+        <p class="newsletter-note">No spam. Unsubscribe any time.</p>
+      </section>`;
+};
+const writeHomepageIndex = async (posts) => {
+  const indexPath = path.join(staticDir, "index.html");
+  const html = await fs.readFile(indexPath, "utf8");
+  const start = html.indexOf(HOMEPAGE_START_MARKER);
+  const end = html.indexOf(HOMEPAGE_END_MARKER);
+  if (start === -1 || end === -1 || end < start) {
+    throw new Error("Could not find homepage static content markers in static/index.html");
+  }
+  const prefix = html.slice(0, start + HOMEPAGE_START_MARKER.length);
+  const suffix = html.slice(end);
+  const rendered = buildHomepageStaticMarkup(posts);
+  await fs.writeFile(indexPath, `${prefix}\n${rendered}\n      ${suffix}`, "utf8");
+};
 
 const ensureCleanPostDir = async () => {
   const entries = await fs.readdir(staticDir, { withFileTypes: true });
@@ -1605,6 +1699,7 @@ const main = async () => {
   await writeSitemap(posts);
   await writeFeed(posts);
   await writeHomepagePreloadScript(posts);
+  await writeHomepageIndex(posts);
   console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };
 
