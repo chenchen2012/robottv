@@ -7,7 +7,9 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
+const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
 const STATIC_RESERVED_DIRS = new Set(["scripts"]);
+const HOMEPAGE_PRELOAD_DEPTH = 60;
 const RESERVED_ARTICLE_SLUGS = new Set([
   "",
   "404",
@@ -35,6 +37,25 @@ const retiredLegacyRedirects = {
   "amazon-halts-blue-jay-robotics-project-after-less-than-6-months":
     "amazon-blue-jay-halt-warehouse-robotics-roi-standards",
 };
+const hiddenListingSlugs = new Set([
+  "biggest-ai-news-today",
+  "the-biggest-robot-news-today",
+  "robots-learn-faster-with-new-ai-techniques",
+  "alphabet-owned-robotics-software-company-intrinsic-joins-google",
+  "amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
+  "11-women-shaping-the-future-of-robotics",
+  "2026-robotics-summit-early-bird-registration-ends-march-2",
+  "amazon-cuts-jobs-in-strategically-important-robotics-division",
+  "amazon-cuts-more-jobs-this-time-in-robotics-unit",
+  "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
+  "breakingviews-hyundai-motors-robots-herald-hardware-reboot",
+  "chinas-dancing-robots-how-worried-should-we-be",
+  "dancing-robots-bring-support-company-to-barcelona-elderly",
+  "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
+  "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
+  "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
+  "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
+]);
 const editorialPinnedPosts = [
   {
     title: "NVIDIA bets on robotics to drive future growth",
@@ -879,6 +900,16 @@ const normalizeCompareText = (value) =>
     .replace(/[^a-z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+const normalizeListingTitle = (value) =>
+  normalizeCompareText(value)
+    .split(" ")
+    .filter(
+      (word) =>
+        word &&
+        !["the", "a", "an", "and", "for", "to", "of", "in", "on", "with", "after", "than"].includes(word)
+    )
+    .slice(0, 8)
+    .join(" ");
 
 const mergeUniqueText = (...groups) => {
   const merged = [];
@@ -949,6 +980,34 @@ const applyEditorialEnhancements = (post) => {
   if (enhancement.relatedResource) enhancedPost.relatedResource = enhancement.relatedResource;
   return enhancedPost;
 };
+const dedupeListingPosts = (posts) => {
+  const seen = new Set();
+  return posts.filter((post) => {
+    const key = normalizeListingTitle(post?.title);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+const sortPostsByPublishedAtDesc = (posts) =>
+  [...posts].sort((a, b) => {
+    const aTime = new Date(a?.publishedAt || 0).getTime();
+    const bTime = new Date(b?.publishedAt || 0).getTime();
+    return bTime - aTime;
+  });
+const filterVisibleListingPosts = (posts) =>
+  posts.filter((post) => !hiddenListingSlugs.has(normalizeSlug(post?.slug)));
+const buildHomepagePreloadPosts = (posts) =>
+  dedupeListingPosts(sortPostsByPublishedAtDesc(filterVisibleListingPosts(posts)))
+    .slice(0, HOMEPAGE_PRELOAD_DEPTH)
+    .map((post) => ({
+      title: toPlainText(post.title || ""),
+      excerpt: toPlainText(post.excerpt || ""),
+      publishedAt: post.publishedAt || "",
+      youtubeUrl: post.youtubeUrl || "",
+      slug: normalizeSlug(post.slug),
+      author: getAuthorName(post.author),
+    }));
 
 const youtubeThumb = (url) => {
   const id = videoIdFromUrl(url);
@@ -1500,6 +1559,15 @@ ${categories.map((category) => `      <category>${escapeHtml(category)}</categor
 
   await fs.writeFile(feedPath, xml, "utf8");
 };
+const writeHomepagePreloadScript = async (posts) => {
+  const preloadPosts = buildHomepagePreloadPosts(posts);
+  const payload = JSON.stringify(preloadPosts);
+  await fs.writeFile(
+    preloadedPostsScriptPath,
+    `window.__ROBOTTV_PRELOADED_POSTS__ = ${payload};\n`,
+    "utf8"
+  );
+};
 
 const ensureCleanPostDir = async () => {
   const entries = await fs.readdir(staticDir, { withFileTypes: true });
@@ -1536,6 +1604,7 @@ const main = async () => {
   await writePosts(posts);
   await writeSitemap(posts);
   await writeFeed(posts);
+  await writeHomepagePreloadScript(posts);
   console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };
 

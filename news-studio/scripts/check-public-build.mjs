@@ -1,5 +1,6 @@
 import fs from "node:fs/promises"
 import path from "node:path"
+import vm from "node:vm"
 
 const root = process.cwd()
 const distDir = path.join(root, "dist-public")
@@ -11,7 +12,8 @@ const requiredFiles = [
   "feed.xml",
   "robots.txt",
   "sitemap.xml",
-  "scripts/ga-lazy.js"
+  "scripts/ga-lazy.js",
+  "scripts/preloaded-news-posts.js"
 ]
 
 const directGaPatterns = [
@@ -43,6 +45,27 @@ const fileExists = async (target) => {
     return true
   } catch {
     return false
+  }
+}
+
+const validateInlineScripts = (html, relPath, failures) => {
+  const scriptRegex = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi
+  let match
+  while ((match = scriptRegex.exec(html))) {
+    const attrs = match[1] || ""
+    const body = match[2] || ""
+    if (/\bsrc\s*=/i.test(attrs)) continue
+    const typeMatch = attrs.match(/\btype\s*=\s*["']([^"']+)["']/i)
+    const typeValue = (typeMatch?.[1] || "").toLowerCase()
+    if (typeValue && typeValue !== "text/javascript" && typeValue !== "application/javascript" && typeValue !== "module") {
+      continue
+    }
+    if (!body.trim()) continue
+    try {
+      new vm.Script(body, { filename: relPath })
+    } catch (error) {
+      failures.push(`Inline script parse failure in ${relPath}: ${error?.message || error}`)
+    }
   }
 }
 
@@ -78,6 +101,7 @@ for (const file of htmlFiles) {
   if (directGaPatterns.some((pattern) => html.includes(pattern))) {
     failures.push(`Found direct GA snippet in public HTML: ${relPath}`)
   }
+  validateInlineScripts(html, relPath, failures)
 }
 
 const redirectsPath = path.join(distDir, "_redirects")

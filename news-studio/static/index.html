@@ -297,6 +297,7 @@
     </footer>
   </div>
 
+  <script src="scripts/preloaded-news-posts.js"></script>
   <script>
     (() => {
       const nav = document.querySelector('.nav');
@@ -317,6 +318,7 @@
     const PAGE_SIZE = 12;
     const FETCH_DEPTH = 60;
     const CACHE_KEY = "robot_tv_news_cache_v2";
+    const preloadedPosts = Array.isArray(window.__ROBOTTV_PRELOADED_POSTS__) ? window.__ROBOTTV_PRELOADED_POSTS__ : [];
     const hiddenListingSlugs = new Set([
       "biggest-ai-news-today",
       "the-biggest-robot-news-today",
@@ -1454,11 +1456,16 @@
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
     } else {
-      const cached = getCachedPosts();
-      if (cached.length) {
-        renderList(cached, { warning: "Loading latest updates..." });
+      if (preloadedPosts.length) {
+        cachePosts(preloadedPosts);
+        renderList(preloadedPosts);
       } else {
-        renderList([], { emptyMessage: "Loading latest stories..." });
+        const cached = getCachedPosts();
+        if (cached.length) {
+          renderList(cached, { warning: "Loading latest updates..." });
+        } else {
+          renderList([], { emptyMessage: "Loading latest stories..." });
+        }
       }
 
       const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
@@ -1470,9 +1477,9 @@
           renderList(posts);
         })
         .catch(() => {
-          const cached = getCachedPosts();
-          if (cached.length) {
-            renderList(cached, { warning: "Live feed is temporarily unavailable. Showing recently cached stories." });
+          const fallbackPosts = preloadedPosts.length ? preloadedPosts : getCachedPosts();
+          if (fallbackPosts.length) {
+            renderList(fallbackPosts, { warning: "Live feed is temporarily unavailable. Showing the latest preloaded stories." });
           } else {
             renderList([], { emptyMessage: "Live feed is temporarily unavailable. Please refresh shortly." });
           }
