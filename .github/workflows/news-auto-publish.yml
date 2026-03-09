@@ -31,7 +31,8 @@ jobs:
           SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SANITY_AUTHOR_ID: ${{ secrets.SANITY_AUTHOR_ID }}
-          NETLIFY_BUILD_HOOK_URL: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+          NEWS_PUBLIC_DEPLOY_HOOK_URL: ${{ secrets.NEWS_PUBLIC_DEPLOY_HOOK_URL }}
+          SKIP_PUBLIC_DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_API_KEY != '' && secrets.CLOUDFLARE_EMAIL != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME != '' && '1' || '0' }}
           PUBLISH_COUNT: "2"
         run: node scripts/publish-latest-news.mjs
 
@@ -60,3 +61,15 @@ jobs:
             news-studio/social-drafts/latest-social-drafts.json
             news-studio/social-drafts/latest-social-drafts.md
           if-no-files-found: warn
+
+      - name: Build public news site
+        if: ${{ secrets.CLOUDFLARE_API_KEY != '' && secrets.CLOUDFLARE_EMAIL != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME != '' }}
+        run: npm run build:public
+
+      - name: Deploy public news site to Cloudflare Pages
+        if: ${{ secrets.CLOUDFLARE_API_KEY != '' && secrets.CLOUDFLARE_EMAIL != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME != '' }}
+        env:
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler@4 pages deploy dist-public --project-name="${{ secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME }}"

@@ -1,0 +1,45 @@
+name: Deploy Public News Site
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-news-public.yml"
+      - "news-studio/package.json"
+      - "news-studio/package-lock.json"
+      - "news-studio/static/**"
+      - "news-studio/scripts/build-static-news-seo.mjs"
+      - "news-studio/scripts/build-public-dist.mjs"
+      - "news-studio/scripts/check-public-build.mjs"
+
+jobs:
+  deploy:
+    if: ${{ secrets.CLOUDFLARE_API_KEY != '' && secrets.CLOUDFLARE_EMAIL != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: news-studio/package-lock.json
+
+      - name: Install dependencies
+        working-directory: news-studio
+        run: npm ci
+
+      - name: Build public news site
+        working-directory: news-studio
+        run: npm run build:public
+
+      - name: Deploy public news site to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler@4 pages deploy news-studio/dist-public --project-name="${{ secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME }}"
