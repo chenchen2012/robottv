@@ -7,6 +7,7 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const postDir = path.join(staticDir, "post");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
+const feedPath = path.join(staticDir, "feed.xml");
 const retiredLegacyRedirects = {
   "china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots": "robot-news",
   "alphabet-owned-robotics-software-company-intrinsic-joins-google":
@@ -14,9 +15,6 @@ const retiredLegacyRedirects = {
   "amazon-halts-blue-jay-robotics-project-after-less-than-6-months":
     "amazon-blue-jay-halt-warehouse-robotics-roi-standards",
 };
-const legacyHtmlAliasSlugs = new Set([
-  "chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications",
-]);
 const editorialPinnedPosts = [
   {
     title: "NVIDIA bets on robotics to drive future growth",
@@ -943,6 +941,12 @@ const formatDisplayDate = (iso) => {
   return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 };
 
+const formatRssDate = (iso) => {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return new Date().toUTCString();
+  return d.toUTCString();
+};
+
 const blocksToParagraphs = (body) => {
   if (!Array.isArray(body)) return [];
   return body
@@ -1225,6 +1229,7 @@ const buildArticleHtml = (post) => {
   <script type="application/ld+json">${JSON.stringify(siteJsonLd)}</script>
   <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
   <style>
     :root { --bg:#05070b; --panel:#0d131d; --panel2:#111a27; --text:#f3f6fb; --muted:#97a5bc; --line:#233048; --red:#ef2d52; --blue:#5e84ff; }
     * { box-sizing:border-box; } html,body { margin:0; padding:0; min-height:100%; } body { font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:var(--bg); overflow-x:hidden; }
@@ -1371,10 +1376,28 @@ const fetchPosts = async () => {
       })
     );
   }
+  unique.sort((a, b) => {
+    const aTime = new Date(a.publishedAt || 0).getTime();
+    const bTime = new Date(b.publishedAt || 0).getTime();
+    return bTime - aTime;
+  });
+  const generatedSlugs = new Set(unique.map((post) => post.slug));
+  for (const [legacySlug, targetSlug] of Object.entries(retiredLegacyRedirects)) {
+    if (!generatedSlugs.has(targetSlug)) {
+      throw new Error(
+        `Legacy redirect target is missing for ${legacySlug}: expected generated post ${targetSlug}`
+      );
+    }
+  }
   return unique;
 };
 
 const writeSitemap = async (posts) => {
+  const orderedPosts = [...posts].sort((a, b) => {
+    const aTime = new Date(a.publishedAt || 0).getTime();
+    const bTime = new Date(b.publishedAt || 0).getTime();
+    return bTime - aTime;
+  });
   const items = [
     {
       loc: `${siteUrl}/`,
@@ -1382,7 +1405,7 @@ const writeSitemap = async (posts) => {
       changefreq: "daily",
       priority: "0.9",
     },
-    ...posts.filter((p) => !isNoindexNewsSlug(p.slug)).map((p) => ({
+    ...orderedPosts.filter((p) => !isNoindexNewsSlug(p.slug)).map((p) => ({
       loc: `${siteUrl}/post/${encodeURIComponent(normalizeSlug(p.slug))}/`,
       lastmod: formatDateOnly(p.publishedAt),
       changefreq: "weekly",
@@ -1404,6 +1427,47 @@ ${items
   await fs.writeFile(sitemapPath, xml, "utf8");
 };
 
+const writeFeed = async (posts) => {
+  const feedPosts = [...posts]
+    .sort((a, b) => {
+      const aTime = new Date(a.publishedAt || 0).getTime();
+      const bTime = new Date(b.publishedAt || 0).getTime();
+      return bTime - aTime;
+    })
+    .filter((post) => !isNoindexNewsSlug(post.slug))
+    .slice(0, 40);
+  const latestPublished = feedPosts[0]?.publishedAt || new Date().toISOString();
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>robot.tv News</title>
+    <link>${siteUrl}/</link>
+    <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
+    <language>en-us</language>
+    <lastBuildDate>${formatRssDate(latestPublished)}</lastBuildDate>
+    <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
+${feedPosts
+  .map((post) => {
+    const slug = normalizeSlug(post.slug);
+    const link = `${siteUrl}/post/${encodeURIComponent(slug)}/`;
+    const categories = Array.isArray(post.categories) ? post.categories : [];
+    return `    <item>
+      <title>${escapeHtml(post.title || "")}</title>
+      <link>${escapeHtml(link)}</link>
+      <guid isPermaLink="true">${escapeHtml(link)}</guid>
+      <pubDate>${formatRssDate(post.publishedAt)}</pubDate>
+      <description>${escapeHtml(toPlainText(post.excerpt || "Latest robotics briefing from robot.tv."))}</description>
+${categories.map((category) => `      <category>${escapeHtml(category)}</category>`).join("\n")}
+    </item>`;
+  })
+  .join("\n")}
+  </channel>
+</rss>
+`;
+
+  await fs.writeFile(feedPath, xml, "utf8");
+};
+
 const ensureCleanPostDir = async () => {
   await fs.rm(postDir, { recursive: true, force: true });
   await fs.mkdir(postDir, { recursive: true });
@@ -1420,33 +1484,6 @@ const writePosts = async (posts) => {
     await fs.mkdir(primaryDir, { recursive: true });
     await fs.writeFile(path.join(primaryDir, "index.html"), html, "utf8");
 
-    const publishedYear = (() => {
-      const d = new Date(post.publishedAt || "");
-      return Number.isNaN(d.getTime()) ? null : d.getUTCFullYear();
-    })();
-    const needsLegacyHtmlAlias = legacyHtmlAliasSlugs.has(slug) || (publishedYear !== null && publishedYear <= 2025);
-    if (needsLegacyHtmlAlias) {
-      const aliasDir = path.join(postDir, `${slug}.html`);
-      await fs.mkdir(aliasDir, { recursive: true });
-      await fs.writeFile(path.join(aliasDir, "index.html"), html, "utf8");
-
-      // Restore old WordPress-style dated permalink paths:
-      // /YYYY/MM/DD/slug.html and /YYYY/MM/slug.html
-      const d = new Date(post.publishedAt || "");
-      if (!Number.isNaN(d.getTime())) {
-        const yyyy = String(d.getUTCFullYear());
-        const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
-        const dd = String(d.getUTCDate()).padStart(2, "0");
-
-        const datedDir = path.join(staticDir, yyyy, mm, dd, `${slug}.html`);
-        await fs.mkdir(datedDir, { recursive: true });
-        await fs.writeFile(path.join(datedDir, "index.html"), html, "utf8");
-
-        const datedShortDir = path.join(staticDir, yyyy, mm, `${slug}.html`);
-        await fs.mkdir(datedShortDir, { recursive: true });
-        await fs.writeFile(path.join(datedShortDir, "index.html"), html, "utf8");
-      }
-    }
   }
 };
 
@@ -1455,7 +1492,8 @@ const main = async () => {
   await ensureCleanPostDir();
   await writePosts(posts);
   await writeSitemap(posts);
-  console.log(`Generated ${posts.length} static post pages and updated sitemap.xml`);
+  await writeFeed(posts);
+  console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };
 
 main().catch((error) => {

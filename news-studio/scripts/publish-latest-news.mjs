@@ -4,7 +4,8 @@ const token = process.env.SANITY_API_TOKEN
 const authorId = process.env.SANITY_AUTHOR_ID || 'author-chen-chen'
 const maxPosts = Number(process.env.PUBLISH_COUNT || 2)
 const dryRun = process.env.DRY_RUN === '1'
-const netlifyBuildHookUrl = String(process.env.NETLIFY_BUILD_HOOK_URL || '').trim()
+const newsPublicDeployHookUrl = String(process.env.NEWS_PUBLIC_DEPLOY_HOOK_URL || '').trim()
+const skipPublicDeployHook = process.env.SKIP_PUBLIC_DEPLOY_HOOK === '1'
 
 if (!projectId || !token) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID) and SANITY_API_TOKEN')
@@ -320,18 +321,20 @@ if (result?.results) {
   console.log('Mutation results:', result.results.length)
 }
 
-if (netlifyBuildHookUrl) {
+if (skipPublicDeployHook) {
+  console.log('SKIP_PUBLIC_DEPLOY_HOOK=1; skipped deploy-hook trigger because CI will publish public news directly.')
+} else if (newsPublicDeployHookUrl) {
   try {
-    const hookResp = await fetch(netlifyBuildHookUrl, { method: 'POST' })
+    const hookResp = await fetch(newsPublicDeployHookUrl, { method: 'POST' })
     if (!hookResp.ok) {
       const hookText = await hookResp.text()
-      console.warn(`Netlify build hook failed: HTTP ${hookResp.status} ${hookText}`.trim())
+      console.warn(`Public news deploy hook failed: HTTP ${hookResp.status} ${hookText}`.trim())
     } else {
-      console.log('Triggered Netlify rebuild via build hook.')
+      console.log('Triggered public news site rebuild via deploy hook.')
     }
   } catch (err) {
-    console.warn(`Netlify build hook request failed: ${err?.message || err}`)
+    console.warn(`Public news deploy hook request failed: ${err?.message || err}`)
   }
 } else {
-  console.log('NETLIFY_BUILD_HOOK_URL not set; skipped automatic news site redeploy trigger.')
+  console.log('NEWS_PUBLIC_DEPLOY_HOOK_URL not set; skipped automatic public news site rebuild trigger.')
 }

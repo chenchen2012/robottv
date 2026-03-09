@@ -1,10 +1,3 @@
-# Obsolete WordPress system endpoints
-/wp-admin/*    /404.html  410
-/wp-content/*  /404.html  410
-/wp-includes/* /404.html  410
-/wp-json/*     /404.html  410
-/xmlrpc.php    /404.html  410
-
 # Legacy theme/template URLs from old WordPress news stack
 /index.php                    /  301!
 /tdb_templates/*              /  301!
@@ -23,14 +16,11 @@
 /post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months/  /post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
 /post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months.html  /post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
 /post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications.html  /post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications/  301!
-/post/*.html/  /post/:splat/  301!
-/post/*.html  /post/:splat/  301!
-/post/:slug/    /static/post/:slug/index.html   200
-/post/*         /404.html                        404
-
-# Legacy WordPress date permalink migration
-/:year/:month/:day/:slug  /post/:slug/  301!
-/:year/:month/:slug       /post/:slug/  301!
+/post/*.html                  /post/:splat  301!
+/:year/:month/:day/*.html     /post/:splat  301!
+/:year/:month/*.html          /post/:splat  301!
+/:year/:month/:day/:slug      /post/:slug  301!
+/:year/:month/:slug           /post/:slug  301!
 
 # Legacy archives/taxonomy migration
 /category/*  /  301!
@@ -38,11 +28,6 @@
 /author/*    /  301!
 /page/*      /  301!
 
-# Keep robots + sitemap direct
-/robots.txt  /robots.txt  200
-/sitemap.xml /sitemap.xml 200
+# Keep feed and favicon direct
+/feed       /feed.xml    301!
 /favicon.ico https://robot.tv/images/favicon.png 301!
-/        /index.html  200
-
-# 404 fallback
-/*  /404.html  404

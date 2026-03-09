@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Robot news and robotics news from robot.tv: daily video-first coverage of humanoid robot news, AI robotics news, quadrupeds, and startup execution.">
   <link rel="canonical" id="canonical-link" href="https://news.robot.tv/">
+  <link rel="alternate" type="application/rss+xml" title="robot.tv News RSS Feed" href="https://news.robot.tv/feed.xml">
   <link rel="icon" href="https://robot.tv/images/favicon.png" type="image/png">
   <title>Robot News & Robotics News | robot.tv</title>
   <script type="application/ld+json">
@@ -49,13 +50,7 @@
       ]
     }
   </script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-WC8XB1DN1E');
-  </script>
+  <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -297,6 +292,7 @@
         <a href="https://robot.tv/live.html">Live</a>
         <a href="https://robot.tv/partner.html">Partner</a>
         <a href="https://robot.tv/about.html">About</a>
+        <a href="https://news.robot.tv/feed.xml">RSS Feed</a>
       </div>
     </footer>
   </div>
@@ -317,7 +313,7 @@
     const dataset = "production";
     const PAGE_SIZE = 12;
     const FETCH_DEPTH = 60;
-    const CACHE_KEY = "robot_tv_news_cache_v1";
+    const CACHE_KEY = "robot_tv_news_cache_v2";
     const hiddenListingSlugs = new Set([
       "biggest-ai-news-today",
       "the-biggest-robot-news-today",
@@ -949,6 +945,12 @@
         return true;
       });
     };
+    const sortPostsByPublishedAtDesc = (posts) =>
+      [...posts].sort((a, b) => {
+        const aTime = new Date(a?.publishedAt || 0).getTime();
+        const bTime = new Date(b?.publishedAt || 0).getTime();
+        return bTime - aTime;
+      });
     const filterVisibleListingPosts = (posts) =>
       posts.filter((p) => !hiddenListingSlugs.has(String(p.slug || "").trim()));
 
@@ -1014,7 +1016,11 @@
       return enhancedPost;
     };
     const getListingPosts = (posts) =>
-      dedupePosts(filterVisibleListingPosts([...editorialPinnedPosts, ...posts].map(applyEditorialEnhancements)));
+      dedupePosts(
+        sortPostsByPublishedAtDesc(
+          filterVisibleListingPosts([...editorialPinnedPosts, ...posts].map(applyEditorialEnhancements))
+        )
+      );
     const isNoindexArticleSlug = (slug) => noindexArticleSlugs.has(String(slug || "").trim());
     const buildVideoSummary = (post, paragraphs = []) => {
       const manualSummary = toPlain(post.videoSummary || "");
