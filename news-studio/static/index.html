@@ -1441,15 +1441,13 @@
 
     };
 
-    if (path.startsWith("/post/")) {
-      const legacySlug = path.replace("/post/", "").replace(/\/+$/, "").trim();
-      if (legacySlug) {
-        window.location.replace(`/${legacySlug}/${window.location.search || ""}${window.location.hash || ""}`);
-        return;
-      }
-    }
+    const legacySlug = path.startsWith("/post/")
+      ? path.replace("/post/", "").replace(/\/+$/, "").trim()
+      : "";
 
-    if (isArticlePath(path)) {
+    if (legacySlug) {
+      window.location.replace(`/${legacySlug}/${window.location.search || ""}${window.location.hash || ""}`);
+    } else if (isArticlePath(path)) {
       const slug = path.replace(/^\//, "").trim();
       const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourcePublishedAt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}`;
       fetchJsonWithFallback(sanityUrls(query).map((u) => `${u}&$slug=${sanityParam(slug)}`))
