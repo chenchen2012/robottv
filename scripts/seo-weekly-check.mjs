@@ -12,6 +12,10 @@ const REQUIRED_SUPPORT_FILES = [
   path.join("news-studio", "scripts", "build-public-dist.mjs"),
   path.join(".github", "workflows", "deploy-news-studio.yml")
 ];
+const NEWS_STATIC_INDEX = path.join("news-studio", "static", "index.html");
+const NEWS_PRELOAD_SCRIPT = path.join("news-studio", "static", "scripts", "preloaded-news-posts.js");
+const NEWS_STATIC_HOME_START = "<!-- STATIC_NEWS_HOME_START -->";
+const NEWS_STATIC_HOME_END = "<!-- STATIC_NEWS_HOME_END -->";
 const CONFIG_SNIPPET_CHECKS = [
   {
     label: "root legacy-news redirects",
@@ -208,6 +212,13 @@ function hasNoindex(html) {
   return /noindex/i.test(html);
 }
 
+function extractBetween(content, startMarker, endMarker) {
+  const start = content.indexOf(startMarker);
+  const end = content.indexOf(endMarker);
+  if (start === -1 || end === -1 || end < start) return null;
+  return content.slice(start + startMarker.length, end);
+}
+
 async function run() {
   const timestamp = toIsoNow();
   const htmlFiles = await listHtmlFiles();
@@ -228,6 +239,7 @@ async function run() {
   const brokenLocalLinks = [];
   const sitemapNoindexUrls = [];
   const redirectConfigIssues = [];
+  const newsHomepageIssues = [];
 
   for (const htmlFile of htmlFiles) {
     const html = await readFileSafe(htmlFile);
@@ -303,6 +315,48 @@ async function run() {
     }
   }
 
+  const newsStaticIndexHtml = await readOptionalFile(NEWS_STATIC_INDEX);
+  const newsPreloadScript = await readOptionalFile(NEWS_PRELOAD_SCRIPT);
+  if (!newsStaticIndexHtml) {
+    newsHomepageIssues.push(`Missing news static homepage template: ${NEWS_STATIC_INDEX}`);
+  } else {
+    if (!newsStaticIndexHtml.includes('<script src="scripts/preloaded-news-posts.js">')) {
+      newsHomepageIssues.push("News homepage template is missing the preloaded posts script include");
+    }
+    const staticHomeBlock = extractBetween(
+      newsStaticIndexHtml,
+      NEWS_STATIC_HOME_START,
+      NEWS_STATIC_HOME_END
+    );
+    if (!staticHomeBlock) {
+      newsHomepageIssues.push("News homepage template is missing the static homepage fallback markers");
+    } else {
+      const articleHrefMatches = [...staticHomeBlock.matchAll(/href="\/([^"?#]+)\/"/g)]
+        .map((match) => match[1])
+        .filter((slug) => slug && !slug.includes("${"));
+      const uniqueArticleSlugs = new Set(articleHrefMatches);
+      if (uniqueArticleSlugs.size < 1) {
+        newsHomepageIssues.push("News homepage static fallback does not include any crawlable article links");
+      }
+      if (staticHomeBlock.includes("/post/")) {
+        newsHomepageIssues.push("News homepage static fallback still contains legacy /post/ links");
+      }
+      if (/\?page=\d+/i.test(staticHomeBlock)) {
+        newsHomepageIssues.push("News homepage static fallback exposes query pagination links");
+      }
+    }
+  }
+  if (!newsPreloadScript) {
+    newsHomepageIssues.push(`Missing news homepage preload script: ${NEWS_PRELOAD_SCRIPT}`);
+  } else {
+    if (!newsPreloadScript.includes("window.__ROBOTTV_PRELOADED_POSTS__ = [")) {
+      newsHomepageIssues.push("News homepage preload script is missing the expected post payload");
+    }
+    if (newsPreloadScript.includes("/post/")) {
+      newsHomepageIssues.push("News homepage preload script still contains legacy /post/ URLs");
+    }
+  }
+
   const failedChecks = [];
   const warnings = [];
 
@@ -314,6 +368,9 @@ async function run() {
   }
   if (redirectConfigIssues.length > 0) {
     failedChecks.push(`Redirect config regression detected: ${redirectConfigIssues.length}`);
+  }
+  if (newsHomepageIssues.length > 0) {
+    failedChecks.push(`News homepage crawlability regression detected: ${newsHomepageIssues.length}`);
   }
   if (brokenLocalLinks.length > 0) {
     warnings.push(`Broken local links found: ${brokenLocalLinks.length}`);
@@ -346,7 +403,8 @@ async function run() {
       unexpectedNoindex: unexpectedNoindex.length,
       brokenLocalLinks: brokenLocalLinks.length,
       sitemapNoindexUrls: sitemapNoindexUrls.length,
-      redirectConfigIssues: redirectConfigIssues.length
+      redirectConfigIssues: redirectConfigIssues.length,
+      newsHomepageIssues: newsHomepageIssues.length
     },
     failedChecks,
     warnings,
@@ -359,7 +417,8 @@ async function run() {
       unexpectedNoindex,
       brokenLocalLinks: brokenLocalLinks.slice(0, 60),
       sitemapNoindexUrls,
-      redirectConfigIssues
+      redirectConfigIssues,
+      newsHomepageIssues
     }
   };
 
@@ -380,6 +439,7 @@ async function run() {
     `- Broken local links: ${report.summary.brokenLocalLinks}`,
     `- Sitemap URLs pointing to noindex pages: ${report.summary.sitemapNoindexUrls}`,
     `- Redirect config issues: ${report.summary.redirectConfigIssues}`,
+    `- News homepage crawlability issues: ${report.summary.newsHomepageIssues}`,
     ""
   ];
 
