@@ -128,19 +128,20 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 
 # Legacy WordPress/article URLs should point to the new news site
 /images/*                 /images/:splat                    200
-/2026/02/17/unitree-robots-stun-at-spring-festival-gala.html  https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/  301!
-/2026/02/17/unitree-spring-festival-gala-robots-a-full-release-of-additional-details.html  https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/  301!
-/:year/:month/:day/*.html      https://news.robot.tv/post/:splat/  301!
-/:year/:month/*.html           https://news.robot.tv/post/:splat/  301!
-/:year/:month/:day/:slug  https://news.robot.tv/post/:slug/  301!
-/:year/:month/:slug       https://news.robot.tv/post/:slug/  301!
-/post/*.html             https://news.robot.tv/post/:splat/  301!
+/2026/02/17/unitree-robots-stun-at-spring-festival-gala.html  https://news.robot.tv/china-humanoid-robots-lunar-new-year-showtime/  301!
+/2026/02/17/unitree-spring-festival-gala-robots-a-full-release-of-additional-details.html  https://news.robot.tv/china-humanoid-robots-lunar-new-year-showtime/  301!
+/post                     https://news.robot.tv/            301!
+/post/                    https://news.robot.tv/            301!
+/post/*.html              https://news.robot.tv/:splat/     301!
+/post/*                   https://news.robot.tv/:splat/     301!
+/:year/:month/:day/*.html https://news.robot.tv/:splat/     301!
+/:year/:month/*.html      https://news.robot.tv/:splat/     301!
+/:year/:month/:day/:slug  https://news.robot.tv/:slug/      301!
+/:year/:month/:slug       https://news.robot.tv/:slug/      301!
 /category/*               https://news.robot.tv/            301!
 /tag/*                    https://news.robot.tv/            301!
 /author/*                 https://news.robot.tv/            301!
 /page/*                   https://news.robot.tv/            301!
-/post/:slug               https://news.robot.tv/post/:slug/  301!
-/post/*                   https://news.robot.tv/            301!
 
 # Legacy recovery: trailing-slash variants for canonical static pages
 /about/             /about.html             301!

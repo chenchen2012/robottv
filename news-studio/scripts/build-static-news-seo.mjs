@@ -5,9 +5,29 @@ const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PRO
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
 const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
-const postDir = path.join(staticDir, "post");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
+const STATIC_RESERVED_DIRS = new Set(["scripts"]);
+const RESERVED_ARTICLE_SLUGS = new Set([
+  "",
+  "404",
+  "404.html",
+  "_redirects",
+  "_worker.js",
+  "author",
+  "category",
+  "favicon.ico",
+  "feed",
+  "feed.xml",
+  "index",
+  "index.html",
+  "page",
+  "post",
+  "robots.txt",
+  "scripts",
+  "sitemap.xml",
+  "tag",
+]);
 const retiredLegacyRedirects = {
   "china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots": "robot-news",
   "alphabet-owned-robotics-software-company-intrinsic-joins-google":
@@ -876,6 +896,18 @@ const mergeUniqueText = (...groups) => {
 };
 
 const normalizeSlug = (slug) => String(slug || "").trim().replace(/^\/+|\/+$/g, "");
+const articleUrlForSlug = (slug) => `${siteUrl}/${encodeURIComponent(normalizeSlug(slug))}/`;
+const assertSafeArticleSlug = (slug) => {
+  if (!slug) {
+    throw new Error("Encountered an empty article slug while building news pages.");
+  }
+  if (slug.includes("/")) {
+    throw new Error(`Article slug "${slug}" cannot contain "/" when articles live at the site root.`);
+  }
+  if (RESERVED_ARTICLE_SLUGS.has(slug.toLowerCase())) {
+    throw new Error(`Article slug "${slug}" conflicts with a reserved top-level route on news.robot.tv.`);
+  }
+};
 const isNoindexNewsSlug = (slug) => noindexNewsSlugs.has(normalizeSlug(slug));
 const videoIdFromUrl = (url) => {
   const value = String(url || "").trim();
@@ -1114,7 +1146,8 @@ const buildArticleHtml = (post) => {
   const categories = Array.isArray(post.categories) ? post.categories.map(toPlainText).filter(Boolean) : [];
   const publishedAtIso = formatDate(post.publishedAt || new Date().toISOString());
   const publishedDateDisplay = publishedAtIso ? formatDisplayDate(publishedAtIso) : "";
-  const canonicalUrl = `${siteUrl}/post/${encodeURIComponent(slug)}/`;
+  assertSafeArticleSlug(slug);
+  const canonicalUrl = articleUrlForSlug(slug);
   const thumb = youtubeThumb(post.youtubeUrl);
   const rawParagraphs = blocksToParagraphs(post.body);
   const paragraphs = filterRenderableParagraphs(rawParagraphs);
@@ -1406,7 +1439,7 @@ const writeSitemap = async (posts) => {
       priority: "0.9",
     },
     ...orderedPosts.filter((p) => !isNoindexNewsSlug(p.slug)).map((p) => ({
-      loc: `${siteUrl}/post/${encodeURIComponent(normalizeSlug(p.slug))}/`,
+      loc: articleUrlForSlug(p.slug),
       lastmod: formatDateOnly(p.publishedAt),
       changefreq: "weekly",
       priority: "0.8",
@@ -1449,7 +1482,7 @@ const writeFeed = async (posts) => {
 ${feedPosts
   .map((post) => {
     const slug = normalizeSlug(post.slug);
-    const link = `${siteUrl}/post/${encodeURIComponent(slug)}/`;
+    const link = articleUrlForSlug(slug);
     const categories = Array.isArray(post.categories) ? post.categories : [];
     return `    <item>
       <title>${escapeHtml(post.title || "")}</title>
@@ -1469,18 +1502,28 @@ ${categories.map((category) => `      <category>${escapeHtml(category)}</categor
 };
 
 const ensureCleanPostDir = async () => {
-  await fs.rm(postDir, { recursive: true, force: true });
-  await fs.mkdir(postDir, { recursive: true });
+  const entries = await fs.readdir(staticDir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    if (STATIC_RESERVED_DIRS.has(entry.name)) continue;
+    await fs.rm(path.join(staticDir, entry.name), { recursive: true, force: true });
+  }
   for (const year of ["2024", "2025"]) {
     await fs.rm(path.join(staticDir, year), { recursive: true, force: true });
   }
 };
 
 const writePosts = async (posts) => {
+  const seenSlugs = new Set();
   for (const post of posts) {
     const slug = normalizeSlug(post.slug);
+    assertSafeArticleSlug(slug);
+    if (seenSlugs.has(slug)) {
+      throw new Error(`Duplicate article slug "${slug}" would overwrite an existing news page.`);
+    }
+    seenSlugs.add(slug);
     const html = buildArticleHtml(post);
-    const primaryDir = path.join(postDir, slug);
+    const primaryDir = path.join(staticDir, slug);
     await fs.mkdir(primaryDir, { recursive: true });
     await fs.writeFile(path.join(primaryDir, "index.html"), html, "utf8");
 

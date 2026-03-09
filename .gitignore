@@ -1,5 +1,7 @@
 # Local Netlify folder
 .netlify
+.wrangler/
+dist-root-public/
 codex-mem-robottv.txt
 
 ops-private/

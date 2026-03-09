@@ -105,13 +105,7 @@
             .contact-form .grid { grid-template-columns: 1fr; }
         }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag("js", new Date());
-      gtag("config", "G-WC8XB1DN1E");
-    </script>
+    <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
 </head>
 <body>
     <div class="bg-grid" aria-hidden="true"></div>
@@ -202,18 +196,6 @@
                 </form>
             </section>
         </main>
-
-        <!-- Free backup capture in Netlify Forms (no paid notifications required) -->
-        <form name="robottv-contact-backup" data-netlify="true" hidden>
-            <input type="text" name="name">
-            <input type="text" name="organization">
-            <input type="text" name="contact_channel">
-            <input type="text" name="contact_value">
-            <input type="text" name="topic">
-            <input type="text" name="domain">
-            <input type="text" name="source">
-            <textarea name="message"></textarea>
-        </form>
     </div>
 
     <script>
@@ -237,26 +219,6 @@
                 if (heading) heading.textContent = "Send Domain Offer / Inquiry";
             }
         })();
-
-        // Fire-and-forget backup copy to Netlify Forms so submissions are recoverable.
-        document.addEventListener("submit", (event) => {
-            const form = event.target;
-            if (!(form instanceof HTMLFormElement)) return;
-            if (form.getAttribute("name") !== "robottv-contact") return;
-
-            const fd = new FormData(form);
-            const payload = new URLSearchParams();
-            payload.set("form-name", "robottv-contact-backup");
-            ["name", "organization", "contact_channel", "contact_value", "topic", "domain", "source", "message"]
-                .forEach((key) => payload.set(key, String(fd.get(key) || "")));
-
-            fetch("/", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: payload.toString(),
-                keepalive: true
-            }).catch(() => {});
-        });
     </script>
         <footer class="site-footer">
             <p>robot.tv | Global robotics media network</p>

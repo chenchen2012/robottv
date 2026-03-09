@@ -58,7 +58,7 @@
         <ul class="related-news-list">
           ${picks.map((p) => `
             <li class="related-news-item">
-              <a href="https://news.robot.tv/post/${p.slug}/">
+              <a href="https://news.robot.tv/${p.slug}/">
                 <h3>${String(p.title || '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]))}</h3>
                 <p>${new Date(p.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
               </a>

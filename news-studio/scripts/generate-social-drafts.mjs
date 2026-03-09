@@ -77,7 +77,7 @@ const items = dedup.map((p) => {
   const topic = detectTopic(p.title, p.excerpt)
   const hook = hookFor(topic)
   const tags = tagsFor(topic)
-  const articleUrl = `https://news.robot.tv/post/${p.slug}/`
+  const articleUrl = `https://news.robot.tv/${p.slug}/`
   const homeUrl = 'https://robot.tv/'
   const newsUrl = 'https://news.robot.tv/'
   const sourceLine = p.author ? `By ${normalize(p.author)} on robot.tv News.` : 'From robot.tv News.'

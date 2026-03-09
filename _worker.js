@@ -70,11 +70,11 @@ const EXACT_REDIRECTS = new Map([
   ["/cn/", "/"],
   [
     "/2026/02/17/unitree-robots-stun-at-spring-festival-gala.html",
-    "https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/"
+    "https://news.robot.tv/china-humanoid-robots-lunar-new-year-showtime/"
   ],
   [
     "/2026/02/17/unitree-spring-festival-gala-robots-a-full-release-of-additional-details.html",
-    "https://news.robot.tv/post/china-humanoid-robots-lunar-new-year-showtime/"
+    "https://news.robot.tv/china-humanoid-robots-lunar-new-year-showtime/"
   ]
 ])
 
@@ -154,17 +154,22 @@ export default {
 
     const postHtmlMatch = path.match(/^\/post\/([^/]+)\.html$/)
     if (postHtmlMatch) {
-      return redirect(url, `https://news.robot.tv/post/${postHtmlMatch[1]}/`, 301)
+      return redirect(url, `https://news.robot.tv/${postHtmlMatch[1]}/`, 301)
+    }
+
+    const postSlugMatch = path.match(/^\/post\/([^/]+)\/?$/)
+    if (postSlugMatch && !postSlugMatch[1].includes(".")) {
+      return redirect(url, `https://news.robot.tv/${postSlugMatch[1]}/`, 301)
     }
 
     const datedHtmlMatch = path.match(/^\/\d{4}\/\d{2}(?:\/\d{2})?\/([^/]+)\.html$/)
     if (datedHtmlMatch) {
-      return redirect(url, `https://news.robot.tv/post/${datedHtmlMatch[1]}/`, 301)
+      return redirect(url, `https://news.robot.tv/${datedHtmlMatch[1]}/`, 301)
     }
 
     const datedSlugMatch = path.match(/^\/\d{4}\/\d{2}(?:\/\d{2})?\/([^/]+)\/?$/)
     if (datedSlugMatch) {
-      return redirect(url, `https://news.robot.tv/post/${datedSlugMatch[1]}/`, 301)
+      return redirect(url, `https://news.robot.tv/${datedSlugMatch[1]}/`, 301)
     }
 
     if (path.endsWith(".html")) {

@@ -13,7 +13,7 @@
   const query = '*[_type == "post"] | order(publishedAt desc)[0...200]{title,excerpt,publishedAt,"slug":slug.current,youtubeUrl,categories[]->title}';
 
   const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
-  const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/";
+  const toPostUrl = (slug) => slug ? `https://news.robot.tv/${slug}/` : "https://news.robot.tv/";
   const toDate = (iso) => {
     if (!iso) return "";
     const d = new Date(iso);

@@ -302,7 +302,10 @@
       const nav = document.querySelector('.nav');
       if (!nav) return;
       const path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
-      const onNews = path === '/' || path.startsWith('/post/');
+      const reservedArticlePaths = new Set(['/404', '/404.html', '/feed', '/feed.xml', '/favicon.ico', '/index.html', '/post', '/robots.txt', '/sitemap.xml']);
+      const reservedArticlePrefixes = ['/author/', '/category/', '/page/', '/scripts/', '/tag/'];
+      const isArticlePath = (pathname) => pathname !== '/' && pathname.split('/').filter(Boolean).length === 1 && !reservedArticlePaths.has(pathname) && !reservedArticlePrefixes.some((prefix) => pathname.startsWith(prefix));
+      const onNews = path === '/' || isArticlePath(path);
       nav.querySelectorAll('a').forEach((a) => {
         const href = a.getAttribute('href') || '';
         if ((onNews && href === '/') || (!onNews && href !== '/')) a.classList.add('is-active');
@@ -869,9 +872,16 @@
     const path = window.location.pathname.replace(/\/$/, "") || "/";
     const params = new URLSearchParams(window.location.search || "");
     const requestedPage = Math.max(1, parseInt(params.get("page") || "1", 10) || 1);
+    const reservedArticlePaths = new Set(["/404", "/404.html", "/feed", "/feed.xml", "/favicon.ico", "/index.html", "/post", "/robots.txt", "/sitemap.xml"]);
+    const reservedArticlePrefixes = ["/author/", "/category/", "/page/", "/scripts/", "/tag/"];
+    const isArticlePath = (pathname) =>
+      pathname !== "/" &&
+      pathname.split("/").filter(Boolean).length === 1 &&
+      !reservedArticlePaths.has(pathname) &&
+      !reservedArticlePrefixes.some((prefix) => pathname.startsWith(prefix));
     const canonical = document.getElementById("canonical-link");
     if (canonical) {
-      const canonicalPath = path === "/" ? "/" : path.startsWith("/post/") ? `${path}/` : path;
+      const canonicalPath = path === "/" ? "/" : isArticlePath(path) ? `${path}/` : path;
       const search = path === "/" && requestedPage > 1 ? `?page=${requestedPage}` : "";
       canonical.setAttribute("href", `https://news.robot.tv${canonicalPath}${search}`);
     }
@@ -1149,7 +1159,7 @@
 
     const setArticleJsonLd = (post) => {
       if (!post) return;
-      const canonicalUrl = `https://news.robot.tv/post/${post.slug || ""}/`;
+      const canonicalUrl = `https://news.robot.tv/${encodeURIComponent(String(post.slug || "").trim())}/`;
       const authorProfile = buildAuthorProfile(post);
       const sourceMeta = extractSourceMeta(post, post.rawParagraphs || []);
       const json = {
@@ -1282,10 +1292,10 @@
           </span>
           <div class="content">
             <p class="meta">${esc(formatDate(p.publishedAt))}</p>
-            <h3><a href="/post/${esc(p.slug)}/">${esc(p.title)}</a></h3>
+            <h3><a href="/${esc(p.slug)}/">${esc(p.title)}</a></h3>
             <p>${esc(p.excerpt || "Latest robotics intelligence from robot.tv.")}</p>
             <div class="row">
-	              <a class="btn btn-primary" href="/post/${esc(p.slug)}/">Read Robot News</a>
+	              <a class="btn btn-primary" href="/${esc(p.slug)}/">Read Robot News</a>
             </div>
           </div>
         </article>
@@ -1432,7 +1442,15 @@
     };
 
     if (path.startsWith("/post/")) {
-      const slug = path.replace("/post/", "").trim();
+      const legacySlug = path.replace("/post/", "").replace(/\/+$/, "").trim();
+      if (legacySlug) {
+        window.location.replace(`/${legacySlug}/${window.location.search || ""}${window.location.hash || ""}`);
+        return;
+      }
+    }
+
+    if (isArticlePath(path)) {
+      const slug = path.replace(/^\//, "").trim();
       const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourcePublishedAt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}`;
       fetchJsonWithFallback(sanityUrls(query).map((u) => `${u}&$slug=${sanityParam(slug)}`))
         .then((d) => renderArticle(d.result || null))

@@ -6,21 +6,23 @@
 
 # Canonical article routes should win before legacy date-style redirects.
 /post        /  301!
-/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots  /post/robot-news/  301!
-/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots/  /post/robot-news/  301!
-/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots.html  /post/robot-news/  301!
-/post/alphabet-owned-robotics-software-company-intrinsic-joins-google  /post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/  301!
-/post/alphabet-owned-robotics-software-company-intrinsic-joins-google/  /post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/  301!
-/post/alphabet-owned-robotics-software-company-intrinsic-joins-google.html  /post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/  301!
-/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months  /post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
-/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months/  /post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
-/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months.html  /post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
-/post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications.html  /post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications/  301!
-/post/*.html                  /post/:splat  301!
-/:year/:month/:day/*.html     /post/:splat  301!
-/:year/:month/*.html          /post/:splat  301!
-/:year/:month/:day/:slug      /post/:slug  301!
-/:year/:month/:slug           /post/:slug  301!
+/post/       /  301!
+/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots  /robot-news/  301!
+/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots/  /robot-news/  301!
+/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots.html  /robot-news/  301!
+/post/alphabet-owned-robotics-software-company-intrinsic-joins-google  /intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/  301!
+/post/alphabet-owned-robotics-software-company-intrinsic-joins-google/  /intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/  301!
+/post/alphabet-owned-robotics-software-company-intrinsic-joins-google.html  /intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/  301!
+/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months  /amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
+/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months/  /amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
+/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months.html  /amazon-blue-jay-halt-warehouse-robotics-roi-standards/  301!
+/post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications.html  /chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications/  301!
+/post/*.html                  /:splat/  301!
+/post/*                       /:splat/  301!
+/:year/:month/:day/*.html     /:splat/  301!
+/:year/:month/*.html          /:splat/  301!
+/:year/:month/:day/:slug      /:slug/  301!
+/:year/:month/:slug           /:slug/  301!
 
 # Legacy archives/taxonomy migration
 /category/*  /  301!

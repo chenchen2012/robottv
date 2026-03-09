@@ -42,6 +42,18 @@ const run = async () => {
     path.join(distStaticDir, "sitemap.xml"),
     path.join(distDir, "sitemap.xml"),
   );
+  const copiedFeed = await copyIfExists(
+    path.join(distStaticDir, "feed.xml"),
+    path.join(distDir, "feed.xml"),
+  );
+  const copied404 = await copyIfExists(
+    path.join(distStaticDir, "404.html"),
+    path.join(distDir, "404.html"),
+  );
+  const copiedRedirects = await copyIfExists(
+    path.join(distStaticDir, "_redirects"),
+    path.join(distDir, "_redirects"),
+  );
   const copiedRobots = await copyIfExists(
     path.join(distStaticDir, "robots.txt"),
     path.join(distDir, "robots.txt"),
@@ -49,6 +61,9 @@ const run = async () => {
 
   console.log("Synced static SEO pages to dist/post.");
   if (copiedSitemap) console.log("Copied dist/static/sitemap.xml -> dist/sitemap.xml");
+  if (copiedFeed) console.log("Copied dist/static/feed.xml -> dist/feed.xml");
+  if (copied404) console.log("Copied dist/static/404.html -> dist/404.html");
+  if (copiedRedirects) console.log("Copied dist/static/_redirects -> dist/_redirects");
   if (copiedRobots) console.log("Copied dist/static/robots.txt -> dist/robots.txt");
 };
 

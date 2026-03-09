@@ -8,6 +8,71 @@ const REPORT_JSON = path.join(REPORT_DIR, "weekly-seo-check.json");
 const REPORT_MD = path.join(REPORT_DIR, "weekly-seo-check.md");
 
 const REQUIRED_FILES = ["robots.txt", "sitemap.xml", "_redirects", "404.html", "index.html"];
+const REQUIRED_SUPPORT_FILES = [
+  path.join("news-studio", "scripts", "build-public-dist.mjs"),
+  path.join(".github", "workflows", "deploy-news-studio.yml")
+];
+const CONFIG_SNIPPET_CHECKS = [
+  {
+    label: "root legacy-news redirects",
+    relPath: "_redirects",
+    requiredSnippets: [
+      "/:year/:month/:day/*.html https://news.robot.tv/:splat/     301!",
+      "/:year/:month/*.html      https://news.robot.tv/:splat/     301!",
+      "/post/*                   https://news.robot.tv/:splat/     301!",
+      "/post/*.html              https://news.robot.tv/:splat/     301!"
+    ],
+    forbiddenSnippets: [
+      "/:year/:month/:day/*     /.netlify/functions/legacy-news-redirect  200!",
+      "/:year/:month/*          /.netlify/functions/legacy-news-redirect  200!",
+      "/post/*                  /.netlify/functions/legacy-news-redirect  200!"
+    ]
+  },
+  {
+    label: "news legacy redirects",
+    relPath: path.join("news-studio", "static", "_redirects"),
+    requiredSnippets: [
+      "/post/*.html                  /:splat/  301!",
+      "/post/*                       /:splat/  301!",
+      "/:year/:month/:day/*.html     /:splat/  301!",
+      "/:year/:month/:slug           /:slug/  301!",
+      "/feed       /feed.xml    301!"
+    ],
+    forbiddenSnippets: [
+      "/post/:slug/    /static/post/:slug/index.html   200",
+      "/post/*         /404.html                        404",
+      "/post/*.html                  /post/:splat  301!",
+      "/:year/:month/:slug           /post/:slug  301!",
+      "/wp-admin/*    /404.html  410",
+      "/*  /404.html  404"
+    ]
+  },
+  {
+    label: "news studio host config",
+    relPath: path.join("news-studio", "sanity.cli.ts"),
+    requiredSnippets: [
+      "const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'lumv116w'",
+      "const dataset = process.env.SANITY_STUDIO_DATASET || 'production'",
+      "const studioHost = process.env.SANITY_STUDIO_HOSTNAME || 'robottv'",
+      "studioHost,"
+    ],
+    forbiddenSnippets: [
+      "YOUR_PROJECT_ID"
+    ]
+  },
+  {
+    label: "news studio base path config",
+    relPath: path.join("news-studio", "sanity.config.ts"),
+    requiredSnippets: [
+      "const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'lumv116w'",
+      "basePath: '/'"
+    ],
+    forbiddenSnippets: [
+      "basePath: '/studio'",
+      "YOUR_PROJECT_ID"
+    ]
+  }
+];
 const HIGH_VALUE_PAGES = [
   "home.html",
   "humanoid-robots.html",
@@ -103,6 +168,38 @@ async function readFileSafe(rel) {
   return fs.readFile(path.join(ROOT, rel), "utf8");
 }
 
+async function readOptionalFile(rel) {
+  try {
+    return await readFileSafe(rel);
+  } catch (err) {
+    if (err && err.code === "ENOENT") return null;
+    throw err;
+  }
+}
+
+function parseSitemapLocs(xml) {
+  const urls = [];
+  const re = /<loc>([^<]+)<\/loc>/gi;
+  for (let m = re.exec(xml); m; m = re.exec(xml)) urls.push(m[1]);
+  return urls;
+}
+
+function normalizeSitemapUrlToLocal(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== "robot.tv" && parsed.hostname !== "www.robot.tv") return null;
+    let pathname = parsed.pathname || "/";
+    if (pathname === "/") return "index.html";
+    pathname = pathname.replace(/^\/+/, "");
+    if (!pathname) return "index.html";
+    if (pathname.endsWith("/")) pathname += "index.html";
+    return pathname;
+  } catch {
+    return null;
+  }
+}
+
 function hasCanonical(html) {
   return /rel=["']canonical["']/i.test(html);
 }
@@ -117,12 +214,20 @@ async function run() {
   const allFilesSet = new Set(await fs.readdir(ROOT));
 
   const requiredMissing = REQUIRED_FILES.filter((f) => !allFilesSet.has(f));
+  const requiredSupportMissing = [];
+  for (const relPath of REQUIRED_SUPPORT_FILES) {
+    if (!(await fileExists(path.join(ROOT, relPath)))) {
+      requiredSupportMissing.push(relPath);
+    }
+  }
   const highValueMissing = HIGH_VALUE_PAGES.filter((f) => !allFilesSet.has(f));
 
   const canonicalMissing = [];
   const noindexDetected = [];
   const unexpectedNoindex = [];
   const brokenLocalLinks = [];
+  const sitemapNoindexUrls = [];
+  const redirectConfigIssues = [];
 
   for (const htmlFile of htmlFiles) {
     const html = await readFileSafe(htmlFile);
@@ -151,11 +256,64 @@ async function run() {
     }
   }
 
+  if (await fileExists(path.join(ROOT, "sitemap.xml"))) {
+    const sitemapXml = await readFileSafe("sitemap.xml");
+    const sitemapLocs = parseSitemapLocs(sitemapXml);
+    for (const loc of sitemapLocs) {
+      const local = normalizeSitemapUrlToLocal(loc);
+      if (!local) continue;
+      if (!(await fileExists(path.join(ROOT, local)))) continue;
+      const html = await readFileSafe(local);
+      if (hasNoindex(html)) {
+        sitemapNoindexUrls.push({
+          url: loc,
+          file: local
+        });
+      }
+    }
+  }
+
+  for (const ruleCheck of CONFIG_SNIPPET_CHECKS) {
+    const content = await readOptionalFile(ruleCheck.relPath);
+    if (!content) {
+      redirectConfigIssues.push({
+        label: ruleCheck.label,
+        relPath: ruleCheck.relPath,
+        issue: "missing file"
+      });
+      continue;
+    }
+    for (const snippet of ruleCheck.requiredSnippets) {
+      if (!content.includes(snippet)) {
+        redirectConfigIssues.push({
+          label: ruleCheck.label,
+          relPath: ruleCheck.relPath,
+          issue: `missing required redirect snippet: ${snippet}`
+        });
+      }
+    }
+    for (const snippet of ruleCheck.forbiddenSnippets) {
+      if (content.includes(snippet)) {
+        redirectConfigIssues.push({
+          label: ruleCheck.label,
+          relPath: ruleCheck.relPath,
+          issue: `found deprecated redirect snippet: ${snippet}`
+        });
+      }
+    }
+  }
+
   const failedChecks = [];
   const warnings = [];
 
   if (requiredMissing.length > 0) {
     failedChecks.push(`Missing required SEO files: ${requiredMissing.join(", ")}`);
+  }
+  if (requiredSupportMissing.length > 0) {
+    failedChecks.push(`Missing SEO support files: ${requiredSupportMissing.join(", ")}`);
+  }
+  if (redirectConfigIssues.length > 0) {
+    failedChecks.push(`Redirect config regression detected: ${redirectConfigIssues.length}`);
   }
   if (brokenLocalLinks.length > 0) {
     warnings.push(`Broken local links found: ${brokenLocalLinks.length}`);
@@ -169,6 +327,9 @@ async function run() {
   if (highValueMissing.length > 0) {
     warnings.push(`High-value pages missing: ${highValueMissing.length}`);
   }
+  if (sitemapNoindexUrls.length > 0) {
+    warnings.push(`Sitemap includes noindex pages: ${sitemapNoindexUrls.length}`);
+  }
 
   const status = failedChecks.length > 0 ? "fail" : warnings.length > 0 ? "warn" : "pass";
 
@@ -178,21 +339,27 @@ async function run() {
     summary: {
       htmlPagesScanned: htmlFiles.length,
       requiredMissing: requiredMissing.length,
+      requiredSupportMissing: requiredSupportMissing.length,
       highValueMissing: highValueMissing.length,
       canonicalMissing: canonicalMissing.length,
       noindexDetected: noindexDetected.length,
       unexpectedNoindex: unexpectedNoindex.length,
-      brokenLocalLinks: brokenLocalLinks.length
+      brokenLocalLinks: brokenLocalLinks.length,
+      sitemapNoindexUrls: sitemapNoindexUrls.length,
+      redirectConfigIssues: redirectConfigIssues.length
     },
     failedChecks,
     warnings,
     details: {
       requiredMissing,
+      requiredSupportMissing,
       highValueMissing,
       canonicalMissing,
       noindexDetected,
       unexpectedNoindex,
-      brokenLocalLinks: brokenLocalLinks.slice(0, 60)
+      brokenLocalLinks: brokenLocalLinks.slice(0, 60),
+      sitemapNoindexUrls,
+      redirectConfigIssues
     }
   };
 
@@ -205,11 +372,14 @@ async function run() {
     "## Summary",
     `- HTML pages scanned: ${report.summary.htmlPagesScanned}`,
     `- Missing required SEO files: ${report.summary.requiredMissing}`,
+    `- Missing SEO support files: ${report.summary.requiredSupportMissing}`,
     `- Missing high-value pages: ${report.summary.highValueMissing}`,
     `- Missing canonical tags: ${report.summary.canonicalMissing}`,
     `- Pages with noindex (all): ${report.summary.noindexDetected}`,
     `- Unexpected noindex pages: ${report.summary.unexpectedNoindex}`,
     `- Broken local links: ${report.summary.brokenLocalLinks}`,
+    `- Sitemap URLs pointing to noindex pages: ${report.summary.sitemapNoindexUrls}`,
+    `- Redirect config issues: ${report.summary.redirectConfigIssues}`,
     ""
   ];
 

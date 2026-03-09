@@ -30,7 +30,7 @@ const escapeHtml = (value) =>
   }[char]));
 
 const toText = (value) => String(value || "").toLowerCase();
-const toPostUrl = (slug) => (slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/");
+const toPostUrl = (slug) => (slug ? `https://news.robot.tv/${slug}/` : "https://news.robot.tv/");
 
 const formatDate = (iso) => {
   if (!iso) return "";

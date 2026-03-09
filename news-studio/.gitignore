@@ -2,5 +2,6 @@ node_modules
 .env
 .env.local
 .dist
+dist-public
 dist
 .sanity

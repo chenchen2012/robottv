@@ -1,39 +1,39 @@
 const LEGACY_POST_MAP = new Map([
   [
     "/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots",
-    "/post/robot-news/"
+    "/robot-news/"
   ],
   [
     "/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots/",
-    "/post/robot-news/"
+    "/robot-news/"
   ],
   [
     "/post/china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots.html",
-    "/post/robot-news/"
+    "/robot-news/"
   ],
   [
     "/post/alphabet-owned-robotics-software-company-intrinsic-joins-google",
-    "/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/"
+    "/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/"
   ],
   [
     "/post/alphabet-owned-robotics-software-company-intrinsic-joins-google/",
-    "/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/"
+    "/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/"
   ],
   [
     "/post/alphabet-owned-robotics-software-company-intrinsic-joins-google.html",
-    "/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/"
+    "/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/"
   ],
   [
     "/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
-    "/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/"
+    "/amazon-blue-jay-halt-warehouse-robotics-roi-standards/"
   ],
   [
     "/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months/",
-    "/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/"
+    "/amazon-blue-jay-halt-warehouse-robotics-roi-standards/"
   ],
   [
     "/post/amazon-halts-blue-jay-robotics-project-after-less-than-6-months.html",
-    "/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/"
+    "/amazon-blue-jay-halt-warehouse-robotics-roi-standards/"
   ]
 ])
 
@@ -79,17 +79,22 @@ export default {
 
     const postHtmlMatch = path.match(/^\/post\/([^/]+)\.html$/)
     if (postHtmlMatch) {
-      return Response.redirect(withSearch(url, `/post/${postHtmlMatch[1]}/`), 301)
+      return Response.redirect(withSearch(url, `/${postHtmlMatch[1]}/`), 301)
+    }
+
+    const postSlugMatch = path.match(/^\/post\/([^/]+)\/?$/)
+    if (postSlugMatch && !postSlugMatch[1].includes(".")) {
+      return Response.redirect(withSearch(url, `/${postSlugMatch[1]}/`), 301)
     }
 
     const datedHtmlMatch = path.match(/^\/\d{4}\/\d{2}(?:\/\d{2})?\/([^/]+)\.html$/)
     if (datedHtmlMatch) {
-      return Response.redirect(withSearch(url, `/post/${datedHtmlMatch[1]}/`), 301)
+      return Response.redirect(withSearch(url, `/${datedHtmlMatch[1]}/`), 301)
     }
 
     const datedSlugMatch = path.match(/^\/\d{4}\/\d{2}(?:\/\d{2})?\/([^/]+)\/?$/)
     if (datedSlugMatch) {
-      return Response.redirect(withSearch(url, `/post/${datedSlugMatch[1]}/`), 301)
+      return Response.redirect(withSearch(url, `/${datedSlugMatch[1]}/`), 301)
     }
 
     return env.ASSETS.fetch(request)

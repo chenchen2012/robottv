@@ -19,6 +19,7 @@ const directGaPatterns = [
   "gtag('config', 'G-WC8XB1DN1E')",
   'gtag("config", "G-WC8XB1DN1E")'
 ]
+const reservedTopLevelDirs = new Set(["scripts"])
 
 const collectHtmlFiles = async (dir) => {
   const entries = await fs.readdir(dir, { withFileTypes: true })
@@ -55,10 +56,17 @@ for (const relPath of requiredFiles) {
 }
 
 const htmlFiles = await collectHtmlFiles(distDir)
-const postFiles = htmlFiles.filter((file) => file.includes(`${path.sep}post${path.sep}`))
+const postFiles = htmlFiles.filter((file) => {
+  const relParts = path.relative(distDir, file).split(path.sep)
+  return relParts.length === 2 && relParts[1] === "index.html" && !reservedTopLevelDirs.has(relParts[0])
+})
 
 if (!postFiles.length) {
-  failures.push("Expected at least one generated article page under dist-public/post/")
+  failures.push("Expected at least one generated article page under dist-public/<slug>/index.html")
+}
+
+if (await fileExists(path.join(distDir, "post"))) {
+  failures.push("Unexpected legacy dist-public/post/ directory present after article URL migration")
 }
 
 for (const file of htmlFiles) {
@@ -75,7 +83,7 @@ for (const file of htmlFiles) {
 const redirectsPath = path.join(distDir, "_redirects")
 if (await fileExists(redirectsPath)) {
   const redirects = await fs.readFile(redirectsPath, "utf8")
-  if (!redirects.includes("/post/*.html")) {
+  if (!redirects.includes("/post/*")) {
     failures.push("Expected legacy article redirect rule in dist-public/_redirects")
   }
   if (!redirects.includes("/feed       /feed.xml")) {

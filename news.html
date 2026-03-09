@@ -65,13 +65,7 @@
         @media (max-width: 980px) { .news-grid { grid-template-columns: 1fr 1fr; } .news-card.featured { grid-column: span 2; grid-row: auto; } }
         @media (max-width: 760px) { .news-grid { grid-template-columns: 1fr; } .news-card.featured { grid-column: auto; } }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag("js", new Date());
-      gtag("config", "G-WC8XB1DN1E");
-    </script>
+    <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
 </head>
 <body>
     <div class="bg-grid" aria-hidden="true"></div>
@@ -143,9 +137,9 @@
                         <a href="collaborative-robot-integration.html">Collaborative Robot Integration Guide</a> |
                         <a href="company-unitree.html">Unitree Company Guide</a> |
                         <a href="company-tesla.html">Tesla Optimus Guide</a> |
-                        <a href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China's humanoid robot industry is winning the early market</a> |
-                        <a href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a> |
-                        <a href="https://news.robot.tv/post/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/">Toyota manufacturing Canada deploys Agility Digit humanoids</a>
+                        <a href="https://news.robot.tv/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China's humanoid robot industry is winning the early market</a> |
+                        <a href="https://news.robot.tv/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a> |
+                        <a href="https://news.robot.tv/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/">Toyota manufacturing Canada deploys Agility Digit humanoids</a>
                     </p>
                 </div>
                 <div class="hero-actions">
@@ -237,7 +231,7 @@
             try { return new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"}); }
             catch { return "Recent"; }
         };
-        const postUrl = (post) => post && post.slug ? `https://news.robot.tv/post/${post.slug}/` : "https://news.robot.tv/";
+        const postUrl = (post) => post && post.slug ? `https://news.robot.tv/${post.slug}/` : "https://news.robot.tv/";
         const postExcerpt = (post) => excerptOverrides[String(post?.slug || "").trim()] || post?.excerpt || "Read the latest robotics intelligence from robot.tv newsroom.";
 
         const render = (posts) => {

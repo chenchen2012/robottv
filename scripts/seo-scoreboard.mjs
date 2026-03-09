@@ -19,7 +19,7 @@ const targets = [
   { siteUrl: "sc-domain:robot.tv", url: "https://robot.tv/" },
   { siteUrl: "sc-domain:robot.tv", url: "https://robot.tv/news.html" },
   { siteUrl: "https://news.robot.tv/", url: "https://news.robot.tv/" },
-  { siteUrl: "https://news.robot.tv/", url: "https://news.robot.tv/post/chinas-dancing-robots-how-worried-should-we-be/" },
+  { siteUrl: "https://news.robot.tv/", url: "https://news.robot.tv/chinas-dancing-robots-how-worried-should-we-be/" },
 ];
 
 const sitemapTargets = [

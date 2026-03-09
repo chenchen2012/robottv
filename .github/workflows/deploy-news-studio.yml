@@ -1,0 +1,43 @@
+name: Deploy Sanity Studio
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-news-studio.yml"
+      - "news-studio/package.json"
+      - "news-studio/package-lock.json"
+      - "news-studio/sanity.config.ts"
+      - "news-studio/sanity.cli.ts"
+      - "news-studio/schemaTypes/**"
+      - "news-studio/schemas/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: news-studio
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: news-studio/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy Studio to robottv.sanity.studio
+        env:
+          SANITY_STUDIO_PROJECT_ID: lumv116w
+          SANITY_STUDIO_DATASET: production
+          SANITY_STUDIO_HOSTNAME: robottv
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: npx sanity deploy --yes

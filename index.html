@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Robot TV (robot.tv) delivers robot news and robotics news, including humanoid robot news, AI robotics news, live streams, and robotics company intelligence.">
-        <meta property="og:title" content="Robot TV: Robot News, Robotics News, Live Streams &amp; Company Profiles | robot.tv">
-    <meta property="og:description" content="Robot TV (robot.tv) delivers robot news and robotics news, including humanoid robot news, AI robotics news, live streams, and robotics company intelligence.">
+    <meta name="description" content="robot.tv tracks robot news, robotics company guides, humanoid robots, live robot streams, and deployment signals for builders, operators, and investors.">
+        <meta property="og:title" content="robot.tv: Robot News, Live Robot Streams &amp; Robotics Company Guides">
+    <meta property="og:description" content="robot.tv tracks robot news, robotics company guides, humanoid robots, live robot streams, and deployment signals for builders, operators, and investors.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://robot.tv/">
     <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Robot TV: Robot News, Robotics News, Live Streams &amp; Company Profiles | robot.tv">
-    <meta name="twitter:description" content="Robot TV (robot.tv) delivers robot news and robotics news, including humanoid robot news, AI robotics news, live streams, and robotics company intelligence.">
+    <meta name="twitter:title" content="robot.tv: Robot News, Live Robot Streams &amp; Robotics Company Guides">
+    <meta name="twitter:description" content="robot.tv tracks robot news, robotics company guides, humanoid robots, live robot streams, and deployment signals for builders, operators, and investors.">
     <meta name="twitter:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:url" content="https://robot.tv/">
 <link rel="canonical" href="https://robot.tv/">
-    <title>Robot TV: Robot News, Robotics News, Live Streams &amp; Company Profiles | robot.tv</title>
+    <link rel="alternate" type="application/rss+xml" title="robot.tv News RSS Feed" href="https://news.robot.tv/feed.xml">
+    <title>robot.tv: Robot News, Live Robot Streams &amp; Robotics Company Guides</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional"></noscript>
-<link rel="stylesheet" href="styles.css?v=20260219-nav-v6">
+<link rel="stylesheet" href="styles.css?v=20260309-home-v5">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -43,14 +44,25 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Robot TV Homepage",
+      "@type": "CollectionPage",
+      "name": "robot.tv Homepage",
       "url": "https://robot.tv/",
-      "description": "Robot TV delivers robot news and robotics news, including humanoid robot news, AI robotics news, live streams, and robotics company intelligence.",
+      "description": "robot.tv tracks robot news, robotics company guides, humanoid robots, live robot streams, and deployment signals for builders, operators, and investors.",
       "isPartOf": {
         "@type": "WebSite",
         "name": "robot.tv",
         "url": "https://robot.tv/"
+      },
+      "about": [
+        "Robot news",
+        "Humanoid robots",
+        "Robotics companies",
+        "Live robot streams",
+        "Industrial robotics deployment"
+      ],
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://robot.tv/images/robot_logo.png"
       }
     }
     </script>
@@ -60,37 +72,83 @@
       "@type": "ItemList",
       "name": "Robot TV Primary Destinations",
       "itemListOrder": "https://schema.org/ItemListOrderAscending",
-      "numberOfItems": 5,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "name": "Newsroom",
+          "url": "https://news.robot.tv/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "name": "Robot Index",
           "url": "https://robot.tv/home.html"
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "name": "Companies",
           "url": "https://robot.tv/companies.html"
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "name": "Humanoid Robots",
           "url": "https://robot.tv/humanoid-robots.html"
         },
         {
           "@type": "ListItem",
-          "position": 4,
-          "name": "Robotics Companies Hub",
-          "url": "https://robot.tv/companies.html"
+          "position": 5,
+          "name": "Warehouse Humanoid Hub",
+          "url": "https://robot.tv/warehouse-humanoid-robots.html"
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "name": "Live Now",
           "url": "https://robot.tv/live.html"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is robot.tv best for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "robot.tv is best for people who want robot news, robotics company guides, and category-level pages in one place instead of bouncing between isolated demo clips."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does robot.tv cover only humanoid robots?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. robot.tv covers humanoids, quadrupeds, collaborative robots, industrial inspection robots, and broader physical AI and robotics market signals."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where should I start if I want the latest robotics coverage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with the robot.tv newsroom on news.robot.tv for daily briefings, then use Robot Index and the company guides for deeper comparison and evergreen context."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does robot.tv have an RSS feed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The newsroom feed is available at https://news.robot.tv/feed.xml."
+          }
         }
       ]
     }
@@ -104,7 +162,7 @@
     <div class="container">
         <header class="site-header">
             <a class="brand" href="/" aria-label="robot.tv home">
-                <img src="images/robot_logo.png" alt="robot.tv" width="300" height="74" fetchpriority="high" decoding="async">
+                <img src="images/robot_logo.png" alt="robot.tv" width="1194" height="224" fetchpriority="high" decoding="async">
             </a>
             <nav class="site-nav" aria-label="Primary navigation">
                 <a href="/">Home</a>
@@ -121,39 +179,49 @@
         <main>
             <section class="top-stage">
                 <section class="hero hero-premium panel">
-                    <p class="kicker">GLOBAL ROBOTICS COVERAGE</p>
-                    <h1>Robot News at the Global Robot TV Station</h1>
+                    <p class="kicker">ROBOT NEWSROOM + ROBOT INDEX</p>
+                    <h1>Robot News, Live Streams, and Company Guides</h1>
                     <p class="hero-copy">
-                        A sharper feed for people building and funding robotics.
-                        Fast robot news, humanoid robot news, AI robotics news, verified deployments, and live robot coverage in one place.
+                        Track humanoid robots, robotics companies, live video, and deployment signals in one path.
+                        Start with the latest briefings, then move into company guides and category pages when you need more than a headline.
                     </p>
                     <div class="hero-badges">
-                        <span>Daily Briefings</span>
-                        <span>Live Robot Feed</span>
-                        <span>Deployment Signals</span>
+                        <span>Daily Robot News</span>
+                        <span>Robot Index</span>
+                        <span>Company Guides</span>
+                        <span>Live Coverage</span>
                     </div>
                     <div class="hero-actions">
-                        <a class="btn btn-primary" href="home.html" data-analytics-click="open_robot_index_hero" data-analytics-location="home_hero">Open Robot Index</a>
-                        <a class="btn btn-ghost" href="https://news.robot.tv" data-analytics-click="enter_newsroom_hero" data-analytics-location="home_hero">Enter Newsroom</a>
+                        <a class="btn btn-primary" href="https://news.robot.tv" data-analytics-click="enter_newsroom_hero" data-analytics-location="home_hero">Open Latest Robot News</a>
+                        <a class="btn btn-ghost" href="home.html" data-analytics-click="open_robot_index_hero" data-analytics-location="home_hero">Open Robot Index</a>
+                        <a class="btn btn-ghost" href="companies.html" data-analytics-click="open_company_guides_hero" data-analytics-location="home_hero">Explore Company Guides</a>
                     </div>
+                    <p class="hero-note">Built for builders, operators, and investors who want fast coverage with company and category context in the same place.</p>
                     <div class="signal-grid" aria-label="Network highlights">
                         <div class="signal-item">
-                            <p class="signal-label">Coverage</p>
-                            <p class="signal-value">Humanoids + Industrial AI</p>
+                            <p class="signal-label">Start With</p>
+                            <p class="signal-value">Newsroom, Robot Index, and company hubs</p>
                         </div>
                         <div class="signal-item">
-                            <p class="signal-label">Cadence</p>
-                            <p class="signal-value">Always-on live + daily briefs</p>
+                            <p class="signal-label">Best For</p>
+                            <p class="signal-value">Humanoids, quadrupeds, physical AI, and deployment proof</p>
                         </div>
                         <div class="signal-item">
-                            <p class="signal-label">Network</p>
-                            <p class="signal-value">robot.tv + news.robot.tv</p>
+                            <p class="signal-label">Follow</p>
+                            <p class="signal-value">Live streams, RSS feed, and daily briefings</p>
                         </div>
                     </div>
                 </section>
 
                 <aside class="live-spotlight panel" aria-label="Live stream spotlight">
                     <a class="live-preview" href="live.html">
+                        <span class="live-preview-poster" aria-hidden="true">
+                            <img data-live-preview-poster src="images/unitreeg1.jpg" alt="robot.tv live preview poster" loading="lazy" decoding="async">
+                            <span class="live-preview-poster-copy">
+                                <strong>robot.tv live</strong>
+                                <span>Latest newsroom video feed</span>
+                            </span>
+                        </span>
                         <iframe
                             id="live-preview-frame"
                             data-live-preview-frame
@@ -169,7 +237,9 @@
                     </a>
                     <div class="live-spotlight-copy">
                         <p class="kicker">LIVE SPOTLIGHT</p>
-                        <p class="live-spotlight-desc">Robot.tv newsroom live feed.</p>
+                        <h2 class="live-spotlight-title">Keep a live robotics feed on screen</h2>
+                        <p class="live-spotlight-desc">Watch the latest robot.tv newsroom videos in a single window while you monitor launches, demos, and deployment updates.</p>
+                        <p class="live-source-line">Built for event watching, ambient monitoring, and quick handoff from homepage to full live coverage.</p>
                         <div class="hero-actions">
                             <a class="btn btn-primary" href="live.html" data-analytics-click="open_live_room_spotlight" data-analytics-location="live_spotlight">Open Live Room</a>
                         </div>
@@ -181,11 +251,11 @@
                 <span class="ticker-label"><span class="live-dot" aria-hidden="true"></span>Live Intelligence Rail</span>
                 <div class="ticker-track-wrap">
                     <div id="intelligence-rail" class="ticker-track">
-                        <span><a href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a></span>
-                        <span><a href="https://news.robot.tv/post/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation/">AW 2026 features Korea humanoid debuts as industry seeks digital transformation</a></span>
-                        <span><a href="https://news.robot.tv/post/ais-role-in-the-future-of-robotics-insights-from-3laws/">AI’s role in the future of robotics: Insights from 3Laws</a></span>
-                        <span><a href="https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">6 lessons I learned watching a robotics startup die from the inside</a></span>
-                        <span><a href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China's humanoid robot industry is winning the early market</a></span>
+                        <span><a href="https://news.robot.tv/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a></span>
+                        <span><a href="https://news.robot.tv/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation/">AW 2026 features Korea humanoid debuts as industry seeks digital transformation</a></span>
+                        <span><a href="https://news.robot.tv/ais-role-in-the-future-of-robotics-insights-from-3laws/">AI’s role in the future of robotics: Insights from 3Laws</a></span>
+                        <span><a href="https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">6 lessons I learned watching a robotics startup die from the inside</a></span>
+                        <span><a href="https://news.robot.tv/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China's humanoid robot industry is winning the early market</a></span>
                     </div>
                 </div>
             </section>
@@ -193,8 +263,8 @@
             <section class="index-spotlight panel" aria-label="Robot Index spotlight">
                 <div>
                     <p class="kicker">CORE DESTINATION</p>
-                    <h2>Robot Index is your command center for every profile</h2>
-                    <p class="index-spotlight-copy">Compare humanoids, quadrupeds, and top company platforms in one structured index with videos and specs.</p>
+                    <h2>Robot Index is the fastest way to compare robots, videos, and guide pages</h2>
+                    <p class="index-spotlight-copy">Use Robot Index when you want one structured view of humanoids, quadrupeds, and high-interest platforms instead of scattered profile pages.</p>
                 </div>
                 <div class="hero-actions">
                     <a class="btn btn-primary" href="home.html" data-analytics-click="go_to_robot_index_spotlight" data-analytics-location="index_spotlight">Go to Robot Index</a>
@@ -202,51 +272,73 @@
                 </div>
             </section>
 
-            <section class="section panel index-spotlight" aria-label="Featured unitree coverage">
-                <div>
+            <section class="section featured-grid" aria-label="Featured guides and research paths">
+                <article class="featured-card featured-card-unitree">
                     <p class="kicker">MOST SEARCHED COMPANY</p>
-                    <h2>Unitree robots: G1, H1, H2, Go2, and B2</h2>
-                    <p class="index-spotlight-copy">Open the Unitree company profile and one-page Unitree robots guide for source-backed model comparisons.</p>
-                </div>
-                <div class="hero-actions">
-                    <a class="btn btn-primary" href="company-unitree.html">Open Unitree Company Profile</a>
-                    <a class="btn btn-ghost" href="unitree-robots.html">Compare Unitree Robots</a>
-                </div>
-            </section>
-
-            <section class="section panel index-spotlight" aria-label="Featured Tesla coverage">
-                <div>
+                    <h3>Unitree robots: G1, H1, H2, Go2, and B2</h3>
+                    <p>Open the Unitree company profile and the one-page robots guide for cleaner model comparisons and source-backed product context.</p>
+                    <div class="featured-actions">
+                        <a class="btn btn-primary" href="company-unitree.html">Company Profile</a>
+                        <a class="btn btn-ghost" href="unitree-robots.html">Compare Robots</a>
+                    </div>
+                </article>
+                <article class="featured-card featured-card-tesla">
                     <p class="kicker">PLATFORM WATCH</p>
-                    <h2>Tesla Optimus needs a cleaner guide path inside robot.tv</h2>
-                    <p class="index-spotlight-copy">Track official Tesla videos, factory-signal claims, and cross-humanoid comparisons without relying on scattered demo clips or thin summaries.</p>
-                </div>
-                <div class="hero-actions">
-                    <a class="btn btn-primary" href="company-tesla.html">Open Tesla Guide</a>
-                    <a class="btn btn-ghost" href="tesla-optimus.html">Open Optimus Profile</a>
-                </div>
-            </section>
-
-            <section class="section panel index-spotlight" aria-label="Strategy hub spotlight">
-                <div>
+                    <h3>Tesla Optimus coverage with a cleaner path from company guide to robot profile</h3>
+                    <p>Track official Tesla videos, factory-signal claims, and cross-humanoid comparisons without relying on thin summaries or scattered clips.</p>
+                    <div class="featured-actions">
+                        <a class="btn btn-primary" href="company-tesla.html">Tesla Guide</a>
+                        <a class="btn btn-ghost" href="tesla-optimus.html">Optimus Profile</a>
+                    </div>
+                </article>
+                <article class="featured-card featured-card-hubs">
                     <p class="kicker">STRATEGY HUBS</p>
-                    <h2>Follow the industrial and market-analysis pages that now carry the best long-tail search intent</h2>
-                    <p class="index-spotlight-copy">These hubs are where robot.tv now turns scattered posts into canonical topic pages: China humanoid market structure, warehouse humanoid deployment economics, industrial inspection workflows, and collaborative robot integration.</p>
+                    <h3>Start with the topic hubs when you want market structure, not isolated posts</h3>
+                    <p>Use the hub pages for China humanoids, warehouse deployment economics, inspection workflows, and collaborative robot integration.</p>
+                    <div class="featured-actions">
+                        <a class="btn btn-primary" href="china-humanoid-robots.html">China Humanoid Hub</a>
+                        <a class="btn btn-ghost" href="warehouse-humanoid-robots.html">Warehouse Hub</a>
+                    </div>
+                    <p class="featured-note">Also includes inspection and cobot guides.</p>
+                </article>
+            </section>
+
+            <section class="section panel path-panel" aria-label="Start here pathways">
+                <div class="section-head path-head">
+                    <h2>Start Here</h2>
+                    <a href="https://news.robot.tv/feed.xml">Open RSS feed</a>
                 </div>
-                <div class="hero-actions">
-                    <a class="btn btn-primary" href="china-humanoid-robots.html">Open China Humanoid Hub</a>
-                    <a class="btn btn-ghost" href="warehouse-humanoid-robots.html">Open Warehouse Hub</a>
-                    <a class="btn btn-ghost" href="industrial-inspection-robots.html">Open Inspection Hub</a>
-                    <a class="btn btn-ghost" href="collaborative-robot-integration.html">Open Cobot Guide</a>
+                <div class="path-grid">
+                    <a class="path-card" href="https://news.robot.tv">
+                        <p class="path-kicker">Latest Coverage</p>
+                        <h3>Read the daily newsroom first</h3>
+                        <p>Start with the most recent robot news, then branch into topic hubs once a story matters enough to explore more deeply.</p>
+                    </a>
+                    <a class="path-card" href="home.html">
+                        <p class="path-kicker">Compare Robots</p>
+                        <h3>Use Robot Index for faster comparison</h3>
+                        <p>Open one structured grid of robot profiles, videos, and guide pages instead of browsing individual pages blind.</p>
+                    </a>
+                    <a class="path-card" href="companies.html">
+                        <p class="path-kicker">Company Research</p>
+                        <h3>Go company-first when the vendor matters most</h3>
+                        <p>Use the company guides for Tesla, Unitree, Figure, Agility, Boston Dynamics, and the broader vendor landscape.</p>
+                    </a>
+                    <a class="path-card" href="live.html">
+                        <p class="path-kicker">Live View</p>
+                        <h3>Keep a live robot screen open</h3>
+                        <p>Switch to the live room when you want an always-on robotics watch window for events, launches, and ambient monitoring.</p>
+                    </a>
                 </div>
             </section>
 
-            <section class="section" id="latest">
+            <section class="section panel content-band latest-band" id="latest">
                 <div class="section-head">
                     <h2>Latest Robot News</h2>
                     <a href="https://news.robot.tv">Open newsroom</a>
                 </div>
                 <div class="story-grid">
-                    <a id="story-top" class="story-card story-large" href="https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/" data-video="https://www.youtube.com/watch?v=2zCh_6GO49c">
+                    <a id="story-top" class="story-card story-large" href="https://news.robot.tv/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/" data-video="https://www.youtube.com/watch?v=2zCh_6GO49c">
                         <span class="story-media-shell">
                             <img id="story-top-thumb" class="story-media" src="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg" alt="Top story video thumbnail" loading="lazy" width="1600" height="860" decoding="async">
                             <span id="story-top-preview" class="story-preview-layer" aria-hidden="true"></span>
@@ -255,23 +347,25 @@
                         <h3 id="story-top-title">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</h3>
                         <p id="story-top-desc">Warehouse humanoid programs are moving from proof-of-concept demos to measurable deployment targets.</p>
                     </a>
-                    <a id="story-humanoid" class="story-card" href="https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/" data-video="https://www.youtube.com/watch?v=s4SmxpIO2qk">
+                    <a id="story-humanoid" class="story-card" href="https://news.robot.tv/why-chinas-humanoid-robot-industry-is-winning-the-early-market/" data-video="https://www.youtube.com/watch?v=s4SmxpIO2qk">
                         <span class="story-media-shell">
                             <img id="story-humanoid-thumb" class="story-media" src="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg" alt="Humanoid story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-humanoid-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Humanoids</span>
                         <h3 id="story-humanoid-title">Why China's humanoid robot industry is winning the early market</h3>
+                        <p>Follow supply-chain momentum, pricing pressure, and go-to-market speed across the fastest-moving biped contenders.</p>
                     </a>
-                    <a id="story-quadruped" class="story-card" href="https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale/" data-video="https://www.youtube.com/watch?v=zFUHi3_oiXk">
+                    <a id="story-quadruped" class="story-card" href="https://news.robot.tv/quadrupeds-routine-industrial-inspection-scale/" data-video="https://www.youtube.com/watch?v=zFUHi3_oiXk">
                         <span class="story-media-shell">
                             <img id="story-quadruped-thumb" class="story-media" src="https://img.youtube.com/vi/zFUHi3_oiXk/hqdefault.jpg" alt="Quadruped story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-quadruped-preview" class="story-preview-layer" aria-hidden="true"></span>
                         </span>
                         <span class="story-tag">Quadrupeds</span>
                         <h3 id="story-quadruped-title">Quadrupeds are becoming routine across industrial inspection programs</h3>
+                        <p>See where field robots are moving from showcase footage into repeat inspection, patrol, and site-operations work.</p>
                     </a>
-                    <a id="story-startup" class="story-card" href="https://news.robot.tv/post/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/" data-video="https://www.youtube.com/watch?v=b8BDUa-xbyA">
+                    <a id="story-startup" class="story-card" href="https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/" data-video="https://www.youtube.com/watch?v=b8BDUa-xbyA">
                         <span class="story-media-shell">
                             <img id="story-startup-thumb" class="story-media" src="https://img.youtube.com/vi/b8BDUa-xbyA/hqdefault.jpg" alt="Startup story video thumbnail" loading="lazy" width="1600" height="900" decoding="async">
                             <span id="story-startup-preview" class="story-preview-layer" aria-hidden="true"></span>
@@ -292,7 +386,26 @@
                 </div>
             </section>
 
-            <section class="section" id="channels">
+            <section class="section panel guidance-panel" aria-label="Why robot.tv is useful">
+                <p class="kicker">WHY THIS SITE WORKS</p>
+                <h2>robot.tv is strongest when you want a cleaner path from headline to deeper context</h2>
+                <div class="guidance-grid">
+                    <article class="guidance-card">
+                        <h3>Video-first news, not headline-only aggregation</h3>
+                        <p>The newsroom is built around briefings with embedded video and category context, so the site is more useful than a raw link dump when you need to understand why a robotics story matters.</p>
+                    </article>
+                    <article class="guidance-card">
+                        <h3>Category hubs reduce repeat searching</h3>
+                        <p>Pages for China humanoids, warehouse robots, physical AI, industrial inspection, and startup execution give you a stable place to return instead of reassembling the topic from short posts every time.</p>
+                    </article>
+                    <article class="guidance-card">
+                        <h3>Company guides connect the dots</h3>
+                        <p>Company pages and robot profiles sit next to the news layer, which makes it easier to move from a fresh story into the right vendor, platform, and comparison page without extra searching.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section panel content-band channel-band" id="channels">
                 <div class="section-head">
                     <h2>Channel Highlights</h2>
                     <a href="home.html">Open full Robot Index</a>
@@ -352,6 +465,25 @@
                 </form>
                 <p class="newsletter-note">No spam. Unsubscribe any time.</p>
             </section>
+
+            <section class="section panel faq-panel" aria-label="Homepage FAQ">
+                <p class="kicker">FAQ</p>
+                <h2>Common ways people use robot.tv</h2>
+                <div class="faq-grid">
+                    <article class="faq-card">
+                        <h3>What should I open first on robot.tv?</h3>
+                        <p>Start with <a href="https://news.robot.tv">the newsroom</a> for fresh coverage, then use <a href="home.html">Robot Index</a> or <a href="companies.html">Companies</a> when you need comparison and context.</p>
+                    </article>
+                    <article class="faq-card">
+                        <h3>Is robot.tv mostly about humanoid robots?</h3>
+                        <p>Humanoids are a major focus, but the site also covers quadrupeds, collaborative robots, industrial inspection robots, physical AI, and robotics market structure.</p>
+                    </article>
+                    <article class="faq-card">
+                        <h3>Where can I follow robot.tv updates outside the homepage?</h3>
+                        <p>You can use the newsroom directly, keep the <a href="live.html">live room</a> open, or subscribe to the <a href="https://news.robot.tv/feed.xml">RSS feed</a> for a cleaner update stream.</p>
+                    </article>
+                </div>
+            </section>
         </main>
 
         <footer class="site-footer">
@@ -359,6 +491,7 @@
             <div>
                 <a href="about.html">About</a>
                 <a href="https://news.robot.tv">Newsroom</a>
+                <a href="https://news.robot.tv/feed.xml">RSS Feed</a>
                 <a href="partner.html">Partner</a>
                 <a href="contact.html">Contact</a>
                 <a href="privacy.html">Privacy Policy</a>
@@ -366,53 +499,8 @@
             </div>
         </footer>
     </div>
+    <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
     <script>
-      const loadAnalytics = (() => {
-        let started = false;
-
-        return () => {
-          if (started) return;
-          started = true;
-          window.dataLayer = window.dataLayer || [];
-          window.gtag = window.gtag || function gtag(){window.dataLayer.push(arguments);};
-
-          const script = document.createElement("script");
-          script.src = "https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E";
-          script.async = true;
-          script.onload = () => {
-            window.gtag("js", new Date());
-            window.gtag("config", "G-WC8XB1DN1E");
-          };
-          document.head.appendChild(script);
-        };
-      })();
-
-      const scheduleAnalyticsLoad = () => {
-        const kickoff = () => {
-          window.setTimeout(() => {
-            if ("requestIdleCallback" in window) {
-              window.requestIdleCallback(() => loadAnalytics(), { timeout: 12000 });
-            } else {
-              loadAnalytics();
-            }
-          }, 8000);
-        };
-
-        if (document.readyState === "complete") {
-          window.setTimeout(kickoff, 1200);
-          return;
-        }
-
-        window.addEventListener("load", () => {
-          window.setTimeout(kickoff, 1200);
-        }, { once: true });
-      };
-
-      ["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
-        window.addEventListener(eventName, loadAnalytics, { once: true, passive: true });
-      });
-      scheduleAnalyticsLoad();
-
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
@@ -427,7 +515,7 @@
         }
       ];
 
-      const toPostUrl = (slug) => slug ? `https://news.robot.tv/post/${slug}/` : "https://news.robot.tv/";
+      const toPostUrl = (slug) => slug ? `https://news.robot.tv/${slug}/` : "https://news.robot.tv/";
       const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
       const hasCat = (post, name) => Array.isArray(post?.cats) && post.cats.some((c) => String(c || "").toLowerCase().includes(name));
       const videoIdFromUrl = (u) => {
@@ -564,7 +652,7 @@
         });
       }
     </script>
-    <script src="scripts/live-feed-rotator.js?v=20260224-livefeed4"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260309-live-v7"></script>
     <script src="scripts/analytics-events.js?v=20260220-evt1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
