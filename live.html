@@ -45,8 +45,13 @@
             border: 1px solid var(--line);
             border-radius: 12px;
             overflow: hidden;
-            background: #000;
+            background:
+                radial-gradient(circle at 18% 16%, rgba(94, 132, 255, 0.28), transparent 34%),
+                radial-gradient(circle at 84% 18%, rgba(239, 45, 82, 0.2), transparent 28%),
+                linear-gradient(180deg, #09101a, #040811);
             position: relative;
+            isolation: isolate;
+            box-shadow: inset 0 0 0 1px rgba(120, 154, 220, 0.2);
         }
 
         .live-embed iframe {
@@ -54,102 +59,96 @@
             aspect-ratio: 16/9;
             border: 0;
             display: block;
-        }
-
-        .live-fallback {
             position: relative;
-            aspect-ratio: 16/9;
-            display: none;
-            background: #09111a;
-            color: #edf4ff;
+            z-index: 1;
+            opacity: 0;
+            background: #05070b;
+            transition: opacity 0.35s ease;
         }
 
-        .live-embed.fallback-mode iframe,
-        .live-embed.fallback-mode .live-main-cta {
-            display: none;
+        .live-embed::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(4, 8, 13, 0.02), rgba(4, 8, 13, 0.46) 78%, rgba(4, 8, 13, 0.78));
         }
 
-        .live-embed.fallback-mode .live-fallback {
-            display: block;
+        .live-main-poster {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            transition: opacity 0.32s ease, transform 0.32s ease;
         }
 
-        .live-fallback img {
+        .live-main-poster::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(140deg, rgba(5, 8, 14, 0.18), rgba(5, 8, 14, 0.04) 42%, rgba(5, 8, 14, 0.78)),
+                radial-gradient(circle at 75% 22%, rgba(0, 0, 0, 0.18), transparent 28%);
+        }
+
+        .live-main-poster img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            opacity: 0.42;
+            transform: scale(1.02);
         }
 
-        .live-fallback-overlay {
+        .live-main-poster-copy {
             position: absolute;
-            inset: 0;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            z-index: 1;
             display: grid;
-            align-content: end;
-            gap: 0.7rem;
-            padding: 1.1rem;
-            background:
-                linear-gradient(180deg, rgba(5, 8, 14, 0.08), rgba(5, 8, 14, 0.86)),
-                radial-gradient(circle at top right, rgba(94, 132, 255, 0.18), transparent 38%);
+            gap: 0.2rem;
         }
 
-        .live-fallback-kicker {
-            display: inline-flex;
-            width: fit-content;
-            border: 1px solid #46608a;
-            border-radius: 999px;
-            padding: 0.2rem 0.55rem;
-            background: rgba(7, 11, 18, 0.74);
-            color: #dbe8ff;
-            font-size: 0.76rem;
-            letter-spacing: 0.08em;
-            font-weight: 700;
+        .live-main-poster-copy strong {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
         }
 
-        .live-fallback-title {
-            margin: 0;
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.15rem, 2.6vw, 1.8rem);
-            line-height: 1.18;
-            max-width: 22ch;
+        .live-main-poster-copy span {
+            color: #d4def1;
+            font-size: 0.95rem;
+            line-height: 1.35;
         }
 
-        .live-fallback-copy {
-            margin: 0;
-            color: #cad9f3;
-            max-width: 64ch;
-            line-height: 1.55;
-            font-size: 0.96rem;
-        }
-
-        .live-fallback-actions {
-            display: flex;
-            gap: 0.7rem;
-            flex-wrap: wrap;
-        }
-
-        .live-fallback-btn {
+        .live-main-badge {
+            position: absolute;
+            left: 0.7rem;
+            top: 0.7rem;
+            border: 1px solid #5d2740;
+            border-radius: 999px;
+            background: rgba(7, 11, 18, 0.82);
+            color: #ffe1ea;
+            font-size: 0.74rem;
+            letter-spacing: 0.08em;
+            padding: 0.2rem 0.56rem;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            border: 1px solid #4f678f;
-            border-radius: 999px;
-            padding: 0.55rem 0.95rem;
-            background: rgba(10, 16, 26, 0.76);
-            color: #edf4ff;
+            gap: 0.38rem;
+            text-transform: uppercase;
             font-weight: 700;
-            text-decoration: none;
+            z-index: 3;
         }
 
-        .live-fallback-btn:hover {
-            background: rgba(18, 28, 43, 0.9);
+        .live-embed.has-video iframe {
+            opacity: 1;
         }
 
-        .live-fallback-note {
-            margin: 0;
-            color: #aebfe0;
-            font-size: 0.88rem;
+        .live-embed.has-video .live-main-poster {
+            opacity: 0;
+            transform: scale(1.04);
+            pointer-events: none;
         }
 
         .live-main-cta {
@@ -166,7 +165,7 @@
             padding: 0.42rem 0.8rem;
             font-weight: 700;
             display: none;
-            z-index: 2;
+            z-index: 4;
             cursor: pointer;
         }
 
@@ -175,7 +174,8 @@
                 display: inline-flex;
             }
 
-            .live-embed.is-playing .live-main-cta {
+            .live-embed.is-playing .live-main-cta,
+            .live-embed.has-video .live-main-cta {
                 display: none;
             }
         }
@@ -280,13 +280,7 @@
       ]
     }
     </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC8XB1DN1E"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag("js", new Date());
-      gtag("config", "G-WC8XB1DN1E");
-    </script>
+<script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
 </head>
 <body>
     <div class="bg-grid" aria-hidden="true"></div>
@@ -315,6 +309,13 @@
             <p class="live-sub">Robot.tv newsroom live feed.</p>
 
             <div class="live-embed">
+                <span class="live-main-poster" aria-hidden="true">
+                    <img data-live-main-poster src="images/unitreeg1.jpg" alt="robot.tv live poster" loading="lazy" decoding="async">
+                    <span class="live-main-poster-copy">
+                        <strong>robot.tv live</strong>
+                        <span>Latest newsroom video feed</span>
+                    </span>
+                </span>
                 <iframe
                     data-live-main-frame
                     src="about:blank"
@@ -323,19 +324,7 @@
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
                 </iframe>
-                <div class="live-fallback" data-live-fallback>
-                    <img data-live-fallback-image src="images/robot_logo.png" alt="robot.tv live fallback" width="1600" height="900" loading="lazy" decoding="async">
-                    <div class="live-fallback-overlay">
-                        <span class="live-fallback-kicker">Live Fallback</span>
-                        <h2 class="live-fallback-title" data-live-fallback-title>Latest robot.tv newsroom update</h2>
-                        <p class="live-fallback-copy" data-live-fallback-copy>Showing the latest newsroom story cards because the embedded video stream is currently unavailable.</p>
-                        <div class="live-fallback-actions">
-                            <a class="live-fallback-btn" data-live-fallback-link href="https://news.robot.tv/">Open Story</a>
-                            <a class="live-fallback-btn" href="https://news.robot.tv/">Open Newsroom</a>
-                        </div>
-                        <p class="live-fallback-note" data-live-fallback-note>Auto-rotating the latest newsroom items.</p>
-                    </div>
-                </div>
+                <span class="live-main-badge"><span class="live-dot" aria-hidden="true"></span>On Air</span>
                 <span class="live-main-cta" data-live-main-tap-play role="button" tabindex="0" aria-label="Tap to play live">Tap to play live</span>
             </div>
 
@@ -369,7 +358,7 @@
             </div>
         </footer>
     </div>
-    <script src="scripts/live-feed-rotator.js?v=20260308-livefix3"></script>
+    <script src="scripts/live-feed-rotator.js?v=20260309-live-v7"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
 </html>
