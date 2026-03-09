@@ -22,6 +22,7 @@ const directGaPatterns = [
   'gtag("config", "G-WC8XB1DN1E")'
 ]
 const reservedTopLevelDirs = new Set(["scripts"])
+const thinBodySentinel = "This article is part of robot.tv's video-first robotics coverage."
 
 const collectHtmlFiles = async (dir) => {
   const entries = await fs.readdir(dir, { withFileTypes: true })
@@ -83,6 +84,7 @@ const postFiles = htmlFiles.filter((file) => {
   const relParts = path.relative(distDir, file).split(path.sep)
   return relParts.length === 2 && relParts[1] === "index.html" && !reservedTopLevelDirs.has(relParts[0])
 })
+const postRelPaths = new Set(postFiles.map((file) => path.relative(distDir, file)))
 
 if (!postFiles.length) {
   failures.push("Expected at least one generated article page under dist-public/<slug>/index.html")
@@ -100,6 +102,9 @@ for (const file of htmlFiles) {
   }
   if (directGaPatterns.some((pattern) => html.includes(pattern))) {
     failures.push(`Found direct GA snippet in public HTML: ${relPath}`)
+  }
+  if (postRelPaths.has(relPath) && html.includes(thinBodySentinel) && !/noindex,follow/i.test(html)) {
+    failures.push(`Thin fallback-only article is still indexable: ${relPath}`)
   }
   validateInlineScripts(html, relPath, failures)
 }

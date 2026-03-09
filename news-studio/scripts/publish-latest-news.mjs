@@ -6,6 +6,7 @@ const maxPosts = Number(process.env.PUBLISH_COUNT || 2)
 const dryRun = process.env.DRY_RUN === '1'
 const newsPublicDeployHookUrl = String(process.env.NEWS_PUBLIC_DEPLOY_HOOK_URL || '').trim()
 const skipPublicDeployHook = process.env.SKIP_PUBLIC_DEPLOY_HOOK === '1'
+const NEAR_DUPLICATE_LOOKBACK_DAYS = 7
 
 if (!projectId || !token) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID) and SANITY_API_TOKEN')
@@ -117,6 +118,40 @@ const titleKey = (s) => normalizeText(s)
   .slice(0, 8)
   .join(' ')
 
+const normalizeTitleToken = (token) => {
+  const word = String(token || '').trim()
+  if (!word) return ''
+  if (word.length > 5 && word.endsWith('ies')) return `${word.slice(0, -3)}y`
+  if (word.length > 5 && word.endsWith('ing')) return word.slice(0, -3)
+  if (word.length > 4 && word.endsWith('ed')) return word.slice(0, -2)
+  if (word.length > 4 && word.endsWith('s')) return word.slice(0, -1)
+  return word
+}
+
+const comparableTitleTokens = (title) => [...new Set(
+  normalizeText(title)
+    .split(' ')
+    .map((token) => normalizeTitleToken(token))
+    .filter((token) => token && token.length > 2 && !STOPWORDS.has(token))
+)]
+
+const findNearDuplicateTitle = (title, candidates = []) => {
+  const titleTokens = comparableTitleTokens(title)
+  if (titleTokens.length < 4) return ''
+  const titleTokenSet = new Set(titleTokens)
+  for (const candidate of candidates) {
+    const candidateTokens = comparableTitleTokens(candidate)
+    if (candidateTokens.length < 4) continue
+    const overlap = candidateTokens.filter((token) => titleTokenSet.has(token)).length
+    const union = new Set([...titleTokens, ...candidateTokens]).size
+    const similarity = union ? overlap / union : 0
+    if (overlap >= 4 && similarity >= 0.8) {
+      return candidate
+    }
+  }
+  return ''
+}
+
 const hasTopCompanySignal = (text) => {
   const n = normalizeText(text)
   return topCompanyTokens.some((token) => n.includes(token))
@@ -151,13 +186,21 @@ const parseRssItems = (xml) => {
   })
 }
 
-const existingQuery = encodeURIComponent(`*[_type=="post"]{"title":title,"slug":slug.current,"youtubeUrl":youtubeUrl,"sourceUrl":sourceUrl}`)
+const existingQuery = encodeURIComponent(`*[_type=="post"]{"title":title,"slug":slug.current,"youtubeUrl":youtubeUrl,"sourceUrl":sourceUrl,"publishedAt":publishedAt}`)
 const existingResp = await fetch(`https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${existingQuery}`)
 const existingJson = await existingResp.json()
 const existingTitleKeys = new Set((existingJson?.result || []).map((p) => titleKey(p.title)).filter(Boolean))
 const existingSlugs = new Set((existingJson?.result || []).map((p) => String(p.slug || '').trim()).filter(Boolean))
 const existingYoutubeIds = new Set((existingJson?.result || []).map((p) => extractYoutubeId(p.youtubeUrl)).filter(Boolean))
 const existingSourceUrls = new Set((existingJson?.result || []).map((p) => normalizeUrl(p.sourceUrl)).filter(Boolean))
+const nearDuplicateCutoff = Date.now() - (NEAR_DUPLICATE_LOOKBACK_DAYS * 24 * 60 * 60 * 1000)
+const recentExistingTitles = (existingJson?.result || [])
+  .filter((p) => {
+    const publishedAt = new Date(p.publishedAt || '').getTime()
+    return Number.isFinite(publishedAt) && publishedAt >= nearDuplicateCutoff
+  })
+  .map((p) => String(p.title || '').trim())
+  .filter(Boolean)
 
 const xml = await fetch(rssUrl).then((r) => r.text())
 const parsed = parseRssItems(xml)
@@ -199,6 +242,7 @@ const docs = []
 const skipped = []
 const usedYoutubeIds = new Set(existingYoutubeIds)
 const usedTitleKeys = new Set()
+const usedComparableTitles = [...recentExistingTitles]
 const hasTopCompanyCandidate = selected.some((x) => x.topCompany)
 if (!hasTopCompanyCandidate) {
   console.log('No top-company candidate found in this cycle; allowing vetted fallback stories to publish.')
@@ -213,6 +257,7 @@ for (let i = 0; i < selected.length; i += 1) {
   const excerpt = buildExcerpt(h.title, h.source)
   const videoSummary = buildVideoSummary(h.title, excerpt)
   const key = titleKey(h.title)
+  const nearDuplicateTitle = findNearDuplicateTitle(h.title, usedComparableTitles)
   const sourcePublishedAt = (() => {
     const parsed = new Date(h.pubDate || '')
     return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString()
@@ -226,7 +271,8 @@ for (let i = 0; i < selected.length; i += 1) {
     !isExcerptStrong(excerpt) ||
     !ytId ||
     usedYoutubeIds.has(ytId) ||
-    usedTitleKeys.has(key)
+    usedTitleKeys.has(key) ||
+    Boolean(nearDuplicateTitle)
 
   if (hasGuardIssue) {
     skipped.push({
@@ -239,6 +285,8 @@ for (let i = 0; i < selected.length; i += 1) {
             ? 'duplicate YouTube video in batch'
             : usedTitleKeys.has(key)
               ? 'duplicate headline in batch'
+              : nearDuplicateTitle
+                ? `near-duplicate topic within ${NEAR_DUPLICATE_LOOKBACK_DAYS} days`
               : 'required field guard failed'
     })
     continue
@@ -250,6 +298,7 @@ for (let i = 0; i < selected.length; i += 1) {
 
   usedYoutubeIds.add(ytId)
   usedTitleKeys.add(key)
+  usedComparableTitles.push(h.title)
 
   docs.push({
     _id: docId,

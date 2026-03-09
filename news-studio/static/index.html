@@ -1101,8 +1101,7 @@
     const canonical = document.getElementById("canonical-link");
     if (canonical) {
       const canonicalPath = path === "/" ? "/" : isArticlePath(path) ? `${path}/` : path;
-      const search = path === "/" && requestedPage > 1 ? `?page=${requestedPage}` : "";
-      canonical.setAttribute("href", `https://news.robot.tv${canonicalPath}${search}`);
+      canonical.setAttribute("href", `https://news.robot.tv${canonicalPath}`);
     }
     const setRobots = (content) => {
       let tag = document.querySelector('meta[name="robots"]');
@@ -1113,7 +1112,7 @@
       }
       tag.setAttribute("content", content);
     };
-    setRobots("index,follow");
+    setRobots(path === "/" && requestedPage > 1 ? "noindex,follow" : "index,follow");
 
     const esc = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
     const videoId = (u) => {

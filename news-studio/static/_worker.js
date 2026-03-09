@@ -48,6 +48,16 @@ const withSearch = (requestUrl, pathname) => {
   return nextUrl.toString()
 }
 
+const withRobotsTag = (response, robotsTag) => {
+  const headers = new Headers(response.headers)
+  headers.set("X-Robots-Tag", robotsTag)
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  })
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url)
@@ -97,6 +107,12 @@ export default {
       return Response.redirect(withSearch(url, `/${datedSlugMatch[1]}/`), 301)
     }
 
-    return env.ASSETS.fetch(request)
+    const response = await env.ASSETS.fetch(request)
+    const requestedPage = Number.parseInt(url.searchParams.get("page") || "1", 10)
+    if (path === "/" && Number.isFinite(requestedPage) && requestedPage > 1) {
+      return withRobotsTag(response, "noindex,follow")
+    }
+
+    return response
   }
 }

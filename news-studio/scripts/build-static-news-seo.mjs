@@ -913,6 +913,7 @@ const normalizeListingTitle = (value) =>
     )
     .slice(0, 8)
     .join(" ");
+const countWords = (value) => toPlainText(value).split(/\s+/).filter(Boolean).length;
 
 const mergeUniqueText = (...groups) => {
   const merged = [];
@@ -1067,6 +1068,13 @@ const isMetaParagraph = (paragraph) => {
 
 const filterRenderableParagraphs = (paragraphs) =>
   (Array.isArray(paragraphs) ? paragraphs : []).filter((paragraph) => !isMetaParagraph(paragraph));
+const getRenderableParagraphs = (post) => filterRenderableParagraphs(blocksToParagraphs(post?.body));
+const getRenderableBodyWordCount = (post, paragraphs = getRenderableParagraphs(post)) =>
+  paragraphs.reduce((sum, paragraph) => sum + countWords(paragraph), 0);
+const isThinNewsPost = (post, paragraphs = getRenderableParagraphs(post)) =>
+  getRenderableBodyWordCount(post, paragraphs) < 25;
+const shouldNoindexNewsPost = (post, paragraphs = getRenderableParagraphs(post)) =>
+  isNoindexNewsSlug(post?.slug) || isThinNewsPost(post, paragraphs);
 
 const buildVideoSummary = (post, paragraphs = []) => {
   const manualSummary = toPlainText(post.videoSummary || "");
@@ -1223,7 +1231,7 @@ const buildArticleHtml = (post) => {
   const embedUrl = embedId
     ? `https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&playsinline=1`
     : "";
-  const robotsContent = isNoindexNewsSlug(slug)
+  const robotsContent = shouldNoindexNewsPost(post, paragraphs)
     ? "noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
     : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
 
@@ -1502,7 +1510,7 @@ const writeSitemap = async (posts) => {
       changefreq: "daily",
       priority: "0.9",
     },
-    ...orderedPosts.filter((p) => !isNoindexNewsSlug(p.slug)).map((p) => ({
+    ...orderedPosts.filter((p) => !shouldNoindexNewsPost(p)).map((p) => ({
       loc: articleUrlForSlug(p.slug),
       lastmod: formatDateOnly(p.publishedAt),
       changefreq: "weekly",
@@ -1531,7 +1539,7 @@ const writeFeed = async (posts) => {
       const bTime = new Date(b.publishedAt || 0).getTime();
       return bTime - aTime;
     })
-    .filter((post) => !isNoindexNewsSlug(post.slug))
+    .filter((post) => !shouldNoindexNewsPost(post))
     .slice(0, 40);
   const latestPublished = feedPosts[0]?.publishedAt || new Date().toISOString();
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
