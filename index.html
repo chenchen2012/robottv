@@ -575,7 +575,8 @@
           .then((d) => {
             const fetchedPosts = Array.isArray(d?.result) ? d.result : [];
             const seen = new Set();
-            const posts = [...editorialPinnedPosts, ...fetchedPosts].filter((p) => {
+            // Keep newest fetched posts first; pinned items are fallback context, not top-story overrides.
+            const posts = [...fetchedPosts, ...editorialPinnedPosts].filter((p) => {
               const slug = String(p?.slug || "");
               if (!slug || seen.has(slug)) return false;
               seen.add(slug);
