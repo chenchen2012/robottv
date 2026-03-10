@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = "/Users/cc801/Documents/New project/robottv";
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPORT_DIR = path.join(ROOT, "ops-private", "reports", "seo");
 const REPORT_JSON = path.join(REPORT_DIR, "weekly-content-refresh-report.json");
 const REPORT_MD = path.join(REPORT_DIR, "weekly-content-refresh-report.md");
