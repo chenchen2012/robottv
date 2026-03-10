@@ -39,5 +39,5 @@ jobs:
           SANITY_STUDIO_PROJECT_ID: lumv116w
           SANITY_STUDIO_DATASET: production
           SANITY_STUDIO_HOSTNAME: robottv
-          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN || secrets.SANITY_API_TOKEN }}
         run: npx sanity deploy --yes
