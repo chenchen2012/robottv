@@ -1410,7 +1410,8 @@ a {
     flex: 1 1 auto;
 }
 
-.newsletter #sib-container .entry__label {
+.newsletter #sib-container .entry__label,
+.newsletter .sib-form #sib-container .entry__label {
     display: block;
     margin-bottom: 0.45rem;
     color: #c8d5ea !important;
@@ -1418,17 +1419,19 @@ a {
     font-size: 0.88rem !important;
 }
 
-.newsletter #sib-container .input {
+.newsletter #sib-container .input,
+.newsletter .sib-form #sib-container input.input {
     width: 100%;
     border: 1px solid #2f4465;
     border-radius: 9px;
     background: #0a111b;
     color: #e9f1ff;
     font: inherit;
-    padding: 0.6rem 0.85rem;
-    height: 48px;
-    line-height: 1.2;
-    box-sizing: border-box;
+    padding: 0 0.85rem !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    line-height: 48px !important;
+    box-sizing: border-box !important;
 }
 
 .newsletter #sib-container .input:focus {
@@ -1437,7 +1440,8 @@ a {
     box-shadow: 0 0 0 2px rgba(94, 132, 255, 0.16);
 }
 
-.newsletter #sib-container .sib-form-block__button {
+.newsletter #sib-container .sib-form-block__button,
+.newsletter .sib-form #sib-container .sib-form-block__button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
@@ -1445,9 +1449,10 @@ a {
     color: #ffffff;
     border: none;
     border-radius: 10px;
-    padding: 0 1.35rem;
-    height: 48px;
-    line-height: 48px;
+    padding: 0 1.35rem !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    line-height: 48px !important;
     font-weight: 800;
     letter-spacing: 0.02em;
     cursor: pointer;

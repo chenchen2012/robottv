@@ -310,10 +310,13 @@
     .newsletter #sib-form { display:grid; gap:.7rem; }
     .newsletter .sib-form-row { display:flex; align-items:center; gap:.6rem; }
     .newsletter .sib-form-row .entry__field { flex:1 1 auto; }
-    .newsletter #sib-container .entry__label { display:block; margin-bottom:.4rem; color:#c8d5ea !important; font-weight:600; font-size:.88rem !important; }
-    .newsletter #sib-container .input { width:100%; border:1px solid #2f4465; border-radius:9px; background:#0a111b; color:#e9f1ff; font:inherit; padding:.6rem .85rem; height:48px; line-height:1.2; box-sizing:border-box; }
+    .newsletter #sib-container .entry__label,
+    .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:.4rem; color:#c8d5ea !important; font-weight:600; font-size:.88rem !important; }
+    .newsletter #sib-container .input,
+    .newsletter .sib-form #sib-container input.input { width:100%; border:1px solid #2f4465; border-radius:9px; background:#0a111b; color:#e9f1ff; font:inherit; padding:0 .85rem !important; height:48px !important; min-height:48px !important; line-height:48px !important; box-sizing:border-box !important; }
     .newsletter #sib-container .input:focus { outline:none; border-color:#5c80bb; box-shadow:0 0 0 2px rgba(94,132,255,.16); }
-    .newsletter #sib-container .sib-form-block__button { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border:none; border-radius:10px; padding:0 1.25rem; height:48px; line-height:48px; font-weight:800; letter-spacing:.02em; cursor:pointer; }
+    .newsletter #sib-container .sib-form-block__button,
+    .newsletter .sib-form #sib-container .sib-form-block__button { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border:none; border-radius:10px; padding:0 1.25rem !important; height:48px !important; min-height:48px !important; line-height:48px !important; font-weight:800; letter-spacing:.02em; cursor:pointer; }
     .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.05); }
     .newsletter .sib-form-message-panel { width:100%; max-width:520px; border-radius:10px; padding:.65rem .8rem; border:1px solid #2f4465; background:#0f1724; color:#e9f1ff; }
     .newsletter #success-message { border-color:#1b5f3a; background:#0f2318; color:#b7f0d1; }
