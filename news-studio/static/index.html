@@ -308,10 +308,11 @@
     .newsletter .sib-form-container { display:flex; flex-direction:column; align-items:center; gap:.6rem; }
     .newsletter #sib-container { width:100%; max-width:520px; background:#0b1421; border:1px solid #2f4465; border-radius:12px; padding:.95rem 1rem; }
     .newsletter #sib-form { display:grid; gap:.7rem; }
+    .newsletter .sib-form-row { display:flex; align-items:center; gap:.6rem; }
+    .newsletter .sib-form-row .entry__field { flex:1 1 auto; }
     .newsletter #sib-container .entry__label { display:block; margin-bottom:.4rem; color:#d7e3f6; font-weight:600; }
     .newsletter #sib-container .input { width:100%; border:1px solid #2f4465; border-radius:9px; background:#0a111b; color:#e9f1ff; font:inherit; padding:.6rem .7rem; }
     .newsletter #sib-container .input:focus { outline:none; border-color:#5c80bb; box-shadow:0 0 0 2px rgba(94,132,255,.16); }
-    .newsletter #sib-container .entry__specification { margin-top:.35rem; color:#9cb0d2; font-size:.82rem; display:block; }
     .newsletter #sib-container .sib-form-block__button { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border:none; border-radius:10px; padding:.55rem 1.1rem; font-weight:700; letter-spacing:.02em; cursor:pointer; }
     .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.05); }
     .newsletter .sib-form-message-panel { width:100%; max-width:520px; border-radius:10px; padding:.65rem .8rem; border:1px solid #2f4465; background:#0f1724; color:#e9f1ff; }
@@ -320,6 +321,10 @@
     .newsletter .sib-form-message-panel__text { display:flex; align-items:center; gap:.55rem; }
     .newsletter .sib-form-message-panel__text--center { justify-content:flex-start; }
     .newsletter .sib-icon { width:20px; height:20px; fill:currentColor; opacity:.9; }
+    @media (max-width:640px){
+      .newsletter .sib-form-row{flex-direction:column; align-items:stretch;}
+      .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center;}
+    }
     .topic-hub { margin-top:1.1rem; padding:1rem; border-color:#35506f; background:radial-gradient(820px 220px at 0% 10%, rgba(94,132,255,.16), transparent 60%),linear-gradient(160deg,#101925,#0d1521); }
     .topic-hub h2 { font-size:1.15rem; margin:.45rem 0 0; }
     .pagination { margin-top:1.05rem; padding-top:.85rem; border-top:1px solid var(--line); display:flex; justify-content:center; gap:.5rem; flex-wrap:wrap; }
@@ -577,23 +582,20 @@
                 <form id="sib-form" method="POST" action="https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv" data-type="subscription">
                   <div class="sib-input sib-form-block">
                     <div class="form__entry entry_block">
-                      <div class="form__label-row">
-                        <label class="entry__label" for="EMAIL" data-required="*">Enter your email address to subscribe</label>
+                      <label class="entry__label" for="EMAIL" data-required="*">Enter your email address to subscribe</label>
+                      <div class="sib-form-row">
                         <div class="entry__field">
                           <input class="input" type="email" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@company.com" data-required="true" required>
                         </div>
+                        <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
+                          <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" aria-hidden="true">
+                            <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"></path>
+                          </svg>
+                          Subscribe
+                        </button>
                       </div>
                       <label class="entry__error entry__error--primary"></label>
-                      <label class="entry__specification">Provide your email address to subscribe. For e.g abc@xyz.com</label>
                     </div>
-                  </div>
-                  <div class="sib-form-block">
-                    <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
-                      <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" aria-hidden="true">
-                        <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"></path>
-                      </svg>
-                      Subscribe
-                    </button>
                   </div>
                   <input type="text" name="email_address_check" value="" class="input--hidden">
                   <input type="hidden" name="locale" value="en">
