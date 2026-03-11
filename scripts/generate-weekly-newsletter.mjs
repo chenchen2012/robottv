@@ -139,6 +139,7 @@ const buildIssueHtml = ({ subject, intro, highlights, issueDate, issueUrl }) => 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(subject)}</title>
+  <script src="/scripts/ga-lazy.js?v=20260309-ga-v1" defer></script>
   <style>
     body { margin: 0; padding: 24px; font-family: "Space Grotesk", Arial, sans-serif; background: #0b0f16; color: #f3f6fb; }
     .container { max-width: 720px; margin: 0 auto; }
