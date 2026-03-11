@@ -1422,12 +1422,6 @@ const buildArticleHtml = (post) => {
   <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
   <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
-  <!-- MailerLite Universal -->
-  <script>
-    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[]).push(arguments);},l=d.createElement(e),l.async=1,l.src=u,n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
-    ml('account', '2180323');
-  </script>
-  <!-- End MailerLite Universal -->
   <style>
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
@@ -1744,7 +1738,17 @@ ${cardsHtml}
         <p class="kicker">NEWSLETTER</p>
         <h2>Get The Weekly Robot Brief</h2>
         <p class="copy">One concise email with the biggest robot news and robotics market signals from robot.tv News.</p>
-        <div class="ml-embedded" data-form="SvrrNj"></div>
+        <div class="newsletter-embed">
+          <iframe
+            src="https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv"
+            width="100%"
+            height="420"
+            style="border:0; overflow:hidden;"
+            title="Robot Weekly signup"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        </div>
         <p class="newsletter-note">No spam. Unsubscribe any time.</p>
       </section>`;
 };

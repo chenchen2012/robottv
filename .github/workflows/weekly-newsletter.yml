@@ -25,6 +25,16 @@ jobs:
           NEWSLETTER_TIMEZONE: America/Los_Angeles
         run: node scripts/generate-weekly-newsletter.mjs
 
+      - name: Send weekly newsletter (Brevo)
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_LIST_ID: 3
+          BREVO_SENDER_EMAIL: newsletter@robot.tv
+          BREVO_SENDER_NAME: Robot Weekly
+          NEWSLETTER_OUTPUT_DIR: newsletters
+          NEWSLETTER_SITE_URL: https://robot.tv
+        run: node scripts/send-weekly-newsletter-brevo.mjs
+
       - name: Commit and push updates
         run: |
           if git diff --quiet; then
@@ -33,6 +43,6 @@ jobs:
           fi
           git config user.name "robot-tv-bot"
           git config user.email "robot-tv-bot@users.noreply.github.com"
-          git add newsletters newsletter-feed.xml
+          git add newsletters newsletter-feed.xml ops-private/reports/newsletter/brevo-last-sent.json
           git commit -m "chore(newsletter): generate weekly issue"
           git push
