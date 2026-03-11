@@ -1389,8 +1389,8 @@ a {
 .newsletter #sib-container {
     width: 100%;
     max-width: 560px;
-    background: #0b1421;
-    border: 1px solid #2f4465;
+    background: #0a111a;
+    border: 1px solid rgba(82, 114, 166, 0.35);
     border-radius: 12px;
     padding: 1.05rem 1.1rem;
 }
@@ -1413,8 +1413,9 @@ a {
 .newsletter #sib-container .entry__label {
     display: block;
     margin-bottom: 0.45rem;
-    color: #d7e3f6;
+    color: #c8d5ea;
     font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .newsletter #sib-container .input {
@@ -1424,7 +1425,8 @@ a {
     background: #0a111b;
     color: #e9f1ff;
     font: inherit;
-    padding: 0.65rem 0.75rem;
+    padding: 0.7rem 0.85rem;
+    min-height: 46px;
 }
 
 .newsletter #sib-container .input:focus {
@@ -1441,8 +1443,9 @@ a {
     color: #ffffff;
     border: none;
     border-radius: 10px;
-    padding: 0.6rem 1.2rem;
-    font-weight: 700;
+    padding: 0.7rem 1.35rem;
+    min-height: 46px;
+    font-weight: 800;
     letter-spacing: 0.02em;
     cursor: pointer;
 }
