@@ -1370,6 +1370,128 @@ a {
     font-size: 0.82rem;
 }
 
+.newsletter .newsletter-embed {
+    margin-top: 0.85rem;
+}
+
+.newsletter .sib-form,
+.newsletter .sib-form * {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.newsletter .sib-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.newsletter #sib-container {
+    width: 100%;
+    max-width: 560px;
+    background: #0b1421;
+    border: 1px solid #2f4465;
+    border-radius: 12px;
+    padding: 1.05rem 1.1rem;
+}
+
+.newsletter #sib-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.newsletter #sib-container .entry__label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #d7e3f6;
+    font-weight: 600;
+}
+
+.newsletter #sib-container .input {
+    width: 100%;
+    border: 1px solid #2f4465;
+    border-radius: 9px;
+    background: #0a111b;
+    color: #e9f1ff;
+    font: inherit;
+    padding: 0.65rem 0.75rem;
+}
+
+.newsletter #sib-container .input:focus {
+    outline: none;
+    border-color: #5c80bb;
+    box-shadow: 0 0 0 2px rgba(94, 132, 255, 0.16);
+}
+
+.newsletter #sib-container .entry__specification {
+    margin-top: 0.35rem;
+    color: #9cb0d2;
+    font-size: 0.82rem;
+    display: block;
+}
+
+.newsletter #sib-container .sib-form-block__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: linear-gradient(135deg, #d92749, #ef2d52);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+.newsletter #sib-container .sib-form-block__button:hover {
+    filter: brightness(1.05);
+}
+
+.newsletter #sib-container .sib-form-block__button:focus-visible {
+    outline: 2px solid rgba(239, 45, 82, 0.5);
+    outline-offset: 2px;
+}
+
+.newsletter .sib-form-message-panel {
+    width: 100%;
+    max-width: 560px;
+    border-radius: 10px;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #2f4465;
+    background: #0f1724;
+    color: #e9f1ff;
+}
+
+.newsletter #success-message {
+    border-color: #1b5f3a;
+    background: #0f2318;
+    color: #b7f0d1;
+}
+
+.newsletter #error-message {
+    border-color: #6a1f1f;
+    background: #2a1414;
+    color: #ffbdbd;
+}
+
+.newsletter .sib-form-message-panel__text {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.newsletter .sib-form-message-panel__text--center {
+    justify-content: flex-start;
+}
+
+.newsletter .sib-icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+    opacity: 0.9;
+}
+
 .revenue-cta {
     margin-top: 1rem;
     padding: 1rem 1.1rem;

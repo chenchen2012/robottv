@@ -1422,6 +1422,7 @@ const buildArticleHtml = (post) => {
   <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
   <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
+  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
   <style>
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
@@ -1466,6 +1467,26 @@ const buildArticleHtml = (post) => {
     .body p { margin:.9rem 0 0; color:#c6d2e8; line-height:1.8; }
     .tags { margin:.9rem 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.45rem; }
     .tags li { border:1px solid #2a3f5d; border-radius:999px; padding:.22rem .55rem; color:#c6d2e8; font-size:.8rem; }
+    .newsletter { margin-top:1.1rem; padding:1rem; }
+    .newsletter h2 { font-size:1.15rem; margin:0.45rem 0 0; }
+    .newsletter .newsletter-embed { margin-top:.75rem; }
+    .newsletter .sib-form,
+    .newsletter .sib-form * { font-family:'Space Grotesk',sans-serif; }
+    .newsletter .sib-form-container { display:flex; flex-direction:column; align-items:center; gap:.6rem; }
+    .newsletter #sib-container { width:100%; max-width:520px; background:#0b1421; border:1px solid #2f4465; border-radius:12px; padding:.95rem 1rem; }
+    .newsletter #sib-form { display:grid; gap:.7rem; }
+    .newsletter #sib-container .entry__label { display:block; margin-bottom:.4rem; color:#d7e3f6; font-weight:600; }
+    .newsletter #sib-container .input { width:100%; border:1px solid #2f4465; border-radius:9px; background:#0a111b; color:#e9f1ff; font:inherit; padding:.6rem .7rem; }
+    .newsletter #sib-container .input:focus { outline:none; border-color:#5c80bb; box-shadow:0 0 0 2px rgba(94,132,255,.16); }
+    .newsletter #sib-container .entry__specification { margin-top:.35rem; color:#9cb0d2; font-size:.82rem; display:block; }
+    .newsletter #sib-container .sib-form-block__button { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border:none; border-radius:10px; padding:.55rem 1.1rem; font-weight:700; letter-spacing:.02em; cursor:pointer; }
+    .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.05); }
+    .newsletter .sib-form-message-panel { width:100%; max-width:520px; border-radius:10px; padding:.65rem .8rem; border:1px solid #2f4465; background:#0f1724; color:#e9f1ff; }
+    .newsletter #success-message { border-color:#1b5f3a; background:#0f2318; color:#b7f0d1; }
+    .newsletter #error-message { border-color:#6a1f1f; background:#2a1414; color:#ffbdbd; }
+    .newsletter .sib-form-message-panel__text { display:flex; align-items:center; gap:.55rem; }
+    .newsletter .sib-form-message-panel__text--center { justify-content:flex-start; }
+    .newsletter .sib-icon { width:20px; height:20px; fill:currentColor; opacity:.9; }
     .footer { margin-top:1.2rem; padding:1rem; display:flex; justify-content:space-between; gap:.8rem; flex-wrap:wrap; color:#a7b7d1; font-size:.9rem; }
     .footer-links { display:flex; gap:.9rem; flex-wrap:wrap; }
     @media (max-width:760px){ .header{flex-direction:column; align-items:flex-start;} .insight-grid{grid-template-columns:1fr;} }
@@ -1547,6 +1568,23 @@ const buildArticleHtml = (post) => {
       </div>
     </footer>
   </div>
+  <script>
+    window.REQUIRED_CODE_ERROR_MESSAGE = "Please choose a country code";
+    window.LOCALE = "en";
+    window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    window.REQUIRED_ERROR_MESSAGE = "This field cannot be left blank. ";
+    window.GENERIC_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    window.translation = {
+      common: {
+        selectedList: "{quantity} list selected",
+        selectedLists: "{quantity} lists selected",
+        selectedOption: "{quantity} selected",
+        selectedOptions: "{quantity} selected"
+      }
+    };
+    var AUTOHIDE = Boolean(0);
+  </script>
+  <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 </body>
 </html>`;
 };
@@ -1739,15 +1777,52 @@ ${cardsHtml}
         <h2>Get The Weekly Robot Brief</h2>
         <p class="copy">One concise email with the biggest robot news and robotics market signals from robot.tv News.</p>
         <div class="newsletter-embed">
-          <iframe
-            src="https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv"
-            width="100%"
-            height="420"
-            style="border:0; overflow:hidden;"
-            title="Robot Weekly signup"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-          ></iframe>
+          <div class="sib-form">
+            <div id="sib-form-container" class="sib-form-container">
+              <div id="error-message" class="sib-form-message-panel">
+                <div class="sib-form-message-panel__text sib-form-message-panel__text--center">
+                  <svg viewBox="0 0 512 512" class="sib-icon sib-notification__icon" aria-hidden="true">
+                    <path d="M256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm-11.49 120h22.979c6.823 0 12.274 5.682 11.99 12.5l-7 168c-.268 6.428-5.556 11.5-11.99 11.5h-8.979c-6.433 0-11.722-5.073-11.99-11.5l-7-168c-.283-6.818 5.167-12.5 11.99-12.5zM256 340c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28z"></path>
+                  </svg>
+                  <span class="sib-form-message-panel__inner-text">Your subscription could not be saved. Please try again.</span>
+                </div>
+              </div>
+              <div id="success-message" class="sib-form-message-panel">
+                <div class="sib-form-message-panel__text sib-form-message-panel__text--center">
+                  <svg viewBox="0 0 512 512" class="sib-icon sib-notification__icon" aria-hidden="true">
+                    <path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 464c-118.664 0-216-96.055-216-216 0-118.663 96.055-216 216-216 118.664 0 216 96.055 216 216 0 118.663-96.055 216-216 216zm141.63-274.961L217.15 376.071c-4.705 4.667-12.303 4.637-16.97-.068l-85.878-86.572c-4.667-4.705-4.637-12.303.068-16.97l8.52-8.451c4.705-4.667 12.303-4.637 16.97.068l68.976 69.533 163.441-162.13c4.705-4.667 12.303-4.637 16.97.068l8.451 8.52c4.668 4.705 4.637 12.303-.068 16.97z"></path>
+                  </svg>
+                  <span class="sib-form-message-panel__inner-text">Your subscription has been successful.</span>
+                </div>
+              </div>
+              <div id="sib-container" class="sib-container--large sib-container--vertical">
+                <form id="sib-form" method="POST" action="https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv" data-type="subscription">
+                  <div class="sib-input sib-form-block">
+                    <div class="form__entry entry_block">
+                      <div class="form__label-row">
+                        <label class="entry__label" for="EMAIL" data-required="*">Enter your email address to subscribe</label>
+                        <div class="entry__field">
+                          <input class="input" type="email" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@company.com" data-required="true" required>
+                        </div>
+                      </div>
+                      <label class="entry__error entry__error--primary"></label>
+                      <label class="entry__specification">Provide your email address to subscribe. For e.g abc@xyz.com</label>
+                    </div>
+                  </div>
+                  <div class="sib-form-block">
+                    <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
+                      <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" aria-hidden="true">
+                        <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"></path>
+                      </svg>
+                      Subscribe
+                    </button>
+                  </div>
+                  <input type="text" name="email_address_check" value="" class="input--hidden">
+                  <input type="hidden" name="locale" value="en">
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
         <p class="newsletter-note">No spam. Unsubscribe any time.</p>
       </section>`;
