@@ -217,9 +217,19 @@ const loadExistingFeedItems = async (feedPath) => {
 };
 
 const run = async () => {
-  const xml = await fetch(FEED_URL).then((r) => r.text());
+  const feedResponse = await fetch(FEED_URL, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      Accept: "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.7",
+    },
+  });
+  const xml = await feedResponse.text();
   const items = parseRssItems(xml).filter((item) => item.title && item.link);
-  if (!items.length) throw new Error("No items found in feed.");
+  if (!items.length) {
+    const snippet = xml.slice(0, 280).replace(/\s+/g, " ").trim();
+    throw new Error(`No items found in feed. Status ${feedResponse.status}. Snippet: ${snippet}`);
+  }
 
   const selected = items.slice(0, MAX_ITEMS);
   let summary;
