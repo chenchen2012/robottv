@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BREVO_SEND_ENABLED: "0"
     steps:
       - uses: actions/checkout@v4
 
@@ -27,6 +29,7 @@ jobs:
         run: node scripts/generate-weekly-newsletter.mjs
 
       - name: Send weekly newsletter (Brevo)
+        if: ${{ env.BREVO_SEND_ENABLED == '1' }}
         env:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           BREVO_LIST_ID: 3
