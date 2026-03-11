@@ -19,6 +19,7 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           NEWSLETTER_FEED_URL: https://news.robot.tv/feed.xml
+          NEWSLETTER_FEED_PATH: news-studio/static/feed.xml
           NEWSLETTER_MAX_ITEMS: 8
           NEWSLETTER_OUTPUT_DIR: newsletters
           NEWSLETTER_SITE_URL: https://robot.tv

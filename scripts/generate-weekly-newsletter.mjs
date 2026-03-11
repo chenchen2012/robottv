@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 const FEED_URL = process.env.NEWSLETTER_FEED_URL || "https://news.robot.tv/feed.xml";
+const FEED_PATH = process.env.NEWSLETTER_FEED_PATH;
 const MAX_ITEMS = Number(process.env.NEWSLETTER_MAX_ITEMS || 8);
 const OUTPUT_DIR = process.env.NEWSLETTER_OUTPUT_DIR || "newsletters";
 const SITE_URL = process.env.NEWSLETTER_SITE_URL || "https://robot.tv";
@@ -217,18 +218,25 @@ const loadExistingFeedItems = async (feedPath) => {
 };
 
 const run = async () => {
-  const feedResponse = await fetch(FEED_URL, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      Accept: "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.7",
-    },
-  });
-  const xml = await feedResponse.text();
+  let xml = "";
+  let feedStatus = 200;
+  if (FEED_PATH) {
+    xml = await fs.readFile(FEED_PATH, "utf8");
+  } else {
+    const feedResponse = await fetch(FEED_URL, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.7",
+      },
+    });
+    feedStatus = feedResponse.status;
+    xml = await feedResponse.text();
+  }
   const items = parseRssItems(xml).filter((item) => item.title && item.link);
   if (!items.length) {
     const snippet = xml.slice(0, 280).replace(/\s+/g, " ").trim();
-    throw new Error(`No items found in feed. Status ${feedResponse.status}. Snippet: ${snippet}`);
+    throw new Error(`No items found in feed. Status ${feedStatus}. Snippet: ${snippet}`);
   }
 
   const selected = items.slice(0, MAX_ITEMS);
