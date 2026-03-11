@@ -87,10 +87,9 @@ const normalizeUrl = (url) => String(url || '')
   .replace(/^https?:\/\//, '')
   .replace(/\/+$/, '')
 
-const buildExcerpt = (headline, source) => {
+const buildExcerpt = (headline) => {
   const title = String(headline || '').trim()
-  const outlet = String(source || 'industry source').trim()
-  return `${outlet} reports ${title}. Why it matters: this update may change near-term robotics deployment decisions and market momentum.`
+  return `${title}. Why it matters: this update may change near-term robotics deployment decisions and market momentum.`
 }
 
 const buildVideoSummary = (headline, excerpt) => {
@@ -254,7 +253,7 @@ for (let i = 0; i < selected.length; i += 1) {
   const yt = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
   const ytId = extractYoutubeId(yt)
   const category = sourceToCategory(h.source, h.title)
-  const excerpt = buildExcerpt(h.title, h.source)
+  const excerpt = buildExcerpt(h.title)
   const videoSummary = buildVideoSummary(h.title, excerpt)
   const key = titleKey(h.title)
   const nearDuplicateTitle = findNearDuplicateTitle(h.title, usedComparableTitles)

@@ -1005,6 +1005,19 @@ const mergeUniqueText = (...groups) => {
 };
 
 const normalizeSlug = (slug) => String(slug || "").trim().replace(/^\/+|\/+$/g, "");
+const normalizeExcerpt = (value) => {
+  const text = toPlainText(value || "").trim();
+  if (!text) return text;
+  let cleaned = text.replace(
+    /^(multiple outlets report(?: that)?|[A-Z][A-Za-z0-9&.'"\- ]{2,80}?)\s+(reports|report|says|said)\s+/i,
+    ""
+  ).trim();
+  if (!cleaned) return text;
+  if (cleaned[0] && cleaned[0] === cleaned[0].toLowerCase()) {
+    cleaned = cleaned[0].toUpperCase() + cleaned.slice(1);
+  }
+  return cleaned;
+};
 const articleUrlForSlug = (slug) => `${siteUrl}/${encodeURIComponent(normalizeSlug(slug))}/`;
 const assertSafeArticleSlug = (slug) => {
   if (!slug) {
@@ -1082,7 +1095,7 @@ const buildHomepagePreloadPosts = (posts) =>
     .slice(0, HOMEPAGE_PRELOAD_DEPTH)
     .map((post) => ({
       title: toPlainText(post.title || ""),
-      excerpt: toPlainText(post.excerpt || ""),
+      excerpt: normalizeExcerpt(post.excerpt || ""),
       publishedAt: post.publishedAt || "",
       youtubeUrl: post.youtubeUrl || "",
       slug: normalizeSlug(post.slug),
@@ -1164,7 +1177,7 @@ const buildVideoSummary = (post, paragraphs = []) => {
     parts.push(text);
   };
 
-  pushUnique(post.excerpt || "");
+  pushUnique(normalizeExcerpt(post.excerpt || ""));
   for (const paragraph of paragraphs) {
     if (/^source:/i.test(paragraph)) continue;
     pushUnique(paragraph);
@@ -1287,7 +1300,7 @@ const extractSourceMeta = (post, paragraphs = []) => {
 const buildArticleHtml = (post) => {
   const slug = normalizeSlug(post.slug);
   const title = toPlainText(post.title || "robot.tv News");
-  const excerpt = toPlainText(post.excerpt || "robot.tv News coverage.");
+  const excerpt = normalizeExcerpt(post.excerpt || "robot.tv News coverage.");
   const authorProfile = buildAuthorProfile(post);
   const categories = Array.isArray(post.categories) ? post.categories.map(toPlainText).filter(Boolean) : [];
   const publishedAtIso = formatDate(post.publishedAt || new Date().toISOString());
@@ -1410,6 +1423,13 @@ const buildArticleHtml = (post) => {
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
   <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
   <style>
+    @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:700; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
+    @font-face { font-family:'Orbitron'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/orbitron-latin.woff2') format('woff2'); }
+    @font-face { font-family:'Orbitron'; font-style:normal; font-weight:700; font-display:swap; src:url('/fonts/orbitron-latin.woff2') format('woff2'); }
+    @font-face { font-family:'Orbitron'; font-style:normal; font-weight:800; font-display:swap; src:url('/fonts/orbitron-latin.woff2') format('woff2'); }
     :root { --bg:#05070b; --panel:#0d131d; --panel2:#111a27; --text:#f3f6fb; --muted:#97a5bc; --line:#233048; --red:#ef2d52; --blue:#5e84ff; }
     * { box-sizing:border-box; } html,body { margin:0; padding:0; min-height:100%; } body { font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:var(--bg); overflow-x:hidden; }
     a { color:inherit; text-decoration:none; } .container { position:relative; z-index:2; width:min(1180px,94vw); margin:0 auto; padding:1rem 0 2rem; }
@@ -1635,7 +1655,7 @@ ${feedPosts
       <link>${escapeHtml(link)}</link>
       <guid isPermaLink="true">${escapeHtml(link)}</guid>
       <pubDate>${formatRssDate(post.publishedAt)}</pubDate>
-      <description>${escapeHtml(toPlainText(post.excerpt || "Latest robotics briefing from robot.tv."))}</description>
+      <description>${escapeHtml(normalizeExcerpt(post.excerpt || "Latest robotics briefing from robot.tv."))}</description>
 ${categories.map((category) => `      <category>${escapeHtml(category)}</category>`).join("\n")}
     </item>`;
   })
@@ -1662,7 +1682,7 @@ const buildHomepageStaticMarkup = (posts) => {
     .map((post, index) => {
       const title = escapeHtml(toPlainText(post.title || "robot.tv News"));
       const excerpt = escapeHtml(
-        toPlainText(post.excerpt || "Latest robotics intelligence from robot.tv.")
+        normalizeExcerpt(post.excerpt || "Latest robotics intelligence from robot.tv.")
       );
       const date = escapeHtml(formatDisplayDate(post.publishedAt));
       const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
