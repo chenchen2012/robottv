@@ -1422,6 +1422,12 @@ const buildArticleHtml = (post) => {
   <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
   <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
+  <!-- MailerLite Universal -->
+  <script>
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[]).push(arguments);},l=d.createElement(e),l.async=1,l.src=u,n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', '2180323');
+  </script>
+  <!-- End MailerLite Universal -->
   <style>
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
@@ -1738,16 +1744,7 @@ ${cardsHtml}
         <p class="kicker">NEWSLETTER</p>
         <h2>Get The Weekly Robot Brief</h2>
         <p class="copy">One concise email with the biggest robot news and robotics market signals from robot.tv News.</p>
-        <form class="newsletter-form" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com">
-          <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
-          <input type="hidden" name="_subject" value="robot.tv newsletter signup from news">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="text" name="_honey" style="position:absolute;left:-5000px;" tabindex="-1" autocomplete="off">
-          <input type="hidden" name="topic" value="newsletter-signup">
-          <input type="hidden" name="source" value="news-robot-tv">
-          <input type="email" name="email" placeholder="you@company.com" required>
-          <button class="btn btn-primary" type="submit">Subscribe</button>
-        </form>
+        <div class="ml-embedded" data-form="SvrrNj"></div>
         <p class="newsletter-note">No spam. Unsubscribe any time.</p>
       </section>`;
 };

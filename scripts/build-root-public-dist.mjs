@@ -6,6 +6,7 @@ const distDir = path.join(root, "dist-root-public")
 
 const includeDirs = new Set([
   "images",
+  "newsletters",
   "scripts"
 ])
 
