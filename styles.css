@@ -1397,6 +1397,18 @@ a {
 .newsletter .newsletter-form-card {
     display: grid;
     gap: 0.48rem;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.newsletter .sib-input,
+.newsletter .sib-form-block,
+.newsletter .entry_block,
+.newsletter .form__entry {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .newsletter #sib-container {

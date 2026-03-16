@@ -302,23 +302,30 @@
     .newsletter-form { margin-top:.75rem; display:flex; gap:.55rem; flex-wrap:wrap; }
     .newsletter-form input[type="email"] { flex:1 1 240px; border:1px solid #2f4465; border-radius:9px; background:#0b1421; color:#e9f1ff; font:inherit; padding:.58rem .62rem; }
     .newsletter-note { margin-top:.45rem; color:#9cb0d2; font-size:.82rem; }
-    .newsletter .newsletter-embed { margin-top:.75rem; }
+    .newsletter .newsletter-embed { margin-top:.75rem; display:flex; justify-content:flex-start; }
     .newsletter .sib-form,
     .newsletter .sib-form * { font-family:'Space Grotesk',sans-serif; }
-    .newsletter .sib-form-container { display:flex; flex-direction:column; align-items:center; gap:.6rem; }
-    .newsletter #sib-container { width:100%; max-width:520px; background:#0a111a !important; border:1px solid rgba(82,114,166,.35) !important; border-radius:12px; padding:.95rem 1rem; }
-    .newsletter #sib-form { display:grid; gap:.7rem; }
-    .newsletter .sib-form-row { display:flex; align-items:center; gap:.6rem; }
+    .newsletter .sib-form { width:100%; }
+    .newsletter .sib-form-container { display:grid; gap:.65rem; width:min(100%,760px); justify-items:start; margin-left:0!important; margin-right:auto!important; }
+    .newsletter .newsletter-form-card { display:grid; gap:.48rem; width:100%; margin:0!important; padding:0!important; }
+    .newsletter .sib-input,
+    .newsletter .sib-form-block,
+    .newsletter .entry_block,
+    .newsletter .form__entry { width:100%; margin:0!important; padding:0!important; }
+    .newsletter #sib-container { width:100%; max-width:760px; margin-right:auto; background:transparent!important; border:0!important; border-radius:0; padding:0!important; box-shadow:none!important; }
+    .newsletter #sib-form { display:grid; gap:.62rem; }
+    .newsletter .sib-form-row { display:flex; align-items:center; gap:.8rem; }
     .newsletter .sib-form-row .entry__field { flex:1 1 auto; }
     .newsletter #sib-container .entry__label,
-    .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:.4rem; color:#c8d5ea !important; font-weight:600; font-size:.88rem !important; }
+    .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:0; color:var(--text)!important; font-weight:700; font-size:.92rem!important; letter-spacing:.01em; }
     .newsletter #sib-container .input,
-    .newsletter .sib-form #sib-container input.input { width:100%; border:1px solid #2f4465; border-radius:9px; background:#0a111b; color:#e9f1ff; font:inherit; padding:0 .85rem !important; height:48px !important; min-height:48px !important; line-height:48px !important; box-sizing:border-box !important; }
-    .newsletter #sib-container .input:focus { outline:none; border-color:#5c80bb; box-shadow:0 0 0 2px rgba(94,132,255,.16); }
+    .newsletter .sib-form #sib-container input.input { width:100%; border:1px solid rgba(94,132,255,.34); border-radius:12px; background:linear-gradient(145deg,rgba(10,15,24,.94),rgba(13,19,29,.98)); color:#e9f1ff; font:inherit; padding:0 .95rem!important; height:50px!important; min-height:50px!important; line-height:50px!important; box-sizing:border-box!important; box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 14px 28px rgba(3,8,15,.2); transition:border-color .2s ease,box-shadow .2s ease,background .2s ease; }
+    .newsletter #sib-container .input:focus { outline:none; border-color:var(--accent-blue); box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(94,132,255,.14); }
+    .newsletter #sib-container .input::placeholder { color:#90a2bf; }
     .newsletter #sib-container .sib-form-block__button,
-    .newsletter .sib-form #sib-container .sib-form-block__button { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border:none; border-radius:10px; padding:0 1.25rem !important; height:48px !important; min-height:48px !important; line-height:48px !important; font-weight:800; letter-spacing:.02em; cursor:pointer; }
-    .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.05); }
-    .newsletter .sib-form-message-panel { width:100%; max-width:520px; border-radius:10px; padding:.65rem .8rem; border:1px solid #2f4465; background:#0f1724; color:#e9f1ff; }
+    .newsletter .sib-form #sib-container .sib-form-block__button { display:inline-flex; align-items:center; justify-content:center; gap:.45rem; background:linear-gradient(110deg,var(--accent-red),var(--accent-blue)); color:#fff; border:none; border-radius:12px; padding:0 1.45rem!important; height:50px!important; min-height:50px!important; line-height:50px!important; font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:.02em; cursor:pointer; min-width:188px; box-shadow:0 14px 26px rgba(20,34,65,.26), inset 0 1px 0 rgba(255,255,255,.14)!important; transition:transform .18s ease,box-shadow .18s ease,filter .18s ease; }
+    .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.04); transform:translateY(-1px); box-shadow:0 18px 30px rgba(20,34,65,.34), inset 0 1px 0 rgba(255,255,255,.18)!important; }
+    .newsletter .sib-form-message-panel { width:100%; border-radius:12px; padding:.72rem .9rem; border:1px solid rgba(47,68,101,.86); background:rgba(15,23,36,.9); color:#e9f1ff; }
     .newsletter #success-message { border-color:#1b5f3a; background:#0f2318; color:#b7f0d1; }
     .newsletter #error-message { border-color:#6a1f1f; background:#2a1414; color:#ffbdbd; }
     .newsletter .sib-form-message-panel__text { display:flex; align-items:center; gap:.55rem; }
@@ -326,7 +333,8 @@
     .newsletter .sib-icon { width:20px; height:20px; fill:currentColor; opacity:.9; }
     @media (max-width:640px){
       .newsletter .sib-form-row{flex-direction:column; align-items:stretch;}
-      .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center;}
+      .newsletter .sib-form-row .entry__field{width:100%;}
+      .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center; min-width:0;}
     }
     .topic-hub { margin-top:1.1rem; padding:1rem; border-color:#35506f; background:radial-gradient(820px 220px at 0% 10%, rgba(94,132,255,.16), transparent 60%),linear-gradient(160deg,#101925,#0d1521); }
     .topic-hub h2 { font-size:1.15rem; margin:.45rem 0 0; }
@@ -375,169 +383,169 @@
         <div class="grid">
         <article class="card featured">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/R9fG1dWn3ho/hqdefault.jpg" alt="Teradyne sues Chinese cobot maker over UR software thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/0aLvy3S57iQ/hqdefault.jpg" alt="Travis Kalanick launches a new company called Atoms focused on robotics thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 11, 2026</p>
-            <h3><a href="/teradyne-sues-chinese-cobot-maker-over-ur-software/">Teradyne sues Chinese cobot maker over UR software</a></h3>
-            <p>Reports Teradyne sues Chinese cobot maker over UR software. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
+            <p class="meta">Mar 17, 2026</p>
+            <h3><a href="/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/">Travis Kalanick launches a new company called Atoms focused on robotics</a></h3>
+            <p>Travis Kalanick launches a new company called Atoms focused on robotics. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/teradyne-sues-chinese-cobot-maker-over-ur-software/">Read Robot News</a>
+              <a class="btn btn-primary" href="/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/nYxkB_F3yM0/hqdefault.jpg" alt="Robotics Medal and Rising Star winners reflect on their work, advancing women in robotics thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/RuNNtHPusNA/hqdefault.jpg" alt="Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 11, 2026</p>
-            <h3><a href="/robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics/">Robotics Medal and Rising Star winners reflect on their work, advancing women in robotics</a></h3>
-            <p>Reports Robotics Medal and Rising Star winners reflect on their work, advancing women in robotics. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
+            <p class="meta">Mar 16, 2026</p>
+            <h3><a href="/dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit/">Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit</a></h3>
+            <p>Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics/">Read Robot News</a>
+              <a class="btn btn-primary" href="/dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/AkocdyGnMiQ/hqdefault.jpg" alt="Qualcomm’s partnership with Neura Robotics is just the beginning thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/RbXfGwhrGjI/hqdefault.jpg" alt="Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs. thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 10, 2026</p>
-            <h3><a href="/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/">Qualcomm’s partnership with Neura Robotics is just the beginning</a></h3>
-            <p>Qualcomm’s partnership with Neura Robotics is just the beginning. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
+            <p class="meta">Mar 16, 2026</p>
+            <h3><a href="/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/">Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs.</a></h3>
+            <p>Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs.. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/">Read Robot News</a>
+              <a class="btn btn-primary" href="/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/e1r-C_zNpvc/hqdefault.jpg" alt="OpenAI robotics head resigns over Pentagon deal thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/q2czJLPJ4nA/hqdefault.jpg" alt="Humanoid robotics developers must address a wide range of applications thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 10, 2026</p>
-            <h3><a href="/openai-robotics-head-resigns-over-pentagon-deal/">OpenAI robotics head resigns over Pentagon deal</a></h3>
-            <p>A senior robotics departure at OpenAI matters because leadership changes around defense-linked decisions can reshape how teams, partners, and observers read the company&#39;s priorities in physical AI.</p>
+            <p class="meta">Mar 16, 2026</p>
+            <h3><a href="/humanoid-robotics-developers-must-address-a-wide-range-of-applications/">Humanoid robotics developers must address a wide range of applications</a></h3>
+            <p>Humanoid robotics developers must address a wide range of applications. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/openai-robotics-head-resigns-over-pentagon-deal/">Read Robot News</a>
+              <a class="btn btn-primary" href="/humanoid-robotics-developers-must-address-a-wide-range-of-applications/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/qm60y53ClfA/hqdefault.jpg" alt="A key robotics staffer at OpenAI quits after the company&#39;s Pentagon deal: &#39;This was about principle&#39; thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/nsmGQ7tPSds/hqdefault.jpg" alt="Rivian’s RJ Scaringe thinks we’re doing robots all wrong thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 9, 2026</p>
-            <h3><a href="/a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri/">A key robotics staffer at OpenAI quits after the company&#39;s Pentagon deal: &#39;This was about principle&#39;</a></h3>
-            <p>A key robotics staffer at OpenAI quits after the company&#39;s Pentagon deal: &#39;This was about principle&#39;. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
+            <p class="meta">Mar 16, 2026</p>
+            <h3><a href="/rivians-rj-scaringe-thinks-were-doing-robots-all-wrong/">Rivian’s RJ Scaringe thinks we’re doing robots all wrong</a></h3>
+            <p>Rivian’s RJ Scaringe thinks we’re doing robots all wrong. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri/">Read Robot News</a>
+              <a class="btn btn-primary" href="/rivians-rj-scaringe-thinks-were-doing-robots-all-wrong/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/u7gfh7E3g48/hqdefault.jpg" alt="Plug-and-Play AI: Transforming robotics with modular skills thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/tF2edC7RmLQ/hqdefault.jpg" alt="Why Travis Kalanick believes humans are on the verge of a &#39;golden age&#39; thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 9, 2026</p>
-            <h3><a href="/plug-and-play-ai-transforming-robotics-with-modular-skills/">Plug-and-Play AI: Transforming robotics with modular skills</a></h3>
-            <p>Modular robotics skills matter because physical AI becomes more deployable when teams can reuse capabilities across tasks instead of rebuilding each workflow from scratch.</p>
+            <p class="meta">Mar 15, 2026</p>
+            <h3><a href="/why-travis-kalanick-believes-humans-are-on-the-verge-of-a-golden-age/">Why Travis Kalanick believes humans are on the verge of a &#39;golden age&#39;</a></h3>
+            <p>Why Travis Kalanick believes humans are on the verge of a &#39;golden age&#39;. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/plug-and-play-ai-transforming-robotics-with-modular-skills/">Read Robot News</a>
+              <a class="btn btn-primary" href="/why-travis-kalanick-believes-humans-are-on-the-verge-of-a-golden-age/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/W4XfJCf_JT8/hqdefault.jpg" alt="These robots are coming for the jobs no one wants — and could fill workforce gaps thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/2ZomqUs0AvQ/hqdefault.jpg" alt="Data security is the foundation of trust in physical AI thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 8, 2026</p>
-            <h3><a href="/these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps/">These robots are coming for the jobs no one wants — and could fill workforce gaps</a></h3>
-            <p>Workforce-gap robotics stories matter because automation wins fastest where jobs are repetitive, difficult to staff, or operationally unattractive rather than where robots chase the broadest labor replacement narrative.</p>
+            <p class="meta">Mar 15, 2026</p>
+            <h3><a href="/data-security-is-the-foundation-of-trust-in-physical-ai/">Data security is the foundation of trust in physical AI</a></h3>
+            <p>Data security is the foundation of trust in physical AI. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps/">Read Robot News</a>
+              <a class="btn btn-primary" href="/data-security-is-the-foundation-of-trust-in-physical-ai/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/QbcfkSml5nE/hqdefault.jpg" alt="OpenAI Robotics head resigns after deal with Pentagon thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/htMpI5XK3Po/hqdefault.jpg" alt="&#39;I never left&#39;: Travis Kalanick launches new robotics company Atoms with manifesto thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 8, 2026</p>
-            <h3><a href="/openai-robotics-head-resigns-after-deal-with-pentagon/">OpenAI Robotics head resigns after deal with Pentagon</a></h3>
-            <p>OpenAI Robotics head resigns after deal with Pentagon. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
+            <p class="meta">Mar 14, 2026</p>
+            <h3><a href="/i-never-left-travis-kalanick-launches-new-robotics-company-atoms-with-manifesto/">&#39;I never left&#39;: Travis Kalanick launches new robotics company Atoms with manifesto</a></h3>
+            <p>&#39;I never left&#39;: Travis Kalanick launches new robotics company Atoms with manifesto. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/openai-robotics-head-resigns-after-deal-with-pentagon/">Read Robot News</a>
+              <a class="btn btn-primary" href="/i-never-left-travis-kalanick-launches-new-robotics-company-atoms-with-manifesto/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/G8CYhk_59LM/hqdefault.jpg" alt="Humanoid developer Agility Robotics rebrands thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/GzVLpSIHHeY/hqdefault.jpg" alt="Uber co-founder Kalanick launches Atoms in specialized robotics push thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 8, 2026</p>
-            <h3><a href="/humanoid-developer-agility-robotics-rebrands/">Humanoid developer Agility Robotics rebrands</a></h3>
-            <p>An Agility Robotics rebrand matters because company positioning in the humanoid market now affects recruiting, customer expectations, and how seriously operators interpret the path from pilot programs to scaled deployments.</p>
+            <p class="meta">Mar 14, 2026</p>
+            <h3><a href="/uber-co-founder-kalanick-launches-atoms-in-specialized-robotics-push/">Uber co-founder Kalanick launches Atoms in specialized robotics push</a></h3>
+            <p>Uber co-founder Kalanick launches Atoms in specialized robotics push. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/humanoid-developer-agility-robotics-rebrands/">Read Robot News</a>
+              <a class="btn btn-primary" href="/uber-co-founder-kalanick-launches-atoms-in-specialized-robotics-push/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/2zCh_6GO49c/hqdefault.jpg" alt="Humanoid warehouse rollouts are shifting from pilot to operations in 2026 thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/9Z_U1d3Sh8k/hqdefault.jpg" alt="Three companies demonstrate global commercialization potential at AW 2026 thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 7, 2026</p>
-            <h3><a href="/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Humanoid warehouse rollouts are shifting from pilot to operations in 2026</a></h3>
-            <p>Warehouse humanoids are entering a stricter phase in 2026: operators are moving beyond pilot headlines and starting to judge programs on throughput, intervention rate, safety, and real workflow fit.</p>
+            <p class="meta">Mar 13, 2026</p>
+            <h3><a href="/three-companies-demonstrate-global-commercialization-potential-at-aw-2026/">Three companies demonstrate global commercialization potential at AW 2026</a></h3>
+            <p>Three companies demonstrate global commercialization potential at AW 2026. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/">Read Robot News</a>
+              <a class="btn btn-primary" href="/three-companies-demonstrate-global-commercialization-potential-at-aw-2026/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/b8BDUa-xbyA/hqdefault.jpg" alt="6 lessons I learned watching a robotics startup die from the inside thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/i35ikMw0KtQ/hqdefault.jpg" alt="STMicroelectronics plans robots, retraining to avoid closures thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 3, 2026</p>
-            <h3><a href="/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">6 lessons I learned watching a robotics startup die from the inside</a></h3>
-            <p>Robotics startup failure stories matter because execution risk in this industry usually comes from focus, deployment discipline, and operating burn, not from a lack of technical ambition alone.</p>
+            <p class="meta">Mar 13, 2026</p>
+            <h3><a href="/stmicroelectronics-plans-robots-retraining-to-avoid-closures/">STMicroelectronics plans robots, retraining to avoid closures</a></h3>
+            <p>STMicroelectronics plans robots, retraining to avoid closures. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/">Read Robot News</a>
+              <a class="btn btn-primary" href="/stmicroelectronics-plans-robots-retraining-to-avoid-closures/">Read Robot News</a>
             </div>
           </div>
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/s4SmxpIO2qk/hqdefault.jpg" alt="Why China’s humanoid robot industry is winning the early market thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/1kRpe2zY7ck/hqdefault.jpg" alt="Elon Musk says Tesla expects to increase its human workforce as AI and robotics boost productivity thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 2, 2026</p>
-            <h3><a href="/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Why China’s humanoid robot industry is winning the early market</a></h3>
-            <p>China&#39;s early lead in humanoid robotics is starting to look structural: dense supply chains, faster hardware iteration, and public pilot visibility are helping local teams move faster than many rivals.</p>
+            <p class="meta">Mar 13, 2026</p>
+            <h3><a href="/elon-musk-says-tesla-expects-to-increase-its-human-workforce-as-ai-and-robotics-boost-prod/">Elon Musk says Tesla expects to increase its human workforce as AI and robotics boost productivity</a></h3>
+            <p>Tesla expects to increase its human workforce as AI and robotics boost productivity. Why it matters: this update may change near-term robotics deployment decisions and market momentum.</p>
             <div class="row">
-              <a class="btn btn-primary" href="/why-chinas-humanoid-robot-industry-is-winning-the-early-market/">Read Robot News</a>
+              <a class="btn btn-primary" href="/elon-musk-says-tesla-expects-to-increase-its-human-workforce-as-ai-and-robotics-boost-prod/">Read Robot News</a>
             </div>
           </div>
         </article>
@@ -581,16 +589,16 @@
                   <span class="sib-form-message-panel__inner-text">Your subscription has been successful.</span>
                 </div>
               </div>
-              <div id="sib-container" class="sib-container--large sib-container--vertical" style="background:#0a111a; border:1px solid rgba(82,114,166,.35); border-radius:12px;">
+              <div id="sib-container" class="sib-container--large sib-container--vertical newsletter-shell">
                 <form id="sib-form" method="POST" action="https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv" data-type="subscription">
                   <div class="sib-input sib-form-block">
-                    <div class="form__entry entry_block">
-                      <label class="entry__label" for="EMAIL" data-required="*" style="font-size:14px; color:#c8d5ea; font-weight:600;">Enter your email address to subscribe</label>
+                    <div class="form__entry entry_block newsletter-form-card">
+                      <label class="entry__label" for="EMAIL" data-required="*">Enter your email address to subscribe</label>
                       <div class="sib-form-row">
                         <div class="entry__field">
-                          <input class="input" type="email" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@company.com" data-required="true" required style="height:48px; line-height:48px; padding:0 14px; background:#0a111b; border:1px solid #2f4465; color:#e9f1ff; border-radius:9px;">
+                          <input class="input" type="email" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@company.com" data-required="true" required>
                         </div>
-                        <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit" style="height:48px; line-height:48px; padding:0 18px; font-weight:800; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border-radius:10px;">
+                        <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
                           <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" aria-hidden="true">
                             <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"></path>
                           </svg>

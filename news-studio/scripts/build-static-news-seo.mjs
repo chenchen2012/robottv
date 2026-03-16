@@ -1469,23 +1469,30 @@ const buildArticleHtml = (post) => {
     .tags li { border:1px solid #2a3f5d; border-radius:999px; padding:.22rem .55rem; color:#c6d2e8; font-size:.8rem; }
     .newsletter { margin-top:1.1rem; padding:1rem; }
     .newsletter h2 { font-size:1.15rem; margin:0.45rem 0 0; }
-    .newsletter .newsletter-embed { margin-top:.75rem; }
+    .newsletter .newsletter-embed { margin-top:.75rem; display:flex; justify-content:flex-start; }
     .newsletter .sib-form,
     .newsletter .sib-form * { font-family:'Space Grotesk',sans-serif; }
-    .newsletter .sib-form-container { display:flex; flex-direction:column; align-items:center; gap:.6rem; }
-    .newsletter #sib-container { width:100%; max-width:520px; background:#0a111a !important; border:1px solid rgba(82,114,166,.35) !important; border-radius:12px; padding:.95rem 1rem; }
-    .newsletter #sib-form { display:grid; gap:.7rem; }
-    .newsletter .sib-form-row { display:flex; align-items:center; gap:.6rem; }
+    .newsletter .sib-form { width:100%; }
+    .newsletter .sib-form-container { display:grid; gap:.65rem; width:min(100%,760px); justify-items:start; margin-left:0!important; margin-right:auto!important; }
+    .newsletter .newsletter-form-card { display:grid; gap:.48rem; width:100%; margin:0!important; padding:0!important; }
+    .newsletter .sib-input,
+    .newsletter .sib-form-block,
+    .newsletter .entry_block,
+    .newsletter .form__entry { width:100%; margin:0!important; padding:0!important; }
+    .newsletter #sib-container { width:100%; max-width:760px; margin-right:auto; background:transparent!important; border:0!important; border-radius:0; padding:0!important; box-shadow:none!important; }
+    .newsletter #sib-form { display:grid; gap:.62rem; }
+    .newsletter .sib-form-row { display:flex; align-items:center; gap:.8rem; }
     .newsletter .sib-form-row .entry__field { flex:1 1 auto; }
     .newsletter #sib-container .entry__label,
-    .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:.4rem; color:#c8d5ea !important; font-weight:600; font-size:.88rem !important; }
+    .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:0; color:var(--text)!important; font-weight:700; font-size:.92rem!important; letter-spacing:.01em; }
     .newsletter #sib-container .input,
-    .newsletter .sib-form #sib-container input.input { width:100%; border:1px solid #2f4465; border-radius:9px; background:#0a111b; color:#e9f1ff; font:inherit; padding:0 .85rem !important; height:48px !important; min-height:48px !important; line-height:48px !important; box-sizing:border-box !important; }
-    .newsletter #sib-container .input:focus { outline:none; border-color:#5c80bb; box-shadow:0 0 0 2px rgba(94,132,255,.16); }
+    .newsletter .sib-form #sib-container input.input { width:100%; border:1px solid rgba(94,132,255,.34); border-radius:12px; background:linear-gradient(145deg,rgba(10,15,24,.94),rgba(13,19,29,.98)); color:#e9f1ff; font:inherit; padding:0 .95rem!important; height:50px!important; min-height:50px!important; line-height:50px!important; box-sizing:border-box!important; box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 14px 28px rgba(3,8,15,.2); transition:border-color .2s ease,box-shadow .2s ease,background .2s ease; }
+    .newsletter #sib-container .input:focus { outline:none; border-color:var(--accent-blue); box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(94,132,255,.14); }
+    .newsletter #sib-container .input::placeholder { color:#90a2bf; }
     .newsletter #sib-container .sib-form-block__button,
-    .newsletter .sib-form #sib-container .sib-form-block__button { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border:none; border-radius:10px; padding:0 1.25rem !important; height:48px !important; min-height:48px !important; line-height:48px !important; font-weight:800; letter-spacing:.02em; cursor:pointer; }
-    .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.05); }
-    .newsletter .sib-form-message-panel { width:100%; max-width:520px; border-radius:10px; padding:.65rem .8rem; border:1px solid #2f4465; background:#0f1724; color:#e9f1ff; }
+    .newsletter .sib-form #sib-container .sib-form-block__button { display:inline-flex; align-items:center; justify-content:center; gap:.45rem; background:linear-gradient(110deg,var(--accent-red),var(--accent-blue)); color:#fff; border:none; border-radius:12px; padding:0 1.45rem!important; height:50px!important; min-height:50px!important; line-height:50px!important; font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:.02em; cursor:pointer; min-width:188px; box-shadow:0 14px 26px rgba(20,34,65,.26), inset 0 1px 0 rgba(255,255,255,.14)!important; transition:transform .18s ease,box-shadow .18s ease,filter .18s ease; }
+    .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.04); transform:translateY(-1px); box-shadow:0 18px 30px rgba(20,34,65,.34), inset 0 1px 0 rgba(255,255,255,.18)!important; }
+    .newsletter .sib-form-message-panel { width:100%; border-radius:12px; padding:.72rem .9rem; border:1px solid rgba(47,68,101,.86); background:rgba(15,23,36,.9); color:#e9f1ff; }
     .newsletter #success-message { border-color:#1b5f3a; background:#0f2318; color:#b7f0d1; }
     .newsletter #error-message { border-color:#6a1f1f; background:#2a1414; color:#ffbdbd; }
     .newsletter .sib-form-message-panel__text { display:flex; align-items:center; gap:.55rem; }
@@ -1493,7 +1500,8 @@ const buildArticleHtml = (post) => {
     .newsletter .sib-icon { width:20px; height:20px; fill:currentColor; opacity:.9; }
     @media (max-width:640px){
       .newsletter .sib-form-row{flex-direction:column; align-items:stretch;}
-      .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center;}
+      .newsletter .sib-form-row .entry__field{width:100%;}
+      .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center; min-width:0;}
     }
     .footer { margin-top:1.2rem; padding:1rem; display:flex; justify-content:space-between; gap:.8rem; flex-wrap:wrap; color:#a7b7d1; font-size:.9rem; }
     .footer-links { display:flex; gap:.9rem; flex-wrap:wrap; }
@@ -1803,16 +1811,16 @@ ${cardsHtml}
                   <span class="sib-form-message-panel__inner-text">Your subscription has been successful.</span>
                 </div>
               </div>
-              <div id="sib-container" class="sib-container--large sib-container--vertical" style="background:#0a111a; border:1px solid rgba(82,114,166,.35); border-radius:12px;">
+              <div id="sib-container" class="sib-container--large sib-container--vertical newsletter-shell">
                 <form id="sib-form" method="POST" action="https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv" data-type="subscription">
                   <div class="sib-input sib-form-block">
-                    <div class="form__entry entry_block">
-                      <label class="entry__label" for="EMAIL" data-required="*" style="font-size:14px; color:#c8d5ea; font-weight:600;">Enter your email address to subscribe</label>
+                    <div class="form__entry entry_block newsletter-form-card">
+                      <label class="entry__label" for="EMAIL" data-required="*">Enter your email address to subscribe</label>
                       <div class="sib-form-row">
                         <div class="entry__field">
-                          <input class="input" type="email" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@company.com" data-required="true" required style="height:48px; line-height:48px; padding:0 14px; background:#0a111b; border:1px solid #2f4465; color:#e9f1ff; border-radius:9px;">
+                          <input class="input" type="email" id="EMAIL" name="EMAIL" autocomplete="email" placeholder="you@company.com" data-required="true" required>
                         </div>
-                        <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit" style="height:48px; line-height:48px; padding:0 18px; font-weight:800; background:linear-gradient(135deg,#d92749,#ef2d52); color:#fff; border-radius:10px;">
+                        <button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
                           <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" aria-hidden="true">
                             <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"></path>
                           </svg>
