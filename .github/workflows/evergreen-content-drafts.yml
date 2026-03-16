@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   generate-drafts:
-    if: ${{ secrets.DEEPSEEK_API_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,6 +21,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Verify DeepSeek Secret
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "Missing DEEPSEEK_API_KEY secret"
+            exit 1
+          fi
 
       - name: Generate Evergreen Drafts
         env:
