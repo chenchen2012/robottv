@@ -1480,9 +1480,14 @@ const buildArticleHtml = (post) => {
     .newsletter .entry_block,
     .newsletter .form__entry { width:100%; margin:0!important; padding:0!important; }
     .newsletter #sib-container { width:100%; max-width:760px; margin-right:auto; background:transparent!important; border:0!important; border-radius:0; padding:0!important; box-shadow:none!important; }
-    .newsletter #sib-form { display:grid; gap:.62rem; }
+    .newsletter #sib-form { display:flex; flex-wrap:wrap; align-items:flex-end; gap:.8rem; }
+    .newsletter #sib-form > .sib-input.sib-form-block { flex:1 1 0; min-width:0; }
+    .newsletter #sib-form > .sib-form-block { flex:0 0 auto; width:auto; }
+    .newsletter .form__label-row { display:grid; gap:.48rem; width:100%; }
     .newsletter .sib-form-row { display:flex; align-items:center; gap:.8rem; }
     .newsletter .sib-form-row .entry__field { flex:1 1 auto; }
+    .newsletter .entry__field { width:100%; }
+    .newsletter .entry__specification { display:none!important; }
     .newsletter #sib-container .entry__label,
     .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:0; color:var(--text)!important; font-weight:700; font-size:.92rem!important; letter-spacing:.01em; }
     .newsletter #sib-container .input,
@@ -1499,6 +1504,7 @@ const buildArticleHtml = (post) => {
     .newsletter .sib-form-message-panel__text--center { justify-content:flex-start; }
     .newsletter .sib-icon { width:20px; height:20px; fill:currentColor; opacity:.9; }
     @media (max-width:640px){
+      .newsletter #sib-form{display:grid;}
       .newsletter .sib-form-row{flex-direction:column; align-items:stretch;}
       .newsletter .sib-form-row .entry__field{width:100%;}
       .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center; min-width:0;}
