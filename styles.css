@@ -1382,6 +1382,7 @@ a {
 .newsletter .sib-form-container {
     display: grid;
     gap: 0.65rem;
+    width: min(100%, 760px);
 }
 
 .newsletter .newsletter-form-card {
@@ -1391,7 +1392,8 @@ a {
 
 .newsletter #sib-container {
     width: 100%;
-    max-width: none;
+    max-width: 760px;
+    margin-right: auto;
     background: transparent !important;
     border: 0 !important;
     border-radius: 0;
