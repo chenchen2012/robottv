@@ -11,7 +11,7 @@ const OUTPUT_DIR = path.join(ROOT, "ops-private", "reports", "seo", "deepseek-ev
 const NEWS_ROOT = path.join(ROOT, "news-studio", "static");
 const API_URL = "https://api.deepseek.com/chat/completions";
 const API_KEY = process.env.DEEPSEEK_API_KEY;
-const API_TIMEOUT_MS = 45000;
+const API_TIMEOUT_MS = 45_000;
 const execFileAsync = promisify(execFile);
 
 const args = process.argv.slice(2);
@@ -52,7 +52,7 @@ const collectNewsDocs = async () => {
         description: extractTag(html, /<meta\s+name="description"\s+content="([^"]*)"/i),
       });
     } catch {
-      // Ignore non-article directories.
+      // Ignore directories without article HTML.
     }
   }
   return docs;
@@ -76,59 +76,69 @@ const pickNews = (newsDocs, keywords, limit = 5) => {
     }));
 };
 
-const buildPrompt = ({ manifestEntry, pageHtml, relatedNews }) => {
+const compactContext = ({ manifestEntry, pageHtml, relatedNews }) => {
   const title = extractTag(pageHtml, /<title>([\s\S]*?)<\/title>/i);
   const metaDescription = extractTag(pageHtml, /<meta\s+name="description"\s+content="([^"]*)"/i);
   const h1 = extractTag(pageHtml, /<h1[^>]*>([\s\S]*?)<\/h1>/i);
 
-  return [
-    "You are an SEO editor improving a robotics evergreen page for robot.tv.",
-    "Rules:",
-    "- Use only the supplied facts, source notes, and internal context.",
-    "- Do not invent product specs, dates, partnerships, pricing, or deployment claims.",
-    "- Keep the tone analytical, concise, operator-aware, and non-hype.",
-    "- Focus on search usefulness, internal linking, and content depth.",
-    "- Output valid JSON only.",
-    "",
-    "Return this exact JSON shape:",
-    '{',
-    '  "file": "string",',
-    '  "summary": "1-2 sentence editorial summary",',
-    '  "sections": [',
-    '    { "heading": "string", "paragraphs": ["string", "string"], "bullets": ["string"] }',
-    "  ],",
-    '  "faq": [',
-    '    { "question": "string", "answer": "string" }',
-    "  ],",
-    '  "internalLinks": [',
-    '    { "href": "string", "reason": "string" }',
-    "  ]",
-    '}',
-    "",
-    `File: ${manifestEntry.file}`,
-    `Page type: ${manifestEntry.pageType}`,
-    `Primary intent: ${manifestEntry.primaryIntent}`,
-    `Current title: ${title}`,
-    `Current meta description: ${metaDescription}`,
-    `Current H1: ${h1}`,
-    `Required angles: ${manifestEntry.requiredAngles.join("; ")}`,
-    `Approved facts: ${manifestEntry.approvedFacts.join(" | ")}`,
-    `Official sources: ${manifestEntry.officialSources.join(" | ")}`,
-    `Preferred internal links: ${manifestEntry.internalLinks.join(" | ")}`,
-    `Related internal newsroom coverage: ${relatedNews.slice(0, 3).map((item) => `${item.title} (${item.url})`).join(" | ") || "None"}`,
-  ].join("\n");
+  return {
+    file: manifestEntry.file,
+    pageType: manifestEntry.pageType,
+    primaryIntent: manifestEntry.primaryIntent,
+    title,
+    metaDescription,
+    h1,
+    requiredAngles: manifestEntry.requiredAngles,
+    approvedFacts: manifestEntry.approvedFacts,
+    officialSources: manifestEntry.officialSources,
+    internalLinks: manifestEntry.internalLinks,
+    relatedNews: relatedNews.slice(0, 3),
+  };
 };
 
-const callDeepSeek = async (prompt) => {
+const parseLooseJsonObject = (raw) => {
+  const value = String(raw || "").trim().replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "");
+  try {
+    return JSON.parse(value);
+  } catch {
+    const start = value.indexOf("{");
+    const end = value.lastIndexOf("}");
+    if (start >= 0 && end > start) {
+      return JSON.parse(value.slice(start, end + 1));
+    }
+    throw new Error(`Unable to parse JSON object from model output: ${value.slice(0, 400)}`);
+  }
+};
+
+const buildBasePrompt = (context) =>
+  [
+    "You are an SEO editor improving a robotics evergreen page for robot.tv.",
+    "Rules:",
+    "- Use only the supplied facts, internal links, and page context.",
+    "- Do not invent product specs, dates, partnerships, pricing, or deployment claims.",
+    "- Keep the tone analytical, concise, operator-aware, and non-hype.",
+    "- Prefer short concrete sentences over broad marketing language.",
+    `File: ${context.file}`,
+    `Page type: ${context.pageType}`,
+    `Primary intent: ${context.primaryIntent}`,
+    `Title: ${context.title}`,
+    `Meta description: ${context.metaDescription}`,
+    `H1: ${context.h1}`,
+    `Required angles: ${context.requiredAngles.join("; ")}`,
+    `Approved facts: ${context.approvedFacts.join(" | ")}`,
+    `Preferred internal links: ${context.internalLinks.join(" | ")}`,
+    `Related newsroom coverage: ${context.relatedNews.map((item) => `${item.title} (${item.url})`).join(" | ") || "None"}`,
+  ].join("\n");
+
+const callDeepSeek = async ({ userPrompt, maxTokens = 350, temperature = 0.3, expectJson = true }) => {
   if (!API_KEY) {
     throw new Error("Missing DEEPSEEK_API_KEY.");
   }
 
   const requestBody = JSON.stringify({
     model: "deepseek-chat",
-    temperature: 0.4,
-    max_tokens: 1200,
-    response_format: { type: "json_object" },
+    temperature,
+    max_tokens: maxTokens,
     messages: [
       {
         role: "system",
@@ -136,7 +146,7 @@ const callDeepSeek = async (prompt) => {
       },
       {
         role: "user",
-        content: prompt,
+        content: userPrompt,
       },
     ],
   });
@@ -169,11 +179,91 @@ const callDeepSeek = async (prompt) => {
   if (payload?.error) {
     throw new Error(`DeepSeek API failed: ${JSON.stringify(payload.error).slice(0, 400)}`);
   }
+
   const content = payload?.choices?.[0]?.message?.content;
   if (!content) {
     throw new Error("DeepSeek API returned no content.");
   }
-  return JSON.parse(content);
+  return expectJson ? parseLooseJsonObject(content) : String(content).trim();
+};
+
+const buildSectionPrompt = (context, angle, index) =>
+  [
+    buildBasePrompt(context),
+    "",
+    "Task:",
+    `Write one evergreen section for angle ${index + 1}: ${angle}`,
+    "Return strict JSON only in this shape:",
+    '{ "heading": "string", "paragraphs": ["string", "string"], "bullets": ["string", "string", "string"] }',
+    "Use exactly 2 paragraphs and exactly 3 bullets.",
+    "Bullets should describe evaluation criteria, comparison logic, or what readers should watch next.",
+  ].join("\n");
+
+const buildSummaryPrompt = (context) =>
+  [
+    buildBasePrompt(context),
+    "",
+    "Task:",
+    "Write a concise 2-sentence editorial summary for this evergreen page.",
+    "Return plain text only. No JSON. No bullet points.",
+  ].join("\n");
+
+const buildFaqPrompt = (context) =>
+  [
+    buildBasePrompt(context),
+    "",
+    "Task:",
+    "Write 3 FAQ items for this evergreen page.",
+    "Return plain text only in this format:",
+    "Q: question",
+    "A: answer",
+    "",
+    "Q: question",
+    "A: answer",
+    "",
+    "Q: question",
+    "A: answer",
+    "Keep answers practical and fact-grounded.",
+  ].join("\n");
+
+const buildLinksPrompt = (context) =>
+  [
+    buildBasePrompt(context),
+    "",
+    "Task:",
+    "Recommend 4 internal links from the preferred internal link list.",
+    "Return plain text only with one line per link in this format:",
+    "href | reason",
+    "Only use href values from the preferred internal links list.",
+  ].join("\n");
+
+const parseFaqText = (raw) => {
+  const lines = String(raw || "").split(/\r?\n/).map((line) => line.trim());
+  const faq = [];
+  for (let i = 0; i < lines.length; i += 1) {
+    const q = lines[i];
+    const a = lines[i + 1];
+    if (!q?.startsWith("Q:") || !a?.startsWith("A:")) continue;
+    faq.push({
+      question: q.replace(/^Q:\s*/, "").trim(),
+      answer: a.replace(/^A:\s*/, "").trim(),
+    });
+  }
+  return faq.filter((item) => item.question && item.answer);
+};
+
+const parseLinksText = (raw, allowedHrefs) => {
+  const allowed = new Set(allowedHrefs);
+  return String(raw || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [href, reason] = line.split("|").map((part) => (part || "").trim());
+      return { href, reason };
+    })
+    .filter((item) => item.href && item.reason && allowed.has(item.href))
+    .slice(0, 4);
 };
 
 const toMarkdown = (draft) => {
@@ -187,7 +277,7 @@ const toMarkdown = (draft) => {
     for (const bullet of section.bullets || []) {
       lines.push(`- ${bullet}`);
     }
-    if ((section.bullets || []).length) lines.push("");
+    lines.push("");
   }
 
   if ((draft.faq || []).length) {
@@ -209,6 +299,56 @@ const toMarkdown = (draft) => {
   return `${lines.join("\n")}\n`;
 };
 
+const generateDraft = async ({ entry, pageHtml, relatedNews }) => {
+  const context = compactContext({ manifestEntry: entry, pageHtml, relatedNews });
+  const sections = [];
+
+  for (const [index, angle] of context.requiredAngles.entries()) {
+    console.log(`  section ${index + 1}/${context.requiredAngles.length}: ${angle}`);
+    const section = await callDeepSeek({
+      userPrompt: buildSectionPrompt(context, angle, index),
+      maxTokens: 260,
+      expectJson: true,
+    });
+    sections.push({
+      heading: section.heading || `Section ${index + 1}`,
+      paragraphs: Array.isArray(section.paragraphs) ? section.paragraphs.slice(0, 2) : [],
+      bullets: Array.isArray(section.bullets) ? section.bullets.slice(0, 3) : [],
+    });
+  }
+
+  console.log("  summary");
+  const summaryPayload = await callDeepSeek({
+    userPrompt: buildSummaryPrompt(context),
+    maxTokens: 120,
+    temperature: 0.2,
+    expectJson: false,
+  });
+
+  console.log("  faq");
+  const faqPayload = await callDeepSeek({
+    userPrompt: buildFaqPrompt(context),
+    maxTokens: 220,
+    expectJson: false,
+  });
+
+  console.log("  internal links");
+  const linksPayload = await callDeepSeek({
+    userPrompt: buildLinksPrompt(context),
+    maxTokens: 180,
+    temperature: 0.2,
+    expectJson: false,
+  });
+
+  return {
+    file: entry.file,
+    summary: summaryPayload,
+    sections,
+    faq: parseFaqText(faqPayload).slice(0, 3),
+    internalLinks: parseLinksText(linksPayload, context.internalLinks),
+  };
+};
+
 const main = async () => {
   const manifest = await readJson(MANIFEST_PATH);
   const filtered = pageFilters.length
@@ -227,10 +367,9 @@ const main = async () => {
     const pagePath = path.join(ROOT, entry.file);
     const pageHtml = await fs.readFile(pagePath, "utf8");
     const relatedNews = pickNews(newsDocs, entry.keywords, 5);
-    const prompt = buildPrompt({ manifestEntry: entry, pageHtml, relatedNews });
-    const draft = await callDeepSeek(prompt);
-
+    const draft = await generateDraft({ entry, pageHtml, relatedNews });
     const baseName = entry.file.replace(/\.html$/i, "");
+
     await fs.writeFile(path.join(OUTPUT_DIR, `${baseName}.json`), `${JSON.stringify(draft, null, 2)}\n`, "utf8");
     await fs.writeFile(path.join(OUTPUT_DIR, `${baseName}.md`), toMarkdown(draft), "utf8");
     console.log(`Generated DeepSeek draft for ${entry.file}`);
