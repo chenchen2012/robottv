@@ -1635,6 +1635,19 @@ a {
 .site-footer div {
     display: flex;
     gap: 0.9rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+    .site-footer {
+        align-items: flex-start;
+    }
+
+    .site-footer div {
+        width: 100%;
+        justify-content: flex-start;
+    }
 }
 
 .index-toolbar {
