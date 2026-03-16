@@ -94,6 +94,34 @@ const RETIRED_EXACT = new Set([
   "/xdog.html"
 ])
 
+const LEGACY_SLUG_REDIRECTS = new Map([
+  ["atlas", "/company-boston-dynamics.html"],
+  ["atlas-jogs", "/company-boston-dynamics.html"],
+  ["boston-dynamics", "/company-boston-dynamics.html"],
+  ["spot", "/company-boston-dynamics.html"],
+  ["stretch", "/company-boston-dynamics.html"],
+  ["digit", "/company-agility.html"],
+  ["agility", "/company-agility.html"],
+  ["apollo", "/company-apptronik.html"],
+  ["apptronik", "/company-apptronik.html"],
+  ["figure", "/company-figure.html"],
+  ["figure-02", "/company-figure.html"],
+  ["tesla", "/company-tesla.html"],
+  ["optimus", "/company-tesla.html"],
+  ["unitree", "/company-unitree.html"],
+  ["unitree-g1", "/company-unitree.html"],
+  ["unitree-h1", "/company-unitree.html"],
+  ["unitree-h2", "/company-unitree.html"],
+  ["unitree-go2", "/company-unitree.html"],
+  ["unitree-b2", "/company-unitree.html"],
+  ["humanoid-robots", "/humanoid-robots.html"],
+  ["china-humanoid-robots", "/china-humanoid-robots.html"],
+  ["warehouse-humanoid-robots", "/warehouse-humanoid-robots.html"],
+  ["industrial-inspection-robots", "/industrial-inspection-robots.html"],
+  ["robot-companies", "/companies.html"],
+  ["companies-hub", "/companies.html"]
+])
+
 const redirect = (requestUrl, targetPath, status = 301) => {
   const nextUrl = new URL(targetPath, requestUrl)
   nextUrl.search = requestUrl.search
@@ -103,6 +131,34 @@ const redirect = (requestUrl, targetPath, status = 301) => {
 const normalizePath = (pathname) => {
   if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1)
   return pathname
+}
+
+const getLegacyRecoveryTarget = (pathname) => {
+  const match = pathname.match(/^\/([a-z0-9-]+?)(?:\.html)?$/i)
+  if (!match) return null
+
+  const slug = match[1].toLowerCase()
+  if (LEGACY_SLUG_REDIRECTS.has(slug)) return LEGACY_SLUG_REDIRECTS.get(slug)
+
+  if (slug.includes("unitree")) return "/company-unitree.html"
+  if (slug.includes("tesla") || slug.includes("optimus")) return "/company-tesla.html"
+  if (slug.includes("figure")) return "/company-figure.html"
+  if (slug.includes("agility") || slug.includes("digit")) return "/company-agility.html"
+  if (slug.includes("apptronik") || slug.includes("apollo")) return "/company-apptronik.html"
+  if (
+    slug.includes("boston-dynamics") ||
+    slug.includes("atlas") ||
+    slug.includes("spot") ||
+    slug.includes("stretch")
+  ) {
+    return "/company-boston-dynamics.html"
+  }
+  if (slug.includes("humanoid")) return "/humanoid-robots.html"
+  if (slug.includes("inspection") || slug.includes("quadruped")) return "/industrial-inspection-robots.html"
+  if (slug.includes("company") || slug.includes("startup")) return "/companies.html"
+
+  // Most legacy single-slug URLs were article-style pages from the old site.
+  return "https://news.robot.tv/"
 }
 
 const servePrettyAsset = async (request, env, prettyPath, statusOverride) => {
@@ -178,7 +234,15 @@ export default {
       }
       const prettyPath = path.slice(0, -5)
       if (prettyPath) {
-        return servePrettyAsset(request, env, prettyPath)
+        const candidateResp = await servePrettyAsset(request, env, prettyPath)
+        if (candidateResp.status < 400) {
+          return candidateResp
+        }
+
+        const legacyTarget = getLegacyRecoveryTarget(path)
+        if (legacyTarget) {
+          return redirect(url, legacyTarget, 301)
+        }
       }
     }
 
@@ -187,6 +251,11 @@ export default {
       const candidateResp = await servePrettyAsset(request, env, normalized)
       if (candidateResp.status < 400) {
         return redirect(url, `${normalized}.html`, 301)
+      }
+
+      const legacyTarget = getLegacyRecoveryTarget(path)
+      if (legacyTarget) {
+        return redirect(url, legacyTarget, 301)
       }
     }
 
