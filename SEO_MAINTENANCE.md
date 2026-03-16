@@ -101,11 +101,13 @@ Last updated: March 7, 2026
 1. Automation handles:
 - 12-hour homepage/news refreshes
 - Weekly technical SEO report via `.github/workflows/weekly-seo-check.yml`
+- Manual AI draft generation via `.github/workflows/evergreen-content-drafts.yml`
 
 2. Manual/editorial handles:
 - weekly technical checks
 - biweekly evergreen page improvements
 - monthly conversion and metadata refinement
+- reviewing AI-generated evergreen draft artifacts before publishing them live
 
 ## Quick Run Commands
 
@@ -127,6 +129,9 @@ rg -n 'news\\.robot\\.tv|company-|companies\\.html' *.html
 # Refresh static newsroom link blocks inside profile pages
 node scripts/build-static-profile-news.mjs
 
+# Generate DeepSeek-backed evergreen draft packs (requires DEEPSEEK_API_KEY)
+node scripts/generate-evergreen-seo-drafts.mjs
+
 # Run the same checks used by GitHub Actions
 node scripts/seo-weekly-check.mjs
 ```
@@ -145,3 +150,5 @@ node scripts/seo-weekly-check.mjs
 10. Use `collaborative-robot-integration.html` as the main root-level destination for cobot rollout, line-fit, safety, and operator handoff guidance.
 11. Use `industrial-inspection-robots.html` as the main root-level destination for quadruped inspection, outdoor patrol, routine rounds, and field-operations workflow stories.
 12. Use `robotics-startup-execution.html` as the main root-level destination for robotics startup execution, shipping velocity, capital discipline, and deployment-proof intent.
+13. DeepSeek automation should generate draft artifacts only; do not let AI auto-commit or auto-publish evergreen edits without review.
+14. Evergreen AI prompts should stay source-grounded: official company pages, robot.tv internal guides, and relevant `news.robot.tv` coverage only.

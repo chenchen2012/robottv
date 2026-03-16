@@ -1,0 +1,142 @@
+[
+  {
+    "file": "company-agility.html",
+    "pageType": "company",
+    "primaryIntent": "Agility Robotics company overview with Digit deployment context",
+    "keywords": ["agility robotics", "digit robot", "warehouse humanoid", "logistics humanoid"],
+    "requiredAngles": [
+      "why this company matters now",
+      "what deployment proof matters most",
+      "how to compare with Figure, Tesla, and Apptronik",
+      "what readers should watch next"
+    ],
+    "approvedFacts": [
+      "Agility Robotics is tracked on robot.tv through Digit and warehouse-focused humanoid operations.",
+      "The strongest evaluation lens is repeatable deployment proof rather than demo attention.",
+      "This page should route broader warehouse questions to warehouse-humanoid-robots.html and broader humanoid comparisons to humanoid-robots.html."
+    ],
+    "officialSources": [
+      "https://agilityrobotics.com/",
+      "https://agilityrobotics.com/digit/"
+    ],
+    "internalLinks": [
+      "digit.html",
+      "warehouse-humanoid-robots.html",
+      "humanoid-robots.html",
+      "robotics-startup-execution.html"
+    ]
+  },
+  {
+    "file": "company-apptronik.html",
+    "pageType": "company",
+    "primaryIntent": "Apptronik company overview with Apollo deployment context",
+    "keywords": ["apptronik", "apollo robot", "humanoid operations", "industrial humanoid"],
+    "requiredAngles": [
+      "why Apptronik matters now",
+      "what would count as real deployment proof",
+      "how to compare with Agility, Figure, and Tesla",
+      "what internal pages should rank with this page"
+    ],
+    "approvedFacts": [
+      "Apptronik is tracked on robot.tv through Apollo and industrial-service workflow intent.",
+      "Commercial relevance should be judged through workflow fit, integration burden, and observable deployment signals.",
+      "This page should own broad Apptronik company intent while Apollo-specific details stay on apollo.html."
+    ],
+    "officialSources": [
+      "https://apptronik.com/",
+      "https://apptronik.com/apollo/"
+    ],
+    "internalLinks": [
+      "apollo.html",
+      "humanoid-robots.html",
+      "robotics-startup-execution.html",
+      "companies.html"
+    ]
+  },
+  {
+    "file": "industrial-inspection-robots.html",
+    "pageType": "topic-hub",
+    "primaryIntent": "Industrial inspection robots buyer and category guide",
+    "keywords": ["industrial inspection robots", "inspection robot", "quadruped inspection", "outdoor patrol robot"],
+    "requiredAngles": [
+      "why this category deserves a dedicated hub",
+      "how operators should compare systems",
+      "what breaks programs after pilot stage",
+      "where readers should go next in robot.tv"
+    ],
+    "approvedFacts": [
+      "robot.tv treats industrial inspection as an operating workflow, not just a robot demo category.",
+      "Buyers should care about route completion, alert quality, supervision load, networking, and charging logistics.",
+      "Spot and Unitree belong together here when the comparison question is field operations."
+    ],
+    "officialSources": [
+      "https://bostondynamics.com/spot/",
+      "https://www.unitree.com/go2/",
+      "https://www.unitree.com/b2/"
+    ],
+    "internalLinks": [
+      "spot.html",
+      "company-boston-dynamics.html",
+      "company-unitree.html",
+      "unitreego2.html",
+      "unitreeb2.html"
+    ]
+  },
+  {
+    "file": "physical-ai-robot-learning.html",
+    "pageType": "topic-hub",
+    "primaryIntent": "Physical AI and robot learning hub",
+    "keywords": ["physical ai robotics", "robot learning", "vision language action models", "robotics simulation"],
+    "requiredAngles": [
+      "how the stack fits together",
+      "what matters beyond model demos",
+      "why compute, simulation, and orchestration belong together",
+      "which related pages should capture adjacent intent"
+    ],
+    "approvedFacts": [
+      "robot.tv treats physical AI as a stack story spanning models, simulation, compute, orchestration, and deployment tooling.",
+      "The strongest signal is whether the stack makes robotics teams faster and more reliable after the demo stage.",
+      "This page should route workflow-specific questions into humanoid, warehouse, startup execution, and integration guides."
+    ],
+    "officialSources": [
+      "https://developer.nvidia.com/isaac",
+      "https://intrinsic.ai/"
+    ],
+    "internalLinks": [
+      "humanoid-robots.html",
+      "warehouse-humanoid-robots.html",
+      "robotics-startup-execution.html",
+      "collaborative-robot-integration.html"
+    ]
+  },
+  {
+    "file": "unitree-robots.html",
+    "pageType": "comparison-guide",
+    "primaryIntent": "Unitree robot lineup comparison",
+    "keywords": ["unitree robots", "unitree g1", "unitree h1", "unitree h2", "unitree go2", "unitree b2"],
+    "requiredAngles": [
+      "how to read the lineup by workflow",
+      "why Unitree matters strategically",
+      "what questions belong here vs on the company page",
+      "where to compare Unitree against broader market peers"
+    ],
+    "approvedFacts": [
+      "This page is the fastest side-by-side comparison for Unitree's major published robots.",
+      "The company-level narrative belongs on company-unitree.html while this page should stay product-lineup focused.",
+      "Humanoid and quadruped tracks should both be represented because they shape how readers evaluate Unitree's breadth."
+    ],
+    "officialSources": [
+      "https://www.unitree.com/",
+      "https://www.unitree.com/g1/",
+      "https://www.unitree.com/h1/",
+      "https://www.unitree.com/go2/",
+      "https://www.unitree.com/b2/"
+    ],
+    "internalLinks": [
+      "company-unitree.html",
+      "china-humanoid-robots.html",
+      "humanoid-robots.html",
+      "industrial-inspection-robots.html"
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+name: Evergreen Content Drafts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evergreen-content-drafts
+  cancel-in-progress: false
+
+jobs:
+  generate-drafts:
+    if: ${{ secrets.DEEPSEEK_API_KEY != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate Evergreen Drafts
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: node scripts/generate-evergreen-seo-drafts.mjs
+
+      - name: Upload draft artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evergreen-content-drafts
+          path: ops-private/reports/seo/deepseek-evergreen-drafts
+          if-no-files-found: error
