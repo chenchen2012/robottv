@@ -1372,6 +1372,8 @@ a {
 
 .newsletter .newsletter-embed {
     margin-top: 0.85rem;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .newsletter .sib-form,
@@ -1379,10 +1381,17 @@ a {
     font-family: 'Space Grotesk', sans-serif;
 }
 
+.newsletter .sib-form {
+    width: 100%;
+}
+
 .newsletter .sib-form-container {
     display: grid;
     gap: 0.65rem;
     width: min(100%, 760px);
+    justify-items: start;
+    margin-left: 0 !important;
+    margin-right: auto !important;
 }
 
 .newsletter .newsletter-form-card {
