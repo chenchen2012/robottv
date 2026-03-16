@@ -138,5 +138,87 @@
       "humanoid-robots.html",
       "industrial-inspection-robots.html"
     ]
+  },
+  {
+    "file": "company-unitree.html",
+    "pageType": "company",
+    "primaryIntent": "Unitree company overview across humanoid and quadruped tracks",
+    "keywords": ["unitree", "yushu", "unitree robots", "unitree humanoid", "unitree quadruped"],
+    "requiredAngles": [
+      "why Unitree matters now",
+      "what proves real company momentum",
+      "how to compare Unitree with Tesla, Figure, and Boston Dynamics",
+      "what readers should watch next"
+    ],
+    "approvedFacts": [
+      "Unitree should be evaluated as a multi-track robotics company spanning humanoids and quadrupeds.",
+      "The strongest company-level signal is whether visibility, cost pressure, and product breadth compound into durable market momentum.",
+      "Broader China ecosystem questions should route to china-humanoid-robots.html and product-lineup questions should route to unitree-robots.html."
+    ],
+    "officialSources": [
+      "https://www.unitree.com/",
+      "https://www.unitree.com/g1/",
+      "https://www.unitree.com/go2/"
+    ],
+    "internalLinks": [
+      "unitree-robots.html",
+      "china-humanoid-robots.html",
+      "humanoid-robots.html",
+      "industrial-inspection-robots.html"
+    ]
+  },
+  {
+    "file": "company-tesla.html",
+    "pageType": "company",
+    "primaryIntent": "Tesla robotics and Optimus company-level guide",
+    "keywords": ["tesla optimus", "tesla robot", "tesla humanoid", "optimus robot"],
+    "requiredAngles": [
+      "why Tesla matters now in humanoid robotics",
+      "what operational proof matters more than brand attention",
+      "how to compare Tesla with Figure, Unitree, and Apptronik",
+      "what readers should watch next"
+    ],
+    "approvedFacts": [
+      "Tesla should be judged on operational proof and repeatability rather than brand attention alone.",
+      "This page should own the company-level Tesla robotics framing while tesla-optimus.html handles robot-specific intent.",
+      "Questions about software-stack leverage should route into physical-ai-robot-learning.html."
+    ],
+    "officialSources": [
+      "https://www.tesla.com/AI",
+      "https://www.youtube.com/@tesla"
+    ],
+    "internalLinks": [
+      "tesla-optimus.html",
+      "humanoid-robots.html",
+      "warehouse-humanoid-robots.html",
+      "physical-ai-robot-learning.html"
+    ]
+  },
+  {
+    "file": "company-figure.html",
+    "pageType": "company",
+    "primaryIntent": "Figure AI company guide with commercialization and humanoid execution context",
+    "keywords": ["figure ai", "figure robot", "figure 02", "figure humanoid"],
+    "requiredAngles": [
+      "why Figure matters now",
+      "what would count as commercialization proof",
+      "how to compare Figure with Tesla, Apptronik, and Agility",
+      "what readers should watch next"
+    ],
+    "approvedFacts": [
+      "Figure should be evaluated on commercialization discipline, deployment evidence, and enterprise relevance.",
+      "This page should own broad Figure company intent while figure-02.html handles robot-level platform framing.",
+      "The strongest comparison pages are humanoid-robots.html and robotics-startup-execution.html."
+    ],
+    "officialSources": [
+      "https://www.figure.ai",
+      "https://www.youtube.com/@Figure_ai"
+    ],
+    "internalLinks": [
+      "figure-02.html",
+      "humanoid-robots.html",
+      "robotics-startup-execution.html",
+      "companies.html"
+    ]
   }
 ]
