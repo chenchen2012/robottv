@@ -4,12 +4,21 @@ on:
   schedule:
     - cron: "0 16 * * 1"
   workflow_dispatch:
+    inputs:
+      send_enabled:
+        description: "Set to 1 to run the send step for this manual run"
+        required: false
+        default: "0"
+      test_recipients:
+        description: "Comma-separated email list for Brevo sendTest instead of live list send"
+        required: false
+        default: ""
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      BREVO_SEND_ENABLED: ${{ vars.BREVO_SEND_ENABLED || '0' }}
+      BREVO_SEND_ENABLED: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.send_enabled || vars.BREVO_SEND_ENABLED || '0' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,6 +55,7 @@ jobs:
           BREVO_LIST_ID: 3
           BREVO_SENDER_EMAIL: newsletter@robot.tv
           BREVO_SENDER_NAME: Robot Weekly
+          BREVO_TEST_EMAILS: ${{ github.event.inputs.test_recipients }}
           NEWSLETTER_OUTPUT_DIR: newsletters
           NEWSLETTER_SITE_URL: https://robot.tv
         run: node scripts/send-weekly-newsletter-brevo.mjs

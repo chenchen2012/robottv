@@ -11,6 +11,10 @@ const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || "newsletter@robot.t
 const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || "Robot Weekly";
 const BREVO_CAMPAIGN_PREFIX = process.env.BREVO_CAMPAIGN_PREFIX || "Robot Weekly";
 const BREVO_DRY_RUN = process.env.BREVO_DRY_RUN === "1";
+const BREVO_TEST_EMAILS = String(process.env.BREVO_TEST_EMAILS || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
 
 const LOG_PATH = path.join("ops-private", "reports", "newsletter", "brevo-last-sent.json");
 
@@ -133,6 +137,15 @@ const run = async () => {
   if (!campaignId) {
     throw new Error("Brevo did not return a campaign ID.");
   }
+
+  if (BREVO_TEST_EMAILS.length) {
+    await brevoRequest(`https://api.brevo.com/v3/emailCampaigns/${campaignId}/sendTest`, {
+      emailTo: BREVO_TEST_EMAILS,
+    });
+    console.log(`Sent test newsletter for ${latest.filename} via Brevo campaign ${campaignId} to ${BREVO_TEST_EMAILS.join(", ")}.`);
+    return;
+  }
+
   await brevoRequest(`https://api.brevo.com/v3/emailCampaigns/${campaignId}/sendNow`, {});
 
   await saveLastSent({
