@@ -1,3 +1,5 @@
+import { buildEditorialPackage, blocksFromParagraphs } from "./lib/news-editorial-content.mjs"
+
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || 'production'
 const token = process.env.SANITY_API_TOKEN
@@ -87,26 +89,10 @@ const normalizeUrl = (url) => String(url || '')
   .replace(/^https?:\/\//, '')
   .replace(/\/+$/, '')
 
-const buildExcerpt = (headline) => {
-  const title = String(headline || '').trim()
-  return `${title}. Why it matters: this update may change near-term robotics deployment decisions and market momentum.`
-}
-
-const buildVideoSummary = (headline, excerpt) => {
-  const cleanHeadline = String(headline || '').trim()
-  const cleanExcerpt = String(excerpt || '').trim()
-  const lead = cleanExcerpt || `This embedded video supports robot.tv's coverage of ${cleanHeadline}.`
-  const suffix = 'The video adds visual context for the robotics capability, deployment signal, or market move behind this story.'
-  const combined = `${lead} ${suffix}`.trim()
-  return combined.length > 320 ? `${combined.slice(0, 317).trimEnd()}...` : combined
-}
-
 const isExcerptStrong = (excerpt) => {
   const text = String(excerpt || '').trim()
-  if (text.length < 110 || text.length > 240) return false
-  if (wordCount(text) < 16) return false
-  const lower = text.toLowerCase()
-  return lower.includes('why it matters:')
+  if (text.length < 120 || text.length > 260) return false
+  return wordCount(text) >= 18
 }
 
 const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'for', 'to', 'of', 'in', 'on', 'with', 'after', 'than', 'into', 'from'])
@@ -253,8 +239,15 @@ for (let i = 0; i < selected.length; i += 1) {
   const yt = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
   const ytId = extractYoutubeId(yt)
   const category = sourceToCategory(h.source, h.title)
-  const excerpt = buildExcerpt(h.title)
-  const videoSummary = buildVideoSummary(h.title, excerpt)
+  const editorial = await buildEditorialPackage({
+    headline: h.title,
+    source: h.source,
+    sourceUrl: h.link,
+    pubDate: h.pubDate,
+    categoryHint: category
+  })
+  const excerpt = editorial.excerpt
+  const videoSummary = editorial.videoSummary
   const key = titleKey(h.title)
   const nearDuplicateTitle = findNearDuplicateTitle(h.title, usedComparableTitles)
   const sourcePublishedAt = (() => {
@@ -314,15 +307,7 @@ for (let i = 0; i < selected.length; i += 1) {
     sourcePublishedAt,
     author: { _type: 'reference', _ref: authorId },
     categories: [{ _type: 'reference', _ref: category }],
-    body: [
-      {
-        _type: 'block',
-        _key: `b${i}a`,
-        style: 'normal',
-        markDefs: [],
-        children: [{ _type: 'span', _key: `s${i}a`, text: `Source: ${h.source}. Published: ${h.pubDate || 'n/a'}.` }]
-      }
-    ]
+    body: blocksFromParagraphs(editorial.bodyParagraphs)
   })
 }
 

@@ -48,6 +48,7 @@ jobs:
           SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SANITY_AUTHOR_ID: ${{ secrets.SANITY_AUTHOR_ID }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           NEWS_PUBLIC_DEPLOY_HOOK_URL: ${{ secrets.NEWS_PUBLIC_DEPLOY_HOOK_URL }}
           SKIP_PUBLIC_DEPLOY_HOOK: ${{ steps.cf.outputs.skip_public_deploy_hook }}
           PUBLISH_COUNT: "2"

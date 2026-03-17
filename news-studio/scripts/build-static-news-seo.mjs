@@ -1614,8 +1614,11 @@ const buildArticleHtml = (post) => {
 const fetchPosts = async () => {
   const query =
     '*[_type=="post" && defined(slug.current)] | order(publishedAt desc)[0...500]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourcePublishedAt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}';
-  const url = `https://${projectId}.apicdn.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`;
-  const resp = await fetch(url, { headers: { Accept: "application/json" } });
+  const url = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`;
+  const resp = await fetch(url, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
   if (!resp.ok) throw new Error(`Failed to fetch posts from Sanity: HTTP ${resp.status}`);
   const json = await resp.json();
   const posts = Array.isArray(json.result) ? json.result : [];
