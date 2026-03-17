@@ -338,6 +338,7 @@ const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSu
           <div class="footer">
             <p>You’re receiving this because you signed up for Robot Weekly at robot.tv.</p>
             <p>Read more at <a href="https://news.robot.tv">news.robot.tv</a>.</p>
+            <p>Issue archive: <a href="${escapeHtml(issueUrl)}">${escapeHtml(issueUrl)}</a></p>
             <p>robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA</p>
           </div>
         </section>
@@ -381,6 +382,7 @@ const buildIssueText = ({ subject, intro, leadTitle, leadLink, leadSummary, lead
   lines.push("");
   lines.push("You’re receiving this because you signed up for Robot Weekly at robot.tv.");
   lines.push("Read more: https://news.robot.tv");
+  lines.push(`Archive: ${issueUrl}`);
   lines.push("robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA");
 
   return `${lines.join("\n")}\n`;
