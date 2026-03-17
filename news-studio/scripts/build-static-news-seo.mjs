@@ -39,6 +39,8 @@ const retiredLegacyRedirects = {
     "intrinsic-is-joining-google-to-advance-physical-ai-in-robotics",
   "amazon-halts-blue-jay-robotics-project-after-less-than-6-months":
     "amazon-blue-jay-halt-warehouse-robotics-roi-standards",
+  "2026-robotics-summit-early-bird-registration-ends-march-2":
+    "dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit",
 };
 const hiddenListingSlugs = new Set([
   "biggest-ai-news-today",
@@ -1878,10 +1880,43 @@ const writePosts = async (posts) => {
   }
 };
 
+const buildRetiredRedirectHtml = (legacySlug, targetSlug) => {
+  const targetUrl = `${siteUrl}/${targetSlug}/`;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,follow">
+  <title>Moved | robot.tv News</title>
+  <link rel="canonical" href="${targetUrl}">
+  <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
+  <meta http-equiv="refresh" content="0; url=${targetUrl}">
+  <script>window.location.replace(${JSON.stringify(targetUrl)});</script>
+</head>
+<body>
+  <p>This page has moved to <a href="${targetUrl}">${targetUrl}</a>.</p>
+</body>
+</html>`;
+};
+
+const writeRetiredRedirectPages = async () => {
+  for (const [legacySlug, targetSlug] of Object.entries(retiredLegacyRedirects)) {
+    const legacyDir = path.join(staticDir, legacySlug);
+    await fs.mkdir(legacyDir, { recursive: true });
+    await fs.writeFile(
+      path.join(legacyDir, "index.html"),
+      buildRetiredRedirectHtml(legacySlug, targetSlug),
+      "utf8"
+    );
+  }
+};
+
 const main = async () => {
   const posts = await fetchPosts();
   await ensureCleanPostDir();
   await writePosts(posts);
+  await writeRetiredRedirectPages();
   await writeSitemap(posts);
   await writeFeed(posts);
   await writeHomepagePreloadScript(posts);
