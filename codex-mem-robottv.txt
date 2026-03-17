@@ -227,6 +227,18 @@ Recent operational decisions
     - stronger routing to the right narrower pages
     - more deliberate internal links among company, robot, and topic hubs
   - removed lingering `News Sitemap` CTA from `companies.html` and `news.html`; replaced with useful human-facing internal routes
+- Mar 18, 2026 regular evergreen refresh automation:
+  - expanded `scripts/seo-evergreen-manifest.json` to cover the highest-upside ranking pages:
+    - `companies.html`
+    - `humanoid-robots.html`
+    - `industrial-inspection-robots.html`
+    - `physical-ai-robot-learning.html`
+    - `company-unitree.html`
+    - `china-humanoid-robots.html`
+  - `.github/workflows/evergreen-content-drafts.yml` now runs on a weekly schedule (`20 8 * * 1` UTC) in addition to manual runs
+  - workflow intentionally generates DeepSeek draft artifacts only; it does not auto-publish page rewrites
+  - this is the preferred SEO pattern: meaningful, reviewable refreshes on top evergreen pages rather than artificial auto-edits for freshness alone
+  - local proof run succeeded for `companies.html` via `node scripts/generate-evergreen-seo-drafts.mjs --page companies.html`
 
 Known commands
 - Root public deploy automation: `.github/workflows/deploy-robot-tv-public.yml`

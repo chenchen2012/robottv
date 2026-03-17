@@ -1,6 +1,8 @@
 name: Evergreen Content Drafts
 
 on:
+  schedule:
+    - cron: "20 8 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -34,7 +36,14 @@ jobs:
       - name: Generate Evergreen Drafts
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-        run: node scripts/generate-evergreen-seo-drafts.mjs
+        run: >
+          node scripts/generate-evergreen-seo-drafts.mjs
+          --page companies.html
+          --page humanoid-robots.html
+          --page industrial-inspection-robots.html
+          --page physical-ai-robot-learning.html
+          --page company-unitree.html
+          --page china-humanoid-robots.html
 
       - name: Upload draft artifacts
         uses: actions/upload-artifact@v4

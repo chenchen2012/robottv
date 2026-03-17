@@ -1,5 +1,78 @@
 [
   {
+    "file": "companies.html",
+    "pageType": "topic-hub",
+    "primaryIntent": "Robotics companies and humanoid robotics company comparison hub",
+    "keywords": ["robotics companies", "robot companies", "top robotics companies", "humanoid robot companies"],
+    "requiredAngles": [
+      "why this page exists as the broad company research layer",
+      "how readers should compare robotics companies",
+      "which internal routes handle narrower company and market intent",
+      "what current signals matter most across top companies"
+    ],
+    "approvedFacts": [
+      "robot.tv uses this page as the broad company comparison layer across Unitree, Boston Dynamics, Tesla, Figure, Agility Robotics, and Apptronik.",
+      "The strongest comparison filters are deployment credibility, product-family clarity, and market position.",
+      "Narrower company, robot, and market questions should route to dedicated guides instead of overloading this page."
+    ],
+    "officialSources": [
+      "https://www.tesla.com/AI",
+      "https://bostondynamics.com/",
+      "https://www.unitree.com/",
+      "https://www.figure.ai/",
+      "https://agilityrobotics.com/",
+      "https://apptronik.com/"
+    ],
+    "internalLinks": [
+      "company-unitree.html",
+      "company-boston-dynamics.html",
+      "company-tesla.html",
+      "company-figure.html",
+      "company-agility.html",
+      "company-apptronik.html",
+      "humanoid-robots.html",
+      "china-humanoid-robots.html",
+      "warehouse-humanoid-robots.html"
+    ]
+  },
+  {
+    "file": "humanoid-robots.html",
+    "pageType": "topic-hub",
+    "primaryIntent": "Humanoid robots comparison hub across leading platforms and companies",
+    "keywords": ["humanoid robots", "best humanoid robots", "leading humanoid robots", "humanoid robot companies"],
+    "requiredAngles": [
+      "how to compare humanoid robots beyond hype",
+      "what separates company pages, robot pages, and market hubs",
+      "which deployment signals matter most now",
+      "what readers should watch next across top platforms"
+    ],
+    "approvedFacts": [
+      "robot.tv treats this page as the broad humanoid comparison layer across Optimus, Figure, Unitree, Atlas, Digit, and Apollo.",
+      "Task fit, deployment proof, and company execution matter more than viral demos alone.",
+      "Regional and workflow-specific questions should route to China humanoids and warehouse humanoids rather than collapsing into one generic page."
+    ],
+    "officialSources": [
+      "https://www.tesla.com/AI",
+      "https://www.figure.ai/",
+      "https://www.unitree.com/",
+      "https://bostondynamics.com/atlas/",
+      "https://agilityrobotics.com/digit/",
+      "https://apptronik.com/apollo/"
+    ],
+    "internalLinks": [
+      "company-tesla.html",
+      "company-figure.html",
+      "company-unitree.html",
+      "company-agility.html",
+      "company-apptronik.html",
+      "atlas.html",
+      "digit.html",
+      "apollo.html",
+      "china-humanoid-robots.html",
+      "warehouse-humanoid-robots.html"
+    ]
+  },
+  {
     "file": "company-agility.html",
     "pageType": "company",
     "primaryIntent": "Agility Robotics company overview with Digit deployment context",
@@ -107,6 +180,34 @@
       "warehouse-humanoid-robots.html",
       "robotics-startup-execution.html",
       "collaborative-robot-integration.html"
+    ]
+  },
+  {
+    "file": "china-humanoid-robots.html",
+    "pageType": "topic-hub",
+    "primaryIntent": "China humanoid robots market and ecosystem hub",
+    "keywords": ["china humanoid robots", "chinese humanoid robots", "china humanoid robot companies", "unitree china humanoid"],
+    "requiredAngles": [
+      "why China matters in humanoid robotics now",
+      "how to separate ecosystem signals from demo spectacle",
+      "which companies and structural advantages matter most",
+      "where readers should go next for company and category detail"
+    ],
+    "approvedFacts": [
+      "robot.tv uses this page to explain the broader China humanoid ecosystem rather than focusing only on one company or one event.",
+      "Supply-chain density, manufacturing speed, public visibility, and EV-industry crossover are core parts of the current China humanoid story.",
+      "Unitree is the strongest company-level anchor inside this topic, but this page should stay market-structure focused."
+    ],
+    "officialSources": [
+      "https://www.unitree.com/",
+      "https://www.xiaomi.com/",
+      "https://www.ubtrobot.com/"
+    ],
+    "internalLinks": [
+      "company-unitree.html",
+      "humanoid-robots.html",
+      "companies.html",
+      "unitree-robots.html"
     ]
   },
   {
