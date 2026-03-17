@@ -406,20 +406,7 @@ const startupExecutionGuideResource = {
   url: "https://robot.tv/robotics-startup-execution.html",
   ctaLabel: "Open the guide",
 };
-const noindexNewsSlugs = new Set([
-  "11-women-shaping-the-future-of-robotics",
-  "2026-robotics-summit-early-bird-registration-ends-march-2",
-  "amazon-cuts-jobs-in-strategically-important-robotics-division",
-  "amazon-cuts-more-jobs-this-time-in-robotics-unit",
-  "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
-  "breakingviews-hyundai-motors-robots-herald-hardware-reboot",
-  "chinas-dancing-robots-how-worried-should-we-be",
-  "dancing-robots-bring-support-company-to-barcelona-elderly",
-  "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
-  "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
-  "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
-  "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
-]);
+const noindexNewsSlugs = new Set();
 
 const editorialEnhancementsBySlug = new Map([
   [
