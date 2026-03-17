@@ -2021,3 +2021,15 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
 - Live behavior for the retired summit slug:
   - canonical slug now serves a noindex retirement page canonically pointing to `dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit`
   - future auto-publish should not recreate similar event-registration promo posts
+
+2026-03-18 robot index SEO strengthening
+- `home.html` should be treated as a real evergreen landing page for broad robot-comparison intent, not just a utility grid.
+- Live content/SEO upgrade added:
+  - stronger title/meta wording around comparing humanoid, quadruped, industrial, and AMR robots
+  - clearer hero framing that explains when to use Robot Index versus the homepage, Companies hub, and topic pages
+  - new internal-routing sections (`SEARCH INTENT`, `PAGE ROLE`, `BEST NEXT CLICKS`)
+  - visible FAQ content plus matching `FAQPage` JSON-LD
+- Strategic positioning:
+  - homepage `/` = editorial front door
+  - `home.html` = structured robot-comparison layer
+  - company pages/topic hubs = deeper research destinations
