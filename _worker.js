@@ -6,6 +6,7 @@ const EXACT_REDIRECTS = new Map([
   ["/homepage/", "/"],
   ["/news", "https://news.robot.tv/"],
   ["/news/", "https://news.robot.tv/"],
+  ["/news.html", "https://news.robot.tv/"],
   ["/post", "https://news.robot.tv/"],
   ["/post/", "https://news.robot.tv/"],
   ["/robot-companies", "/companies.html"],
