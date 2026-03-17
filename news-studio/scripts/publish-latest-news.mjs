@@ -116,6 +116,15 @@ const normalizeTitleToken = (token) => {
   return word
 }
 
+const isPromotionalEventPost = (headline, sourceUrl = '') => {
+  const title = normalizeText(headline)
+  const url = normalizeUrl(sourceUrl)
+  const hasEventToken = /(summit|conference|expo|event|register|registration|ticket|agenda|speaker|keynote)/.test(title)
+  const hasPromoToken = /(early bird|save the date|register now|discount|deadline|ends march|on sale|tickets)/.test(title)
+  const sourceLooksPromotional = /(roboticssummit|eventbrite|10times|conference|expo|register|registration)/.test(url)
+  return (hasEventToken && hasPromoToken) || (hasPromoToken && sourceLooksPromotional)
+}
+
 const comparableTitleTokens = (title) => [...new Set(
   normalizeText(title)
     .split(' ')
@@ -263,6 +272,7 @@ for (let i = 0; i < selected.length; i += 1) {
     !slug ||
     !key ||
     !h.link ||
+    isPromotionalEventPost(h.title, h.link) ||
     !isExcerptStrong(excerpt) ||
     !ytId ||
     usedYoutubeIds.has(ytId) ||
@@ -272,7 +282,9 @@ for (let i = 0; i < selected.length; i += 1) {
   if (hasGuardIssue) {
     skipped.push({
       title: h.title,
-      reason: !ytId
+      reason: isPromotionalEventPost(h.title, h.link)
+        ? 'promotional event/registration post'
+        : !ytId
         ? 'missing/invalid YouTube video'
         : !isExcerptStrong(excerpt)
           ? 'excerpt quality below threshold'

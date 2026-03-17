@@ -47,7 +47,6 @@ const hiddenListingSlugs = new Set([
   "alphabet-owned-robotics-software-company-intrinsic-joins-google",
   "amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
   "11-women-shaping-the-future-of-robotics",
-  "2026-robotics-summit-early-bird-registration-ends-march-2",
   "amazon-cuts-jobs-in-strategically-important-robotics-division",
   "amazon-cuts-more-jobs-this-time-in-robotics-unit",
   "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
