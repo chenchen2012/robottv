@@ -39,7 +39,13 @@ const findLatestIssue = async () => {
   const latest = matches[0];
   const filePath = path.join(dir, latest.name);
   const html = await fs.readFile(filePath, "utf8");
-  return { filePath, filename: latest.name, date: latest.date, html };
+  let text = "";
+  try {
+    text = await fs.readFile(path.join(dir, `${ISSUE_PREFIX}-${latest.date}.txt`), "utf8");
+  } catch {
+    text = "";
+  }
+  return { filePath, filename: latest.name, date: latest.date, html, text };
 };
 
 const extractSubject = (html) => {
@@ -109,6 +115,7 @@ const run = async () => {
     replyTo: BREVO_SENDER_EMAIL,
     type: "classic",
     htmlContent: latest.html,
+    textContent: latest.text || undefined,
     recipients: {
       listIds: [BREVO_LIST_ID],
     },
