@@ -26,6 +26,13 @@ const decodeHtml = (input) =>
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'");
 
+const sanitizeEmailHtml = (html) =>
+  String(html || "")
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+    .replace(/\sdata-new-gr-c-s-check-loaded="[^"]*"/gi, "")
+    .replace(/\sdata-gr-ext-installed=""/gi, "")
+    .trim();
+
 const findLatestIssue = async () => {
   const dir = path.resolve(OUTPUT_DIR);
   const entries = await fs.readdir(dir);
@@ -118,7 +125,7 @@ const run = async () => {
     },
     replyTo: BREVO_SENDER_EMAIL,
     type: "classic",
-    htmlContent: latest.html,
+    htmlContent: sanitizeEmailHtml(latest.html),
     textContent: latest.text || undefined,
     recipients: {
       listIds: [BREVO_LIST_ID],

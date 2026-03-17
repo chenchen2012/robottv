@@ -1,0 +1,46 @@
+Robot Weekly | Mar 16, 2026
+Mar 16, 2026
+
+From Chen Chen, Editor at robot.tv
+
+EDITORIAL NOTE
+I pulled this week’s note around the developments that feel most useful for understanding where robotics is getting more commercial, more operational, and easier to evaluate in real terms.
+
+LEAD SIGNAL
+Travis Kalanick launches a new company called Atoms focused on robotics
+Travis Kalanick, the former Uber CEO, has launched a new robotics company named Atoms. The venture's specific focus and initial product details remain undisclosed.
+It helps explain where robotics adoption is getting more real, not just more visible.
+https://news.robot.tv/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/
+
+WHAT ELSE MATTERED
+- Travis Kalanick launches a new company called Atoms focused on robotics
+  Travis Kalanick, the former Uber CEO, has launched a new robotics company named Atoms. The venture's specific focus and initial product details remain undisclosed.
+  It helps explain where robotics adoption is getting more real, not just more visible.
+  https://news.robot.tv/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/
+
+- Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit
+  Noland Arbaugh, a pioneering Neuralink patient, is confirmed as a keynote speaker for the 2026 Robotics Summit. His firsthand experience with a brain-computer interface offers a unique perspective for the robotics community.
+  It offers a useful read on where deployment, platform strategy, or market momentum may move next.
+  https://news.robot.tv/dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit/
+
+- Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs.
+  Legged robots are now patrolling data center floors, moving beyond pilot programs into active security and inspection roles. Early operators report measurable returns on investment from these deployments.
+  It offers a useful read on where deployment, platform strategy, or market momentum may move next.
+  https://news.robot.tv/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/
+
+- Humanoid robotics developers must address a wide range of applications
+  Argues humanoid robotics developers must look beyond a single killer app. Success hinges on designing versatile platforms capable of addressing a wide range of industrial and commercial applications.
+  It offers a useful read on where deployment, platform strategy, or market momentum may move next.
+  https://news.robot.tv/humanoid-robotics-developers-must-address-a-wide-range-of-applications/
+
+- Rivian’s RJ Scaringe thinks we’re doing robots all wrong
+  Rivian CEO RJ Scaringe critiques the prevailing approach to robotics development. He argues for a fundamental shift in how the industry builds and deploys autonomous systems.
+  It offers a useful read on where deployment, platform strategy, or market momentum may move next.
+  https://news.robot.tv/rivians-rj-scaringe-thinks-were-doing-robots-all-wrong/
+
+WHAT TO WATCH
+The next thing I’ll be watching is whether these signals turn into repeatable deployments, clearer category leaders, and better evidence that robotics buyers are moving from curiosity to operating habit.
+
+You’re receiving this because you signed up for Robot Weekly at robot.tv.
+Read more: https://news.robot.tv
+robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA

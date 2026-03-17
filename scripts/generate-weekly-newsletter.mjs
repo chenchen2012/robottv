@@ -3,7 +3,7 @@ import path from "node:path";
 
 const FEED_URL = process.env.NEWSLETTER_FEED_URL || "https://news.robot.tv/feed.xml";
 const FEED_PATH = process.env.NEWSLETTER_FEED_PATH;
-const MAX_ITEMS = Number(process.env.NEWSLETTER_MAX_ITEMS || 8);
+const MAX_ITEMS = Number(process.env.NEWSLETTER_MAX_ITEMS || 5);
 const OUTPUT_DIR = process.env.NEWSLETTER_OUTPUT_DIR || "newsletters";
 const SITE_URL = process.env.NEWSLETTER_SITE_URL || "https://robot.tv";
 const TIME_ZONE = process.env.NEWSLETTER_TIMEZONE || "America/Los_Angeles";
@@ -111,7 +111,7 @@ const buildFallbackIssue = (items) => {
     subject: `Robot Weekly | ${formatDate(new Date())}`,
     preheader: "A concise weekly brief on robotics deployments, company moves, and what matters next.",
     intro:
-      "This week’s robot.tv briefing focuses on the stories that look most useful for understanding deployment progress, company positioning, and the shape of the current robotics market.",
+      "I pulled this week’s note around the developments that feel most useful for understanding where robotics is getting more commercial, more operational, and easier to evaluate in real terms.",
     leadTitle: highlights[0]?.title || "The week in robotics",
     leadLink: highlights[0]?.link || "",
     leadSummary:
@@ -122,7 +122,7 @@ const buildFallbackIssue = (items) => {
       "That matters because the market is rewarding proof of execution more than broad platform claims.",
     highlights,
     closing:
-      "The next useful question is whether these signals turn into repeatable deployments, stronger margins, and clearer category leaders over the next quarter.",
+      "The next thing I’ll be watching is whether these signals turn into repeatable deployments, clearer category leaders, and better evidence that robotics buyers are moving from curiosity to operating habit.",
   };
 };
 
@@ -193,18 +193,21 @@ const buildAiIssue = async (items) => {
     "Rules:",
     "- Use only the supplied items.",
     "- Do not invent facts, numbers, customers, or partnerships.",
-    "- Avoid robotic phrases like 'why it matters:' in labels.",
+    "- Avoid robotic phrases and corporate filler.",
+    "- Write in a human editorial voice, as if Chen Chen is briefing readers directly.",
     "- Keep the tone sharp, human, and professional.",
     "- Keep each title matched to the linked story.",
     "- Summaries should explain the development.",
     "- whyItMatters lines should explain the practical implication.",
+    "- Prefer plain English over hype.",
+    "- Do not sound like a marketing campaign.",
     "- Return strict JSON only.",
     "",
     "Return this shape:",
     "{",
     '  "subject": "string <= 80 chars",',
     '  "preheader": "string <= 140 chars",',
-    '  "intro": "2-3 sentences",',
+    '  "intro": "2-3 sentences in first person singular",',
     '  "leadTitle": "string",',
     '  "leadLink": "one of the supplied links",',
     '  "leadSummary": "2 sentences",',
@@ -212,7 +215,7 @@ const buildAiIssue = async (items) => {
     '  "highlights": [',
     '    { "title": "string", "link": "string", "source": "string", "summary": "1-2 sentences", "whyItMatters": "1 sentence" }',
     "  ],",
-    '  "closing": "2 sentences"',
+    '  "closing": "2 sentences in first person singular"',
     "}",
     "",
     "ITEMS:",
@@ -261,7 +264,6 @@ const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSu
         <h3><a href="${escapeHtml(item.link)}">${escapeHtml(item.title)}</a></h3>
         <p>${escapeHtml(item.summary)}</p>
         <p class="why">${escapeHtml(item.whyItMatters)}</p>
-        ${item.source ? `<div class="source">${escapeHtml(item.source)}</div>` : ""}
       </li>`
     )
     .join("\n");
@@ -275,46 +277,45 @@ const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSu
   <meta name="description" content="${escapeHtml(preheader)}">
   <script src="/scripts/ga-lazy.js?v=20260309-ga-v1" defer></script>
   <style>
-    body { margin:0; padding:0; background:#09111a; color:#edf3ff; font-family:"Space Grotesk",Arial,sans-serif; }
-    .shell { width:100%; padding:28px 14px; }
-    .card { max-width:720px; margin:0 auto; border:1px solid #203047; border-radius:20px; background:linear-gradient(160deg,#0d1622,#101d2d); overflow:hidden; }
-    .hero { padding:28px 28px 22px; background:
-      radial-gradient(circle at top right, rgba(94,132,255,.26), transparent 38%),
-      radial-gradient(circle at top left, rgba(239,45,82,.18), transparent 32%),
-      linear-gradient(160deg,#0f1826,#122133); }
-    .kicker { margin:0 0 10px; color:#94a7c6; text-transform:uppercase; letter-spacing:.12em; font-size:12px; font-weight:700; }
-    h1 { margin:0; font-size:31px; line-height:1.15; }
-    .meta { margin-top:12px; color:#9fb0ca; font-size:14px; }
-    .preheader { margin-top:14px; color:#d3def0; line-height:1.7; font-size:16px; }
+    body { margin:0; padding:0; background:#eef2f7; color:#182230; font-family:Arial,sans-serif; }
+    .shell { width:100%; padding:24px 12px; }
+    .card { max-width:680px; margin:0 auto; border:1px solid #d5deea; border-radius:18px; background:#ffffff; overflow:hidden; }
+    .hero { padding:28px 28px 20px; background:linear-gradient(180deg,#f7fafd 0%,#eef4fb 100%); border-bottom:1px solid #dbe5f0; }
+    .eyebrow { margin:0 0 8px; color:#6a7f97; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    h1 { margin:0; font-size:30px; line-height:1.18; color:#0f1824; }
+    .meta { margin-top:10px; color:#6b7b90; font-size:14px; }
+    .preheader { margin-top:14px; color:#324458; line-height:1.65; font-size:16px; }
     .body { padding:0 28px 28px; }
+    .editor-line { padding-top:20px; color:#607389; font-size:14px; }
     .section { padding-top:24px; }
-    .section h2 { margin:0 0 12px; font-size:21px; }
-    .section p { margin:0; color:#d6e1f2; line-height:1.75; }
-    .lead { border:1px solid #243955; border-radius:16px; padding:18px 18px 16px; background:rgba(8,13,22,.64); }
-    .lead h3 { margin:0 0 10px; font-size:22px; line-height:1.25; }
-    .lead .why { margin-top:12px; color:#9fc2ff; }
+    .section h2 { margin:0 0 12px; font-size:20px; color:#132033; }
+    .section p { margin:0; color:#2b3b4d; line-height:1.72; }
+    .lead { border:1px solid #d8e2ee; border-radius:14px; padding:18px; background:#f8fbff; }
+    .lead h3 { margin:0 0 10px; font-size:21px; line-height:1.3; }
+    .lead .why { margin-top:12px; color:#40556d; }
     ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
-    li { border:1px solid #1d314b; border-radius:16px; padding:16px 16px 14px; background:#0d1724; }
+    li { border:1px solid #dbe4ef; border-radius:14px; padding:16px; background:#ffffff; }
     li h3 { margin:0 0 10px; font-size:18px; line-height:1.35; }
-    li h3 a { color:#edf3ff; text-decoration:none; }
-    li p { margin:0; color:#d2deef; line-height:1.7; }
-    li .why { margin-top:10px; color:#8fb3ff; }
-    .source { margin-top:10px; color:#7f96b7; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
-    .closing { border-top:1px solid #22344e; margin-top:24px; padding-top:24px; }
-    .footer { margin-top:24px; color:#8da2c2; font-size:13px; line-height:1.7; }
-    a { color:#8db5ff; }
+    li h3 a { color:#142033; text-decoration:none; }
+    li p { margin:0; color:#304153; line-height:1.68; }
+    li .why { margin-top:10px; color:#4a5f76; }
+    .closing { border-top:1px solid #dde6ef; margin-top:24px; padding-top:24px; }
+    .footer { margin-top:24px; color:#607389; font-size:13px; line-height:1.7; }
+    .footer p { margin:0 0 10px; }
+    a { color:#245ea8; }
   </style>
 </head>
 <body>
   <div class="shell">
     <div class="card">
       <div class="hero">
-        <p class="kicker">Robot Weekly</p>
+        <p class="eyebrow">Robot Weekly</p>
         <h1>${escapeHtml(subject)}</h1>
         <div class="meta">${escapeHtml(issueDate)}</div>
         <p class="preheader">${escapeHtml(preheader)}</p>
       </div>
       <div class="body">
+        <div class="editor-line">From Chen Chen, Editor at robot.tv</div>
         <section class="section">
           <h2>Editorial Note</h2>
           <p>${escapeHtml(intro)}</p>
@@ -335,8 +336,9 @@ const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSu
           <h2>What To Watch</h2>
           <p>${escapeHtml(closing)}</p>
           <div class="footer">
-            <p>Browse the newsroom any time at <a href="https://news.robot.tv">news.robot.tv</a>.</p>
-            <p>Issue archive: <a href="${escapeHtml(issueUrl)}">${escapeHtml(issueUrl)}</a></p>
+            <p>You’re receiving this because you signed up for Robot Weekly at robot.tv.</p>
+            <p>Read more at <a href="https://news.robot.tv">news.robot.tv</a>.</p>
+            <p>robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA</p>
           </div>
         </section>
       </div>
@@ -350,6 +352,8 @@ const buildIssueText = ({ subject, intro, leadTitle, leadLink, leadSummary, lead
   const lines = [
     subject,
     issueDate,
+    "",
+    "From Chen Chen, Editor at robot.tv",
     "",
     "EDITORIAL NOTE",
     intro,
@@ -375,7 +379,9 @@ const buildIssueText = ({ subject, intro, leadTitle, leadLink, leadSummary, lead
   lines.push("WHAT TO WATCH");
   lines.push(closing);
   lines.push("");
-  lines.push(`Archive: ${issueUrl}`);
+  lines.push("You’re receiving this because you signed up for Robot Weekly at robot.tv.");
+  lines.push("Read more: https://news.robot.tv");
+  lines.push("robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA");
 
   return `${lines.join("\n")}\n`;
 };
