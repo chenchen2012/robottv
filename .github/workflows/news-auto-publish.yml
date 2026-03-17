@@ -51,6 +51,7 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           NEWS_PUBLIC_DEPLOY_HOOK_URL: ${{ secrets.NEWS_PUBLIC_DEPLOY_HOOK_URL }}
           SKIP_PUBLIC_DEPLOY_HOOK: ${{ steps.cf.outputs.skip_public_deploy_hook }}
+          NEWS_PUBLISH_REPORT_PATH: ops-private/reports/publish/latest-published-news.json
           PUBLISH_COUNT: "2"
         run: node scripts/publish-latest-news.mjs
 
@@ -84,6 +85,12 @@ jobs:
         if: steps.cf.outputs.enabled == 'true'
         run: npm run build:public
 
+      - name: Verify generated permalinks for published posts
+        if: steps.cf.outputs.enabled == 'true'
+        env:
+          NEWS_PUBLISH_REPORT_PATH: ops-private/reports/publish/latest-published-news.json
+        run: node scripts/verify-published-news-deploy.mjs
+
       - name: Deploy public news site to Cloudflare Pages
         if: steps.cf.outputs.enabled == 'true'
         env:
@@ -91,3 +98,20 @@ jobs:
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler@4 pages deploy dist-public --project-name="${{ secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME }}"
+
+      - name: Verify live permalinks after deploy
+        if: steps.cf.outputs.enabled == 'true'
+        env:
+          NEWS_PUBLISH_REPORT_PATH: ops-private/reports/publish/latest-published-news.json
+          NEWS_VERIFY_LIVE: "1"
+          NEWS_VERIFY_RETRIES: "12"
+          NEWS_VERIFY_DELAY_MS: "5000"
+        run: node scripts/verify-published-news-deploy.mjs
+
+      - name: Upload publish verification artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-news-report
+          path: news-studio/ops-private/reports/publish/latest-published-news.json
+          if-no-files-found: warn

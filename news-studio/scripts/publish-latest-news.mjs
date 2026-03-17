@@ -1,4 +1,6 @@
 import { buildEditorialPackage, blocksFromParagraphs } from "./lib/news-editorial-content.mjs"
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || 'production'
@@ -9,6 +11,7 @@ const dryRun = process.env.DRY_RUN === '1'
 const newsPublicDeployHookUrl = String(process.env.NEWS_PUBLIC_DEPLOY_HOOK_URL || '').trim()
 const skipPublicDeployHook = process.env.SKIP_PUBLIC_DEPLOY_HOOK === '1'
 const NEAR_DUPLICATE_LOOKBACK_DAYS = 7
+const publishReportPath = process.env.NEWS_PUBLISH_REPORT_PATH || path.join('ops-private', 'reports', 'publish', 'latest-published-news.json')
 
 if (!projectId || !token) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID) and SANITY_API_TOKEN')
@@ -348,11 +351,34 @@ if (!resp.ok) {
 const result = await resp.json()
 const published = docs.filter((d) => !d._id.startsWith('drafts.')).length
 const drafted = docs.length - published
+
+await fs.mkdir(path.dirname(publishReportPath), { recursive: true })
+await fs.writeFile(
+  publishReportPath,
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      published,
+      drafted,
+      docs: docs.map((doc) => ({
+        id: doc._id,
+        title: doc.title,
+        slug: doc.slug?.current || '',
+        isDraft: doc._id.startsWith('drafts.'),
+        url: doc.slug?.current ? `https://news.robot.tv/${doc.slug.current}/` : ''
+      }))
+    },
+    null,
+    2
+  )
+)
+
 console.log('Created docs:', docs.map((d) => d._id).join(', '))
 console.log(`Published: ${published}, Drafted: ${drafted}`)
 if (result?.results) {
   console.log('Mutation results:', result.results.length)
 }
+console.log(`Publish report: ${publishReportPath}`)
 
 if (skipPublicDeployHook) {
   console.log('SKIP_PUBLIC_DEPLOY_HOOK=1; skipped deploy-hook trigger because CI will publish public news directly.')
