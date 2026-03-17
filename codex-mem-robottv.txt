@@ -206,6 +206,27 @@ Recent operational decisions
   - manually patched all duplicate `toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids` documents in Sanity with a stronger warehouse-humanoid editorial package because that slug appears on key ranking pages
   - `scripts/build-static-profile-news.mjs` and `scripts/entity-latest-news.js` now exclude low-value/retired newsroom slugs so main-site entity-news blocks do not resurface hidden clutter
   - after refresh, `companies.html`, `humanoid-robots.html`, and related company pages picked up stronger newsroom links; some pages like `company-boston-dynamics.html` now hide the entity-news block entirely when no acceptable current coverage exists
+- Mar 18, 2026 keyword-ranking pass on root evergreen hubs:
+  - strengthened search-intent copy and routing on:
+    - `companies.html`
+    - `humanoid-robots.html`
+    - `industrial-inspection-robots.html`
+    - `physical-ai-robot-learning.html`
+    - `company-unitree.html`
+    - `china-humanoid-robots.html`
+  - main goal was to make top keyword targets read more directly for broad queries such as:
+    - `robotics companies`
+    - `humanoid robots`
+    - `industrial inspection robots`
+    - `physical AI robotics`
+    - `Unitree`
+    - `China humanoid robots`
+  - pattern used:
+    - clearer keyword-aligned hero copy
+    - explicit “search intent” sections
+    - stronger routing to the right narrower pages
+    - more deliberate internal links among company, robot, and topic hubs
+  - removed lingering `News Sitemap` CTA from `companies.html` and `news.html`; replaced with useful human-facing internal routes
 
 Known commands
 - Root public deploy automation: `.github/workflows/deploy-robot-tv-public.yml`
