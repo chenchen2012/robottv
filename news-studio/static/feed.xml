@@ -5,8 +5,32 @@
     <link>https://news.robot.tv/</link>
     <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 16 Mar 2026 19:21:18 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 17 Mar 2026 13:52:46 GMT</lastBuildDate>
     <atom:link href="https://news.robot.tv/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Gecko Robotics lands the largest U.S. Navy robotics deal yet</title>
+      <link>https://news.robot.tv/gecko-robotics-lands-the-largest-us-navy-robotics-deal-yet/</link>
+      <guid isPermaLink="true">https://news.robot.tv/gecko-robotics-lands-the-largest-us-navy-robotics-deal-yet/</guid>
+      <pubDate>Tue, 17 Mar 2026 13:52:46 GMT</pubDate>
+      <description>Gecko Robotics has secured the largest robotics contract to date from the U.S. Navy. This deal marks a significant milestone for the company&#39;s expansion into defense infrastructure.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>BEDEX 2026: Sweden receives Blaze interceptor UAVs from Origin Robotics</title>
+      <link>https://news.robot.tv/bedex-2026-sweden-receives-blaze-interceptor-uavs-from-origin-robotics/</link>
+      <guid isPermaLink="true">https://news.robot.tv/bedex-2026-sweden-receives-blaze-interceptor-uavs-from-origin-robotics/</guid>
+      <pubDate>Tue, 17 Mar 2026 07:19:49 GMT</pubDate>
+      <description>Sweden has taken delivery of Blaze interceptor UAVs from Origin Robotics. The handover occurred at the BEDEX 2026 defense exhibition.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Memories AI is building the visual memory layer for wearables and robotics</title>
+      <link>https://news.robot.tv/memories-ai-is-building-the-visual-memory-layer-for-wearables-and-robotics/</link>
+      <guid isPermaLink="true">https://news.robot.tv/memories-ai-is-building-the-visual-memory-layer-for-wearables-and-robotics/</guid>
+      <pubDate>Tue, 17 Mar 2026 03:13:30 GMT</pubDate>
+      <description>Memories AI is developing a visual memory layer for wearables and robotics. The startup aims to enable devices to understand and recall their visual experiences.</description>
+      <category>Robotics Startups</category>
+    </item>
     <item>
       <title>Travis Kalanick launches a new company called Atoms focused on robotics</title>
       <link>https://news.robot.tv/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/</link>
@@ -136,19 +160,19 @@
       <category>Robotics Startups</category>
     </item>
     <item>
-      <title>Agility, Boston Dynamics, ASTM to discuss the state of humanoid robotics</title>
-      <link>https://news.robot.tv/agility-boston-dynamics-astm-to-discuss-the-state-of-humanoid-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/agility-boston-dynamics-astm-to-discuss-the-state-of-humanoid-robotics/</guid>
-      <pubDate>Wed, 11 Mar 2026 13:39:13 GMT</pubDate>
-      <description>Agility Robotics, Boston Dynamics, and standards body ASTM International will hold a panel on the state of humanoid robotics. The discussion will focus on the current capabilities and deployment challenges for these advanced systems.</description>
-      <category>Humanoid Robots</category>
-    </item>
-    <item>
       <title>Teradyne sues Chinese cobot maker over UR software</title>
       <link>https://news.robot.tv/teradyne-sues-chinese-cobot-maker-over-ur-software/</link>
       <guid isPermaLink="true">https://news.robot.tv/teradyne-sues-chinese-cobot-maker-over-ur-software/</guid>
       <pubDate>Tue, 10 Mar 2026 19:09:22 GMT</pubDate>
       <description>Teradyne has filed a lawsuit against a Chinese collaborative robot manufacturer, alleging infringement of Universal Robots&#39; software. The legal action centers on the core programming that defines the UR cobot platform&#39;s functionality.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Qualcomm’s partnership with Neura Robotics is just the beginning</title>
+      <link>https://news.robot.tv/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/</link>
+      <guid isPermaLink="true">https://news.robot.tv/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/</guid>
+      <pubDate>Tue, 10 Mar 2026 02:50:29 GMT</pubDate>
+      <description>Qualcomm has entered a strategic partnership with Neura Robotics, focusing on integrating its AI compute platforms into Neura&#39;s cognitive robotics systems. This collaboration aims to accelerate the development of more capable and efficient robots.</description>
       <category>Robotics Startups</category>
     </item>
     <item>
@@ -160,6 +184,14 @@
       <category>Robotics Startups</category>
       <category>Physical AI</category>
       <category>Defense</category>
+    </item>
+    <item>
+      <title>A key robotics staffer at OpenAI quits after the company&#39;s Pentagon deal: &#39;This was about principle&#39;</title>
+      <link>https://news.robot.tv/a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri/</link>
+      <guid isPermaLink="true">https://news.robot.tv/a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri/</guid>
+      <pubDate>Mon, 09 Mar 2026 07:18:52 GMT</pubDate>
+      <description>A senior robotics researcher at OpenAI has resigned, citing ethical objections to the company&#39;s new contract with the Pentagon. The departure highlights internal tensions over the direction of AI development for defense applications.</description>
+      <category>Robotics Startups</category>
     </item>
     <item>
       <title>Plug-and-Play AI: Transforming robotics with modular skills</title>
@@ -184,6 +216,14 @@
       <category>Robotics Markets</category>
     </item>
     <item>
+      <title>OpenAI Robotics head resigns after deal with Pentagon</title>
+      <link>https://news.robot.tv/openai-robotics-head-resigns-after-deal-with-pentagon/</link>
+      <guid isPermaLink="true">https://news.robot.tv/openai-robotics-head-resigns-after-deal-with-pentagon/</guid>
+      <pubDate>Sun, 08 Mar 2026 03:13:02 GMT</pubDate>
+      <description>OpenAI&#39;s head of robotics has resigned. The departure follows the company&#39;s decision to enter into a deal with the Pentagon.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
       <title>Humanoid developer Agility Robotics rebrands</title>
       <link>https://news.robot.tv/humanoid-developer-agility-robotics-rebrands/</link>
       <guid isPermaLink="true">https://news.robot.tv/humanoid-developer-agility-robotics-rebrands/</guid>
@@ -203,6 +243,38 @@
       <category>Operations</category>
       <category>Robotics News</category>
       <category>Warehouse Robotics</category>
+    </item>
+    <item>
+      <title>Amazon cuts jobs in strategically important robotics division</title>
+      <link>https://news.robot.tv/amazon-cuts-jobs-in-strategically-important-robotics-division/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-cuts-jobs-in-strategically-important-robotics-division/</guid>
+      <pubDate>Thu, 05 Mar 2026 13:37:46 GMT</pubDate>
+      <description>Amazon is reducing headcount within its strategic robotics division. This move signals a shift in how the company is allocating resources for its automation efforts.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Amazon cuts more jobs; this time in robotics unit</title>
+      <link>https://news.robot.tv/amazon-cuts-more-jobs-this-time-in-robotics-unit/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-cuts-more-jobs-this-time-in-robotics-unit/</guid>
+      <pubDate>Thu, 05 Mar 2026 13:37:45 GMT</pubDate>
+      <description>Amazon has initiated another round of job cuts, this time within its robotics division. The move follows broader layoffs across the company&#39;s tech and retail units.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>AW 2026 features Korea humanoid debuts as industry seeks digital transformation</title>
+      <link>https://news.robot.tv/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation/</link>
+      <guid isPermaLink="true">https://news.robot.tv/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation/</guid>
+      <pubDate>Thu, 05 Mar 2026 01:56:55 GMT</pubDate>
+      <description>Multiple Korean humanoid robots are set to debut at AW 2026. The event highlights a growing industry focus on digital transformation.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Breakingviews - Hyundai Motor&#39;s robots herald hardware reboot</title>
+      <link>https://news.robot.tv/breakingviews-hyundai-motors-robots-herald-hardware-reboot/</link>
+      <guid isPermaLink="true">https://news.robot.tv/breakingviews-hyundai-motors-robots-herald-hardware-reboot/</guid>
+      <pubDate>Wed, 04 Mar 2026 12:53:16 GMT</pubDate>
+      <description>Hyundai Motor is shifting its robotics strategy toward a hardware-first approach. This signals a deeper commitment to physical platforms over pure software or service models.</description>
+      <category>Robotics Startups</category>
     </item>
     <item>
       <title>6 lessons I learned watching a robotics startup die from the inside</title>
@@ -258,6 +330,22 @@
       <category>Strategy</category>
     </item>
     <item>
+      <title>Hyundai to show MobED at AW as robotics, AI expand in manufacturing</title>
+      <link>https://news.robot.tv/hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing/</link>
+      <guid isPermaLink="true">https://news.robot.tv/hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing/</guid>
+      <pubDate>Fri, 27 Feb 2026 12:55:34 GMT</pubDate>
+      <description>Hyundai will showcase its MobED platform at an upcoming automation event. This follows a broader industry trend of integrating advanced robotics and AI into manufacturing environments.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Hyundai Motor to unveil multi-billion-dollar investment in South Korea, source says</title>
+      <link>https://news.robot.tv/hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says/</link>
+      <guid isPermaLink="true">https://news.robot.tv/hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says/</guid>
+      <pubDate>Thu, 26 Feb 2026 13:02:14 GMT</pubDate>
+      <description>Hyundai Motor is reportedly preparing a multi-billion-dollar investment in South Korea. The capital infusion signals a major strategic commitment to its domestic industrial base.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
       <title>Intrinsic is joining Google to advance physical AI in robotics</title>
       <link>https://news.robot.tv/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/</link>
       <guid isPermaLink="true">https://news.robot.tv/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/</guid>
@@ -266,121 +354,6 @@
       <category>Robotics Startups</category>
       <category>Physical AI</category>
       <category>Robotics Software</category>
-    </item>
-    <item>
-      <title>VDMA warns Germany is losing ground in global robotics race</title>
-      <link>https://news.robot.tv/vdma-warns-germany-is-losing-ground-in-global-robotics-race/</link>
-      <guid isPermaLink="true">https://news.robot.tv/vdma-warns-germany-is-losing-ground-in-global-robotics-race/</guid>
-      <pubDate>Wed, 25 Feb 2026 02:00:21 GMT</pubDate>
-      <description>VDMA&#39;s warning matters because Germany&#39;s robotics position now depends on whether engineering strength can still convert into faster investment, commercialization, and industrial demand as global competitors accelerate.</description>
-      <category>Europe</category>
-      <category>Robotics Markets</category>
-      <category>Industrial Policy</category>
-    </item>
-    <item>
-      <title>AI2 Robotics raises Series B funding to advance AlphaBot, embodied AI</title>
-      <link>https://news.robot.tv/ai2-robotics-raises-series-b-funding-to-advance-alphabot-embodied-ai/</link>
-      <guid isPermaLink="true">https://news.robot.tv/ai2-robotics-raises-series-b-funding-to-advance-alphabot-embodied-ai/</guid>
-      <pubDate>Wed, 25 Feb 2026 02:00:20 GMT</pubDate>
-      <description>AI2 Robotics funding matters because embodied AI teams still need capital to turn research-heavy physical AI claims into shippable products and repeatable customer value.</description>
-      <category>Robotics Startups</category>
-      <category>Embodied AI</category>
-      <category>Physical AI</category>
-    </item>
-    <item>
-      <title>The hidden infrastructure challenge facing outdoor robotics OEMs</title>
-      <link>https://news.robot.tv/the-hidden-infrastructure-challenge-facing-outdoor-robotics-oems/</link>
-      <guid isPermaLink="true">https://news.robot.tv/the-hidden-infrastructure-challenge-facing-outdoor-robotics-oems/</guid>
-      <pubDate>Tue, 24 Feb 2026 10:59:49 GMT</pubDate>
-      <description>Outdoor robotics infrastructure matters because physical AI does not win on models alone; deployments also depend on charging, communications, mapping, and service assumptions that many teams underestimate.</description>
-      <category>Robotics Startups</category>
-      <category>Infrastructure</category>
-      <category>Physical AI</category>
-      <category>Autonomy</category>
-    </item>
-    <item>
-      <title>Toyota Motor Manufacturing Canada to deploy Agility Robotics’ Digit humanoids</title>
-      <link>https://news.robot.tv/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/</link>
-      <guid isPermaLink="true">https://news.robot.tv/toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids/</guid>
-      <pubDate>Mon, 23 Feb 2026 02:01:07 GMT</pubDate>
-      <description>Toyota&#39;s planned Digit deployment matters because warehouse humanoids only become durable market signals when serious industrial operators are willing to test them inside production environments.</description>
-      <category>Humanoid Robots</category>
-      <category>Warehouse Robotics</category>
-      <category>Operations</category>
-      <category>Agility Robotics</category>
-    </item>
-    <item>
-      <title>NORD releases digital twin simulation platform for robotics developers</title>
-      <link>https://news.robot.tv/nord-releases-digital-twin-simulation-platform-for-robotics-developers/</link>
-      <guid isPermaLink="true">https://news.robot.tv/nord-releases-digital-twin-simulation-platform-for-robotics-developers/</guid>
-      <pubDate>Sun, 22 Feb 2026 12:44:56 GMT</pubDate>
-      <description>Digital twin tooling matters because robot learning and physical AI only scale when developers can test layouts, controls, and edge cases before touching production hardware.</description>
-      <category>Robotics Startups</category>
-      <category>Simulation</category>
-      <category>Robotics Software</category>
-      <category>Physical AI</category>
-    </item>
-    <item>
-      <title>Ottonomy launches Ottumn.AI to orchestrate robots, drones, and smart infrastructure</title>
-      <link>https://news.robot.tv/ottonomy-ottumn-ai-orchestrates-robots-drones-smart-infrastructure/</link>
-      <guid isPermaLink="true">https://news.robot.tv/ottonomy-ottumn-ai-orchestrates-robots-drones-smart-infrastructure/</guid>
-      <pubDate>Thu, 19 Feb 2026 14:35:00 GMT</pubDate>
-      <description>Ottumn.AI matters because orchestration layers may become part of the physical AI stack as mixed fleets of robots, drones, and infrastructure nodes need one control surface.</description>
-      <category>Robotics Startups</category>
-      <category>Robotics Software</category>
-      <category>Autonomy</category>
-      <category>Physical AI</category>
-    </item>
-    <item>
-      <title>igus launches a new RBTX shopping platform for robotics developers</title>
-      <link>https://news.robot.tv/igus-launches-new-rbtx-shopping-platform-for-robotics-developers/</link>
-      <guid isPermaLink="true">https://news.robot.tv/igus-launches-new-rbtx-shopping-platform-for-robotics-developers/</guid>
-      <pubDate>Thu, 19 Feb 2026 14:30:00 GMT</pubDate>
-      <description>Developer marketplaces matter because faster robotics builds require easier sourcing and integration of the components that sit underneath physical AI demos and real deployments.</description>
-      <category>Robotics Startups</category>
-      <category>Robotics Software</category>
-      <category>Developer Tools</category>
-      <category>Physical AI</category>
-    </item>
-    <item>
-      <title>Amazon&#39;s Blue Jay halt shows warehouse robotics programs are being held to tighter ROI standards</title>
-      <link>https://news.robot.tv/amazon-blue-jay-halt-warehouse-robotics-roi-standards/</link>
-      <guid isPermaLink="true">https://news.robot.tv/amazon-blue-jay-halt-warehouse-robotics-roi-standards/</guid>
-      <pubDate>Wed, 18 Feb 2026 22:10:00 GMT</pubDate>
-      <description>Amazon&#39;s Blue Jay halt is a useful reality check for the warehouse robotics market: large operators are tightening ROI expectations and dropping programs that cannot prove practical value quickly enough.</description>
-      <category>Robotics Startups</category>
-      <category>Warehouse Robotics</category>
-      <category>Operations</category>
-    </item>
-    <item>
-      <title>Unitree momentum signals China is becoming a serious global robotics competitor</title>
-      <link>https://news.robot.tv/unitree-china-global-robotics-competitor-momentum/</link>
-      <guid isPermaLink="true">https://news.robot.tv/unitree-china-global-robotics-competitor-momentum/</guid>
-      <pubDate>Wed, 18 Feb 2026 22:05:00 GMT</pubDate>
-      <description>Unitree is becoming one of the clearest signals that China&#39;s robotics sector can compete globally on speed, visibility, and cost-aware product iteration.</description>
-      <category>Humanoid Robots</category>
-      <category>China</category>
-    </item>
-    <item>
-      <title>China&#39;s humanoid robots take centre stage for Lunar New Year showtime</title>
-      <link>https://news.robot.tv/china-humanoid-robots-lunar-new-year-showtime/</link>
-      <guid isPermaLink="true">https://news.robot.tv/china-humanoid-robots-lunar-new-year-showtime/</guid>
-      <pubDate>Wed, 18 Feb 2026 21:40:00 GMT</pubDate>
-      <description>Humanoid appearances during Lunar New Year programming were more than a novelty moment. They showed how China&#39;s robot makers are using mass-audience visibility to normalize the category and build confidence around domestic progress.</description>
-      <category>Humanoid Robots</category>
-      <category>China</category>
-      <category>Robotics News</category>
-    </item>
-    <item>
-      <title>Humanoid Deployments Enter the Factory Proof Stage in 2026</title>
-      <link>https://news.robot.tv/humanoid-deployments-factory-proof-stage-2026/</link>
-      <guid isPermaLink="true">https://news.robot.tv/humanoid-deployments-factory-proof-stage-2026/</guid>
-      <pubDate>Wed, 18 Feb 2026 12:00:00 GMT</pubDate>
-      <description>Humanoid deployments are entering the factory-proof stage, where performance has to survive real operating constraints instead of presentation-stage conditions.</description>
-      <category>Humanoid Robots</category>
-      <category>Robotics Startups</category>
-      <category>Warehouse Robotics</category>
-      <category>Operations</category>
     </item>
   </channel>
 </rss>

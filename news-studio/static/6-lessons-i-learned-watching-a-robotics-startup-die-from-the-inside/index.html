@@ -24,6 +24,7 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"robot.tv","item":"https://robot.tv/"},{"@type":"ListItem","position":2,"name":"News","item":"https://news.robot.tv/"},{"@type":"ListItem","position":3,"name":"6 lessons I learned watching a robotics startup die from the inside","item":"https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"6 lessons I learned watching a robotics startup die from the inside","description":"Robotics startup failure stories matter because execution risk in this industry usually comes from focus, deployment discipline, and operating burn, not from a lack of technical ambition alone.","datePublished":"2026-03-03T01:59:57.756Z","dateModified":"2026-03-03T01:59:57.756Z","mainEntityOfPage":"https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/","url":"https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/","image":["https://img.youtube.com/vi/b8BDUa-xbyA/hqdefault.jpg"],"author":{"@type":"Person","name":"Chen Chen","url":"https://robot.tv/about.html#editorial-operations","description":"Editor covering humanoids, autonomy, and robotics startup execution."},"publisher":{"@type":"Organization","name":"robot.tv","logo":{"@type":"ImageObject","url":"https://robot.tv/images/robot_logo.png"}}}</script>
   <script src="/scripts/ga-lazy.js?v=20260309-ga-v1"></script>
+  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
   <style>
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
     @font-face { font-family:'Space Grotesk'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/space-grotesk-latin.woff2') format('woff2'); }
@@ -68,6 +69,48 @@
     .body p { margin:.9rem 0 0; color:#c6d2e8; line-height:1.8; }
     .tags { margin:.9rem 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:.45rem; }
     .tags li { border:1px solid #2a3f5d; border-radius:999px; padding:.22rem .55rem; color:#c6d2e8; font-size:.8rem; }
+    .newsletter { margin-top:1.1rem; padding:1rem; }
+    .newsletter h2 { font-size:1.15rem; margin:0.45rem 0 0; }
+    .newsletter .newsletter-embed { margin-top:.75rem; display:flex; justify-content:flex-start; }
+    .newsletter .sib-form,
+    .newsletter .sib-form * { font-family:'Space Grotesk',sans-serif; }
+    .newsletter .sib-form { width:100%; }
+    .newsletter .sib-form-container { display:grid; gap:.65rem; width:min(100%,760px); justify-items:start; margin-left:0!important; margin-right:auto!important; }
+    .newsletter .newsletter-form-card { display:grid; gap:.48rem; width:100%; margin:0!important; padding:0!important; }
+    .newsletter .sib-input,
+    .newsletter .sib-form-block,
+    .newsletter .entry_block,
+    .newsletter .form__entry { width:100%; margin:0!important; padding:0!important; }
+    .newsletter #sib-container { width:100%; max-width:760px; margin-right:auto; background:transparent!important; border:0!important; border-radius:0; padding:0!important; box-shadow:none!important; }
+    .newsletter #sib-form { display:flex; flex-wrap:wrap; align-items:flex-end; gap:.8rem; }
+    .newsletter #sib-form > .sib-input.sib-form-block { flex:1 1 0; min-width:0; }
+    .newsletter #sib-form > .sib-form-block { flex:0 0 auto; width:auto; }
+    .newsletter .form__label-row { display:grid; gap:.48rem; width:100%; }
+    .newsletter .sib-form-row { display:flex; align-items:center; gap:.8rem; }
+    .newsletter .sib-form-row .entry__field { flex:1 1 auto; }
+    .newsletter .entry__field { width:100%; }
+    .newsletter .entry__specification { display:none!important; }
+    .newsletter #sib-container .entry__label,
+    .newsletter .sib-form #sib-container .entry__label { display:block; margin-bottom:0; color:var(--text)!important; font-weight:700; font-size:.92rem!important; letter-spacing:.01em; }
+    .newsletter #sib-container .input,
+    .newsletter .sib-form #sib-container input.input { width:100%; border:1px solid rgba(94,132,255,.34); border-radius:12px; background:linear-gradient(145deg,rgba(10,15,24,.94),rgba(13,19,29,.98)); color:#e9f1ff; font:inherit; padding:0 .95rem!important; height:50px!important; min-height:50px!important; line-height:50px!important; box-sizing:border-box!important; box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 14px 28px rgba(3,8,15,.2); transition:border-color .2s ease,box-shadow .2s ease,background .2s ease; }
+    .newsletter #sib-container .input:focus { outline:none; border-color:var(--blue); box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(94,132,255,.14); }
+    .newsletter #sib-container .input::placeholder { color:#90a2bf; }
+    .newsletter #sib-container .sib-form-block__button,
+    .newsletter .sib-form #sib-container .sib-form-block__button { display:inline-flex; align-items:center; justify-content:center; gap:.45rem; background:linear-gradient(110deg,var(--red),var(--blue))!important; background-color:var(--red)!important; color:#fff!important; border:none!important; border-radius:12px; padding:0 1.45rem!important; height:50px!important; min-height:50px!important; line-height:50px!important; font-family:'Orbitron',sans-serif; font-weight:800; letter-spacing:.02em; cursor:pointer; min-width:188px; box-shadow:0 14px 26px rgba(20,34,65,.26), inset 0 1px 0 rgba(255,255,255,.14)!important; transition:transform .18s ease,box-shadow .18s ease,filter .18s ease; }
+    .newsletter #sib-container .sib-form-block__button:hover { filter:brightness(1.04); transform:translateY(-1px); box-shadow:0 18px 30px rgba(20,34,65,.34), inset 0 1px 0 rgba(255,255,255,.18)!important; }
+    .newsletter .sib-form-message-panel { width:100%; border-radius:12px; padding:.72rem .9rem; border:1px solid rgba(47,68,101,.86); background:rgba(15,23,36,.9); color:#e9f1ff; }
+    .newsletter #success-message { border-color:#1b5f3a; background:#0f2318; color:#b7f0d1; }
+    .newsletter #error-message { border-color:#6a1f1f; background:#2a1414; color:#ffbdbd; }
+    .newsletter .sib-form-message-panel__text { display:flex; align-items:center; gap:.55rem; }
+    .newsletter .sib-form-message-panel__text--center { justify-content:flex-start; }
+    .newsletter .sib-icon { width:20px; height:20px; fill:currentColor; opacity:.9; }
+    @media (max-width:640px){
+      .newsletter #sib-form{display:grid;}
+      .newsletter .sib-form-row{flex-direction:column; align-items:stretch;}
+      .newsletter .sib-form-row .entry__field{width:100%;}
+      .newsletter #sib-container .sib-form-block__button{width:100%; justify-content:center; min-width:0;}
+    }
     .footer { margin-top:1.2rem; padding:1rem; display:flex; justify-content:space-between; gap:.8rem; flex-wrap:wrap; color:#a7b7d1; font-size:.9rem; }
     .footer-links { display:flex; gap:.9rem; flex-wrap:wrap; }
     @media (max-width:760px){ .header{flex-direction:column; align-items:flex-start;} .insight-grid{grid-template-columns:1fr;} }
@@ -143,5 +186,22 @@
       </div>
     </footer>
   </div>
+  <script>
+    window.REQUIRED_CODE_ERROR_MESSAGE = "Please choose a country code";
+    window.LOCALE = "en";
+    window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    window.REQUIRED_ERROR_MESSAGE = "This field cannot be left blank. ";
+    window.GENERIC_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+    window.translation = {
+      common: {
+        selectedList: "{quantity} list selected",
+        selectedLists: "{quantity} lists selected",
+        selectedOption: "{quantity} selected",
+        selectedOptions: "{quantity} selected"
+      }
+    };
+    var AUTOHIDE = Boolean(0);
+  </script>
+  <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 </body>
 </html>

@@ -5,6 +5,10 @@ This folder contains two separate things:
 - the Sanity Studio for editing content
 - the static public build that powers `news.robot.tv`
 
+Editorial standard:
+
+- See [EDITORIAL_POLICY.md](/Users/cc801/Documents/New%20project/robottv/news-studio/EDITORIAL_POLICY.md) for what should and should not be published on `news.robot.tv`.
+
 ## 1) Create / link a Sanity project
 
 Run in this folder:

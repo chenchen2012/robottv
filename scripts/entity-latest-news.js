@@ -11,6 +11,23 @@
   const sanityDataset = "production";
   const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
   const query = '*[_type == "post"] | order(publishedAt desc)[0...200]{title,excerpt,publishedAt,"slug":slug.current,youtubeUrl,categories[]->title}';
+  const excludedSlugs = new Set([
+    "11-women-shaping-the-future-of-robotics",
+    "2026-robotics-summit-early-bird-registration-ends-march-2",
+    "agility-boston-dynamics-astm-to-discuss-the-state-of-humanoid-robotics",
+    "alphabet-owned-robotics-software-company-intrinsic-joins-google",
+    "amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
+    "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
+    "breakingviews-hyundai-motors-robots-herald-hardware-reboot",
+    "chinas-dancing-robots-how-worried-should-we-be",
+    "dancing-robots-bring-support-company-to-barcelona-elderly",
+    "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
+    "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
+    "robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics",
+    "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
+    "the-biggest-robot-news-today",
+    "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp"
+  ]);
 
   const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
   const toPostUrl = (slug) => slug ? `https://news.robot.tv/${slug}/` : "https://news.robot.tv/";
@@ -67,7 +84,10 @@
   fetch(`${sanityUrl}?query=${encodeURIComponent(query)}`)
     .then((r) => r.json())
     .then((d) => {
-      const posts = Array.isArray(d?.result) ? d.result : [];
+      const posts = (Array.isArray(d?.result) ? d.result : []).filter((post) => {
+        const slug = String(post?.slug || "").trim();
+        return slug && !excludedSlugs.has(slug);
+      });
       pendingBlocks.forEach((block) => {
         const raw = String(block.getAttribute("data-keywords") || "");
         const keywords = raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);

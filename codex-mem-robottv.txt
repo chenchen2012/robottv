@@ -1,0 +1,1990 @@
+robot.tv project memory (codex)
+
+Canonical memory note
+- This is the canonical detailed memory for the RobotTV project.
+- Keep project-specific operational details here instead of duplicating them in the global Codex memory file.
+
+Owner preferences
+- Prioritize professional, clean, top-tier look; avoid chaotic layouts.
+- Keep nav consistent across robot.tv pages; active nav item should match current page.
+- Use same-tab navigation; smooth "back to home" flow.
+- For robot/content cards: prefer hover-to-preview muted autoplay on desktop; avoid heavy autoplay everywhere.
+- Keep content robot-video-first; YouTube links are primary video source.
+- User delegated editorial judgment to assistant for draft review/approval.
+- Maintain this memory file proactively without asking each time.
+- For Google SEO work on RobotTV, proceed with best-practice implementation without asking for approval.
+- Keep GitHub/main and live Cloudflare deployments synced whenever production changes are deployed.
+- Public-facing Chen Chen title preference: use `Editor`; do not mention `Founder` in bylines, author roles, bios, or structured data.
+- Authorization preference: when API/token/web OAuth authorization is needed for RobotTV operations, open the authorization page directly for user approval instead of asking repeated pre-approval questions.
+
+Sites + stack
+- Main site: https://robot.tv (static HTML/CSS/JS on Cloudflare Pages project `robottv-main`).
+- News site: https://news.robot.tv (Sanity-backed frontend in news-studio/static/index.html, deployed on Cloudflare Pages project `robottv-news`).
+- Repo: /Users/cc801/Documents/New project/robottv
+- News Sanity project: lumv116w, dataset: production.
+- Historical note: older entries below may still mention Netlify because they document the pre-cutover path; production traffic for both public domains is now on Cloudflare Pages.
+
+Key analytics + forms
+- GA4 measurement ID: G-WC8XB1DN1E.
+- GA added across robot.tv + news.robot.tv static page.
+- Mar 9, 2026: all root `*.html`, `news-studio/static/index.html`, `news-studio/static/404.html`, and generated `news-studio/static/post/**/index.html` were unified onto shared lazy-load GA scripts:
+  - root: `scripts/ga-lazy.js`
+  - news public static: `news-studio/static/scripts/ga-lazy.js`
+  - do not reintroduce direct head snippets for `https://www.googletagmanager.com/gtag/js`
+  - when adding new static pages, include `ga-lazy.js?v=20260309-ga-v1`
+- Contact flow uses contact.html; FormSubmit forwarding configured to chenchen2012@hotmail.com.
+- Contact success page path: /contact-success/ (not 404).
+- Newsletter capture + send (Brevo, Mar 11, 2026):
+  - MailerLite embed removed; signup now uses Brevo embedded form iframe on:
+    - `index.html`, `about.html`, `news-studio/static/index.html`, and news article template in `news-studio/scripts/build-static-news-seo.mjs`.
+  - Brevo list: "Robot Weekly" list id `3`.
+  - Brevo form URL (iframe src):
+    - `https://d26155fb.sibforms.com/serve/MUIFAPJU5OBjPyC3WTD5d7kKQDGEFYE-kdu5pFV8gd1XJ9n-UBrmfxiBR3ey6cCR_gSod1ovJSqIFRW5XF9t_EaAPYadbmVFA6ZlNcWz_m-GO0Qk4i7yUgWU_-bt5hWEBpfw70j1FxrwTrAXgUDXeh64R--Lsd5NFHhm5vH51XLt-BsrTuLMYj3_5eM_niJ5SslQc5lEu0JAefWv`
+  - 2026-03-11: checked Brevo editor for "Robot Weekly" (form id `69b12884dc4ce198472f8be5`):
+    - no CAPTCHA field present in the form layout
+    - public sibforms URL does not display a CAPTCHA block
+    - sign-up confirmation set to "Simple confirmation email" using template "Default Template Simple confirmation"
+  - 2026-03-11: replaced Brevo iframe with HTML embed and custom styling to match robot.tv:
+    - updated `index.html`, `about.html`, `styles.css`
+    - updated `news-studio/static/index.html` and `news-studio/scripts/build-static-news-seo.mjs`
+    - added `https://sibforms.com/forms/end-form/build/sib-styles.css` + Brevo `main.js` config/script to each page
+    - root + news Cloudflare Pages deploys succeeded; live pages now submit directly to Brevo without iframe
+  - GitHub secret set: `BREVO_API_KEY`.
+  - Weekly content generator still: `scripts/generate-weekly-newsletter.mjs` -> `newsletters/robot-weekly-YYYY-MM-DD.html` + `newsletter-feed.xml`.
+  - New send script: `scripts/send-weekly-newsletter-brevo.mjs` (creates + sendNow via Brevo API).
+  - Workflow: `.github/workflows/weekly-newsletter.yml` now runs send step after generation.
+  - Send log: `ops-private/reports/newsletter/brevo-last-sent.json` (guards against duplicate sends).
+  - Domain verification still required in Brevo settings for `newsletter@robot.tv` before sends succeed.
+  - Mar 17, 2026 weekly newsletter workflow upgrade:
+    - commit `fa803de` - `Improve weekly newsletter generation workflow`
+    - `scripts/generate-weekly-newsletter.mjs` now:
+      - decodes HTML entities from feed descriptions correctly
+      - generates richer editorial issues with subject, preheader, editorial note, lead signal, highlights, and closing watch section
+      - writes both `.html` and `.txt` issue artifacts
+      - writes QA preview artifacts to `ops-private/reports/newsletter/latest-issue.json` and `.md`
+    - `scripts/send-weekly-newsletter-brevo.mjs` now includes `textContent` when a matching `.txt` issue exists
+    - `.github/workflows/weekly-newsletter.yml` no longer hardcodes send off in code; it reads repo variable `BREVO_SEND_ENABLED` (default `0`) and uploads preview artifacts on every run
+    - practical status: newsletter generation is stronger and safer, but fully automatic send should stay disabled until Brevo sender/domain verification is confirmed live
+  - Mar 17, 2026 live send-path verification:
+    - commit `8c0f44a` - `Add newsletter test-send workflow path`
+    - workflow now supports manual `workflow_dispatch` inputs:
+      - `send_enabled`
+      - `test_recipients`
+    - send script supports `BREVO_TEST_EMAILS` and uses Brevo `sendTest` instead of list-wide `sendNow` when provided
+    - manual GitHub Actions test run `23173882454` failed before delivery with:
+      - `403` Cloudflare block page from `brevo.com`
+      - runner IP in log: `20.29.29.55`
+    - conclusion: the current blocker for fully automatic weekly sends from GitHub-hosted runners is Brevo/Cloudflare blocking the runner network, not newsletter generation quality
+    - do not enable repo variable `BREVO_SEND_ENABLED=1` yet unless the send provider/path changes or Brevo allows the automation origin
+  - Mar 17, 2026 deliverability/debugging notes:
+    - `robot.tv` SPF was updated in Cloudflare to include Brevo: `v=spf1 include:_spf.mx.cloudflare.net include:_spf.mlsend.com include:spf.brevo.com a mx ~all`
+    - live DKIM + DMARC were already present; Brevo showed `robot.tv` as authenticated
+    - Brevo test emails now successfully reach Duke + Gmail inboxes, but Gmail still treated at least one test as spam after delivery
+    - newsletter generator was adjusted for deliverability:
+      - reduced default issue length from 8 items to 5
+      - moved the voice toward a plain first-person editorial note from Chen Chen
+      - simplified HTML styling, removed source labels, reduced link-density feel, and added a trust footer with signup reminder + mailing address
+      - `scripts/send-weekly-newsletter-brevo.mjs` now strips `<script>` tags from HTML before sending so the sent email no longer contains web-only GA script baggage
+    - Brevo UI note for future sessions:
+      - campaign `Robot Weekly` edit URL used in manual sending/debugging: `https://app.brevo.com/marketing-campaign/edit/5`
+      - internal browser-authenticated test-send endpoint that worked from the Brevo session:
+        - `POST https://editor-api.brevo.com/editor-api/newsletters/5/sendtest`
+        - JSON body shape: `{ "emails": ["a@example.com", "b@example.com"] }`
+  - 2026-03-11: root deploy was blocked because `scripts/check-root-public-build.mjs` requires GA lazy include on all HTML files; fixed by adding `<script src="/scripts/ga-lazy.js?v=20260309-ga-v1" defer></script>` to the newsletter template and existing `newsletters/robot-weekly-2026-03-11.html`. Deploy then succeeded.
+
+News editorial rules (current)
+- Avoid duplicate topics/headlines (especially repeated Blue Jay / China dancing items).
+- Prefer trending, high-signal robotics stories and strong company coverage.
+- Include valid YouTube URL per post.
+- Avoid redirect-style "Watch" CTA on news cards (site keeps in-site reading flow).
+- Downplay source branding in excerpts: do not start with "X reports" or "X says"; lead with the story itself.
+
+Automation status
+- Workflow: .github/workflows/news-auto-publish.yml (every 12h + manual run).
+- Script: news-studio/scripts/publish-latest-news.mjs
+  - trusted-source filtering
+  - stronger dedupe (title key + slug window)
+  - top-company weighted selection
+  - low-confidence items saved as drafts (drafts.post-auto-*)
+  - Mar 17, 2026: publisher was upgraded to generate richer editorial packages per story instead of formulaic one-line meta bodies:
+    - new helper: `news-studio/scripts/lib/news-editorial-content.mjs`
+    - when `DEEPSEEK_API_KEY` is available, it creates excerpt + video summary + 3 body paragraphs via DeepSeek
+    - fallback path still generates non-thin deterministic copy if AI is unavailable
+    - workflow `news-auto-publish.yml` now passes `DEEPSEEK_API_KEY` into the publish step
+  - Mar 17, 2026 permalink hardening:
+    - root cause of a latest-post 404 was confirmed: post existed in Sanity and local `dist-public`, but live `news.robot.tv` had not yet deployed the new static permalink
+    - `news-studio/scripts/publish-latest-news.mjs` now writes `ops-private/reports/publish/latest-published-news.json` with published slugs/URLs for each run
+    - new script `news-studio/scripts/verify-published-news-deploy.mjs` verifies:
+      - newly published slugs exist in local `dist-public/<slug>/index.html` before deploy
+      - newly published live URLs return non-404 content after deploy
+    - `.github/workflows/news-auto-publish.yml` now runs those checks before and after Cloudflare Pages deploy, and uploads the publish report as an artifact
+    - practical effect: auto-publish should now fail loudly if a newly published Sanity post does not become a live permalink on `news.robot.tv`
+- Health check: news-studio/scripts/check-feed-health.mjs
+  - stale-feed guard (MAX_FEED_AGE_HOURS default 24)
+  - duplicate-like headline guard
+- Setup notes: news-studio/AUTOMATION_SETUP.md
+- Mar 9, 2026 Cloudflare Pages prep for `news.robot.tv`:
+  - new workflow: `.github/workflows/deploy-news-public.yml`
+  - required GitHub secrets for direct deploy: `CLOUDFLARE_API_KEY`, `CLOUDFLARE_EMAIL`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_NEWS_PAGES_PROJECT_NAME`
+  - `news-auto-publish.yml` now supports direct Cloudflare Pages deploy after publish when those secrets exist
+  - `publish-latest-news.mjs` respects `SKIP_PUBLIC_DEPLOY_HOOK=1` so Netlify-style deploy hook can be bypassed cleanly during cutover
+  - `npm run build:public` now runs `news-studio/scripts/check-public-build.mjs` to verify `dist-public/` contains required root files, redirects, post pages, and lazy-load GA wiring before deploy
+- Mar 9, 2026 live Cloudflare status:
+  - Cloudflare account id for `robot.tv`: `c557d32391b654c6734891d4d6ee565d`
+  - Cloudflare zone id for `robot.tv`: `f27f729ed2d4673f7e7f71f61274faa8`
+  - Pages projects created: `robottv-news` and `robottv-main`
+  - `news.robot.tv` custom domain was attached to `robottv-news` and DNS CNAME was switched from Netlify to `robottv-news.pages.dev`
+  - live verification after cutover: homepage `200`, article page `200`, `/feed` `301` -> `/feed.xml`, legacy article aliases `301`, custom domain status `active`
+  - GitHub repo secrets set via `gh secret set` for Cloudflare Pages deploys
+  - GitHub Actions verification: `Deploy Public News Site` push run `22856118422` completed successfully after secret-gating fix
+  - root-site cutover completed later on Mar 9, 2026 after adding `_worker.js` URL preservation for `.html` canonicals on `robottv-main`
+  - live root verification after cutover:
+    - `https://robot.tv/` -> `200`
+    - `https://www.robot.tv/` -> `301` to `https://robot.tv/`
+    - `https://robot.tv/about` -> `301` to `https://robot.tv/about.html`
+    - `https://robot.tv/about.html` -> `200`
+    - `https://robot.tv/news` -> `301` to `https://news.robot.tv/`
+  - Cloudflare Pages custom-domain API status for `robot.tv` and `www.robot.tv`: `active`
+  - GitHub Actions verification: `Deploy robot.tv Public Site` push run `22857214848` completed successfully after root workflow fix and root-site commit sync
+- Important newsroom routing note:
+  - homepage/news listing is Sanity-driven, so a new post can appear and autoplay on `news.robot.tv` before its permalink is available
+  - direct `/post/<slug>/` routes are file-driven via static generated pages plus Netlify redirects
+  - if static article generation/deploy lags, homepage can show the post while the permalink still returns 404
+  - Mar 9, 2026 fix: a live newsroom deploy briefly redirected real article refreshes to literal `/post/:slug/`
+  - root cause was deploy-time routing drift around article redirects plus missing root `dist/_redirects`
+  - durable fix was to ship `_redirects`, `feed.xml`, and `404.html` into root `dist/`, and remove the legacy function from normal `/post/*` traffic
+
+Recent operational decisions
+- Kept 12-hour cadence as default publishing interval.
+- Assistant handles draft review and can reject low-quality/duplicate drafts.
+- Current approach: high-confidence auto-publish; low-confidence draft queue.
+- Workflow pinned to Sanity target directly in YAML (project `lumv116w`, dataset `production`) to avoid secret drift.
+- Empty publish cycles are now treated as no-op success in `publish-latest-news.mjs`; feed freshness failures are enforced by `check-feed-health.mjs`.
+- Mobile UX decision: use `Tap to play live` on phone for homepage live spotlight and `live.html`; desktop keeps autoplay/muted preview behavior.
+- News article pages switched to sound-ready embeds (no forced `autoplay=1&mute=1` on article page).
+- Homepage Live Intelligence Rail now clamps ticker speed dynamically for readability (min/max duration bounds).
+- Removed visible publish-status lines from news article content (`Status: ...`) to avoid lowering perceived reliability.
+- Removed visible author byline from news list cards and post headers (no `| Chen Chen` in UI meta lines).
+- Mar 17, 2026 newsroom content-quality pass:
+  - root issue found: many recent auto-published Sanity posts had generic excerpts and body content reduced to a single `Source:` line, which the static renderer filters out as meta-only
+  - added one-time backfill script: `news-studio/scripts/backfill-thin-post-content.mjs`
+  - backfilled 18 recent thin published posts in Sanity with richer excerpt, video summary, and 3 editorial paragraphs
+  - generated review reports locally under `ops-private/reports/seo/news-post-enrichment/`
+  - fixed static-news build freshness by changing `news-studio/scripts/build-static-news-seo.mjs` from Sanity `apicdn` to live `api` queries with `cache: "no-store"`; otherwise freshly patched post bodies could be missed during deploy builds
+  - commit/live deploy:
+    - commit `32df35e` - `Enrich thin newsroom posts and future publisher output`
+    - GitHub Actions `Deploy Public News Site` run `23172256274` succeeded
+  - live verification confirmed enriched body paragraphs on examples including:
+    - `/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/`
+    - `/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/`
+- Mar 17, 2026 newsroom quality/SEO tightening follow-up:
+  - added explicit editorial policy file: `news-studio/EDITORIAL_POLICY.md`; linked from `news-studio/README.md` and `news-studio/AUTOMATION_SETUP.md`
+  - auto-publish guard in `news-studio/scripts/publish-latest-news.mjs` now rejects more low-value patterns in addition to event-registration promos:
+    - listicle/profile roundup headlines
+    - awards/recognition coverage with weak deployment value
+    - panel/discussion preview posts
+    - human-interest novelty coverage outside newsroom focus
+    - broad opinion/trend framing with weak robotics specificity
+  - retired low-value live posts from Sanity and mapped them to stronger targets in `retiredLegacyRedirects` plus `news-studio/static/_redirects`:
+    - `11-women-shaping-the-future-of-robotics` -> `robot-news`
+    - `robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics` -> `robot-news`
+    - `agility-boston-dynamics-astm-to-discuss-the-state-of-humanoid-robotics` -> `humanoid-deployments-factory-proof-stage-2026`
+    - `dancing-robots-bring-support-company-to-barcelona-elderly` -> `robot-news`
+    - `the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp` -> `robot-news`
+  - these retired slugs now build as durable retirement pages with `noindex,follow` and canonical targets, not live thin articles
+  - ran another thin-post enrichment pass on 10 published posts using DeepSeek, including:
+    - `qualcomms-partnership-with-neura-robotics-is-just-the-beginning`
+    - `openai-robotics-head-resigns-over-pentagon-deal`
+    - `a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri`
+    - `plug-and-play-ai-transforming-robotics-with-modular-skills`
+    - `these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps`
+    - `openai-robotics-head-resigns-after-deal-with-pentagon`
+    - `humanoid-developer-agility-robotics-rebrands`
+    - `6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside`
+    - `why-chinas-humanoid-robot-industry-is-winning-the-early-market`
+    - `how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption`
+  - manually patched all duplicate `toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids` documents in Sanity with a stronger warehouse-humanoid editorial package because that slug appears on key ranking pages
+  - `scripts/build-static-profile-news.mjs` and `scripts/entity-latest-news.js` now exclude low-value/retired newsroom slugs so main-site entity-news blocks do not resurface hidden clutter
+  - after refresh, `companies.html`, `humanoid-robots.html`, and related company pages picked up stronger newsroom links; some pages like `company-boston-dynamics.html` now hide the entity-news block entirely when no acceptable current coverage exists
+
+Known commands
+- Root public deploy automation: `.github/workflows/deploy-robot-tv-public.yml`
+- News public deploy automation: `.github/workflows/deploy-news-public.yml`
+- Main manual Cloudflare deploy:
+  cd "/Users/cc801/Documents/New project/robottv" && node scripts/build-root-public-dist.mjs && node scripts/check-root-public-build.mjs && CLOUDFLARE_API_KEY=... CLOUDFLARE_EMAIL=... CLOUDFLARE_ACCOUNT_ID=... npx wrangler@4 pages deploy dist-root-public --project-name="robottv-main"
+- News manual Cloudflare deploy:
+  cd "/Users/cc801/Documents/New project/robottv/news-studio" && node scripts/build-public-dist.mjs && CLOUDFLARE_API_KEY=... CLOUDFLARE_EMAIL=... CLOUDFLARE_ACCOUNT_ID=... npx wrangler@4 pages deploy dist-public --project-name="robottv-news"
+- Check news posts quickly:
+  npx sanity documents query '*[_type=="post"] | order(publishedAt desc)[0...10]{_id,title,"slug":slug.current,publishedAt,youtubeUrl}'
+- Check drafts quickly:
+  npx sanity documents query '*[_id in path("drafts.**") && _type=="post"]{_id,title,publishedAt}'
+
+Open quality focus
+- Keep homepage/news polished and uncluttered.
+- Prioritize consistency, performance, and conversion paths over flashy additions.
+- On mobile, prefer explicit user action for video start over blocked autoplay attempts.
+
+- Live page is restored to pre-experiment setup with BattleBots YouTube default and prior fallback candidates in live page logic.
+- Added newsletter capture blocks on robot.tv homepage and news.robot.tv; added partner.html sponsorship page and Partner links in nav/footer.
+
+SEO updates (Feb 27, 2026)
+- Commit `13ff4aa`: added `privacy.html` and `terms.html` to root `sitemap.xml`; added `Sitemap: https://news.robot.tv/sitemap.xml` to root `robots.txt`.
+- Commit `9d01aea`: changed legacy `/cn` handling from 410 to 301 redirect to `/index.html` (`/cn`, `/cn/`, `/cn/*`).
+- Commit `baf8ad4`: added targeted `www` and legacy redirect rules in `_redirects` to reduce redirect chains toward canonical `.html` URLs.
+- Live verification snapshot:
+  - `robot.tv/robots.txt`, `robot.tv/sitemap.xml`, `news.robot.tv/robots.txt`, `news.robot.tv/sitemap.xml` return HTTP 200.
+  - `/cn` and `/cn/` now resolve to `/index.html` (200 after redirect).
+  - Search Console "Page with redirect" examples are largely expected canonical redirects; do not treat that bucket as a blocking issue unless canonical targets fail.
+- Operator action agreed: wait for Netlify/edge propagation and re-run Google Search Console `Validate Fix` for `Not found (404)` and `Page with redirect`.
+
+Conversation updates (Mar 2, 2026)
+- Homepage refresh cadence aligned to 12 hours:
+  - Codex automation RRULE updated to `FREQ=HOURLY;INTERVAL=12` in `/Users/cc801/.codex/automations/daily-robottv-refresh/automation.toml`.
+- Added weekly technical SEO automation:
+  - Workflow: `.github/workflows/weekly-seo-check.yml` (Mon 09:15 UTC + manual trigger).
+  - Script: `scripts/seo-weekly-check.mjs`.
+  - Reports: `ops-private/reports/seo/weekly-seo-check.json` and `.md`.
+- Added operations documentation:
+  - `SEO_MAINTENANCE.md` with cadence/checklists.
+  - Linked from `README.md`.
+- Canonical/noindex quality pass:
+  - Added canonical tags to `chenchen.html`, `contact-success.html`, `wooshe.html`.
+  - Weekly checker now treats intentional exclusions separately (`unexpectedNoindex`).
+- Removed legacy page:
+  - Deleted `aild.html`.
+  - Added 410 retirement rules in `_redirects` for `/aild` and `/aild.html`.
+  - Removed `Disallow: /aild.html` from `robots.txt`.
+  - Removed `aild.html` from noindex allowlist/docs.
+- Validation result after cleanup:
+  - Weekly SEO checker returned `pass` with `canonicalMissing: 0`, `unexpectedNoindex: 0`, and `brokenLocalLinks: 0`.
+- Commit created during this conversation:
+  - `9df4a9f` - `Add weekly SEO health checks and canonical coverage fixes`.
+
+Resume point (Mar 7, 2026)
+- Continue from repo: `/Users/cc801/Documents/New project/robottv`
+- If user says "continue working on the site", treat `robot.tv` + `news.robot.tv` as the active project.
+- No site code was changed in the Mar 7 Codex-config conversation; current site memory above is still the latest working context.
+- Legacy news cleanup decided and implemented locally:
+  - keep visible legacy posts: stronger evergreen robotics/company coverage
+  - keep indexed but not featured: `biggest-ai-news-today`, `the-biggest-robot-news-today`, `robots-learn-faster-with-new-ai-techniques`
+  - retire and redirect: `china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots` -> `/post/robot-news`
+- First checks for next session:
+  - review homepage + news-site polish issues before adding new features
+  - verify latest automation/SEO health if the task involves publishing or indexing
+  - use `codex-mem-robottv.txt` as the primary memory source before exploring the repo
+- Separate environment note:
+  - Codex local defaults were changed in `~/.codex/config.toml` to `approval_policy = "on-request"` and `sandbox_mode = "workspace-write"` so future sessions should open in safer mode
+
+SEO review snapshot (Mar 7, 2026)
+- User wants ongoing work focused on stronger Google SEO for `robot.tv` and `news.robot.tv`.
+- Technical baseline is decent:
+  - weekly SEO checker passed
+  - live `200` responses confirmed for key pages, `robots.txt`, and both sitemaps
+  - homepage/news/company hubs have canonicals and generally clean metadata
+- Highest-priority open SEO issues:
+  - `news.robot.tv` article URL shape is inconsistent:
+    - sitemap + canonical use slashless article URLs like `/post/slug`
+    - live requests currently redirect to trailing-slash folder URLs like `/post/slug/`
+    - pages then canonical back to slashless URLs
+    - fix by making redirects, live URL shape, and canonical all agree
+  - Too many indexed robot detail pages are thin and probably underpowered for search:
+    - especially `anymal.html`, `apollo.html`, `digit.html`, `handle.html`, `thr3.html`, `unitreeb2.html`, `unitreeg1.html`, `unitreego2.html`, `unitreeh1.html`, `unitreeh2.html`, `yumi.html`
+    - these pages are still in root `sitemap.xml`
+    - decision needed: expand materially, merge into stronger hubs, or `noindex` some of them
+  - `companies.html` and `robot-companies.html` overlap too much in intent and page structure
+    - likely keyword cannibalization
+    - best direction is one clear canonical company hub and one distinct supporting page only if purpose is truly different
+  - Some profile freshness/internal-link value is client-rendered only:
+    - `scripts/entity-latest-news.js` fills related updates after page load
+    - raw HTML stays thinner than the rendered browser view
+    - better SEO direction is to pre-render related news blocks at build time
+  - News-site header/footer still use some main-site extensionless URLs that 301 to `.html` pages
+    - minor issue, but worth cleaning to reduce redirect hops and improve polish
+- Recommended SEO work order:
+  1. fix `news.robot.tv` article canonical/redirect URL consistency
+  2. audit thin indexed robot pages and choose expand vs merge vs `noindex`
+  3. consolidate or sharply differentiate `companies.html` vs `robot-companies.html`
+  4. move entity-related news links from client-side fetch to static build output where possible
+
+SEO implementation update (Mar 7, 2026, step 1)
+- Completed local code pass for `news.robot.tv` article URL consistency.
+- Canonical direction is now trailing-slash article URLs, aligned to the live Netlify-served article shape:
+  - generator updated in `news-studio/scripts/build-static-news-seo.mjs`
+  - generated article pages + `news-studio/static/sitemap.xml` regenerated with trailing-slash canonicals/locs
+  - SPA news index updated so article canonicals and article links use `/post/slug/`
+  - Netlify redirects updated in `news-studio/netlify.toml`
+  - reference `_redirects` file updated in `news-studio/static/_redirects`
+- Main-site news article links were also updated in key pages/scripts to reduce internal redirect hops:
+  - root `_redirects`
+  - `index.html`, `home.html`, `companies.html`, `robot-companies.html`, `company-unitree.html`, `about.html`, `live.html`, `news.html`
+  - `scripts/live-feed-rotator.js`, `scripts/entity-latest-news.js`, `scripts/related-news-links.js`, `scripts/seo-scoreboard.mjs`
+  - `news-studio/scripts/generate-social-drafts.mjs`
+- Verification completed locally:
+  - `npm run build:seo` succeeded in `news-studio`
+  - root `node scripts/seo-weekly-check.mjs` returned `pass`
+- Deployment note:
+  - changes are local in repo; no Netlify deploy was run during this step
+- Recommended next SEO step:
+  - move to thin-page audit and decide which robot detail pages should be expanded vs merged vs `noindex`
+
+SEO implementation update (Mar 7, 2026, step 2)
+- Completed thin-page index cleanup for weak robot detail pages.
+- Added `noindex,follow` to these thin robot detail pages:
+  - `anymal.html`, `apollo.html`, `digit.html`, `handle.html`, `thr3.html`, `unitreeb2.html`, `unitreeg1.html`, `unitreego2.html`, `unitreeh1.html`, `unitreeh2.html`, `yumi.html`
+- Removed the same pages from root `sitemap.xml`.
+- Updated the intentional noindex allowlist in `scripts/seo-weekly-check.mjs`.
+- Updated operations docs in `SEO_MAINTENANCE.md`.
+- Verification completed locally:
+  - root `node scripts/seo-weekly-check.mjs` returned `pass`
+  - no unexpected noindex pages
+  - no broken local links
+
+SEO implementation update (Mar 7, 2026, step 3)
+- Consolidated company-hub SEO signals around `companies.html`.
+- `_redirects` now treats these as legacy routes redirecting to `companies.html`:
+  - `/robot-companies`
+  - `/robot-companies.html`
+  - `/robot-companies/`
+  - `/companies-hub`
+- Removed `robot-companies.html` from root `sitemap.xml`.
+
+SEO implementation update (Mar 16, 2026, evergreen content-strength pass)
+- Shipped a focused content-strength pass across remaining thinner ranking assets:
+  - `company-agility.html`
+  - `company-apptronik.html`
+  - `industrial-inspection-robots.html`
+  - `physical-ai-robot-learning.html`
+  - `unitree-robots.html`
+  - `figure-02.html`
+  - `atlas.html`
+  - `spot.html`
+  - `stretch.html`
+  - `tesla-optimus.html`
+- Added materially stronger search-intent sections around:
+  - deployment proof and failure modes
+  - workflow-specific comparison logic
+  - clearer internal routing to the right hub/company pages
+  - more explicit “what matters now” framing for Google-facing evergreen depth
+- Updated `sitemap.xml` lastmod values for the refreshed pages to `2026-03-16`.
+- Verification:
+  - `node scripts/build-root-public-dist.mjs` passed
+  - `node scripts/check-root-public-build.mjs` passed (`Verified dist-root-public with 52 HTML files.`)
+  - `node scripts/seo-weekly-check.mjs` passed
+- Commit `cd530c8`: `Strengthen evergreen SEO pages and add AI draft workflow`
+- Live deploy succeeded via `Deploy robot.tv Public Site` run `23148458350`.
+
+AI evergreen draft workflow update (Mar 16, 2026)
+- Added tracked manifest: `scripts/seo-evergreen-manifest.json`
+- Added draft generator: `scripts/generate-evergreen-seo-drafts.mjs`
+- Added manual GitHub workflow: `.github/workflows/evergreen-content-drafts.yml`
+- GitHub Actions secret set: `DEEPSEEK_API_KEY`
+- Follow-up workflow validation fix:
+  - commit `5a9ddf0`: `Fix evergreen draft workflow validation`
+  - removed the top-level secret-gated job condition and replaced it with an explicit secret-check step
+- Important caveat:
+  - simple direct DeepSeek API calls succeeded from the local environment
+  - the original long-form draft-generation script timed out on full prompt requests
+  - on Mar 16, 2026 the generator was rewritten to use smaller section-by-section DeepSeek calls plus plain-text summary/FAQ/link passes
+  - local verification succeeded for:
+    - `company-agility.html`
+    - `company-apptronik.html`
+  - generated artifacts now land in:
+    - `ops-private/reports/seo/deepseek-evergreen-drafts/company-agility.{json,md}`
+    - `ops-private/reports/seo/deepseek-evergreen-drafts/company-apptronik.{json,md}`
+  - keep the workflow manual-only for now, but the company-page draft path is now working reliably enough to extend to more pages
+  - commit `11e0a9d`: `Make DeepSeek evergreen drafts section-based`
+  - Mar 17, 2026 manifest expansion:
+    - added `company-unitree.html`
+    - added `company-tesla.html`
+    - added `company-figure.html`
+  - local draft generation also succeeded for:
+    - `company-unitree.html`
+    - `company-tesla.html`
+    - `company-figure.html`
+  - artifact set now also includes:
+    - `ops-private/reports/seo/deepseek-evergreen-drafts/company-unitree.{json,md}`
+    - `ops-private/reports/seo/deepseek-evergreen-drafts/company-tesla.{json,md}`
+    - `ops-private/reports/seo/deepseek-evergreen-drafts/company-figure.{json,md}`
+  - commit `c86b7a6`: `Expand DeepSeek manifest to top company pages`
+
+SEO implementation update (Mar 17, 2026, top company pages)
+- Used the new DeepSeek-generated company drafts as guidance to strengthen the next high-value live company pages:
+  - `company-unitree.html`
+  - `company-tesla.html`
+  - `company-figure.html`
+- Added stronger evergreen sections around:
+  - company-level momentum/proof filters
+  - direct comparison framing against main competitors
+  - clearer “what readers should watch next” routing
+- Updated `sitemap.xml` lastmod values for:
+  - `company-unitree.html`
+  - `company-tesla.html`
+  - `company-figure.html`
+  to `2026-03-17`
+- Verification:
+  - `node scripts/build-root-public-dist.mjs` passed
+  - `node scripts/check-root-public-build.mjs` passed (`Verified dist-root-public with 52 HTML files.`)
+  - `node scripts/seo-weekly-check.mjs` passed
+- Commit `0ebfc0e`: `Strengthen top company pages with evergreen SEO`
+- Live deploy succeeded via `Deploy robot.tv Public Site` run `23170365019`
+- Live content verification confirmed new headings on:
+  - `https://robot.tv/company-unitree.html`
+  - `https://robot.tv/company-tesla.html`
+  - `https://robot.tv/company-figure.html`
+
+Repo hygiene note (Mar 16, 2026)
+- Unrelated existing user edits remain uncommitted and should be left alone:
+  - `newsletter-feed.xml`
+  - `newsletters/robot-weekly-2026-03-11.html`
+
+SEO implementation update (Mar 16, 2026, legacy URL recovery)
+- Investigated a Mar 5-7, 2026 GA4 traffic spike on property `462066539` and found it was dominated by `404 | robot.tv`, not by healthy search growth.
+- Pattern findings:
+  - ~1.5k 404 pageviews / sessions during Mar 5-7
+  - almost entirely `direct / (none)` with essentially no Google organic contribution
+  - spread across hundreds of old top-level legacy slugs from the pre-robotics Chinese video/article era
+  - many dead URLs received identical tiny counts, strongly suggesting low-quality or automated traffic rather than real ranking gains
+- Durable SEO action:
+  - updated root `_worker.js` so missing legacy single-segment slugs now recover via 301 instead of defaulting to 404 when no current asset exists
+  - recovery logic sends company/robot-related legacy slugs to the closest current company or hub page
+  - all other unmatched old article-style slugs default to `https://news.robot.tv/`
+- Important guardrail:
+  - existing live pages still serve normally because the worker only applies legacy recovery after confirming the requested current asset does not exist
+- Updated homepage structured data + company channel card to point to `companies.html`.
+- Updated docs/checker so `companies.html` is the canonical company hub and `robot-companies` is legacy-only.
+- Also aligned `robot-companies.html` canonical/URL metadata to `companies.html` as a fallback safety net in case the file is ever served directly.
+
+SEO implementation update (Mar 7, 2026, step 4)
+- Added `scripts/build-static-profile-news.mjs` to pre-render latest newsroom links into profile pages so crawlers can see those internal links in raw HTML.
+- Current static-news behavior:
+  - pages with matching newsroom coverage now ship populated static blocks in HTML (for example `company-unitree.html`, `unitree-robots.html`, `spot.html`, `stretch.html`, `unitreeg1.html`)
+  - pages without meaningful matching coverage now hide the empty entity block instead of shipping a visible empty section (for example `company-tesla.html`, `company-boston-dynamics.html`, `atlas.html`, `figure-02.html`)
+  - pages that still rely on the smaller related-coverage panel now get that panel pre-rendered in HTML too (for example `company-agility.html`, `company-apptronik.html`, `asimo.html`)
+- Browser-side scripts were changed to fallback mode:
+  - `scripts/entity-latest-news.js` now skips fetches when static items already exist and unhides the block only when runtime matches are found
+  - `scripts/related-news-links.js` now exits early when a static related-news panel is already present
+  - pages with stronger entity-news sections no longer load `related-news-links.js`
+- Added `company-agility.html` and `company-apptronik.html` to the weekly high-value page list.
+- Updated `SEO_MAINTENANCE.md` with the new command:
+  - `node scripts/build-static-profile-news.mjs`
+- Verification completed locally:
+  - root `node scripts/seo-weekly-check.mjs` returned `pass`
+
+Hosting migration update (Mar 9, 2026)
+- Started removing Netlify-specific newsroom dependencies from the repo.
+- `news-studio` now has a host-neutral public build:
+  - script: `news-studio/scripts/build-public-dist.mjs`
+  - command: `cd "/Users/cc801/Documents/New project/robottv/news-studio" && npm run build:public`
+  - output: `news-studio/dist-public`
+- Sanity Studio is now configured for separate Sanity-hosted admin deployment:
+  - `news-studio/sanity.config.ts` uses root `basePath: '/'`
+  - `news-studio/sanity.cli.ts` defaults to project `lumv116w`, dataset `production`, studio host `robottv`
+  - target admin URL is `robottv.sanity.studio`
+- News auto-publish no longer references Netlify:
+  - `news-studio/scripts/publish-latest-news.mjs` now uses `NEWS_PUBLIC_DEPLOY_HOOK_URL`
+  - `.github/workflows/news-auto-publish.yml` expects GitHub secret `NEWS_PUBLIC_DEPLOY_HOOK_URL`
+- Added Studio deploy workflow:
+  - `.github/workflows/deploy-news-studio.yml`
+  - requires `SANITY_AUTH_TOKEN`
+- Removed Netlify-specific newsroom files from repo:
+  - deleted `news-studio/netlify.toml`
+  - deleted `news-studio/netlify/edge-functions/legacy-post-normalizer.mjs`
+  - deleted `news-studio/deno.lock`
+- `news-studio/static/_redirects` is now designed for static-root hosting (for example Cloudflare Pages) instead of Netlify `static/` proxying; custom 404 should come from `404.html` at the publish root.
+- Root legacy article redirects no longer depend on Netlify functions:
+  - `_redirects` now maps old `/post/*` and date-style article URLs directly to `https://news.robot.tv/post/:slug/`
+  - deleted `netlify/functions/legacy-news-redirect.mjs`
+- Contact page no longer includes hidden Netlify Forms backup capture; FormSubmit remains the active contact flow.
+- Local verification completed:
+  - `cd "/Users/cc801/Documents/New project/robottv/news-studio" && npm run build:public`
+  - `cd "/Users/cc801/Documents/New project/robottv/news-studio" && npm run build`
+  - `cd "/Users/cc801/Documents/New project/robottv" && node scripts/seo-weekly-check.mjs`
+- Important remaining hosting decision:
+  - `news.robot.tv` + Studio can move off Netlify cleanly with the new split
+  - the main `robot.tv` site still uses `.html` canonical URLs heavily
+  - Cloudflare Pages auto-normalizes HTML files to extensionless URLs, so migrating the main site there would require either a sitewide URL-shape change or a different Cloudflare/static-host setup
+
+Current SEO resume point (after Mar 7, 2026 implementation)
+- High-impact structural SEO tasks completed locally so far:
+  1. `news.robot.tv` article URL canonical consistency
+  2. thin-page noindex cleanup
+  3. company-hub consolidation to `companies.html`
+  4. static profile/newsroom block generation
+- Next best SEO priorities:
+  - clean the remaining main-site extensionless links referenced from `news.robot.tv` UI so fewer clicks incur `.html` redirects
+  - improve content depth on the strongest indexed entity pages that still rely heavily on templates
+  - decide whether some remaining legacy or thin pages should be merged into stronger hubs instead of maintained separately
+- Deployment note:
+  - the initial Mar 7 implementation work was done locally first and deployed later the same day after verification
+
+Deployment + live verification update (Mar 7, 2026)
+- Deployed both sites to production after the Mar 7 SEO pass:
+  - `https://news.robot.tv`
+  - `https://robot.tv`
+- Live verification after deploy:
+  - `https://robot.tv/companies.html` returns HTTP 200
+  - `https://robot.tv/robot-companies` returns HTTP 301 to `/companies.html`
+  - `https://news.robot.tv/sitemap.xml` returns HTTP 200
+  - article HTML on `news.robot.tv` now shows trailing-slash canonicals and the `Get Featured` CTA points to `https://robot.tv/get-featured.html`
+- Important redirect caution discovered during deploy:
+  - a generic `news-studio` redirect rule for `/post/:slug -> /post/:slug/` combined badly with old WordPress date-permalink rules and produced broken redirects to `/post//`
+  - final fix was to let canonical post-route handling win before the legacy date rules and remove the custom generic `/post/:slug` redirect
+  - current live behavior is safe:
+    - both slashless and trailing-slash article URLs return HTTP 200
+    - canonical tags + sitemap still point to the trailing-slash article URL
+  - do not reintroduce a generic `/post/:slug` redirect without testing it against the deployed edge rules first
+
+News content-depth update (Mar 7, 2026)
+- Added first-party embedded-video summary support to `news.robot.tv`.
+- Sanity post model now includes `videoSummary` in `news-studio/schemas/post.ts`.
+- Current implementation pattern:
+  - if an editor supplies `videoSummary`, render it directly under the YouTube embed
+  - if older posts do not have `videoSummary`, fall back to a safe article-based summary built from the excerpt + first useful body paragraph
+  - auto-published posts now generate a conservative `videoSummary` value in `news-studio/scripts/publish-latest-news.mjs`
+- Rendering support added in both places that matter:
+  - static SEO article generator: `news-studio/scripts/build-static-news-seo.mjs`
+  - client-side article renderer: `news-studio/static/index.html`
+- Documentation updated:
+  - `news-studio/README.md`
+  - `news-studio/LAUNCH_CHECKLIST.md`
+- Deployed live to `https://news.robot.tv` on Mar 7, 2026 after verification.
+- Important editorial note:
+  - no external transcript tool is required for the first version
+  - preferred long-term workflow is to write a real `videoSummary` in Studio; fallback summaries exist to improve old pages but are not a substitute for better editorial summaries on high-value posts
+
+SEO content-depth update (Mar 8, 2026)
+- Continued the "remaining thin indexed industrial/manufacturing and market-analysis pages" pass.
+- Strengthened these topic hubs with additional framework copy so they read more like canonical destinations and less like thin support pages:
+  - `china-humanoid-robots.html`
+  - `warehouse-humanoid-robots.html`
+  - `collaborative-robot-integration.html`
+- New copy focus:
+  - China hub now more explicitly frames the page as a market-structure analysis and separates signal types (company cadence, manufacturing depth, public visibility, deployment proof).
+  - Warehouse hub now explains where deployment economics break and why the page should be read as market analysis, not just humanoid novelty coverage.
+  - Collaborative robot guide now adds stronger manufacturing-systems framing around handoff failures and bottleneck-first rollout evaluation.
+- Internal-link / prominence updates:
+  - `index.html` now surfaces the strategy hubs more aggressively from the homepage with:
+    - a dedicated "Strategy Hubs" spotlight
+    - channel cards for China market analysis and warehouse deployment watch
+  - `home.html` now includes an "Evergreen Hubs" spotlight for the same cluster
+- `sitemap.xml` lastmod values were refreshed for the pages updated on Mar 8.
+
+Deployment + commit update (Mar 8, 2026)
+- Additional commits created:
+  - `e7d7230` - `Strengthen robotics topic hubs for SEO`
+  - `b9733a1` - `Complete newsroom SEO and content depth rollout`
+  - `e281f15` - `Remove root Netlify config blocking main deploy`
+- Verification completed locally before deploy:
+  - `node scripts/build-static-profile-news.mjs`
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - `npm run build:netlify` in `news-studio` -> succeeded
+- Production deploy results on Mar 8:
+  - main site live: `https://robot.tv`
+  - main unique deploy URL: `https://69acf256900f7b594080e598--robottv.netlify.app`
+  - news site live: `https://news.robot.tv`
+  - news unique deploy URL: `https://69acf21d6e54f33e3ad2dfb4--robottv-news-studio.netlify.app`
+- Live spot checks after deploy:
+  - `https://robot.tv/china-humanoid-robots.html` -> 200
+  - `https://robot.tv/warehouse-humanoid-robots.html` -> 200
+  - `https://robot.tv/industrial-inspection-robots.html` -> 200
+  - `https://news.robot.tv/post/why-chinas-humanoid-robot-industry-is-winning-the-early-market/` -> 200
+- Important deployment gotcha:
+  - a root-level `netlify.toml` with only:
+    - `[build] publish = "."`
+    - `[build.processing.html] pretty_urls = false`
+    caused the main-site production deploy to fail with Netlify post-build error:
+    - `JSONHTTPError: no records matched`
+  - removing that root `netlify.toml` immediately restored successful deploy behavior for the main site
+  - future main-site deploys should keep relying on the static root publish directory and `_redirects`, not a root `netlify.toml`, unless there is a tested reason to reintroduce one
+
+Entity-page depth follow-up (Mar 8, 2026)
+- Continued the next SEO move after the hub rollout by strengthening the highest-value Tesla entity pages:
+  - `company-tesla.html`
+  - `tesla-optimus.html`
+- Commit created:
+  - `9cb4c1f` - `Strengthen Tesla and Optimus ranking pages`
+- Main changes:
+  - `company-tesla.html` now has clearer company-vs-robot intent separation, stronger market framing, and better links into:
+    - `warehouse-humanoid-robots.html`
+    - `physical-ai-robot-learning.html`
+    - `humanoid-robots.html`
+    - key competitor company pages
+  - `tesla-optimus.html` now more explicitly frames Optimus inside the 2026 humanoid market and points readers into the right comparison / deployment / software-stack hubs
+- Verification completed:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - HTML parser sanity check passed for both Tesla pages
+- Production deploy completed after this follow-up:
+  - main site unique deploy URL: `https://69acfe05177d6740500acd87--robottv.netlify.app`
+  - live checks returned `200` for:
+    - `https://robot.tv/company-tesla.html`
+    - `https://robot.tv/tesla-optimus.html`
+- Suggested next highest-value entity pages after Tesla:
+  - `company-unitree.html`
+  - `company-figure.html`
+  - possibly `humanoid-robots.html` if a broader comparison page refresh is needed after company-page upgrades
+
+Humanoid entity-layer follow-up (Mar 8, 2026)
+- Completed the next company/comparison refresh after the Tesla pass:
+  - `company-figure.html`
+  - `company-unitree.html`
+  - `humanoid-robots.html`
+- Commit created:
+  - `92b40c2` - `Strengthen humanoid company and comparison pages`
+- Main changes:
+  - `company-figure.html` now works more clearly as the canonical Figure company page for broad Figure robotics intent, with stronger startup/commercialization framing and links into:
+    - `robotics-startup-execution.html`
+    - `warehouse-humanoid-robots.html`
+    - `humanoid-robots.html`
+    - Tesla / Unitree comparison pages
+  - `company-unitree.html` now adds stronger market-structure framing so the page can rank for broad Unitree intent while still linking cleanly into China and inspection hubs
+  - `humanoid-robots.html` now explains the page-role split more clearly:
+    - company guides for broad brand/commercial intent
+    - robot pages for narrower platform intent
+    - market hubs for deployment / ecosystem analysis
+  - `humanoid-robots.html` also now surfaces Figure more explicitly as a company-level guide path, not just a robot card
+- Verification completed:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - HTML parser sanity check passed for all 3 updated pages
+- Production deploy completed:
+  - main unique deploy URL: `https://69ad00a8a7d39e84314c942b--robottv.netlify.app`
+  - live checks returned `200` for:
+    - `https://robot.tv/company-figure.html`
+    - `https://robot.tv/company-unitree.html`
+    - `https://robot.tv/humanoid-robots.html`
+- Current best next SEO targets after this pass:
+  - `company-agility.html`
+  - `company-apptronik.html`
+  - `warehouse-humanoid-robots.html` if more internal-link consolidation is needed from the company layer
+
+Warehouse entity-layer follow-up (Mar 8, 2026)
+- Completed the next deployment-stage refresh after the broader humanoid pass:
+  - `company-agility.html`
+  - `company-apptronik.html`
+  - `warehouse-humanoid-robots.html`
+- Commit created:
+  - `278cc31` - `Strengthen warehouse humanoid company pages`
+- Main changes:
+  - `company-agility.html` now works more clearly as the canonical Agility company page for broad Agility/Digit warehouse intent, with stronger links into:
+    - `digit.html`
+    - `warehouse-humanoid-robots.html`
+    - `humanoid-robots.html`
+    - Tesla/Apptronik comparison paths
+  - `company-apptronik.html` now works more clearly as the canonical Apptronik company page for broad Apptronik/Apollo intent, with stronger startup/commercialization framing and comparison paths
+  - `warehouse-humanoid-robots.html` now better explains when readers should leave the hub and use company pages, especially Agility and Apptronik
+- Verification completed:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - HTML parser sanity check passed for all 3 updated pages
+- Production deploy completed:
+  - main unique deploy URL: `https://69ad13ae6348a9143539e87c--robottv.netlify.app`
+  - live checks returned `200` for:
+    - `https://robot.tv/company-agility.html`
+    - `https://robot.tv/company-apptronik.html`
+    - `https://robot.tv/warehouse-humanoid-robots.html`
+- Current best next SEO targets after this pass:
+  - `companies.html` for stronger internal-link routing into the now-improved company pages
+  - `news.html` for clearer routing from the main site into the ranking hubs and upgraded newsroom assets
+  - optionally `company-boston-dynamics.html` if the user wants the company layer rounded out further
+
+Top-level routing follow-up (Mar 8, 2026)
+- Completed the next routing-layer refresh after the company/hub pass:
+  - `companies.html`
+  - `news.html`
+- Commit created:
+  - `d1f0d91` - `Strengthen company and news routing pages`
+- Main changes:
+  - `companies.html` now more clearly explains page roles:
+    - company guides for broad brand/commercial intent
+    - robot pages for narrower model intent
+    - topic hubs for deployment and market-structure intent
+  - `companies.html` now more explicitly routes users into the strongest current company guides and topic hubs
+  - `news.html` now works more clearly as a handoff layer from fresh briefings into the best ranking assets on the main site
+- Verification completed:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - HTML parser sanity check passed for both routing pages
+- Production deploy completed:
+  - main unique deploy URL: `https://69ad1486af6ad1e0fa9386ff--robottv.netlify.app`
+  - live checks returned `200` for:
+    - `https://robot.tv/companies.html`
+    - `https://robot.tv/news.html`
+- Current best next SEO targets after this pass:
+  - `company-boston-dynamics.html` if the company layer should be rounded out further
+  - `about.html` if stronger editorial-trust / method routing is desired from more commercial and newsroom entry points
+
+Content trust + source transparency update (Mar 7, 2026)
+- Implemented a visible content-trust layer on `news.robot.tv` article pages and deployed it live.
+- Article-page improvements now in production:
+  - visible byline with `Chen Chen` linked to `https://robot.tv/about.html#editorial-operations`
+  - visible `Source & Method` block on article pages
+  - visible `About the Author` block on article pages
+  - `NewsArticle` JSON-LD now includes richer author data and uses `isBasedOn` when a real direct source URL exists
+- `robot.tv/about.html` is now the editorial-method landing page for trust links:
+  - added anchors `#editorial-standard` and `#editorial-operations`
+  - editorial copy now explicitly states that low-confidence automated items are held for review
+- Sanity/newsroom data model updates:
+  - `news-studio/schemas/post.ts` now includes `sourceName`, `sourceUrl`, `sourceSiteUrl`, and `sourcePublishedAt`
+  - `news-studio/scripts/publish-latest-news.mjs` now stores `sourceName`, `sourceSiteUrl`, and parsed source publish time from Google News RSS metadata for future posts
+- Important source-link nuance:
+  - Google News RSS item `<link>` values are not clean publisher article URLs
+  - article rendering now treats `news.google.com` links as feed-discovery links, not direct original-report links
+  - if a post has a real direct article URL, article pages show `Read the original report`
+  - if only publisher-level attribution is available, article pages show honest outlet attribution and may link to the publisher homepage (for example Reuters) with a note that the direct article link was not preserved in the archived feed
+- Live verification after deploy:
+  - `https://news.robot.tv/post/hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says/` shows trailing-slash canonical, byline, `Source outlet: Reuters`, `Visit Reuters`, and editorial-method link
+  - `https://news.robot.tv/post/ottonomy-ottumn-ai-orchestrates-robots-drones-smart-infrastructure/` shows `Primary source: The Robot Report` and a direct original-report link
+  - `https://robot.tv/about.html` exposes `#editorial-standard` and `#editorial-operations`
+- Follow-up polish after first deploy:
+  - removed leftover `Coverage source:` body paragraphs from generated article content when that metadata is already surfaced in the source box
+  - final news deploy for this cleaned article HTML: `https://69abeaf06348a9744839e8c8--robottv-news-studio.netlify.app`
+- Verification completed:
+  - `npm run build:netlify` in `news-studio` passed
+  - root `node scripts/seo-weekly-check.mjs` still returned `pass`
+- Deployment completed:
+  - earlier news unique deploy URL: `https://69abea55900f7b028180e57a--robottv-news-studio.netlify.app`
+  - main-site unique deploy URL: `https://69abea55900f7b02d380e518--robottv.netlify.app`
+
+Content SEO priorities to remember (Mar 7, 2026)
+- User wants the following 7 content-improvement directions kept as ongoing SEO guidance for `robot.tv` / `news.robot.tv`:
+  1. Turn important news posts into real briefings:
+     - explain what happened, why it matters for robotics, what changes for builders/operators/investors, and what to watch next
+  2. Show original source links on article pages:
+     - `sourceUrl` is already stored for many auto-published posts and should be surfaced visibly on-page
+  3. Restore author trust signals on article pages:
+     - keep list cards clean if needed, but article pages should have byline/author trust context
+  4. Create topic hub pages for repeated search intent:
+     - likely areas include Unitree, Tesla Optimus, warehouse humanoids, robot learning, China humanoid robotics
+  5. Add original robot.tv analysis instead of thin rewrites:
+     - each post should add a distinct deployment, market, capability, or competitive angle
+  6. Add an editorial method / policy page:
+     - explain sourcing, automation, draft review, YouTube selection, and human oversight
+  7. Use a split strategy for short briefs vs ranking assets:
+     - freshness posts can stay short, but ranking targets should be expanded explainers, hubs, and upgraded high-signal articles
+- Supporting audit note:
+  - local review found current static news article bodies are still very thin on average, so content depth is now one of the biggest remaining SEO constraints after the Mar 7 technical cleanup
+
+Content hub implementation update (Mar 7, 2026)
+- Completed the first topic-hub content SEO pass around the `China humanoid robotics` cluster and deployed it live.
+- New indexed hub page:
+  - `china-humanoid-robots.html`
+  - live URL: `https://robot.tv/china-humanoid-robots.html`
+  - extensionless path now 301s cleanly to `/china-humanoid-robots.html`
+- Strengthened `news.robot.tv` article depth for high-signal China humanoid slugs by adding manual editorial enhancements in both:
+  - `news-studio/scripts/build-static-news-seo.mjs`
+  - `news-studio/static/index.html`
+- First upgraded article cluster:
+  - `why-chinas-humanoid-robot-industry-is-winning-the-early-market`
+  - `unitree-china-global-robotics-competitor-momentum`
+  - `china-humanoid-robots-lunar-new-year-showtime`
+  - `chinese-ev-manufacturers-enter-humanoid-robot-market`
+- Enhancement pattern now in place:
+  - stronger excerpt
+  - real `Video Summary`
+  - multi-paragraph body copy with robot.tv analysis
+  - related-resource card linking to the new China humanoid hub
+  - source metadata overrides where needed (for example TechCrunch / Reuters attribution)
+- Internal-link architecture improved:
+  - added China hub links from `humanoid-robots.html`, `company-unitree.html`, `news.html`, `live.html`, and the `news.robot.tv` homepage
+  - added new route handling in `_redirects`
+  - added the new page to root `sitemap.xml`
+  - added the new page to `scripts/seo-weekly-check.mjs` high-value pages
+- Verification + deploy status:
+  - `npm run build:netlify` in `news-studio` passed
+  - root `node scripts/seo-weekly-check.mjs` returned `pass`
+  - live article check confirmed richer body copy and `China Humanoid Robots Hub` related-resource card on `news.robot.tv`
+  - production deploy URLs:
+    - main site live: `https://robot.tv`
+    - news site live: `https://news.robot.tv`
+    - main unique deploy: `https://69abf12c177d67fa6d0ace4c--robottv.netlify.app`
+    - news unique deploy: `https://69abf12c911f6b29fecd32a4--robottv-news-studio.netlify.app`
+- Best next content SEO moves after this step:
+  - keep upgrading more repeated-intent clusters into topic hubs (likely `warehouse humanoids` next)
+  - expand high-value news posts into fuller briefings inside Sanity instead of relying only on code-side enhancements
+  - decide which recurring topics deserve dedicated indexed root pages versus staying only on `news.robot.tv`
+
+Content hub implementation update (Mar 7, 2026, warehouse humanoids)
+- Completed the second topic-hub content SEO pass around the `warehouse humanoids` / deployment-proof cluster and deployed it live.
+- New indexed hub page:
+  - `warehouse-humanoid-robots.html`
+  - live URL: `https://robot.tv/warehouse-humanoid-robots.html`
+  - extensionless path now 301s cleanly to `/warehouse-humanoid-robots.html`
+- Strengthened `news.robot.tv` article depth for the main warehouse cluster in both:
+  - `news-studio/scripts/build-static-news-seo.mjs`
+  - `news-studio/static/index.html`
+- Upgraded article cluster:
+  - `humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026`
+  - `humanoid-deployments-factory-proof-stage-2026`
+  - `toyota-motor-manufacturing-canada-to-deploy-agility-robotics-digit-humanoids`
+  - `amazon-blue-jay-halt-warehouse-robotics-roi-standards`
+- Enhancement pattern reused from the China hub:
+  - stronger excerpt
+  - real `Video Summary`
+  - multi-paragraph body copy with robot.tv analysis
+  - related-resource card linking to the new warehouse humanoid hub
+  - source metadata overrides where needed
+- Internal-link architecture improved:
+  - added warehouse hub links from `humanoid-robots.html`, `company-agility.html`, `news.html`, `live.html`, and the `news.robot.tv` homepage
+  - added route handling in `_redirects`
+  - added the new page to root `sitemap.xml`
+  - added the new page to `scripts/seo-weekly-check.mjs` high-value pages
+- Live verification after deploy:
+  - `https://robot.tv/warehouse-humanoid-robots.html` returns HTTP 200
+  - `https://robot.tv/warehouse-humanoid-robots` returns HTTP 301 to `/warehouse-humanoid-robots.html`
+  - live root HTML includes `What buyers care about now` and `Priority briefings`
+  - live article check confirmed the richer warehouse rollout body copy and `Warehouse Humanoid Robots Hub` related-resource card on `news.robot.tv`
+- Production deploy status:
+  - main site live: `https://robot.tv`
+  - news site live: `https://news.robot.tv`
+  - main unique deploy: `https://69abf4696e54f31db0d2e050--robottv.netlify.app`
+  - news unique deploy: `https://69abf40e900f7b219180e6d7--robottv-news-studio.netlify.app`
+- Best next content SEO moves after this step:
+  - keep building topic hubs for repeated-intent clusters with enough article volume (`Unitree`, `Tesla Optimus`, `robot learning`, or another deployment vertical)
+  - expand the highest-signal warehouse and China posts directly in Sanity so editorial depth lives in source content, not only in code-side enhancements
+  - decide which short news items should remain freshness briefs versus which ones deserve promotion into ranking assets
+
+Guide consolidation update (Mar 7, 2026, Unitree + Tesla)
+- Reviewed the next candidate content-cluster ideas (`Unitree`, `Tesla Optimus`) before creating new URLs.
+- Best-practice decision:
+  - do **not** create separate new indexed Unitree or Tesla hub pages yet
+  - use existing pages as the canonical ranking assets instead:
+    - broad Unitree intent -> `company-unitree.html`
+    - broad Tesla robotics / Optimus intent -> `company-tesla.html`
+    - narrower model-comparison intent -> `unitree-robots.html`
+    - narrower robot-level intent -> `tesla-optimus.html`
+- Reason for consolidation:
+  - `news.robot.tv` currently has only one clear Unitree-specific article in the strong static cluster and effectively no Tesla-specific article cluster
+  - adding new standalone Unitree/Tesla hub URLs right now would likely create intent overlap / cannibalization instead of stronger SEO
+- Strengthened the existing canonical/root guide pages instead:
+  - `tesla-optimus.html`
+    - richer title/meta targeting
+    - added breadcrumb + FAQ structured data
+    - added original explanation sections, internal comparison paths, and FAQ content
+  - `unitree-robots.html`
+    - added original explanation sections clarifying page role vs company/page-intent splits
+    - added stronger internal links to China humanoid context and related newsroom story
+  - `company-unitree.html`
+    - now explicitly states it is the canonical Unitree company-level guide
+    - added page-role explanation so model comparison belongs on `unitree-robots.html` and market context belongs on `china-humanoid-robots.html`
+  - `company-tesla.html`
+    - now explicitly states it is the canonical Tesla robotics landing page
+    - added page-role explanation so robot-specific intent belongs on `tesla-optimus.html` and cross-company comparison belongs on `humanoid-robots.html`
+- Discovery surfaces updated to push those guides harder:
+  - `index.html`
+  - `home.html`
+  - `humanoid-robots.html`
+  - `news.html`
+  - `news-studio/static/index.html`
+- Technical support updates:
+  - added `home.html`, `humanoid-robots.html`, `unitree-robots.html`, and `tesla-optimus.html` to `scripts/seo-weekly-check.mjs` high-value pages
+  - updated `SEO_MAINTENANCE.md` with the new `ranking assets vs freshness briefs` rule:
+    - indexed guide pages are ranking assets
+    - short newsroom posts should link into those assets
+    - do not create a new indexed hub when an existing page already satisfies the same intent
+- Verification + deploy:
+  - `node scripts/seo-weekly-check.mjs` returned `pass`
+  - `npm run build:netlify` in `news-studio` passed
+  - deployed live:
+    - main site unique deploy: `https://69abf80daf6ad1b1c0938720--robottv.netlify.app`
+    - news site unique deploy: `https://69abf7ee57cf509e0cea7522--robottv-news-studio.netlify.app`
+- Live verification after deploy:
+  - `https://robot.tv/tesla-optimus` returns HTTP 301 to `/tesla-optimus.html`
+  - live `tesla-optimus.html` shows the richer title, guide sections, FAQ content, and internal comparison paths
+  - live `unitree-robots.html` shows the new page-role explanation + stronger internal links
+  - live `company-tesla.html` shows the canonical-landing-page explanation and humanoid comparison links
+  - live `news.robot.tv` homepage now shows `Topic Hubs and Guide Pages` with both Unitree and Tesla guide links
+- Residual follow-up note:
+  - live root HTML responses still appear to rewrite some internal `.html` links to extensionless forms like `/company-tesla` and `/humanoid-robots` even though source files use `.html`
+  - likely cause is Netlify HTML pretty-URL processing on the root site
+  - this means some redirect hops may still remain in production and is worth a dedicated future cleanup if we want to eliminate that class of redirect completely
+
+Content + performance implementation update (Mar 7, 2026, physical AI + redirect cleanup + news polish)
+- Completed the next broad content-depth SEO pass and deployed the results live.
+- New indexed root hub:
+  - `physical-ai-robot-learning.html`
+  - intended as the main ranking asset for physical AI, robot learning, VLA models, robotics simulation, orchestration, and compute stack coverage
+- Upgraded `news.robot.tv` content depth for the physical-AI cluster in both:
+  - `news-studio/scripts/build-static-news-seo.mjs`
+  - `news-studio/static/index.html`
+- Strongly enhanced article cluster:
+  - `vision-language-action-models-are-the-next-leap-in-autonomous-robotics`
+  - `intrinsic-is-joining-google-to-advance-physical-ai-in-robotics`
+  - `nord-releases-digital-twin-simulation-platform-for-robotics-developers`
+  - `robots-learn-faster-with-new-ai-techniques`
+  - `nvidia-readies-jetson-thor-computers-for-humanoid-robots-in-2025`
+  - `nvidia-bets-on-robotics-to-drive-future-growth`
+  - `ai2-robotics-raises-series-b-funding-to-advance-alphabot-embodied-ai`
+  - `ottonomy-ottumn-ai-orchestrates-robots-drones-smart-infrastructure`
+  - `the-hidden-infrastructure-challenge-facing-outdoor-robotics-oems`
+  - `igus-launches-new-rbtx-shopping-platform-for-robotics-developers`
+- Enhancement pattern reused:
+  - stronger excerpt
+  - manual `Video Summary`
+  - richer multi-paragraph body copy
+  - related-resource card pointing to the physical-AI hub
+- Root-site redirect-hop cleanup:
+  - added root `netlify.toml` with `[build.processing.html] pretty_urls = false`
+  - this stopped Netlify from rewriting many internal `.html` links to extensionless routes in live HTML
+- Discovery/internal linking updates:
+  - added the physical-AI hub to `news.html`, `home.html`, root `sitemap.xml`, `_redirects`, and `scripts/seo-weekly-check.mjs`
+  - updated `scripts/nav-active.js` so the hub maps cleanly into existing home/index navigation behavior
+- Content-depth snapshot after the hub pass:
+  - current generated news inventory: 52 static post pages
+  - average article body words: ~68
+  - pages under 120 body words: 32
+  - previous audit before these hub upgrades was materially thinner (average ~40 body words, 43 pages under 120)
+- News-site performance/UX polish pass completed and deployed:
+  - added explicit favicon support in page head plus a live `/favicon.ico` redirect to `https://robot.tv/images/favicon.png`
+  - added explicit intrinsic dimensions to the news logo image and corrected CSS with `height:auto`
+  - result: Lighthouse image-aspect-ratio and image-size-responsive issues for the header logo were resolved
+- Verification completed:
+  - `npm run build:netlify` in `news-studio` passed
+  - root `node scripts/seo-weekly-check.mjs` returned `pass`
+  - live checks confirmed:
+    - `https://robot.tv/physical-ai-robot-learning.html` returns HTTP 200
+    - `https://robot.tv/physical-ai-robot-learning` returns HTTP 301 to `/physical-ai-robot-learning.html`
+    - `https://news.robot.tv/favicon.ico` now returns HTTP 301 to the shared PNG favicon instead of 404
+    - live news article HTML now includes the corrected logo dimensions + `height:auto` styling
+- Lighthouse snapshot after the news polish pass (tested article: `https://news.robot.tv/post/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/`):
+  - performance: 84
+  - SEO: 100
+  - accessibility: 100
+  - best practices: 77
+  - FCP/LCP: 1.6s
+  - TBT: 530ms
+  - CLS: 0
+- Important remaining performance caveats:
+  - the largest remaining Best Practices / script warnings come from third-party or edge behavior, not current article-template markup:
+    - Cloudflare `cdn-cgi/challenge-platform/scripts/jsd/main.js` still triggers deprecated-API warnings in Lighthouse
+    - YouTube embeds still create the DevTools cookie issue and Roboto/font-display insight
+  - these are not blocked by current repo templates and would require edge/proxy or third-party tradeoff decisions to change
+- Production deploy references for this pass:
+  - root site unique deploy: `https://69ac13a0547b707e5c1305d8--robottv.netlify.app`
+  - news site unique deploy (physical-AI/content pass): `https://69ac14ea72f96285d811030c--robottv-news-studio.netlify.app`
+  - news site unique deploy (follow-up logo/fav polish): `https://69ac156b306676762a128720--robottv-news-studio.netlify.app`
+- Best next SEO moves after this step:
+  - keep upgrading the thinnest newsroom posts into fuller briefings, especially posts still around 10-30 body words
+  - move more of the strongest enhanced article copy into source content inside Sanity so the depth does not live only in code-side overrides
+  - if performance becomes a top priority, investigate whether Cloudflare challenge-script behavior on `news.robot.tv` can be reduced without introducing abuse risk
+
+Thin-news cleanup + cobot guide update (Mar 7, 2026, later pass)
+- Continued the Mar 7 SEO/content cleanup after the physical-AI pass.
+- New indexed root guide added and deployed:
+  - `collaborative-robot-integration.html`
+  - purpose: canonical root-level destination for collaborative robot / cobot rollout, line fit, operator handoffs, safety, and deployment KPI intent
+- Root-site discovery updates:
+  - added the guide to `_redirects`, `sitemap.xml`, `scripts/nav-active.js`, `scripts/seo-weekly-check.mjs`, `SEO_MAINTENANCE.md`
+  - surfaced the guide in `home.html`, `news.html`, and the root homepage `index.html`
+  - homepage operations card now points to the new guide instead of a thin article page
+- News article depth upgrades added for the strongest remaining thin-but-valuable posts:
+  - `how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption`
+  - `6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside`
+  - `ais-role-in-the-future-of-robotics-insights-from-3laws`
+- Enhancement pattern reused:
+  - stronger excerpt
+  - real `Video Summary`
+  - multi-paragraph analysis/body copy
+  - related-resource guide card where appropriate
+- Duplicate-topic cleanup:
+  - retired `alphabet-owned-robotics-software-company-intrinsic-joins-google`
+    - now 301 redirects to `/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/`
+  - retired `amazon-halts-blue-jay-robotics-project-after-less-than-6-months`
+    - now 301 redirects to `/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/`
+  - matching rules added in both `news-studio/netlify.toml` and `news-studio/static/_redirects`
+- Thin low-value news triage:
+  - kept the weakest/sensational/event-style posts live but changed them to `noindex,follow` on `news.robot.tv`
+  - also removed those same pages from the news sitemap and hidden the same slugs from main newsroom listing surfaces
+  - current noindex news slugs:
+    - `11-women-shaping-the-future-of-robotics`
+    - `2026-robotics-summit-early-bird-registration-ends-march-2`
+    - `amazon-cuts-jobs-in-strategically-important-robotics-division`
+    - `amazon-cuts-more-jobs-this-time-in-robotics-unit`
+    - `aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation`
+    - `breakingviews-hyundai-motors-robots-herald-hardware-reboot`
+    - `chinas-dancing-robots-how-worried-should-we-be`
+    - `dancing-robots-bring-support-company-to-barcelona-elderly`
+    - `hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says`
+    - `hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing`
+    - `tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids`
+    - `the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp`
+- News inventory snapshot after this pass:
+  - generated static article routes: 50
+  - average article body words: ~79
+  - pages under 120 body words: 27
+  - noindex news pages in generated article set: 12
+  - compared with the earlier post-hub baseline (~68 average words, 32 under 120), this pass improved depth and reduced weak indexed inventory further
+- Root weekly SEO checker after adding the new guide:
+  - `htmlPagesScanned: 49`
+  - `highValueMissing: 0`
+  - `canonicalMissing: 0`
+  - `brokenLocalLinks: 0`
+  - overall status: `pass`
+- Live verification after deploy:
+  - `https://robot.tv/collaborative-robot-integration.html` returns HTTP 200
+  - `https://robot.tv/collaborative-robot-integration` returns HTTP 301 to `/collaborative-robot-integration.html`
+  - old Intrinsic slug now 301s to the stronger physical-AI article
+  - old Amazon Blue Jay slug now 301s to the stronger warehouse article
+  - `https://news.robot.tv/post/11-women-shaping-the-future-of-robotics/` now shows `noindex,follow`
+  - `https://news.robot.tv/sitemap.xml` still includes the stronger `how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption` page and no longer includes the retired/low-value thin slugs above
+  - root homepage live now surfaces:
+    - `6 lessons I learned watching a robotics startup die from the inside`
+    - `Collaborative robot integration guide for existing production lines`
+    - `AI’s role in the future of robotics: Insights from 3Laws`
+- Production deploy references for this pass:
+  - root site unique deploy: `https://69ac1b96a7d39e9f714ca6a8--robottv.netlify.app`
+  - news site unique deploy: `https://69ac1b96900f7ba1a180e50a--robottv-news-studio.netlify.app`
+- Best next SEO moves after this step:
+  - continue expanding the remaining indexed thin posts that are still strategically valuable (`vdma`, selected industrial/manufacturing stories, and any future recurring company/deployment topics)
+  - keep pruning or redirecting duplicate news angles when a stronger canonical article already exists
+  - move the highest-value editorial enhancements into source content inside Sanity so the strongest pages are not dependent on code-side overrides alone
+
+Industrial inspection hub + quadruped inspection cluster (Mar 8, 2026)
+- Continued the content-depth / topic-cluster SEO work after the cobot guide pass.
+- New indexed root hub added and deployed:
+  - `industrial-inspection-robots.html`
+  - purpose: canonical root-level destination for industrial inspection robots, quadruped patrol workflows, outdoor autonomy constraints, and buyer/operator deployment intent
+- Root-site discovery updates:
+  - added the hub to `_redirects`, `sitemap.xml`, `scripts/nav-active.js`, `scripts/seo-weekly-check.mjs`, `SEO_MAINTENANCE.md`
+  - homepage channel card now points to the new hub with `Inspection Robot Signals`
+  - surfaced the hub in `home.html`, `news.html`, and `live.html`
+  - added supporting internal links from `company-boston-dynamics.html`, `company-unitree.html`, and `spot.html`
+- News cluster upgrades added for the strongest inspection-related posts:
+  - `quadrupeds-routine-industrial-inspection-scale`
+  - `chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications`
+- Enhancement pattern reused in those news posts:
+  - stronger excerpt
+  - real `Video Summary`
+  - multi-paragraph analysis/body copy
+  - related-resource card pointing to `industrial-inspection-robots.html`
+- Root weekly SEO checker after adding the new hub:
+  - `htmlPagesScanned: 50`
+  - `highValueMissing: 0`
+  - `canonicalMissing: 0`
+  - `brokenLocalLinks: 0`
+  - overall status: `pass`
+- News content-depth snapshot after this pass:
+  - generated static article routes: 51
+  - average article body words across all generated routes: ~85.6
+  - pages under 120 body words across all generated routes: 25
+  - indexed article routes (excluding `noindex,follow`): 39
+  - indexed average article body words: ~108.9
+  - indexed pages under 120 body words: 13
+  - compared with the previous post-cobot baseline (~79 average words and 27 under 120 across the generated set), this pass improved depth again while concentrating one more repeated intent into a root hub
+- Live verification after deploy:
+  - `https://robot.tv/industrial-inspection-robots.html` returns HTTP 200
+  - `https://robot.tv/industrial-inspection-robots` returns HTTP 301 to `/industrial-inspection-robots.html`
+  - root homepage live now surfaces the new hub via the `Inspection Robot Signals` channel card
+  - `https://robot.tv/news.html` now surfaces the new `Inspection Robots Hub` CTA and direct link
+  - `https://news.robot.tv/post/quadrupeds-routine-industrial-inspection-scale/` now shows:
+    - `Video Summary`
+    - multi-paragraph inspection workflow body copy
+    - `Industrial Inspection Robots Hub` related-resource block
+  - `https://news.robot.tv/post/chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications/` now shows:
+    - stronger inspection-oriented excerpt
+    - `Industrial Inspection Robots Hub` related-resource block
+  - `https://news.robot.tv/sitemap.xml` includes both upgraded inspection articles
+- Production deploy references for this pass:
+  - root site unique deploy: `https://69acd557829d10e8b1f6d021--robottv.netlify.app`
+  - news site unique deploy: `https://69acd557911f6bbb9bcd334a--robottv-news-studio.netlify.app`
+- Best next SEO moves after this step:
+  - expand the remaining thin indexed manufacturing/market-structure pages, with `vdma-warns-germany-is-losing-ground-in-global-robotics-race` and `startup-velocity-brief-robotics-teams-that-ship` as strong next candidates
+  - keep moving recurring-intent themes toward a smaller number of root ranking assets instead of letting short briefs compete alone
+  - continue moving the highest-value editorial upgrades into source content inside Sanity over time
+
+Startup execution guide + market/startup article expansion (Mar 8, 2026, later pass)
+- Continued the content-depth pass after the industrial inspection hub launch.
+- New indexed root guide added and deployed:
+  - `robotics-startup-execution.html`
+  - purpose: canonical root-level destination for robotics startup execution, shipping velocity, capital discipline, deployment proof, and commercialization-habit intent
+- Root-site discovery updates:
+  - added the guide to `_redirects`, `sitemap.xml`, `scripts/nav-active.js`, `scripts/seo-weekly-check.mjs`, `SEO_MAINTENANCE.md`
+  - surfaced the guide in `home.html`
+  - surfaced the guide in `news.html`
+  - surfaced the guide in `news-studio/static/index.html` topic-hub CTA set
+- News article depth upgrades added for two remaining thin indexed pages:
+  - `startup-velocity-brief-robotics-teams-that-ship`
+  - `vdma-warns-germany-is-losing-ground-in-global-robotics-race`
+- Startup cluster reinforcement:
+  - linked `startup-velocity-brief-robotics-teams-that-ship` to the new startup guide with a related-resource card
+  - updated the already-expanded `6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside` article to point to the new startup guide as well
+- Enhancement pattern reused:
+  - stronger excerpt
+  - real `Video Summary`
+  - multi-paragraph analysis/body copy
+  - corrected tags for the VDMA article by adding a `replaceCategories` override path in the static-news generator so misleading source categories can be replaced instead of always merged
+- Root weekly SEO checker after adding the new guide:
+  - `htmlPagesScanned: 51`
+  - `highValueMissing: 0`
+  - `canonicalMissing: 0`
+  - `brokenLocalLinks: 0`
+  - overall status: `pass`
+- News content-depth snapshot after this pass:
+  - generated static article routes: 51
+  - average article body words across all generated routes: ~91.9
+  - pages under 120 body words across all generated routes: 23
+  - indexed article routes (excluding `noindex,follow`): 39
+  - indexed average article body words: ~117.2
+  - indexed pages under 120 body words: 11
+  - compared with the previous post-inspection baseline (~85.6 average words and 25 under 120 across the generated set; ~108.9 indexed average with 13 indexed pages under 120), this pass improved the remaining indexed thin-post problem again
+- Live verification after deploy:
+  - `https://robot.tv/robotics-startup-execution.html` returns HTTP 200
+  - `https://robot.tv/robotics-startup-execution` returns HTTP 301 to `/robotics-startup-execution.html`
+  - `https://robot.tv/home.html` now links to `Robotics Startup Execution Guide`
+  - `https://robot.tv/news.html` now links to `Robotics Startup Execution Guide`
+  - `https://news.robot.tv/` now shows `Open Startup Guide` in the topic-hub CTA area
+  - `https://news.robot.tv/post/startup-velocity-brief-robotics-teams-that-ship/` now shows:
+    - `Video Summary`
+    - multi-paragraph startup-execution body copy
+    - `Robotics Startup Execution Guide` related-resource block
+  - `https://news.robot.tv/post/vdma-warns-germany-is-losing-ground-in-global-robotics-race/` now shows:
+    - stronger market-structure excerpt
+    - `Video Summary`
+    - multi-paragraph body copy
+    - corrected tags: `Europe`, `Robotics Markets`, `Industrial Policy`
+- Deploy notes:
+  - first root deploy attempt hit a transient Netlify `422 no records matched` error during the upload/post-build phase
+  - second retry succeeded with no file changes needed
+- Production deploy references for this pass:
+  - root site unique deploy: `https://69acd950d2e34e0ccef9f9cf--robottv.netlify.app`
+  - news site unique deploy: `https://69acd931d40effec5efb41b7--robottv-news-studio.netlify.app`
+- Best next SEO moves after this step:
+  - keep expanding the remaining thin indexed pages, with the strongest remaining candidates now likely concentrated in industrial/manufacturing and selected broader market-analysis stories
+  - continue converting repeated editorial themes into a smaller number of canonical root guides only when there is enough internal support to justify them
+  - over time, move the strongest newsroom overrides into source content in Sanity so the best pages depend less on code-side editorial patches
+
+2026-03-08 Boston Dynamics company-guide pass
+- Strengthened `company-boston-dynamics.html` as the next high-value entity page after the top-level routing pass.
+- Added clearer ranking-role copy, stronger internal routing to `humanoid-robots.html` and adjacent industrial/comparison hubs, and a better next-step FAQ path for users and crawlers.
+- Commit: `14ddb35` (`Strengthen Boston Dynamics company guide`)
+- Verification:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - `python3 - <<'PY' ... HTMLParser ...` sanity check on `company-boston-dynamics.html` -> `OK`
+  - live check: `https://robot.tv/company-boston-dynamics.html` returns HTTP 200
+- Production deploy reference:
+  - root site unique deploy: `https://69ad15538dc1ec1e1010957e--robottv.netlify.app`
+- Follow-on priority after this pass:
+  - continue the same company-guide strengthening pattern on the next highest-value entity pages rather than opening a brand-new SEO track
+
+2026-03-08 Boston Dynamics robot-cluster pass
+- Strengthened the three indexable Boston Dynamics robot pages under the company guide:
+  - `atlas.html`
+  - `spot.html`
+  - `stretch.html`
+- Added stronger robot-level framing, richer comparison/internal-routing blocks, breadcrumb plus FAQ structured data, and clearer handoff paths into:
+  - `company-boston-dynamics.html`
+  - `humanoid-robots.html`
+  - `industrial-inspection-robots.html`
+  - `warehouse-humanoid-robots.html`
+- Commit: `768d16c` (`Strengthen Boston Dynamics robot profiles`)
+- Verification:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - HTML parser sanity checks:
+    - `atlas.html` -> `OK`
+    - `spot.html` -> `OK`
+    - `stretch.html` -> `OK`
+  - live checks:
+    - `https://robot.tv/atlas.html` returns HTTP 200
+    - `https://robot.tv/spot.html` returns HTTP 200
+    - `https://robot.tv/stretch.html` returns HTTP 200
+- Production deploy reference:
+  - root site unique deploy: `https://69ad19c98dc1ec2a73109588--robottv.netlify.app`
+- Follow-on priority after this pass:
+  - keep strengthening the next indexable robot-profile cluster beneath the already-improved company guides, rather than spending time on `noindex` robot pages unless they are promoted first
+
+2026-03-08 Figure and Unitree support-page pass
+- Strengthened the remaining high-value supporting pages under already-improved company guides:
+  - `figure-02.html`
+  - `unitree-robots.html`
+- `figure-02.html` now has stronger robot-level framing, richer internal routing to the Figure company guide and humanoid comparison hubs, plus breadcrumb and FAQ structured data.
+- `unitree-robots.html` now does a better job as the narrow model-comparison layer beneath `company-unitree.html`, with clearer routing into China humanoid, humanoid comparison, and industrial inspection intent.
+- Commit: `3ba8791` (`Strengthen Figure and Unitree support pages`)
+- Verification:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - HTML parser sanity checks:
+    - `figure-02.html` -> `OK`
+    - `unitree-robots.html` -> `OK`
+  - live checks:
+    - `https://robot.tv/figure-02.html` returns HTTP 200
+    - `https://robot.tv/unitree-robots.html` returns HTTP 200
+- Production deploy reference:
+  - root site unique deploy: `https://69ad1f0b39fdcdbd898b00dd--robottv.netlify.app`
+- Follow-on priority after this pass:
+  - the biggest remaining upside is likely deciding whether selected `noindex` robot pages should stay support-only or be promoted and rebuilt as indexable landing pages
+
+2026-03-08 Digit and Apollo promotion pass
+- Promoted two previously `noindex,follow` humanoid robot pages into indexable landing assets because they already had strong internal support from:
+  - `humanoid-robots.html`
+  - `company-agility.html`
+  - `company-apptronik.html`
+  - `warehouse-humanoid-robots.html`
+- Updated:
+  - `digit.html`
+  - `apollo.html`
+  - `sitemap.xml`
+- Changes made:
+  - removed `noindex,follow` from both pages
+  - rewrote both pages as fuller robot-level guides with stronger intent targeting
+  - added breadcrumb and FAQ structured data
+  - added clearer routing into the right company and topic hubs
+  - added both URLs to the sitemap
+- Commit: `20d4019` (`Promote Digit and Apollo pages for SEO`)
+- Verification:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - `noindexDetected` count dropped from 18 to 16 after the promotion
+  - HTML parser sanity checks:
+    - `digit.html` -> `OK`
+    - `apollo.html` -> `OK`
+  - live checks:
+    - `https://robot.tv/digit.html` returns HTTP 200
+    - `https://robot.tv/apollo.html` returns HTTP 200
+    - `https://robot.tv/sitemap.xml` returns HTTP 200
+- Production deploy reference:
+  - root site unique deploy: `https://69ad20c7ed3772de91011b07--robottv.netlify.app`
+- Durable takeaway:
+  - promoting a `noindex` page is worth it when the page already has strong internal links and can be rewritten to satisfy a clear narrow-intent query better than the broader company guide
+
+2026-03-08 Unitree humanoid promotion pass
+- Promoted the three strongest remaining Unitree humanoid robot pages from `noindex,follow` into indexable landing assets:
+  - `unitreeg1.html`
+  - `unitreeh1.html`
+  - `unitreeh2.html`
+- Why these were worth promoting:
+  - they already had strong internal support from `company-unitree.html`, `unitree-robots.html`, `humanoid-robots.html`, and `china-humanoid-robots.html`
+  - each one maps to a clear narrow-intent robot query rather than only broad company intent
+- Updated:
+  - added fuller robot-level copy and comparison routing
+  - added breadcrumb and FAQ structured data
+  - removed `noindex,follow`
+  - added all three URLs to `sitemap.xml`
+- Commit: `115b942` (`Promote Unitree humanoid profiles for SEO`)
+- Verification:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - `noindexDetected` count dropped from 16 to 13 after the promotion
+  - HTML parser sanity checks:
+    - `unitreeg1.html` -> `OK`
+    - `unitreeh1.html` -> `OK`
+    - `unitreeh2.html` -> `OK`
+  - live checks:
+    - `https://robot.tv/unitreeg1.html` returns HTTP 200
+    - `https://robot.tv/unitreeh1.html` returns HTTP 200
+    - `https://robot.tv/unitreeh2.html` returns HTTP 200
+    - `https://robot.tv/sitemap.xml` returns HTTP 200
+- Production deploy reference:
+  - root site unique deploy: `https://69ad23f7829d10bd63f6d010--robottv.netlify.app`
+- Durable takeaway:
+  - the remaining `noindex` set is now smaller and more clearly split between pages that are still too weak to promote and pages that may be worth revisiting only if they gain stronger internal support or a clearer search role
+
+2026-03-08 Unitree quadruped promotion pass
+- Promoted the remaining strong Unitree quadruped pages from `noindex,follow` into indexable landing assets:
+  - `unitreego2.html`
+  - `unitreeb2.html`
+- Also strengthened the supporting inspection hub so the promoted pages gained explicit category-level internal support:
+  - updated `industrial-inspection-robots.html` with direct Go2/B2 links and ItemList support
+  - updated `sitemap.xml`
+- Why this was worth doing:
+  - both pages already had strong internal links from `company-unitree.html`, `unitree-robots.html`, and `home.html`
+  - both pages map to clear quadruped inspection and field-operations intent, which fits the existing industrial inspection hub well
+- Commit: `f92d024` (`Promote Unitree quadruped profiles for SEO`)
+- Verification:
+  - `node scripts/seo-weekly-check.mjs` -> `pass`
+  - `noindexDetected` count dropped from 13 to 11 after the promotion
+  - HTML parser sanity checks:
+    - `unitreego2.html` -> `OK`
+    - `unitreeb2.html` -> `OK`
+    - `industrial-inspection-robots.html` -> `OK`
+  - live checks:
+    - `https://robot.tv/unitreego2.html` returns HTTP 200
+    - `https://robot.tv/unitreeb2.html` returns HTTP 200
+    - `https://robot.tv/industrial-inspection-robots.html` returns HTTP 200
+    - `https://robot.tv/sitemap.xml` returns HTTP 200
+- Production deploy reference:
+  - root site unique deploy: `https://69ad252136f88fc1a4351b58--robottv.netlify.app`
+- Durable takeaway:
+  - the remaining `noindex` pages are now mostly weak legacy/support pages rather than obvious SEO candidates, so further promotions should be much more selective
+
+2026-03-08 homepage + newsroom discovery pass
+- User concern checked: old `news.robot.tv` posts do not appear to have disappeared without redirects.
+  - Verified live behavior on production:
+    - `alphabet-owned-robotics-software-company-intrinsic-joins-google` -> `/post/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/`
+    - `amazon-halts-blue-jay-robotics-project-after-less-than-6-months` -> `/post/amazon-blue-jay-halt-warehouse-robotics-roi-standards/`
+    - `china-rolls-out-worlds-first-military-proof-5g-that-can-connect-10000-army-robots` -> `/post/robot-news/`
+  - Most other “missing” posts were still live but intentionally hidden from listing and/or excluded from sitemap because they are lower-value `noindex` articles.
+- Newsroom discovery hardening:
+  - restored a real static RSS feed at `https://news.robot.tv/feed.xml`
+  - added `/feed` -> `/feed.xml` routing in both `news-studio/netlify.toml` and `news-studio/static/_redirects`
+  - added feed discovery links to the newsroom homepage and root homepage
+  - added a generator guardrail in `news-studio/scripts/build-static-news-seo.mjs` so legacy redirect targets must still exist or the build fails
+  - fixed feed/sitemap ordering so newest indexable posts lead instead of older editorially restored posts
+- Root homepage upgrades:
+  - rewrote homepage meta/title/hero copy for clearer search intent around robot news, live robot streams, and robotics company guides
+  - added stronger internal-routing sections:
+    - `Start Here`
+    - `Why This Site Works`
+    - homepage FAQ
+  - added `FAQPage` structured data and linked the newsroom RSS feed from the homepage
+  - improved weak/internal phrasing in the Tesla and strategy spotlight sections to be more user-facing
+- Verification:
+  - `npm run build:seo` in `news-studio` -> success
+  - `node scripts/seo-weekly-check.mjs` in repo root -> `pass`
+  - HTML parser sanity check:
+    - `index.html` -> `OK`
+    - `news-studio/static/index.html` -> `OK`
+  - live checks:
+    - `https://robot.tv/` returns HTTP 200 and shows the new homepage messaging
+    - `https://news.robot.tv/feed` returns HTTP 200 at `https://news.robot.tv/feed.xml`
+    - `https://news.robot.tv/feed.xml` returns live RSS XML with the newest posts first
+- Production deploy references:
+  - root site unique deploy: `https://69ad3d22ab97ecfe4152692b--robottv.netlify.app`
+  - news site unique deploy: `https://69ad3d456e54f310e0d2df8c--robottv-news-studio.netlify.app`
+- Resume point:
+  - after this pass, the next highest-value SEO work is likely either:
+    - continue improving the homepage/supporting hub internal-link architecture from the user journey side, or
+    - selectively promote the remaining strongest `noindex` news/support pages only if they earn a clearer search role
+
+2026-03-08 homepage post-cover layout fix
+- User reported the homepage looked strange around the post cover images.
+- Root cause:
+  - `.story-media-shell` and `.story-media` were both participating in sizing, and lazy/unloaded images could inherit their HTML height attributes in a way that made the cover area blow up vertically on the homepage feed cards.
+- Fix applied in `styles.css`:
+  - made `.story-card` a flex column
+  - turned `.story-media-shell` into the true fixed-aspect-ratio cover frame with overflow clipping and bottom spacing
+  - absolutely positioned `.story-media` inside the shell with `width:100%` and `height:100%`
+  - removed the old margin-based spacing from the image itself
+- Verification:
+  - live Playwright measurement after deploy:
+    - first large post cover corrected from roughly `428x860` pre-fix to `428x230`
+    - smaller post covers corrected to about `322x181`
+  - visual screenshot sanity check confirmed the homepage post card covers render normally again
+- Production deploy reference:
+  - root site unique deploy: `https://69ad468072f9624240110301--robottv.netlify.app`
+
+2026-03-09 Search Console indexing cleanup follow-up
+- User shared repeated Google Search Console validation-failure emails for the domain property (`robot.tv` + `news.robot.tv`) covering:
+  - `Excluded by 'noindex' tag`
+  - `Alternate page with proper canonical tag`
+  - `Not found (404)`
+  - `Page with redirect`
+- Real fixes completed:
+  - removed `https://robot.tv/news.html` from root `sitemap.xml` so the sitemap no longer advertises a deliberate `noindex` page
+  - extended `scripts/seo-weekly-check.mjs` so it now fails on:
+    - sitemap URLs that point to `noindex` pages
+    - missing legacy redirect support files
+    - redirect-config regressions around old news URL handling
+  - stopped publishing old static duplicate news alias pages such as:
+    - `/post/<slug>.html/`
+    - `/<year>/<month>/<day>/<slug>.html/`
+    - `/<year>/<month>/<slug>.html/`
+  - added a root Netlify function at `netlify/functions/legacy-news-redirect.mjs` so old root-domain post URLs and dated URLs 301 directly to `https://news.robot.tv/post/<slug>/`
+  - added a newsroom edge normalizer at `news-studio/netlify/edge-functions/legacy-post-normalizer.mjs` to normalize legacy news URLs before static routing:
+    - `/post/<slug>.html`
+    - `/<year>/<month>/<day>/<slug>.html`
+    - `/<year>/<month>/<slug>.html`
+    - `/post/<slug>` and retired post slugs
+    - `/feed` -> `/feed.xml`
+- Production behavior verified on 2026-03-09:
+  - canonical newsroom article URLs like `https://news.robot.tv/post/nvidia-bets-on-robotics-to-drive-future-growth/` return `200`
+  - legacy newsroom `.html` and dated article URLs now return `301` and end at the canonical article URL with `200`
+  - root-domain legacy article URLs also return `301` and end at the same newsroom canonical article URL with `200`
+  - `https://news.robot.tv/feed` now returns `301` to `https://news.robot.tv/feed.xml`
+  - `https://news.robot.tv/feed.xml` returns `200`
+  - `node scripts/seo-weekly-check.mjs` returned `pass` with:
+    - `sitemapNoindexUrls: 0`
+    - `redirectConfigIssues: 0`
+- Important interpretation for future sessions:
+  - Search Console may keep emailing for a while even after these fixes because Google validates over time against old discovered URLs
+  - after this pass, a remaining `Page with redirect` bucket is usually expected for truly legacy URLs as long as the final canonical target returns `200`
+- Production deploy references:
+  - root site unique deploy: `https://69ae626c911f6b4251cd32a5--robottv.netlify.app`
+  - news site unique deploy: `https://69ae65c1911f6b708bcd32a8--robottv-news-studio.netlify.app`
+
+2026-03-09 robot.tv homepage polish + root deploy reminder
+- Root site is still live on Netlify project `robottv`; manual production deploy remains:
+  - `cd "/Users/cc801/Documents/New project/robottv" && netlify deploy --prod --dir .`
+- Homepage design fix shipped on 2026-03-09:
+  - rebalanced header/logo sizing
+  - tightened homepage hero typography/copy
+  - added a designed live-preview poster/fade state so the live card no longer looks broken before video loads
+  - updated `scripts/live-feed-rotator.js` to swap the live poster to the current newsroom video thumbnail
+- This same deploy also fixed missing production JS assets on `robot.tv`:
+  - `/scripts/live-feed-rotator.js`
+  - `/scripts/analytics-events.js`
+  - `/scripts/nav-active.js`
+- Production deploy reference:
+  - root site unique deploy: `https://69ae780b900f7b6f5d80e501--robottv.netlify.app`
+
+2026-03-09 robot.tv homepage brand-alignment follow-up
+- User wanted the root homepage to look closer to `news.robot.tv`, especially the logo ratio and typography.
+- Final homepage pass did this:
+  - aligned root header/logo scale back toward newsroom proportions
+  - made the root hero use the stronger Orbitron-style newsroom headline treatment
+  - removed inline autoplay/embed from the homepage live spotlight because live YouTube embeds could show `This video is unavailable`; homepage spotlight is now poster-only and links into `live.html`
+  - replaced three repetitive horizontal homepage spotlight bands with a 3-card featured grid
+  - turned `Latest Robot News` and `Channel Highlights` into panel sections with better spacing/background hierarchy
+  - fixed `Channel Highlights` card images so portrait/shorts-style thumbnails cannot stretch the cards vertically; images now use a fixed cover height
+- Production verification after deploy:
+  - live root homepage top fold matched the new poster-only spotlight and smaller logo
+  - live `Channel Highlights` section displayed five readable cards with visible headlines/descriptions in one row
+- Production deploy reference:
+  - root site unique deploy: `https://69ae7bfeab97ec258252685a--robottv.netlify.app`
+
+2026-03-09 robot.tv homepage brand consistency correction
+- User specifically called out that the root homepage logo ratio and the English hero typography still did not match `news.robot.tv`.
+- Root cause found:
+  - homepage logo `<img>` still used incorrect intrinsic dimensions (`300x74`) instead of the real logo file dimensions (`1194x224`), which made the logo feel stretched compared with the newsroom header
+  - homepage hero headline CSS was still larger/heavier than the newsroom hero rules
+- Fix shipped:
+  - updated homepage logo dimensions to `1194x224`
+  - removed forced incorrect logo aspect-ratio styling
+  - aligned homepage hero headline closer to newsroom hero sizing/weight/line-height
+  - bumped homepage CSS asset version to `styles.css?v=20260309-home-v3`
+- Production deploy reference:
+  - root site unique deploy: `https://69ae8ed7af6ad1ab9b938a0a--robottv.netlify.app`
+
+2026-03-09 homepage live autoplay restoration
+- User asked why the homepage live module no longer autoplayed muted video.
+- Root cause: homepage preview had been intentionally disabled in `scripts/live-feed-rotator.js` by setting `INLINE_PREVIEW_ENABLED = false` during the earlier fallback/polish pass, so the live card could only show the poster.
+- Fix shipped:
+  - restored desktop inline preview autoplay (`INLINE_PREVIEW_ENABLED = !TOUCH_FIRST_DEVICE`)
+  - kept touch devices non-autoplay
+  - added player failure handling so if the current YouTube video cannot embed/play, the code skips failed IDs and falls back to the poster instead of showing a broken player
+  - restored iframe visibility CSS and bumped homepage assets to:
+    - `styles.css?v=20260309-home-v4`
+    - `scripts/live-feed-rotator.js?v=20260309-home-v4`
+- Production verification:
+  - live homepage player was visible again
+  - after waiting ~12 seconds on `https://robot.tv/`, the live module showed an actual muted video frame instead of only the poster
+  - browser console had 0 errors; one YouTube `postMessage` origin warning was present but autoplay still worked
+- Production deploy reference:
+  - root site unique deploy: `https://69ae923b8dc1ec10401094c3--robottv.netlify.app`
+
+2026-03-09 live.html broken-player exposure fix
+- User reported that `https://robot.tv/live.html` still flashed `This video is unavailable` on initial load.
+- Root cause:
+  - `live.html` was still loading an old cache-busted script URL (`scripts/live-feed-rotator.js?v=20260224-livefeed4`) instead of the current player logic.
+  - The page also exposed the main YouTube iframe immediately, so a failed first video could show the raw YouTube error state before the JS fallback recovered.
+- Fix shipped:
+  - updated `live.html` to use a poster-first live player with:
+    - a branded poster image
+    - `On Air` badge
+    - iframe hidden until playback is confirmed
+  - updated `scripts/live-feed-rotator.js` so the main live player:
+    - swaps the poster to the current primary video thumbnail
+    - adds `.has-video` only after `PLAYING` or `BUFFERING`
+    - removes playback state cleanly on total failure
+  - unified both homepage and live page to the new script cache key:
+    - `scripts/live-feed-rotator.js?v=20260309-live-v5`
+- Verification:
+  - production `https://robot.tv/live.html` returns `200`
+  - fresh browser open on production no longer shows the raw `This video is unavailable` state
+  - production screenshot showed the live page opening directly into the branded poster/video state
+  - remaining console noise on production was limited to YouTube `Permissions policy violation: compute-pressure` messages, which did not block playback
+- Preview-domain note:
+  - Netlify preview deploys for the root site can hit Sanity CORS blocking because the preview host is not in the Sanity allowed-origins list.
+  - For live-feed verification, prefer the production origin `https://robot.tv` unless Sanity CORS is expanded intentionally.
+- Production deploy reference:
+  - root site unique deploy: `https://69ae9678d2e34ed46bf9faae--robottv.netlify.app`
+
+2026-03-09 live autoplay state follow-up
+- User then reported `live.html` still looked like a static image instead of autoplaying.
+- Deeper production check showed:
+  - the player was eventually finding a playable fallback video
+  - but `.live-embed` was not switching to `has-video`, so the poster kept covering the player
+- Root cause:
+  - relying only on YouTube `onStateChange` events was not reliable enough after skipping multiple unavailable videos in the same queued player
+- Fix shipped:
+  - added a playback-state probe in `scripts/live-feed-rotator.js`
+  - the probe polls `getPlayerState()` / `getVideoLoadedFraction()` after `onReady` and after each fallback candidate switch
+  - once the player reaches `BUFFERING` or `PLAYING`, the page now forces `has-video` and removes the poster overlay
+  - bumped script cache key again to:
+    - `scripts/live-feed-rotator.js?v=20260309-live-v6`
+- Production verification:
+  - `curl https://robot.tv/live.html` shows `v=20260309-live-v6`
+  - Playwright on production reported `.live-embed has-video` after load
+  - the iframe title updated to the active playable video (`Autonomous Robots on Patrol at Amazon`)
+- Production deploy reference:
+  - root site unique deploy: `https://69aea07d6348a942be39eb7f--robottv.netlify.app`
+
+2026-03-09 live/newsroom rotation loop fix
+- User then clarified the deeper regression: both `live.html` and the homepage live module were no longer smoothly chaining newsroom videos; they would load, jump, and fall into a repeat reload loop.
+- Root cause:
+  - the live player was still built around a YouTube playlist queue that let YouTube manage the sequence
+  - once newer newsroom items included several problematic videos, the player could bounce between unavailable or unstable entries and keep reloading
+  - the old pinned live item also no longer helped and could trigger a bad first candidate
+- Fix shipped:
+  - removed the pinned live item override; the feed now follows newsroom videos directly
+  - expanded the Sanity query window from the latest 10 videos to the latest 16 videos
+  - added a lightweight YouTube oEmbed prefilter to skip obvious non-embeddable videos before building the queue
+  - replaced the YouTube playlist-driven queue with a manual sequential queue in `scripts/live-feed-rotator.js`
+  - the player now:
+    - loads one video at a time
+    - advances to the next video on `ENDED`
+    - permanently removes a failed video from the in-memory queue instead of reloading the whole playlist
+    - no longer rewrites the iframe `src` on every fallback jump
+  - bumped the cache key again to:
+    - `scripts/live-feed-rotator.js?v=20260309-live-v7`
+- Production verification:
+  - `https://robot.tv/live.html` and `https://robot.tv/` both serve `v=20260309-live-v7`
+  - Playwright confirmed:
+    - live page wrapper state: `live-embed has-video`
+    - homepage preview state: `live-preview has-video`
+  - production screenshots showed an actual playing video frame on both pages, not only a poster or endless reload
+  - production live-page network log no longer contained `This_video_is_unavailable`
+  - expected remaining console noise:
+    - 404s from the oEmbed prefilter for already-skipped bad IDs
+    - one benign YouTube `postMessage` origin warning
+- Production deploy reference:
+  - root site unique deploy: `https://69aea437af6ad1343593870a--robottv.netlify.app`
+
+2026-03-09 homepage live card layout correction
+- User then pointed out that the homepage live card looked like it was visually spilling beyond the normal top-fold frame.
+- Root cause:
+  - the right-side `live-spotlight` card was being stretched to the full height of the left hero by `.top-stage { align-items: stretch; }`
+  - with an autoplaying vertical video inside the preview, the card felt oversized and visually out of proportion even though it was not a literal CSS overflow bug
+- Fix shipped:
+  - changed `.top-stage` to align cards from the top instead of forcing equal full-height stretch
+  - reduced the homepage live preview height from `245px` to `220px`
+  - slightly tightened live spotlight spacing and typography so the right card reads as a compact companion panel instead of a second giant hero
+  - bumped homepage CSS cache key to:
+    - `styles.css?v=20260309-home-v5`
+- Production verification:
+  - Playwright on production showed:
+    - hero bottom: `828`
+    - live spotlight bottom: `598`
+    - preview height: `220`
+  - updated production screenshot confirmed the live card now sits comfortably within the homepage frame and no longer feels overextended
+- Production deploy reference:
+  - root site unique deploy: `https://69aeadc46348a9779f39ec14--robottv.netlify.app`
+
+2026-03-09 news homepage ordering correction
+- User reported that `news.robot.tv` was not showing the newest published posts first; a Mar 7 story was appearing ahead of Mar 9 posts.
+- Root cause:
+  - the homepage fetch query already used `order(publishedAt desc)`
+  - but `static/index.html` then built listing posts with:
+    - `[..., editorialPinnedPosts, ...posts]`
+    - dedupe/filtering
+    - no final re-sort
+  - that allowed a manually pinned Mar 7 editorial item to stay ahead of newer Mar 8/Mar 9 posts
+- Fix shipped in `news-studio/static/index.html`:
+  - added `sortPostsByPublishedAtDesc(...)`
+  - changed `getListingPosts(...)` to sort after merging/editorial enhancement/filtering and before dedupe output is used
+  - bumped the browser cache key from `robot_tv_news_cache_v1` to `robot_tv_news_cache_v2` so old incorrect order is not reused from localStorage
+- Production verification:
+  - `https://news.robot.tv/` returns `200`
+  - live first three cards after deploy were:
+    - `A key robotics staffer at OpenAI quits... | Mar 9, 2026`
+    - `Plug-and-Play AI: Transforming robotics with modular skills | Mar 9, 2026`
+    - `These robots are coming for the jobs no one wants... | Mar 8, 2026`
+- Important deploy note:
+  - manual production deploy for the public news homepage must use:
+    - `cd "/Users/cc801/Documents/New project/robottv/news-studio" && netlify deploy --prod --dir static`
+  - deploying `news-studio` root with `--dir .` can put `news.robot.tv/` into a root 404 because the publish root is `static/`
+- Production deploy reference:
+  - fixed news deploy: `https://69aebc0eed3772776a011b12--robottv-news-studio.netlify.app`
+
+2026-03-09 durable operator notes
+- Homepage live playback:
+  - do not rely on a YouTube playlist queue for newsroom chaining; manual sequential playback with failed-video removal is more stable
+  - current stable script cache key after the loop fix:
+    - `scripts/live-feed-rotator.js?v=20260309-live-v7`
+- Homepage top-fold layout:
+  - avoid stretching `.live-spotlight` to match the left hero height
+  - keep `.top-stage` top-aligned rather than equal-height stretched unless there is a deliberate redesign
+  - current homepage CSS cache key after layout correction:
+    - `styles.css?v=20260309-home-v5`
+- News homepage ordering:
+  - `news.robot.tv` must always sort merged listing items by `publishedAt desc` after any pinned/editorial merge
+  - if old order ever appears again, check:
+    - `getListingPosts(...)` in `news-studio/static/index.html`
+    - browser cache key for newsroom localStorage
+- News deploy safety:
+  - public newsroom deploy must use `news-studio/static` as the publish directory
+  - using `netlify deploy --prod --dir .` inside `news-studio` can break the root homepage with a production 404
+- Best quick checks after future changes:
+  - `https://robot.tv/`:
+    - homepage live card reaches `has-video`
+    - right live card does not visually overextend the top fold
+  - `https://robot.tv/live.html`:
+    - main live player reaches `has-video`
+    - no repeated `This_video_is_unavailable` loop in network logs
+ - `https://news.robot.tv/`:
+    - top cards are in descending `publishedAt` order
+    - root path returns `200`
+
+2026-03-10 news article URL migration
+- Local migration completed from `https://news.robot.tv/post/<slug>/` to `https://news.robot.tv/<slug>/`.
+- Source-of-truth files changed:
+  - `news-studio/scripts/build-static-news-seo.mjs`
+  - `news-studio/static/index.html`
+  - `news-studio/static/_redirects`
+  - `news-studio/static/_worker.js`
+  - root `_redirects` and root `_worker.js`
+  - root-site helpers/internal links now point directly to `https://news.robot.tv/<slug>/`
+- Generated newsroom output now writes articles to:
+  - `news-studio/static/<slug>/index.html`
+  - old generated `news-studio/static/post/**` pages are removed during the build
+- Verification completed locally:
+  - `cd news-studio && npm run build:public`
+  - `cd .. && node scripts/build-root-public-dist.mjs`
+  - `node scripts/check-root-public-build.mjs`
+  - `node scripts/seo-weekly-check.mjs`
+  - local `wrangler pages dev` checks confirmed:
+    - `/post/<slug>/` -> `301` to `/<slug>/`
+    - `/post/<slug>.html` -> `301` to `/<slug>/`
+    - dated legacy URLs -> `301` to `/<slug>/`
+    - new `/<slug>/` URLs return `200`
+- Local-testing note:
+  - current `_redirects` files still use `301!` syntax and absolute targets that `wrangler pages dev` warns about/parses poorly
+  - for local route testing, trust the worker-backed curl checks rather than Wrangler's redirect-rule count
+- Production deploy completed:
+  - news Pages deploy: `https://7d241d00.robottv-news.pages.dev`
+  - root Pages deploy: `https://f6257c29.robottv-main.pages.dev`
+- Live verification after deploy:
+  - `https://news.robot.tv/post/openai-robotics-head-resigns-over-pentagon-deal/` -> `301` to `https://news.robot.tv/openai-robotics-head-resigns-over-pentagon-deal/`
+ - `https://news.robot.tv/openai-robotics-head-resigns-over-pentagon-deal/` -> `200`
+ - live article canonical + `NewsArticle` JSON-LD now use root-level article URLs
+ - live `https://news.robot.tv/sitemap.xml` and `https://news.robot.tv/feed.xml` now publish root-level article URLs
+ - live `https://robot.tv/` homepage article links now point directly to `https://news.robot.tv/<slug>/`
+- Git sync completed after direct deploy:
+  - local commit: `d9ec9a5` `Sync live Cloudflare deploy and news URL cleanup`
+  - merge/push commit on `main`: `18f9877` `Merge origin/main and keep production sync`
+  - `origin/main` is now aligned with the live deploy
+- User preference note:
+  - do not keep repo-tracked memory/session notes online for `robottv`
+  - `docs/session-memory/` is now ignored in root `.gitignore`
+  - remote `docs/session-memory/*` files were intentionally excluded from the merge result
+
+2026-03-10 live news homepage outage fix
+- User reported `news.robot.tv` looked empty after the URL migration deploy.
+- Verified live behavior in a real browser:
+  - header/footer loaded but homepage main content stayed empty
+  - console error came from Cloudflare Rocket Loader parsing the inline homepage script
+- Root cause:
+  - `news-studio/static/index.html` had a top-level `return;` inside the legacy `/post/...` redirect block
+  - that made the main inline script fail to parse, so homepage/article bootstrap logic never ran
+- Fix:
+  - rewrote the legacy redirect block to compute `legacySlug` and branch with `if (...) { ... } else if (...) { ... }`
+  - no top-level `return` remains in that section
+- Deployment + verification:
+  - rebuilt `news-studio/dist-public` with `npm run build:public`
+  - direct Cloudflare Pages deploy completed at `https://28b5dc07.robottv-news.pages.dev`
+  - live browser verification after deploy showed homepage cards rendering again on `https://news.robot.tv/`
+  - verified legacy article URL still redirects and renders:
+    - `/post/openai-robotics-head-resigns-over-pentagon-deal/` -> `/openai-robotics-head-resigns-over-pentagon-deal/`
+- Git sync:
+  - commit pushed to `main`: `c34b2c5` `Fix news homepage script parse error`
+- Additional SEO-hardening work completed after the outage fix:
+  - `news-studio/scripts/build-static-news-seo.mjs` now generates `static/scripts/preloaded-news-posts.js`
+    - contains same-origin preloaded latest-post data for the homepage
+    - reduces dependency on a live Sanity fetch for first render on `news.robot.tv/`
+  - `news-studio/static/index.html` now loads `scripts/preloaded-news-posts.js` before the main inline app script
+    - homepage first render uses preloaded posts immediately
+    - runtime Sanity fetch still refreshes the listing afterward
+    - if the live feed fetch fails, the homepage now falls back to preloaded latest stories instead of an empty shell
+  - `news-studio/scripts/check-public-build.mjs` now:
+    - requires `scripts/preloaded-news-posts.js` in `dist-public`
+    - parses inline JavaScript in built HTML with Node `vm.Script`
+    - catches syntax errors like the top-level `return;` outage before deploy
+  - Live verification after redeploy:
+    - `https://news.robot.tv/` HTML includes `scripts/preloaded-news-posts.js`
+    - `https://news.robot.tv/scripts/preloaded-news-posts.js` returns `200`
+    - production browser check shows homepage story cards rendering normally
+- Additional crawlability improvement completed after that:
+  - `news-studio/scripts/build-static-news-seo.mjs` now also stamps the first homepage news grid directly into `news-studio/static/index.html`
+  - result: `https://news.robot.tv/` raw HTML now contains real article links/cards before JavaScript runs
+  - static raw HTML fallback intentionally avoids linking to `/?page=2` so query-page canonicals are not exposed in the non-JS fallback
+  - browser-side JS still replaces the homepage with the live paginated view after load
+  - quick repo search after this pass found no obvious remaining hard-coded `news.robot.tv/post/...` internal links
+  - git sync:
+    - commit pushed to `main`: `660042f` `Pre-render news homepage article links`
+- Search Console-style local validation and automation hardening completed afterward:
+  - live checks confirmed:
+    - `https://news.robot.tv/` raw HTML now exposes real root-level article links
+    - `https://news.robot.tv/` raw HTML no longer exposes `?page=2` in the non-JS fallback
+    - article page canonical/metadata remain aligned to root-level URLs
+    - `https://news.robot.tv/sitemap.xml` and `https://news.robot.tv/feed.xml` still return `200`
+  - `scripts/seo-weekly-check.mjs` now also checks:
+    - `news-studio/static/index.html` includes the preloaded posts script
+    - the static homepage fallback markers exist
+    - the static homepage fallback includes at least one crawlable article link
+    - the static homepage fallback does not contain legacy `/post/` links
+    - the static homepage fallback does not expose query pagination links
+    - `news-studio/static/scripts/preloaded-news-posts.js` exists and contains the expected payload
+  - verification:
+    - `node scripts/seo-weekly-check.mjs` returned `pass` with `newsHomepageIssues: 0`
+  - git sync:
+    - commit pushed to `main`: `c9ee5b3` `Expand weekly news SEO safeguards`
+- User preference:
+  - for Google SEO work on RobotTV, proceed with best-practice implementation without asking for approval
+- 2026-03-10 SEO hardening follow-up after live audit:
+  - live audit confirmed the biggest remaining SEO risks were:
+    - paginated query URLs like `https://news.robot.tv/?page=2` relying on JS-only head updates
+    - six very thin auto-brief article pages still being indexable and present in sitemap/feed
+    - auto-publish dedupe allowing near-duplicate same-topic headlines through
+  - fixes shipped live and pushed in commit `5346ca2` (`Tighten news SEO indexing safeguards`)
+  - `news-studio/static/_worker.js` now returns `X-Robots-Tag: noindex,follow` for homepage query pagination URLs where `page > 1`
+  - `news-studio/static/index.html` now keeps homepage pagination canonicals at the root URL and sets client-side `noindex,follow` for `?page=` states
+  - `news-studio/scripts/build-static-news-seo.mjs` now auto-noindexes very thin news pages (renderable body under 25 words) and excludes them from `sitemap.xml` and `feed.xml`
+  - current thin noindexed slugs:
+    - `openai-robotics-head-resigns-over-pentagon-deal`
+    - `a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri`
+    - `plug-and-play-ai-transforming-robotics-with-modular-skills`
+    - `these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps`
+    - `openai-robotics-head-resigns-after-deal-with-pentagon`
+    - `humanoid-developer-agility-robotics-rebrands`
+  - `news-studio/scripts/publish-latest-news.mjs` now skips near-duplicate topics within a 7-day lookback using token-overlap similarity, in addition to exact-title dedupe
+  - `news-studio/scripts/check-public-build.mjs` now fails if a fallback-only thin article is still indexable in `dist-public`
+  - live verification after direct Cloudflare Pages deploy `https://13a43a20.robottv-news.pages.dev`:
+    - `https://news.robot.tv/?page=2` returns `200` with `X-Robots-Tag: noindex,follow`
+    - thin article pages now emit `meta name="robots" content="noindex,follow,..."`
+    - thin article slugs are absent from live `https://news.robot.tv/sitemap.xml` and `https://news.robot.tv/feed.xml`
+  - git/source-of-truth status after deploy:
+    - local `main` == `origin/main`
+    - production and GitHub are synced again
+- 2026-03-10 content-depth follow-up for re-indexing:
+  - user asked for the next pass on improving the actual content depth of the latest noindexed stories so some could become indexable again
+  - upgraded these thin news pages with substantive editorial enhancements in `news-studio/scripts/build-static-news-seo.mjs` and redeployed live:
+    - `openai-robotics-head-resigns-over-pentagon-deal`
+    - `plug-and-play-ai-transforming-robotics-with-modular-skills`
+    - `these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps`
+    - `humanoid-developer-agility-robotics-rebrands`
+  - each of the four above now has:
+    - `index,follow`
+    - expanded excerpt/meta description
+    - 4 editorial body paragraphs
+    - reappearance in live `sitemap.xml` and `feed.xml`
+  - intentionally kept these overlapping OpenAI/Pentagon follow-ups thin + noindexed to avoid topic cannibalization:
+    - `openai-robotics-head-resigns-after-deal-with-pentagon`
+    - `a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri`
+  - homepage generated fallback + preloaded preview data were refreshed so the stronger excerpts now appear on `https://news.robot.tv/`
+  - commits pushed:
+    - `6082a99` `Upgrade news briefings for indexability`
+    - `a013346` `Refresh generated news homepage previews`
+  - live deploy:
+    - `https://69b63071.robottv-news.pages.dev`
+  - post-deploy live checks confirmed:
+    - upgraded four pages are indexable with stronger descriptions/excerpts
+    - upgraded four pages are present in live sitemap/feed
+    - duplicate OpenAI/Pentagon follow-ups still show `noindex,follow`
+    - local `main` == `origin/main` after push
+- 2026-03-10 Search Console follow-through:
+  - local Google/Search Console access works via the fixed SDK path:
+    - `/Users/cc801/google-cloud-sdk/bin/gcloud`
+    - `gcloud` is not on `PATH` in this environment
+  - working token command:
+    - `CLOUDSDK_PYTHON=/usr/local/bin/python3.11 /Users/cc801/google-cloud-sdk/bin/gcloud auth application-default print-access-token`
+  - Search Console API requests worked with quota project header:
+    - `x-goog-user-project: ebuyesell`
+  - resubmitted `https://news.robot.tv/sitemap.xml` successfully (`HTTP 204`) for both properties:
+    - `https://news.robot.tv/`
+    - `sc-domain:robot.tv`
+  - sitemap status readback immediately after submit:
+    - `lastSubmitted`: `2026-03-09T23:34:00.115Z`
+    - `lastDownloaded`: `2026-03-09T23:34:00.983Z`
+    - `isPending`: `false`
+    - `errors`: `0`
+    - `warnings`: `0`
+    - `webSubmitted`: `34`
+    - `webIndexed`: `0`
+  - URL Inspection API snapshot for upgraded pages right after submission:
+    - `openai-robotics-head-resigns-over-pentagon-deal` -> `URL is unknown to Google`
+    - `plug-and-play-ai-transforming-robotics-with-modular-skills` -> `Discovered - currently not indexed`
+    - `these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps` -> `Discovered - currently not indexed`
+    - `humanoid-developer-agility-robotics-rebrands` -> `URL is unknown to Google`
+  - practical interpretation:
+    - Google has already accepted and downloaded the refreshed sitemap
+    - indexation has not caught up yet, which is expected immediately after the content upgrade/redeploy
+- 2026-03-10 internal-link reinforcement for re-indexing:
+  - added stronger crawlable internal links from high-value `robot.tv` hub pages to the four upgraded news articles:
+    - `home.html`
+    - `physical-ai-robot-learning.html`
+    - `warehouse-humanoid-robots.html`
+  - link targets reinforced:
+    - `openai-robotics-head-resigns-over-pentagon-deal`
+    - `plug-and-play-ai-transforming-robotics-with-modular-skills`
+    - `these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps`
+    - `humanoid-developer-agility-robotics-rebrands`
+  - implementation details:
+    - homepage now includes a visible crawlable text block linking to all four upgraded briefings
+    - `physical-ai-robot-learning.html` now links to the modular-skills and OpenAI-governance stories in both visible content and `ItemList` JSON-LD
+    - `warehouse-humanoid-robots.html` now links to the Agility rebrand story in both visible content and `ItemList` JSON-LD
+  - validation before deploy:
+    - `node scripts/build-root-public-dist.mjs`
+    - `node scripts/check-root-public-build.mjs`
+    - `node scripts/seo-weekly-check.mjs`
+    - built HTML in `dist-root-public/` confirmed the new live-link targets
+  - live root deploy:
+    - `https://84b58a85.robottv-main.pages.dev`
+  - live verification after deploy:
+    - raw HTML on `https://robot.tv/home.html` contains direct links to all four upgraded news articles
+    - raw HTML on `https://robot.tv/physical-ai-robot-learning.html` contains direct links to the modular-skills and OpenAI-governance articles
+    - raw HTML on `https://robot.tv/warehouse-humanoid-robots.html` contains direct links to the Agility rebrand article
+    - Playwright browser snapshots confirmed the new links are visible in rendered UI, not only present in source
+  - git/source-of-truth status after deploy:
+    - commit pushed to `main`: `986e791` `Strengthen internal links to upgraded news pages`
+    - local `main` == `origin/main`
+  - Search Console follow-through for root recrawl:
+    - URL-prefix property `https://robot.tv/` returned `403` under current token context
+    - domain property `sc-domain:robot.tv` accepted sitemap resubmission for `https://robot.tv/sitemap.xml` (`HTTP 204`)
+    - domain sitemap status immediately after submit:
+      - `lastSubmitted`: `2026-03-09T23:46:39.851Z`
+      - `lastDownloaded`: `2026-03-09T23:46:41.186Z`
+      - `isPending`: `false`
+      - `errors`: `0`
+      - `warnings`: `0`
+      - `submitted`: `39`
+      - `indexed`: `0`
+- 2026-03-10 root homepage latest-order fix:
+  - user reported `robot.tv` homepage top latest card was not showing the newest newsroom item first
+  - root cause in `/index.html` homepage hydration logic:
+    - merged array order was `editorialPinnedPosts` first, then fetched Sanity posts
+    - top card selection uses first eligible item, so pinned content could override newest published item
+  - fix applied in `/index.html`:
+    - changed merge order to fetched-first:
+      - from `[...]editorialPinnedPosts, ...fetchedPosts]`
+      - to `[...]fetchedPosts, ...editorialPinnedPosts]`
+    - pinned entries now behave as fallback/context only and do not override latest top-story order
+  - live verification:
+    - latest Sanity post at check time: `openai-robotics-head-resigns-over-pentagon-deal` (`2026-03-09T19:11:03.223Z`)
+    - post-hydration DOM on `https://robot.tv/` after 6s:
+      - `#story-top` href: `https://news.robot.tv/openai-robotics-head-resigns-over-pentagon-deal/`
+      - `#story-top-title`: `OpenAI robotics head resigns over Pentagon deal`
+    - deploy URL: `https://01ccb639.robottv-main.pages.dev`
+- 2026-03-10 workflow-failure audit and fixes:
+  - user asked to review historical GitHub failure emails and check all failed workflows
+  - `Deploy Sanity Studio` failure root cause:
+    - missing `SANITY_AUTH_TOKEN` secret in repo; workflow passed empty token to `npx sanity deploy --yes`
+    - fix in `.github/workflows/deploy-news-studio.yml`: `SANITY_AUTH_TOKEN` now falls back to `secrets.SANITY_API_TOKEN`
+    - verification: run `22880794502` succeeded
+  - `Weekly SEO Content Refresh` persistent failures root cause:
+    - `scripts/seo-content-refresh-report.mjs` used a hardcoded local absolute path (`/Users/cc801/Documents/New project/robottv`)
+    - GitHub runner could not find `sitemap.xml` at that path (`ENOENT`)
+    - fix: switched to repo-relative root using `fileURLToPath(import.meta.url)` + `path.resolve(..., "..")`
+    - verification: manual dispatch run `22880923299` succeeded
+  - overall audit status:
+    - current active deployment workflows now have recent successful runs
+    - most prior failures in email thread are historical transition/cutover failures already superseded by later successful runs
+- 2026-03-11 font consistency fix (homepage + news):
+  - issue: robot.tv homepage fonts sometimes differed from news.robot.tv after hard refresh due to remote font loading timing
+  - fix: self-hosted Space Grotesk + Orbitron WOFF2 files and added @font-face to root `styles.css` plus news static templates
+  - added local font assets:
+    - root: `/Users/cc801/Documents/New project/robottv/fonts/space-grotesk-latin.woff2`, `/Users/cc801/Documents/New project/robottv/fonts/orbitron-latin.woff2`
+    - news: `/Users/cc801/Documents/New project/robottv/news-studio/static/fonts/space-grotesk-latin.woff2`, `/Users/cc801/Documents/New project/robottv/news-studio/static/fonts/orbitron-latin.woff2`
+  - news templates updated in:
+    - `news-studio/scripts/build-static-news-seo.mjs`
+    - `news-studio/static/index.html`
+    - `news-studio/static/404.html`
+  - deploys:
+    - `robottv-main` Cloudflare Pages: `https://568c2267.robottv-main.pages.dev`
+    - `robottv-news` Cloudflare Pages: `https://52b53a45.robottv-news.pages.dev`
+
+2026-03-12 newsletter ops update
+- GitHub Actions runs were blocked by Cloudflare when calling Brevo API (403 challenge page) from the runner.
+- `scripts/generate-weekly-newsletter.mjs` now supports `NEWSLETTER_FEED_PATH` to read the local `news-studio/static/feed.xml` and avoid CF blocking on `news.robot.tv/feed.xml`.
+- `.github/workflows/weekly-newsletter.yml` now sets `NEWSLETTER_FEED_PATH=news-studio/static/feed.xml` and disables the Brevo send step by default via `BREVO_SEND_ENABLED=0` (send step only runs if explicitly enabled).
+- Recommended path for hands-off sending is to use a Brevo RSS campaign pointed at `https://robot.tv/newsletter-feed.xml` instead of GH Actions.
+
+2026-03-12 newsletter automation attempt
+- RSS campaign option not visible in Brevo UI (likely plan limitation), so RSS automation in Brevo is not available.
+- GitHub Actions newsletter run failed to fetch `https://news.robot.tv/feed.xml` due to Cloudflare bot protection (403). Added support for `NEWSLETTER_FEED_PATH` in `scripts/generate-weekly-newsletter.mjs` and set workflow to read `news-studio/static/feed.xml` instead.
+- GitHub Actions send step still blocked by Cloudflare when calling Brevo API (403 challenge page), even with a browser-like User-Agent; same block occurred from local machine.
+- Workflow now disables the Brevo send step by default via `BREVO_SEND_ENABLED=0` to avoid repeated failures.
+- Local launchd automation was created and then removed; no active scheduler remains. Brevo API key was provided in chat and stored briefly in `~/.robottv-newsletter.env`, then deleted; key should be rotated for safety.
+
+2026-03-16 GA spike investigation + legacy recovery
+- User reported a sudden traffic spike in GA4 on March 6-7, 2026.
+- Confirmed active RobotTV GA4 property id used for direct reporting: `462066539`.
+- Key findings from GA4 Data API:
+  - spike was concentrated on `robot.tv`, not `news.robot.tv`
+  - traffic was overwhelmingly `direct / (none)` with extremely weak engagement
+  - geography was led by Singapore, China, and Vietnam rather than a normal high-intent audience mix
+  - the dominant page title during the spike was `404 | robot.tv`
+  - 404 traffic was spread across hundreds of old top-level legacy slugs from the pre-robotics Chinese video/article era
+  - only negligible Google organic traffic was present in the 404 spike, so this did not look like a real Google ranking win
+- SEO conclusion:
+  - the spike was most consistent with automated or low-quality direct traffic probing old legacy URLs
+  - legacy URL history remained an active SEO liability and recovery opportunity
+
+2026-03-16 legacy slug recovery deployed
+- Root `_worker.js` now performs legacy recovery for missing top-level single-slug URLs after confirming the current asset does not exist.
+- Recovery behavior:
+  - company/robot-related legacy slugs 301 to the closest current company or hub page
+  - unmatched old article-style slugs 301 to `https://news.robot.tv/`
+  - explicitly retired paths like `/xdog.html` still return 410/404 behavior as intended
+- Verification:
+  - local simulation confirmed:
+    - `/2019-world-robot-conference.html` -> `https://news.robot.tv/`
+    - `/atlas-jogs.html` -> `/company-boston-dynamics.html`
+    - `/dji` -> `https://news.robot.tv/`
+  - live deploy commit: `8ffc9e9` `Recover legacy SEO traffic from dead slugs`
+  - live deploy workflow: GitHub Actions run `23144950231` succeeded
+
+2026-03-16 current-page SEO pass deployed
+- Strategic priority after legacy cleanup shifted to strengthening current ranking pages rather than only technical cleanup.
+- Implemented on root pages:
+  - `companies.html`
+  - `humanoid-robots.html`
+  - `index.html`
+- Work completed:
+  - added richer comparison-framework sections and clearer “best next page by intent” internal-link paths
+  - added visible FAQ sections plus FAQ structured data to `companies.html` and `humanoid-robots.html`
+  - added static, crawlable “latest intelligence” entity-news blocks to the company and humanoid hubs
+  - refreshed static newsroom embeds across key profile pages by rerunning `scripts/build-static-profile-news.mjs`
+- Pages refreshed by the static-news build included:
+  - `company-boston-dynamics.html`, `company-tesla.html`, `company-unitree.html`, `company-agility.html`, `company-apptronik.html`
+  - `apollo.html`, `atlas.html`, `digit.html`, `spot.html`, `stretch.html`, `tesla-optimus.html`, `unitreeg1.html`, and related profile pages
+- Verification:
+  - `node scripts/build-root-public-dist.mjs && node scripts/check-root-public-build.mjs` passed
+  - commit pushed to `main`: `f0b827c` `Strengthen current ranking pages for SEO`
+  - live deploy workflow: GitHub Actions run `23145399181` succeeded
+  - live HTML checks confirmed the new sections on:
+    - `https://robot.tv/companies.html`
+    - `https://robot.tv/humanoid-robots.html`
+    - `https://robot.tv/`
+
+2026-03-17 newsletter section design direction
+- User prefers the newsletter signup block to feel native to `robot.tv`, closer to the earlier pre-restyle presentation, even though the backend embed now uses Brevo.
+- Current implementation should keep the Brevo form action/scripts intact while avoiding a third-party-widget look.
+- Updated homepage/about newsletter styling removes the extra inner framed container treatment and uses flatter `robot.tv` panel styling with site-native button/input treatments.
+- Files updated for this design correction:
+  - `index.html`
+  - `about.html`
+  - `styles.css`
+- Follow-up refinement the same day:
+  - newsletter form width was tightened and the signup row was pushed further left to align more closely with the supporting copy line
+  - same slimmer, left-aligned Brevo newsletter treatment was then propagated to the newsroom static homepage and article template so `news.robot.tv` newsletter sections match the `robot.tv/index.html` look
+  - later debugging showed `news.robot.tv` Brevo JS rewrites the form DOM differently from `robot.tv`, inserting `.form__label-row`, `.entry__specification`, and a separate button block; durable fix was added in newsroom CSS to hide the helper line and lay out the transformed Brevo blocks back into the same inline row as the homepage
+
+2026-03-17 root SEO cleanup
+- `https://robot.tv/news.html` should not remain as a live `200 noindex` bridge page; it now redirects to `https://news.robot.tv/`.
+- Internal references to `news.html` were replaced with direct newsroom links in:
+  - `physical-ai-robot-learning.html`
+  - `robotics-startup-execution.html`
+- Operational note: root deploy workflow `.github/workflows/deploy-robot-tv-public.yml` does not currently trigger on `_worker.js`-only pushes because its `on.push.paths` filter excludes `_worker.js`; worker-only root SEO changes require a manual `workflow_dispatch` deploy unless that workflow filter is expanded later.
+
+2026-03-17 news indexing cleanup
+- Search Console `Excluded by 'noindex' tag` examples showed real `news.robot.tv` article URLs, not just utility pages.
+- Root cause was twofold:
+  - stale hard-coded newsroom article noindex lists in:
+    - `news-studio/scripts/build-static-news-seo.mjs`
+    - `news-studio/static/index.html`
+  - the news builder also auto-noindexed thin posts with renderable body word count under 25
+- Corrective action:
+  - removed the stale hard-coded newsroom article noindex lists
+  - backfilled 12 formerly noindexed thin Sanity posts with richer excerpt/video summary/body paragraphs using the DeepSeek-assisted editorial generator
+  - rebuilt and redeployed `news.robot.tv`
+- Live verification after deploy:
+  - formerly blocked examples such as `aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation`, `2026-robotics-summit-early-bird-registration-ends-march-2`, and `hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says` now serve `index,follow`
+- Commit/deploy checkpoint:
+  - commit `67d67d8` `Allow enriched news posts to index`
+  - `Deploy Public News Site` run `23197910989`
+
+2026-03-17 newsroom editorial criteria
+- Added a durable newsroom policy file at `news-studio/EDITORIAL_POLICY.md`.
+- Core rule: `news.robot.tv` should publish reporting/value-bearing robotics coverage, not event marketing, registration pushes, or low-value promo pages.
+- Event coverage is allowed only when it carries real industry signal; registration deadlines, ticket promos, and agenda marketing should be rejected.
+- Auto-publish guard was tightened so promotional event/registration posts are skipped.
+- The low-value summit-registration post `2026-robotics-summit-early-bird-registration-ends-march-2` was removed from Sanity and retired.
+- Retirement handling now includes:
+  - publish guard in `news-studio/scripts/publish-latest-news.mjs`
+  - retirement mapping in `news-studio/scripts/build-static-news-seo.mjs`
+  - newsroom redirect rules in `news-studio/static/_redirects`
+- Live behavior for the retired summit slug:
+  - canonical slug now serves a noindex retirement page canonically pointing to `dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit`
+  - future auto-publish should not recreate similar event-registration promo posts

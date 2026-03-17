@@ -41,6 +41,12 @@ const retiredLegacyRedirects = {
     "amazon-blue-jay-halt-warehouse-robotics-roi-standards",
   "2026-robotics-summit-early-bird-registration-ends-march-2":
     "dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit",
+  "11-women-shaping-the-future-of-robotics": "robot-news",
+  "robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics": "robot-news",
+  "agility-boston-dynamics-astm-to-discuss-the-state-of-humanoid-robotics":
+    "humanoid-deployments-factory-proof-stage-2026",
+  "dancing-robots-bring-support-company-to-barcelona-elderly": "robot-news",
+  "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp": "robot-news",
 };
 const hiddenListingSlugs = new Set([
   "biggest-ai-news-today",

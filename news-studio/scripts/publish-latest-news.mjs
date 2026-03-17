@@ -125,6 +125,34 @@ const isPromotionalEventPost = (headline, sourceUrl = '') => {
   return (hasEventToken && hasPromoToken) || (hasPromoToken && sourceLooksPromotional)
 }
 
+const getEditorialRejectionReason = (headline, sourceUrl = '') => {
+  const title = normalizeText(headline)
+
+  if (isPromotionalEventPost(headline, sourceUrl)) {
+    return 'promotional event/registration post'
+  }
+  if (
+    /\b(\d+|ten|eleven|twelve)\b/.test(title) &&
+    /(women|people|leaders|founders|startups|companies|robots)/.test(title) &&
+    /(shaping the future|to watch|you should know|changing robotics)/.test(title)
+  ) {
+    return 'listicle/profile roundup with weak news value'
+  }
+  if (/(medal|rising star|award|awards|winner|winners|fellowship cohort|cohort)/.test(title)) {
+    return 'recognition/awards coverage with weak deployment value'
+  }
+  if (/(to discuss|panel discussion|roundtable|webinar|fireside chat)/.test(title)) {
+    return 'panel or discussion preview without standalone news value'
+  }
+  if (/(dancing robots|support company to elderly|companionship)/.test(title)) {
+    return 'human-interest robotics feature outside newsroom focus'
+  }
+  if (/(the jobs no one wants|golden age)/.test(title)) {
+    return 'broad trend/opinion framing without enough robotics specificity'
+  }
+  return ''
+}
+
 const comparableTitleTokens = (title) => [...new Set(
   normalizeText(title)
     .split(' ')
@@ -272,7 +300,7 @@ for (let i = 0; i < selected.length; i += 1) {
     !slug ||
     !key ||
     !h.link ||
-    isPromotionalEventPost(h.title, h.link) ||
+    Boolean(getEditorialRejectionReason(h.title, h.link)) ||
     !isExcerptStrong(excerpt) ||
     !ytId ||
     usedYoutubeIds.has(ytId) ||
@@ -280,10 +308,11 @@ for (let i = 0; i < selected.length; i += 1) {
     Boolean(nearDuplicateTitle)
 
   if (hasGuardIssue) {
+    const editorialRejectionReason = getEditorialRejectionReason(h.title, h.link)
     skipped.push({
       title: h.title,
-      reason: isPromotionalEventPost(h.title, h.link)
-        ? 'promotional event/registration post'
+      reason: editorialRejectionReason
+        ? editorialRejectionReason
         : !ytId
         ? 'missing/invalid YouTube video'
         : !isExcerptStrong(excerpt)

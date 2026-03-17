@@ -2,6 +2,12 @@
 
 A GitHub Actions workflow is included at `../.github/workflows/news-auto-publish.yml` (repository root).
 
+Before changing automation logic, read:
+
+- [EDITORIAL_POLICY.md](/Users/cc801/Documents/New%20project/robottv/news-studio/EDITORIAL_POLICY.md)
+
+The default publishing bias should stay conservative: skip promotional or weak items rather than publishing them.
+
 ## Required GitHub Secrets
 
 Set these secrets in your repository settings (`Settings -> Secrets and variables -> Actions`):

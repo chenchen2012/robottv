@@ -8,6 +8,23 @@ const SANITY_DATASET = process.env.SANITY_DATASET || "production";
 const PROFILE_NEWS_QUERY =
   '*[_type=="post"] | order(publishedAt desc)[0...200]{title,excerpt,publishedAt,"slug":slug.current,"cats":categories[]->title}';
 const PROFILE_NEWS_ENDPOINT = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2023-10-01/data/query/${SANITY_DATASET}?query=${encodeURIComponent(PROFILE_NEWS_QUERY)}`;
+const EXCLUDED_NEWS_SLUGS = new Set([
+  "11-women-shaping-the-future-of-robotics",
+  "2026-robotics-summit-early-bird-registration-ends-march-2",
+  "agility-boston-dynamics-astm-to-discuss-the-state-of-humanoid-robotics",
+  "alphabet-owned-robotics-software-company-intrinsic-joins-google",
+  "amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
+  "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
+  "breakingviews-hyundai-motors-robots-herald-hardware-reboot",
+  "chinas-dancing-robots-how-worried-should-we-be",
+  "dancing-robots-bring-support-company-to-barcelona-elderly",
+  "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
+  "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
+  "robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics",
+  "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
+  "the-biggest-robot-news-today",
+  "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
+]);
 
 const RELATED_KEYWORD_MAP = {
   "company-agility": ["agility", "digit", "warehouse", "logistics"],
@@ -205,7 +222,9 @@ const fetchPosts = async () => {
     throw new Error(`Sanity query failed: HTTP ${response.status}`);
   }
   const payload = await response.json();
-  return Array.isArray(payload?.result) ? payload.result : [];
+  return (Array.isArray(payload?.result) ? payload.result : []).filter(
+    (post) => post?.slug && !EXCLUDED_NEWS_SLUGS.has(String(post.slug || "").trim())
+  );
 };
 
 const main = async () => {
