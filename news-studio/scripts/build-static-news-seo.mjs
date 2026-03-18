@@ -426,8 +426,6 @@ const editorialEnhancementsBySlug = new Map([
         "That matters because agricultural robots usually fail or stall on edge-case complexity rather than on clean demos. A living-lab setup can reveal durability problems, integration issues, and workflow friction much earlier than greenhouse or lab-only testing.",
         "The practical question to watch is which field tasks benefit most from this kind of environment first. Weeding, monitoring, and selective harvesting are the most obvious candidates, but the larger value may be the faster feedback loop between prototype changes and real farm performance.",
       ],
-      youtubeUrl: "",
-      videoSummary: "",
       relatedResource: null,
     },
   ],
