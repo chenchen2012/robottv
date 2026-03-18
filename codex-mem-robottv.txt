@@ -2050,10 +2050,15 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
     - `sourceSiteUrl: https://www.therobotreport.com`
     - `sourceUrl`: Google News wrapper URL only, not a preserved direct article URL
   - Embedded video `BQ0UMqh8ixk` was actually a Wall Street Journal YouTube video (`How Humanoid Robots Joined This Factory's Workforce`) and was unrelated to the article.
-- Fixes:
-  - `news-studio/scripts/build-static-news-seo.mjs` now overrides that slug to remove the misleading video embed and use more cautious body copy acknowledging that the direct article URL was not preserved.
-  - `news-studio/scripts/publish-latest-news.mjs` no longer blindly accepts the first YouTube search result; it now scores top search candidates against the headline and returns no video when relevance is too weak.
-- Editorial rule reinforced: no video is better than a misleading one.
+- Final live resolution:
+  - the living-lab article now uses a relevant agriculture/living-lab video override: `7Ee_uBCCUF4` (`Living Lab - Atlantic: Precision Agriculture`, Agriculture and Agri-Food Canada)
+  - the WSJ humanoid-factory video was split into its own standalone newsroom post:
+    - slug: `how-humanoid-robots-joined-this-factorys-workforce`
+    - video: `BQ0UMqh8ixk`
+  - `news-studio/static/index.html` homepage source was mirrored so the news homepage lists both stories correctly after hydration
+- Preventive fix:
+  - `news-studio/scripts/publish-latest-news.mjs` no longer blindly accepts the first YouTube search result; it now scores top search candidates against the headline and can reject mismatched videos
+- Editorial rule reinforced: no video is better than a misleading one, and if a mismatched video is still strategically valuable it should get its own separate post rather than stay attached to the wrong article.
 
 2026-03-18 visible source-branding policy
 - User preference: do not visibly spotlight robotics-industry competitor outlets on `news.robot.tv` article pages; it is acceptable to keep visible branding for major general/business/international outlets where attribution helps credibility.
@@ -2093,3 +2098,6 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - detects topic-family conflicts such as `agriculture` vs `humanoid/factory`
   - rejects mismatched candidates with an explicit skipped-item reason instead of attaching the wrong video
 - Operational rule reinforced: if the match is weak or topic families conflict, auto-publish should prefer no video over a misleading embed.
+- Verification:
+  - manual workflow rerun `23241889568` succeeded end to end after the new guard shipped
+  - this confirms the stronger mismatch detection did not break the news auto-publish pipeline
