@@ -2033,3 +2033,11 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - homepage `/` = editorial front door
   - `home.html` = structured robot-comparison layer
   - company pages/topic hubs = deeper research destinations
+
+2026-03-18 newsroom health-check fix
+- Scheduled GitHub workflow `Auto Publish Robot News` failed on run `23212295057` after `Publish latest trusted stories` completed with a no-op.
+- Root cause was stale validation logic in `news-studio/scripts/check-feed-health.mjs`: it still required recent post excerpts to literally include `why it matters:`, while the current DeepSeek/fallback newsroom style uses stronger plain-language excerpts without that phrase.
+- The guard now matches the live publisher rule again:
+  - excerpt length `120-260`
+  - minimum `18` words
+- This was a false-negative workflow failure, not a live publishing outage.

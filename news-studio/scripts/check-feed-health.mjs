@@ -32,9 +32,8 @@ const extractYoutubeId = (url) => {
 
 const isExcerptStrong = (excerpt) => {
   const text = String(excerpt || '').trim()
-  if (text.length < 110 || text.length > 240) return false
-  if (wordCount(text) < 16) return false
-  return text.toLowerCase().includes('why it matters:')
+  if (text.length < 120 || text.length > 260) return false
+  return wordCount(text) >= 18
 }
 
 const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'for', 'to', 'of', 'in', 'on', 'with', 'after', 'than', 'into', 'from'])
