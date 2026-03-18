@@ -34,6 +34,34 @@ Key analytics + forms
   - when adding new static pages, include `ga-lazy.js?v=20260309-ga-v1`
 - Contact flow uses contact.html; FormSubmit forwarding configured to chenchen2012@hotmail.com.
 - Contact success page path: /contact-success/ (not 404).
+- Cloudflare Email Routing aliases:
+  - current route targets:
+    - `newsletter@robot.tv` -> `ebuyesell@gmail.com`, `chen.chen@dukekunshan.edu.cn`
+    - `justin@robot.tv` -> `ebuyesell@gmail.com`, `chen.chen@dukekunshan.edu.cn`
+  - destination address id: `f8521bb6ad8449cca245af30db0858c2`
+  - zone id: `f27f729ed2d4673f7e7f71f61274faa8`
+  - account id: `c557d32391b654c6734891d4d6ee565d`
+  - 2026-03-19 diagnosis: the aliases themselves were healthy (`Email Routing` status `ready`, MX live, SMTP `RCPT TO` accepted for both aliases), but forwarding to `chenchen2012@hotmail.com` can fail because Microsoft sometimes blocks or rate-limits Cloudflare forwarding IPs.
+  - Cloudflare GraphQL email-routing logs showed real upstream Hotmail rejections:
+    - temporary: `451 4.7.650 ... temporarily rate limited due to IP reputation (S775)`
+    - permanent: `550 5.7.1 ... [104.30.8.130] ... on our block list (S3150)`
+  - Important interpretation:
+    - `mx.cloudflare.net` accepted mail for `newsletter@robot.tv` and `justin@robot.tv`
+    - the failure happened on Cloudflare -> Hotmail forwarding, not on inbound alias matching
+  - Operational recommendation:
+    - for reliable forwarding, prefer a non-Microsoft destination inbox (for example Gmail or DKU) or add one as a secondary forward target
+  - 2026-03-19 follow-up:
+    - created new Cloudflare destination addresses:
+      - `ebuyesell@gmail.com`
+      - `chen.chen@dukekunshan.edu.cn`
+    - both aliases were updated to forward to Gmail + DKU instead of Hotmail
+    - Cloudflare accepted the routing-rule updates immediately
+    - both new destination addresses were later verified successfully:
+      - `chen.chen@dukekunshan.edu.cn` verified at `2026-03-18T21:53:40.587071Z`
+      - `ebuyesell@gmail.com` verified at `2026-03-18T21:55:07.555959Z`
+    - final intended steady state:
+      - `newsletter@robot.tv` forwards to Gmail + DKU
+      - `justin@robot.tv` forwards to Gmail + DKU
 - Newsletter capture + send (Brevo, Mar 11, 2026):
   - MailerLite embed removed; signup now uses Brevo embedded form iframe on:
     - `index.html`, `about.html`, `news-studio/static/index.html`, and news article template in `news-studio/scripts/build-static-news-seo.mjs`.
@@ -2114,3 +2142,10 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - the workflow checks existing comments and skips posting if the current `issueSlug` already appears
 - Operational goal:
   - user receives the weekly archive link automatically by GitHub notification email even when full Brevo auto-send remains disabled
+
+2026-03-19 root homepage/manual newsroom sync note
+- `robot.tv/index.html` has its own inline `editorialPinnedPosts` array for homepage hydration.
+- This is separate from the newsroom pinned-post data in:
+  - `news-studio/static/index.html`
+  - `news-studio/scripts/build-static-news-seo.mjs`
+- When manual newsroom-only items are added or updated (for example the WSJ humanoid-factory post), the root homepage pinned array must be kept in sync too or `robot.tv` can show stale/mismatched homepage content even when `news.robot.tv` is already corrected.
