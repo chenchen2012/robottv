@@ -2041,3 +2041,16 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - excerpt length `120-260`
   - minimum `18` words
 - This was a false-negative workflow failure, not a live publishing outage.
+
+2026-03-18 source/video mismatch handling
+- Investigated `news.robot.tv/inside-the-new-living-lab-advancing-agricultural-robotics/` after the embedded YouTube video showed WSJ branding.
+- Findings:
+  - Sanity record source metadata came from Google News RSS and stored:
+    - `sourceName: The Robot Report`
+    - `sourceSiteUrl: https://www.therobotreport.com`
+    - `sourceUrl`: Google News wrapper URL only, not a preserved direct article URL
+  - Embedded video `BQ0UMqh8ixk` was actually a Wall Street Journal YouTube video (`How Humanoid Robots Joined This Factory's Workforce`) and was unrelated to the article.
+- Fixes:
+  - `news-studio/scripts/build-static-news-seo.mjs` now overrides that slug to remove the misleading video embed and use more cautious body copy acknowledging that the direct article URL was not preserved.
+  - `news-studio/scripts/publish-latest-news.mjs` no longer blindly accepts the first YouTube search result; it now scores top search candidates against the headline and returns no video when relevance is too weak.
+- Editorial rule reinforced: no video is better than a misleading one.

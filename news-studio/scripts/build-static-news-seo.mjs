@@ -417,6 +417,21 @@ const noindexNewsSlugs = new Set();
 
 const editorialEnhancementsBySlug = new Map([
   [
+    "inside-the-new-living-lab-advancing-agricultural-robotics",
+    {
+      excerpt:
+        "Google News surfaced a report from The Robot Report about a new 'Living Lab' for agricultural robotics. The facility is positioned as a real-world testing environment for field robots in active farm operations.",
+      bodyParagraphs: [
+        "Google News surfaced this story under The Robot Report, pointing to a new 'Living Lab' intended to accelerate agricultural robotics in working farm conditions. Even without a preserved direct article URL in the archived feed, the core signal is clear: developers want more testing environments that reflect real crops, weather, soil, and operational constraints.",
+        "That matters because agricultural robots usually fail or stall on edge-case complexity rather than on clean demos. A living-lab setup can reveal durability problems, integration issues, and workflow friction much earlier than greenhouse or lab-only testing.",
+        "The practical question to watch is which field tasks benefit most from this kind of environment first. Weeding, monitoring, and selective harvesting are the most obvious candidates, but the larger value may be the faster feedback loop between prototype changes and real farm performance.",
+      ],
+      youtubeUrl: "",
+      videoSummary: "",
+      relatedResource: null,
+    },
+  ],
+  [
     "why-chinas-humanoid-robot-industry-is-winning-the-early-market",
     {
       excerpt:
@@ -1049,7 +1064,7 @@ const applyEditorialEnhancements = (post) => {
     slug,
   };
   if (enhancement.excerpt) enhancedPost.excerpt = enhancement.excerpt;
-  if (enhancement.videoSummary) enhancedPost.videoSummary = enhancement.videoSummary;
+  if (Object.prototype.hasOwnProperty.call(enhancement, "videoSummary")) enhancedPost.videoSummary = enhancement.videoSummary;
   if (enhancement.bodyParagraphs?.length) {
     enhancedPost.body = blocksFromParagraphs(enhancement.bodyParagraphs);
   }
@@ -1062,7 +1077,8 @@ const applyEditorialEnhancements = (post) => {
   if (enhancement.sourceUrl) enhancedPost.sourceUrl = enhancement.sourceUrl;
   if (enhancement.sourceSiteUrl) enhancedPost.sourceSiteUrl = enhancement.sourceSiteUrl;
   if (enhancement.sourcePublishedAt) enhancedPost.sourcePublishedAt = enhancement.sourcePublishedAt;
-  if (enhancement.relatedResource) enhancedPost.relatedResource = enhancement.relatedResource;
+  if (Object.prototype.hasOwnProperty.call(enhancement, "youtubeUrl")) enhancedPost.youtubeUrl = enhancement.youtubeUrl;
+  if (Object.prototype.hasOwnProperty.call(enhancement, "relatedResource")) enhancedPost.relatedResource = enhancement.relatedResource;
   return enhancedPost;
 };
 const dedupeListingPosts = (posts) => {

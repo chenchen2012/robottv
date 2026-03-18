@@ -194,6 +194,49 @@ const sourceToCategory = (source, title) => {
 const youtubeFromQuery = async (q) => {
   const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
   const html = await fetch(url).then((r) => r.text())
+  const initialDataMatch =
+    html.match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/) ||
+    html.match(/ytInitialData\s*=\s*(\{[\s\S]*?\});/)
+
+  const scoreVideoCandidate = (title = '', channel = '') => {
+    const queryTokens = comparableTitleTokens(q)
+    const videoTokens = comparableTitleTokens(`${title} ${channel}`)
+    if (queryTokens.length < 3 || videoTokens.length < 3) return 0
+    const queryTokenSet = new Set(queryTokens)
+    const overlap = videoTokens.filter((token) => queryTokenSet.has(token)).length
+    const union = new Set([...queryTokens, ...videoTokens]).size
+    const similarity = union ? overlap / union : 0
+    return overlap >= 3 ? similarity : 0
+  }
+
+  if (initialDataMatch) {
+    try {
+      const data = JSON.parse(initialDataMatch[1])
+      const sections =
+        data?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents || []
+      let best = null
+      for (const section of sections) {
+        const contents = section?.itemSectionRenderer?.contents || []
+        for (const item of contents) {
+          const video = item?.videoRenderer
+          if (!video?.videoId) continue
+          const title = (video.title?.runs || []).map((run) => run.text || '').join('').trim()
+          const channel = (video.ownerText?.runs || []).map((run) => run.text || '').join('').trim()
+          const score = scoreVideoCandidate(title, channel)
+          if (!best || score > best.score) {
+            best = { score, videoId: video.videoId }
+          }
+        }
+      }
+      if (best && best.score >= 0.34) {
+        return `https://www.youtube.com/watch?v=${best.videoId}`
+      }
+      return ''
+    } catch {
+      // Fall through to the old regex-based extraction as a last resort.
+    }
+  }
+
   const m = html.match(/"videoId":"([^"]+)"/)
   return m ? `https://www.youtube.com/watch?v=${m[1]}` : ''
 }
