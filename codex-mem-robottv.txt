@@ -2101,3 +2101,16 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
 - Verification:
   - manual workflow rerun `23241889568` succeeded end to end after the new guard shipped
   - this confirms the stronger mismatch detection did not break the news auto-publish pipeline
+
+2026-03-18 weekly newsletter link delivery automation
+- `.github/workflows/weekly-newsletter.yml` still generates `Robot Weekly` automatically every Monday on schedule.
+- Brevo send from GitHub-hosted runners remains unreliable because Brevo/Cloudflare can block Actions traffic, so weekly delivery should not depend on Brevo API sends from GitHub.
+- New automation behavior:
+  - after a scheduled weekly issue is generated and committed, the workflow reads `ops-private/reports/newsletter/latest-issue.json`
+  - it waits for the public archive URL (for example `https://robot.tv/newsletters/robot-weekly-YYYY-MM-DD.html`) to return `200`
+  - it then posts the weekly link, subject, and live-status line into a dedicated GitHub issue titled `Robot Weekly Delivery Log`
+  - the issue is assigned to `chenchen2012` and the comment explicitly mentions `@chenchen2012` to trigger GitHub notification email delivery
+- Duplicate protection:
+  - the workflow checks existing comments and skips posting if the current `issueSlug` already appears
+- Operational goal:
+  - user receives the weekly archive link automatically by GitHub notification email even when full Brevo auto-send remains disabled
