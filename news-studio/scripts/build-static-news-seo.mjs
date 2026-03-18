@@ -68,6 +68,46 @@ const hiddenListingSlugs = new Set([
 ]);
 const editorialPinnedPosts = [
   {
+    title: "How humanoid robots joined this factory's workforce",
+    excerpt:
+      "A Wall Street Journal video offers a more concrete look at how humanoid robots are entering factory workflows, where the real questions are supervision, task fit, and whether deployment can move past show-floor optics.",
+    publishedAt: "2026-03-18T09:30:00.000Z",
+    youtubeUrl: "https://www.youtube.com/watch?v=BQ0UMqh8ixk",
+    videoSummary:
+      "The Wall Street Journal video focuses on humanoids inside a real factory context rather than a polished stage demo. The useful signal is not novelty alone, but how these machines are being framed against labor, workflow, and deployment expectations on the factory floor.",
+    body: [
+      {
+        _type: "block",
+        children: [
+          {
+            text: "This video-based robot.tv briefing looks at a simple but important shift in humanoid coverage: instead of presenting humanoids only as viral demos, it places them inside a factory workforce conversation where task fit, supervision, and operating usefulness matter more.",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "That framing is useful because factory deployment is where humanoid ambition meets harder questions. Can the system handle repetition, human-adjacent workflows, and the discipline of industrial operations without creating too much intervention overhead?",
+          },
+        ],
+      },
+      {
+        _type: "block",
+        children: [
+          {
+            text: "The next thing to watch is whether more factory-side humanoid stories start showing measurable contribution instead of only broad labor-replacement narratives. For robot.tv, that is where the category becomes operationally interesting.",
+          },
+        ],
+      },
+    ],
+    slug: "how-humanoid-robots-joined-this-factorys-workforce",
+    author: "Chen Chen",
+    categories: ["Humanoid Robots", "Manufacturing", "Operations"],
+    sourceName: "The Wall Street Journal",
+    sourceSiteUrl: "https://www.wsj.com/",
+  },
+  {
     title: "NVIDIA bets on robotics to drive future growth",
     excerpt:
       "NVIDIA is positioning robotics as a major long-term growth driver, with accelerated compute and software stacks aimed at real deployment workloads.",
@@ -962,6 +1002,7 @@ const editorialEnhancementsBySlug = new Map([
 
 const videoOverridesBySlug = {
   "11-women-shaping-the-future-of-robotics": "https://www.youtube.com/watch?v=uVJeI60glTE",
+  "inside-the-new-living-lab-advancing-agricultural-robotics": "https://www.youtube.com/watch?v=7Ee_uBCCUF4",
 };
 
 const escapeHtml = (value) =>

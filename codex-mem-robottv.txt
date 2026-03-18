@@ -2072,3 +2072,16 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
 - User no longer wants `news.robot.tv` article pages to visibly show `Chen Chen` as the author on every post.
 - Visible byline under the headline and the separate `About the Author` card were removed from the public article template in `news-studio/scripts/build-static-news-seo.mjs`.
 - Structured author data in JSON-LD was left in place for now; only the visible page chrome was changed.
+
+2026-03-18 manual newsroom video split
+- The article `inside-the-new-living-lab-advancing-agricultural-robotics` was confirmed to have a topic/video mismatch:
+  - article text about agricultural robotics living labs
+  - embedded WSJ YouTube video about humanoids in a factory
+- Fix direction:
+  - the living-lab article now uses a more relevant agriculture/living-lab video override (`7Ee_uBCCUF4`, Agriculture and Agri-Food Canada)
+  - a separate manual editorial post was added for the WSJ humanoid-factory video:
+    - slug: `how-humanoid-robots-joined-this-factorys-workforce`
+    - visible as a normal `news.robot.tv` article and in homepage listings
+- Implementation detail:
+  - `news-studio/scripts/build-static-news-seo.mjs` now carries the manual editorial post in `editorialPinnedPosts`
+  - `news-studio/static/index.html` mirrors that pinned post so homepage runtime listings stay consistent after hydration
