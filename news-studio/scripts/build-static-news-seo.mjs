@@ -420,9 +420,9 @@ const editorialEnhancementsBySlug = new Map([
     "inside-the-new-living-lab-advancing-agricultural-robotics",
     {
       excerpt:
-        "Google News surfaced a report from The Robot Report about a new 'Living Lab' for agricultural robotics. The facility is positioned as a real-world testing environment for field robots in active farm operations.",
+        "A new 'Living Lab' for agricultural robotics is being framed as a real-world testing environment for field robots in active farm operations, where developers can work through the messy conditions that lab demos miss.",
       bodyParagraphs: [
-        "Google News surfaced this story under The Robot Report, pointing to a new 'Living Lab' intended to accelerate agricultural robotics in working farm conditions. Even without a preserved direct article URL in the archived feed, the core signal is clear: developers want more testing environments that reflect real crops, weather, soil, and operational constraints.",
+        "The core idea behind the new 'Living Lab' is straightforward: agricultural robots need proving grounds that look more like working farms and less like controlled demos. That means testing against real crops, weather, soil variability, and the operational messiness that often gets hidden in polished presentations.",
         "That matters because agricultural robots usually fail or stall on edge-case complexity rather than on clean demos. A living-lab setup can reveal durability problems, integration issues, and workflow friction much earlier than greenhouse or lab-only testing.",
         "The practical question to watch is which field tasks benefit most from this kind of environment first. Weeding, monitoring, and selective harvesting are the most obvious candidates, but the larger value may be the faster feedback loop between prototype changes and real farm performance.",
       ],
@@ -1198,7 +1198,7 @@ const buildVideoSummary = (post, paragraphs = []) => {
 
 const editorialAboutUrl = "https://robot.tv/about.html#editorial-operations";
 const editorialMethodSummary =
-  "robot.tv pairs attributable source reporting with embedded video and concise robotics context. Low-confidence automation items are held for review.";
+  "robot.tv rewrites public reporting into concise editorial briefings with embedded video, deployment context, and manual review for low-confidence automation items.";
 const knownSourceSites = new Map([
   ["Reuters", "https://www.reuters.com/"],
   ["TechCrunch", "https://techcrunch.com/"],
@@ -1206,6 +1206,35 @@ const knownSourceSites = new Map([
   ["Business Insider", "https://www.businessinsider.com/"],
   ["The Guardian", "https://www.theguardian.com/"],
   ["Janes", "https://www.janes.com/"],
+  ["Bloomberg", "https://www.bloomberg.com/"],
+  ["BBC", "https://www.bbc.com/"],
+  ["CNN", "https://www.cnn.com/"],
+  ["The Wall Street Journal", "https://www.wsj.com/"],
+  ["Wall Street Journal", "https://www.wsj.com/"],
+  ["Financial Times", "https://www.ft.com/"],
+  ["Associated Press", "https://apnews.com/"],
+  ["AP", "https://apnews.com/"],
+]);
+const prominentVisibleSources = new Set([
+  "reuters",
+  "techcrunch",
+  "business insider",
+  "the guardian",
+  "janes",
+  "bloomberg",
+  "bbc",
+  "cnn",
+  "the wall street journal",
+  "wall street journal",
+  "financial times",
+  "associated press",
+  "ap",
+]);
+const roboticsCompetitorSources = new Set([
+  "the robot report",
+  "robotics business review",
+  "robotics 24 7",
+  "the robotreport",
 ]);
 const isGoogleNewsUrl = (value) => {
   try {
@@ -1305,6 +1334,59 @@ const extractSourceMeta = (post, paragraphs = []) => {
   };
 };
 
+const buildVisibleSourcePresentation = (sourceMeta) => {
+  const normalizedName = normalizeCompareText(sourceMeta?.name || "");
+  const showProminentBrand = prominentVisibleSources.has(normalizedName);
+  const isCompetitor = roboticsCompetitorSources.has(normalizedName);
+
+  if (showProminentBrand) {
+    return {
+      eyebrow: "Source & Method",
+      heading: "How this story was built",
+      lead: `<p><strong>${escapeHtml(sourceMeta.type)}:</strong> ${escapeHtml(sourceMeta.name)}</p>`,
+      published: sourceMeta.publishedDisplay
+        ? `<p class="trust-note">Original report date: ${escapeHtml(sourceMeta.publishedDisplay)}</p>`
+        : "",
+      link: sourceMeta.url
+        ? `<a class="meta-link source-link" href="${escapeHtml(sourceMeta.url)}" rel="noopener noreferrer">Read the original report</a>`
+        : sourceMeta.siteUrl
+          ? `<a class="meta-link source-link" href="${escapeHtml(sourceMeta.siteUrl)}" rel="noopener noreferrer">Visit ${escapeHtml(sourceMeta.name)}</a>`
+          : "",
+      attributionNote:
+        !sourceMeta.url && sourceMeta.siteUrl
+          ? `<p class="trust-note">Direct article links were not available in the archived source feed for this post.</p>`
+          : "",
+    };
+  }
+
+  if (isCompetitor || sourceMeta.siteUrl || sourceMeta.url) {
+    return {
+      eyebrow: "Reporting Basis",
+      heading: "How this robot.tv briefing was assembled",
+      lead:
+        '<p class="trust-note">This page is a robot.tv editorial rewrite built from public reporting, source-feed attribution, and video/context review.</p>',
+      published: sourceMeta.publishedDisplay
+        ? `<p class="trust-note">Reporting basis date: ${escapeHtml(sourceMeta.publishedDisplay)}</p>`
+        : "",
+      link: "",
+      attributionNote:
+        !sourceMeta.url && sourceMeta.siteUrl
+          ? '<p class="trust-note">The original article URL was not preserved in the archived source feed for this post.</p>'
+          : "",
+    };
+  }
+
+  return {
+    eyebrow: "Reporting Basis",
+    heading: "How this robot.tv briefing was assembled",
+    lead:
+      '<p class="trust-note">This page is a robot.tv editorial briefing backed by public footage, newsroom context, and source review.</p>',
+    published: "",
+    link: "",
+    attributionNote: "",
+  };
+};
+
 const buildArticleHtml = (post) => {
   const slug = normalizeSlug(post.slug);
   const title = toPlainText(post.title || "robot.tv News");
@@ -1320,6 +1402,7 @@ const buildArticleHtml = (post) => {
   const paragraphs = filterRenderableParagraphs(rawParagraphs);
   const videoSummary = buildVideoSummary(post, paragraphs);
   const sourceMeta = extractSourceMeta(post, rawParagraphs);
+  const visibleSource = buildVisibleSourcePresentation(sourceMeta);
   const relatedResource =
     post.relatedResource && typeof post.relatedResource === "object" ? post.relatedResource : null;
   const embedId = videoIdFromUrl(post.youtubeUrl);
@@ -1552,12 +1635,12 @@ const buildArticleHtml = (post) => {
       ${embedUrl && videoSummary ? `<section class="video-summary"><h2>Video Summary</h2><p>${escapeHtml(videoSummary)}</p></section>` : ""}
       <section class="insight-grid" aria-label="Source and author details">
         <section class="insight-card">
-          <p class="eyebrow">Source & Method</p>
-          <h2>How this story was built</h2>
-          <p><strong>${escapeHtml(sourceMeta.type)}:</strong> ${escapeHtml(sourceMeta.name)}</p>
-          ${sourceMeta.publishedDisplay ? `<p class="trust-note">Original report date: ${escapeHtml(sourceMeta.publishedDisplay)}</p>` : ""}
-          ${sourceMeta.url ? `<a class="meta-link source-link" href="${escapeHtml(sourceMeta.url)}" rel="noopener noreferrer">Read the original report</a>` : sourceMeta.siteUrl ? `<a class="meta-link source-link" href="${escapeHtml(sourceMeta.siteUrl)}" rel="noopener noreferrer">Visit ${escapeHtml(sourceMeta.name)}</a>` : `<p class="trust-note">This page is an original robot.tv editorial briefing backed by public footage and newsroom context.</p>`}
-          ${!sourceMeta.url && sourceMeta.siteUrl ? `<p class="trust-note">Direct article links were not available in the archived source feed for this post.</p>` : ""}
+          <p class="eyebrow">${visibleSource.eyebrow}</p>
+          <h2>${visibleSource.heading}</h2>
+          ${visibleSource.lead}
+          ${visibleSource.published}
+          ${visibleSource.link}
+          ${visibleSource.attributionNote}
           <p class="trust-note">${escapeHtml(editorialMethodSummary)}</p>
           <a class="meta-link source-link" href="${escapeHtml(editorialAboutUrl)}">How robot.tv covers robotics</a>
         </section>

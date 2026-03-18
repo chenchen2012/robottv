@@ -13,6 +13,11 @@ const SOURCE_NAME_OVERRIDES = new Map([
   ["therobotreport", "The Robot Report"],
   ["techcrunch", "TechCrunch"],
 ]);
+const COMPETITOR_SOURCE_KEYS = new Set([
+  "therobotreport",
+  "roboticsbusinessreview",
+  "robotics247",
+]);
 
 const stripHtml = (value) =>
   String(value || "")
@@ -47,6 +52,13 @@ const titleCaseSource = (source) => {
   if (!normalized) return "the source report";
   const key = normalized.toLowerCase().replace(/[^a-z]/g, "");
   return SOURCE_NAME_OVERRIDES.get(key) || normalized;
+};
+const sourceReference = (source) => {
+  const normalized = normalizeWhitespace(source);
+  if (!normalized) return "public reporting";
+  const key = normalized.toLowerCase().replace(/[^a-z]/g, "");
+  if (COMPETITOR_SOURCE_KEYS.has(key)) return "recent industry reporting";
+  return titleCaseSource(source);
 };
 
 const hashString = (value) => {
@@ -153,7 +165,7 @@ const significanceLine = (headline, source, sourceContext) => {
     return "That matters because events and keynote slots often reveal which platforms, customers, and use cases are gaining real momentum before the market narrative fully catches up.";
   }
   if (description) {
-    return `${titleCaseSource(source)} is framing the update as a signal for ${theme}.`;
+    return `${sourceReference(source)} is framing the update as a signal for ${theme}.`;
   }
   return "That matters because operators and investors are looking for concrete evidence that robotics progress is turning into durable deployment signals.";
 };
@@ -177,8 +189,8 @@ const watchLine = (headline) => {
 
 const buildFallbackBodyParagraphs = ({ headline, source, sourceContext }) => {
   const introLead = pickVariant(headline, [
-    `The latest ${titleCaseSource(source)} coverage puts ${headline} into the center of the current robotics conversation.`,
-    `${titleCaseSource(source)} is highlighting ${headline} as a fresh signal in the robotics market.`,
+    `Recent coverage puts ${headline} into the center of the current robotics conversation.`,
+    `${sourceReference(source)} is highlighting ${headline} as a fresh signal in the robotics market.`,
     `${headline} is landing at a moment when robotics teams are under pressure to show more than prototype momentum.`,
   ]);
   const contextSentence = safeSentence(
@@ -292,7 +304,9 @@ const buildAiPrompt = ({ headline, source, sourceUrl, pubDate, sourceContext, ca
     "- Do not quote the source article.",
     "- Avoid robotic phrases like 'Why it matters:' or 'this update may change market momentum'.",
     "- Keep the tone analytical, confident, and readable for robotics operators, founders, and investors.",
-    "- Mention the source by name at most once in the body paragraphs and not in the excerpt unless necessary.",
+    "- Do not mention the source by name in the excerpt.",
+    "- For robotics trade publications, avoid naming the outlet in body paragraphs unless essential for clarity.",
+    "- For major general, business, or international outlets, naming the source once in the body is acceptable when it adds credibility.",
     "- Focus on what happened, why it matters operationally, and what readers should watch next.",
     "",
     `Headline: ${headline}`,
