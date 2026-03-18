@@ -2067,3 +2067,8 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
 - Same-day follow-up:
   - user wanted the WSJ-branded YouTube embed restored on the `inside-the-new-living-lab-advancing-agricultural-robotics` article
   - live state now keeps the embedded video while still using neutral `Reporting Basis` treatment for the source card
+
+2026-03-18 newsroom author-display policy
+- User no longer wants `news.robot.tv` article pages to visibly show `Chen Chen` as the author on every post.
+- Visible byline under the headline and the separate `About the Author` card were removed from the public article template in `news-studio/scripts/build-static-news-seo.mjs`.
+- Structured author data in JSON-LD was left in place for now; only the visible page chrome was changed.

@@ -1540,7 +1540,6 @@ const buildArticleHtml = (post) => {
     h1 { margin:.3rem 0 0; line-height:1.2; font-size:clamp(1.3rem,3.8vw,2rem); }
     .meta { margin:.55rem 0 0; color:var(--muted); font-size:.9rem; }
     .article-meta { margin:.6rem 0 0; display:flex; flex-wrap:wrap; gap:.45rem 1rem; align-items:center; }
-    .article-byline { margin:0; color:#d7e3f6; font-size:.95rem; }
     .meta-link { color:#dbe8ff; text-decoration:underline; text-decoration-color:rgba(219,232,255,.45); text-underline-offset:.18em; }
     .excerpt { margin:.75rem 0 0; color:#c3d0e4; line-height:1.7; }
     .video { margin:.9rem 0 0; width:100%; aspect-ratio:16/9; border:1px solid #24344f; border-radius:10px; overflow:hidden; background:#000; }
@@ -1628,7 +1627,6 @@ const buildArticleHtml = (post) => {
       <h1>${escapeHtml(title)}</h1>
       <div class="article-meta">
         <p class="meta">${escapeHtml(publishedDateDisplay)}</p>
-        <p class="article-byline">By <a class="meta-link" href="${escapeHtml(authorProfile.url)}">${escapeHtml(authorProfile.name)}</a> | ${escapeHtml(authorProfile.role)}</p>
       </div>
       <p class="excerpt">${escapeHtml(excerpt)}</p>
       ${embedUrl ? `<div class="video"><iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(title)} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : ""}
@@ -1643,13 +1641,6 @@ const buildArticleHtml = (post) => {
           ${visibleSource.attributionNote}
           <p class="trust-note">${escapeHtml(editorialMethodSummary)}</p>
           <a class="meta-link source-link" href="${escapeHtml(editorialAboutUrl)}">How robot.tv covers robotics</a>
-        </section>
-        <section class="insight-card">
-          <p class="eyebrow">About the Author</p>
-          <h2>${escapeHtml(authorProfile.name)}</h2>
-          <p><strong>${escapeHtml(authorProfile.role)}</strong></p>
-          <p class="trust-note">${escapeHtml(authorProfile.bio)}</p>
-          <a class="meta-link source-link" href="${escapeHtml(authorProfile.url)}">Editorial background</a>
         </section>
         ${
           relatedResource
