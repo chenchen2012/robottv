@@ -2085,3 +2085,11 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
 - Implementation detail:
   - `news-studio/scripts/build-static-news-seo.mjs` now carries the manual editorial post in `editorialPinnedPosts`
   - `news-studio/static/index.html` mirrors that pinned post so homepage runtime listings stay consistent after hydration
+
+2026-03-18 auto-publish video mismatch guard
+- `news-studio/scripts/publish-latest-news.mjs` now keeps richer YouTube candidate metadata instead of only returning the first found video ID.
+- New hard guard:
+  - compares headline/query tokens against candidate video title/channel tokens
+  - detects topic-family conflicts such as `agriculture` vs `humanoid/factory`
+  - rejects mismatched candidates with an explicit skipped-item reason instead of attaching the wrong video
+- Operational rule reinforced: if the match is weak or topic families conflict, auto-publish should prefer no video over a misleading embed.

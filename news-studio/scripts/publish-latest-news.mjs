@@ -191,23 +191,57 @@ const sourceToCategory = (source, title) => {
   return 'category-robotics-startups'
 }
 
+const topicFamilies = [
+  { name: 'agriculture', patterns: [/\bagricultur/, /\bfarm/, /\bcrop/, /\bharvest/, /\bweeding?/, /\bvineyard/, /\borchard/] },
+  { name: 'humanoid', patterns: [/\bhumanoid/, /\bbiped/, /\boptimus/, /\bdigit\b/, /\batlas\b/, /\bapollo\b/] },
+  { name: 'factory', patterns: [/\bfactory/, /\bmanufactur/, /\bassembly/, /\bproduction/, /\bworkforce/] },
+  { name: 'warehouse', patterns: [/\bwarehouse/, /\bfulfillment/, /\blogistics/, /\bdistribution/] },
+  { name: 'inspection', patterns: [/\binspection/, /\bpatrol/, /\bdata center/, /\binfrastructure/, /\bmaintenance/] },
+  { name: 'quadruped', patterns: [/\bquadruped/, /\brobot dog/, /\bspot\b/] },
+  { name: 'medical', patterns: [/\bsurgery/, /\bmedical/, /\bhospital/, /\bhealthcare/, /\bpatient/] },
+  { name: 'defense', patterns: [/\bdefen[cs]e/, /\bmilitary/, /\buav\b/, /\bdrone/, /\bnavy/, /\binterceptor/] },
+]
+
+const detectTopicFamilies = (text) => {
+  const normalized = normalizeText(text)
+  return new Set(
+    topicFamilies
+      .filter(({ patterns }) => patterns.some((pattern) => pattern.test(normalized)))
+      .map(({ name }) => name)
+  )
+}
+
+const analyzeVideoMatch = (headline, title = '', channel = '') => {
+  const queryTokens = comparableTitleTokens(headline)
+  const videoTokens = comparableTitleTokens(`${title} ${channel}`)
+  const queryTokenSet = new Set(queryTokens)
+  const overlap = videoTokens.filter((token) => queryTokenSet.has(token)).length
+  const union = new Set([...queryTokens, ...videoTokens]).size
+  const similarity = union ? overlap / union : 0
+
+  const headlineFamilies = detectTopicFamilies(headline)
+  const videoFamilies = detectTopicFamilies(`${title} ${channel}`)
+  const sharedFamilies = [...headlineFamilies].filter((family) => videoFamilies.has(family))
+  const hardMismatch =
+    headlineFamilies.size > 0 &&
+    videoFamilies.size > 0 &&
+    sharedFamilies.length === 0
+
+  return {
+    overlap,
+    similarity,
+    headlineFamilies: [...headlineFamilies],
+    videoFamilies: [...videoFamilies],
+    hardMismatch,
+  }
+}
+
 const youtubeFromQuery = async (q) => {
   const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
   const html = await fetch(url).then((r) => r.text())
   const initialDataMatch =
     html.match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/) ||
     html.match(/ytInitialData\s*=\s*(\{[\s\S]*?\});/)
-
-  const scoreVideoCandidate = (title = '', channel = '') => {
-    const queryTokens = comparableTitleTokens(q)
-    const videoTokens = comparableTitleTokens(`${title} ${channel}`)
-    if (queryTokens.length < 3 || videoTokens.length < 3) return 0
-    const queryTokenSet = new Set(queryTokens)
-    const overlap = videoTokens.filter((token) => queryTokenSet.has(token)).length
-    const union = new Set([...queryTokens, ...videoTokens]).size
-    const similarity = union ? overlap / union : 0
-    return overlap >= 3 ? similarity : 0
-  }
 
   if (initialDataMatch) {
     try {
@@ -222,23 +256,48 @@ const youtubeFromQuery = async (q) => {
           if (!video?.videoId) continue
           const title = (video.title?.runs || []).map((run) => run.text || '').join('').trim()
           const channel = (video.ownerText?.runs || []).map((run) => run.text || '').join('').trim()
-          const score = scoreVideoCandidate(title, channel)
+          const analysis = analyzeVideoMatch(q, title, channel)
+          const score = analysis.overlap >= 3 && !analysis.hardMismatch ? analysis.similarity : 0
           if (!best || score > best.score) {
-            best = { score, videoId: video.videoId }
+            best = { score, videoId: video.videoId, title, channel, ...analysis }
           }
         }
       }
       if (best && best.score >= 0.34) {
-        return `https://www.youtube.com/watch?v=${best.videoId}`
+        return {
+          url: `https://www.youtube.com/watch?v=${best.videoId}`,
+          videoId: best.videoId,
+          title: best.title,
+          channel: best.channel,
+          score: best.score,
+          overlap: best.overlap,
+          similarity: best.similarity,
+          headlineFamilies: best.headlineFamilies,
+          videoFamilies: best.videoFamilies,
+          hardMismatch: best.hardMismatch,
+        }
       }
-      return ''
+      return null
     } catch {
       // Fall through to the old regex-based extraction as a last resort.
     }
   }
 
   const m = html.match(/"videoId":"([^"]+)"/)
-  return m ? `https://www.youtube.com/watch?v=${m[1]}` : ''
+  return m
+    ? {
+        url: `https://www.youtube.com/watch?v=${m[1]}`,
+        videoId: m[1],
+        title: '',
+        channel: '',
+        score: 0,
+        overlap: 0,
+        similarity: 0,
+        headlineFamilies: [...detectTopicFamilies(q)],
+        videoFamilies: [],
+        hardMismatch: false,
+      }
+    : null
 }
 
 const parseRssItems = (xml) => {
@@ -319,8 +378,8 @@ for (let i = 0; i < selected.length; i += 1) {
   if (docs.length >= maxPosts) break
   const h = selected[i]
   const slug = slugify(h.title)
-  const yt = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
-  const ytId = extractYoutubeId(yt)
+  const youtubeCandidate = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
+  const ytId = extractYoutubeId(youtubeCandidate?.url || '')
   const category = sourceToCategory(h.source, h.title)
   const editorial = await buildEditorialPackage({
     headline: h.title,
@@ -346,6 +405,7 @@ for (let i = 0; i < selected.length; i += 1) {
     Boolean(getEditorialRejectionReason(h.title, h.link)) ||
     !isExcerptStrong(excerpt) ||
     !ytId ||
+    Boolean(youtubeCandidate?.hardMismatch) ||
     usedYoutubeIds.has(ytId) ||
     usedTitleKeys.has(key) ||
     Boolean(nearDuplicateTitle)
@@ -358,6 +418,8 @@ for (let i = 0; i < selected.length; i += 1) {
         ? editorialRejectionReason
         : !ytId
         ? 'missing/invalid YouTube video'
+        : youtubeCandidate?.hardMismatch
+          ? `video/topic mismatch (${youtubeCandidate.headlineFamilies.join(', ') || 'headline'} vs ${youtubeCandidate.videoFamilies.join(', ') || 'video'})`
         : !isExcerptStrong(excerpt)
           ? 'excerpt quality below threshold'
           : usedYoutubeIds.has(ytId)
@@ -387,7 +449,7 @@ for (let i = 0; i < selected.length; i += 1) {
     excerpt,
     videoSummary,
     publishedAt: new Date().toISOString(),
-    youtubeUrl: `https://www.youtube.com/watch?v=${ytId}`,
+    youtubeUrl: youtubeCandidate.url,
     sourceName: h.source,
     sourceUrl: h.link,
     sourceSiteUrl: h.sourceSiteUrl,
