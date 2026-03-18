@@ -2054,3 +2054,16 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - `news-studio/scripts/build-static-news-seo.mjs` now overrides that slug to remove the misleading video embed and use more cautious body copy acknowledging that the direct article URL was not preserved.
   - `news-studio/scripts/publish-latest-news.mjs` no longer blindly accepts the first YouTube search result; it now scores top search candidates against the headline and returns no video when relevance is too weak.
 - Editorial rule reinforced: no video is better than a misleading one.
+
+2026-03-18 visible source-branding policy
+- User preference: do not visibly spotlight robotics-industry competitor outlets on `news.robot.tv` article pages; it is acceptable to keep visible branding for major general/business/international outlets where attribution helps credibility.
+- Implemented in `news-studio/scripts/build-static-news-seo.mjs`:
+  - major outlets like Reuters, TechCrunch, Business Insider, Bloomberg, BBC, CNN, WSJ, FT, AP, Guardian, and Janes can still appear visibly as `Source outlet`
+  - robotics-competitor sources such as `The Robot Report` now render as neutral `Reporting Basis` / `How this robot.tv briefing was assembled` blocks without visible competitor-brand callouts or links
+  - internal source metadata is still preserved for integrity
+- Implemented in `news-studio/scripts/lib/news-editorial-content.mjs`:
+  - DeepSeek/fallback newsroom copy now avoids naming robotics trade-publication sources in excerpts and generally avoids naming them in body copy unless essential
+  - major outlet names can still appear once in body copy when credibility value is high
+- Same-day follow-up:
+  - user wanted the WSJ-branded YouTube embed restored on the `inside-the-new-living-lab-advancing-agricultural-robotics` article
+  - live state now keeps the embedded video while still using neutral `Reporting Basis` treatment for the source card
