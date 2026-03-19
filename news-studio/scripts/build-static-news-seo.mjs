@@ -823,7 +823,17 @@ const buildHomepagePreloadPosts = (posts) =>
       author: getAuthorName(post.author),
     }));
 
-const youtubeThumb = (url) => {
+const thumbnailOverridesBySlug = new Map([
+  [
+    "how-humanoid-robots-joined-this-factorys-workforce",
+    "https://img.youtube.com/vi/BQ0UMqh8ixk/maxresdefault.jpg",
+  ],
+]);
+
+const youtubeThumb = (url, slug = "") => {
+  const normalizedSlug = normalizeSlug(slug);
+  const override = thumbnailOverridesBySlug.get(normalizedSlug);
+  if (override) return override;
   const id = videoIdFromUrl(url);
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "https://robot.tv/images/robot_logo.png";
 };
@@ -1110,7 +1120,7 @@ const buildArticleHtml = (post) => {
   const publishedDateDisplay = publishedAtIso ? formatDisplayDate(publishedAtIso) : "";
   assertSafeArticleSlug(slug);
   const canonicalUrl = articleUrlForSlug(slug);
-  const thumb = youtubeThumb(post.youtubeUrl);
+  const thumb = youtubeThumb(post.youtubeUrl, post.slug);
   const rawParagraphs = blocksToParagraphs(post.body);
   const paragraphs = filterRenderableParagraphs(rawParagraphs);
   const videoSummary = buildVideoSummary(post, paragraphs);
@@ -1551,7 +1561,7 @@ const buildHomepageStaticMarkup = (posts) => {
       );
       const date = escapeHtml(formatDisplayDate(post.publishedAt));
       const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
-      const thumbUrl = escapeHtml(youtubeThumb(post.youtubeUrl));
+      const thumbUrl = escapeHtml(youtubeThumb(post.youtubeUrl, post.slug));
       return `        <article class="card ${index === 0 ? "featured" : ""}">
           <span class="thumb-shell">
             <img class="thumb" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">

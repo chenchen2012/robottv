@@ -389,7 +389,7 @@
         <div class="grid">
         <article class="card featured">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/BQ0UMqh8ixk/hqdefault.jpg" alt="How humanoid robots joined this factory&#39;s workforce thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/BQ0UMqh8ixk/maxresdefault.jpg" alt="How humanoid robots joined this factory&#39;s workforce thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -1232,9 +1232,12 @@
         ""
       );
     };
-    const thumb = (u, quality = "hq") => {
+    const thumb = (u, quality = "hq", slug = "") => {
       const id = videoId(u);
       if (!id) return "https://robot.tv/images/robot_logo.png";
+      if (String(slug || "").trim() === "how-humanoid-robots-joined-this-factorys-workforce") {
+        return "https://img.youtube.com/vi/BQ0UMqh8ixk/maxresdefault.jpg";
+      }
       return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
     };
     const formatDate = (iso) => {
@@ -1521,7 +1524,7 @@
           "url": authorProfile.url,
           "description": authorProfile.bio
         },
-        "image": [thumb(post.youtubeUrl)]
+        "image": [thumb(post.youtubeUrl, "hq", post.slug)]
       };
       if (sourceMeta.url) json.isBasedOn = sourceMeta.url;
 
@@ -1661,7 +1664,7 @@
       grid.innerHTML = pagePosts.map((p, i) => `
         <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
           <span class="thumb-shell">
-            <img class="thumb" src="${esc(thumb(p.youtubeUrl, "hq"))}" alt="${esc(p.title)} thumbnail" loading="lazy">
+            <img class="thumb" src="${esc(thumb(p.youtubeUrl, "hq", p.slug))}" alt="${esc(p.title)} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
