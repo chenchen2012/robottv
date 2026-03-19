@@ -1699,7 +1699,12 @@
         return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&vq=small` : "";
       };
 
-      const startPreview = (card) => {
+      let hoverPreviewArmed = false;
+      const armHoverPreview = () => { hoverPreviewArmed = true; };
+      window.addEventListener("pointermove", armHoverPreview, { once: true, passive: true });
+
+      const startPreview = (card, mode = "hover") => {
+        if (mode === "hover" && !hoverPreviewArmed) return;
         const slot = card.querySelector(".thumb-preview");
         const embed = toEmbed(card.dataset.video);
         if (!slot || !embed || slot.dataset.active === "1") return;
@@ -1717,9 +1722,9 @@
       };
 
       grid.querySelectorAll(".card").forEach((card) => {
-        card.addEventListener("mouseenter", () => startPreview(card));
+        card.addEventListener("mouseenter", () => startPreview(card, "hover"));
         card.addEventListener("mouseleave", () => stopPreview(card));
-        card.addEventListener("focusin", () => startPreview(card));
+        card.addEventListener("focusin", () => startPreview(card, "focus"));
         card.addEventListener("blur", () => stopPreview(card));
       });
     };
