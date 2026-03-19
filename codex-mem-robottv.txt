@@ -2156,3 +2156,7 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - `news-studio/scripts/build-static-news-seo.mjs` imports the same shared module for static homepage/article generation
   - the news build also writes `news-studio/static/scripts/editorial-pinned-posts.js` so `news-studio/static/index.html` runtime hydration reads the same shared pinned list
 - Result: manual newsroom pinned-post changes only need to be made once, and both `robot.tv` homepage + `news.robot.tv` homepage stay aligned on future builds/deploys
+- Same-day follow-up:
+  - root homepage still showed stale live-news cards because it was reading raw Sanity fields directly, while `news.robot.tv` homepage used the curated `preloaded-news-posts.js` payload with overrides like the living-lab video fix
+  - `index.html` now also loads `https://news.robot.tv/scripts/preloaded-news-posts.js` and uses that payload to override raw Sanity `title` / `excerpt` / `youtubeUrl` values during homepage hydration
+  - practical effect: `robot.tv` homepage should now inherit newsroom-side editorial/video corrections automatically instead of drifting behind on live cards
