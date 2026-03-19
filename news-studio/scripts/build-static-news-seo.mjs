@@ -1,6 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { editorialPinnedPosts } from "../../scripts/editorial-pinned-posts.mjs";
+import {
+  editorialPinnedPosts,
+  homepageEditorialPinnedPosts,
+} from "../../scripts/editorial-pinned-posts.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || "lumv116w";
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
@@ -1552,7 +1555,7 @@ const writeHomepagePreloadScript = async (posts) => {
 const writeEditorialPinnedPostsScript = async () => {
   await fs.writeFile(
     editorialPinnedPostsScriptPath,
-    `window.__ROBOTTV_EDITORIAL_PINNED_POSTS__ = ${JSON.stringify(editorialPinnedPosts)};\n`,
+    `window.__ROBOTTV_EDITORIAL_PINNED_POSTS__ = ${JSON.stringify(homepageEditorialPinnedPosts)};\n`,
     "utf8"
   );
 };

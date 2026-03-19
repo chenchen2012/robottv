@@ -320,7 +320,7 @@ async function run() {
   if (!newsStaticIndexHtml) {
     newsHomepageIssues.push(`Missing news static homepage template: ${NEWS_STATIC_INDEX}`);
   } else {
-    if (!newsStaticIndexHtml.includes('<script src="scripts/preloaded-news-posts.js">')) {
+    if (!/<script src="scripts\/preloaded-news-posts\.js(?:\?[^"]*)?"><\/script>/.test(newsStaticIndexHtml)) {
       newsHomepageIssues.push("News homepage template is missing the preloaded posts script include");
     }
     const staticHomeBlock = extractBetween(

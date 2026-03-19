@@ -328,3 +328,12 @@ export const editorialPinnedPosts = [
     categories: ["Humanoid Robots", "Operations", "Robotics News"],
   },
 ];
+
+const HOMEPAGE_PINNED_MAX_AGE_DAYS = 120;
+const HOMEPAGE_PINNED_MAX_AGE_MS = HOMEPAGE_PINNED_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+export const homepageEditorialPinnedPosts = editorialPinnedPosts.filter((post) => {
+  const publishedAt = Date.parse(post?.publishedAt || "");
+  if (!Number.isFinite(publishedAt)) return false;
+  return Date.now() - publishedAt <= HOMEPAGE_PINNED_MAX_AGE_MS;
+});

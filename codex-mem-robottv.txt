@@ -2175,6 +2175,11 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
 - listing-priority note:
   - `inside-the-new-living-lab-advancing-agricultural-robotics` is intentionally demoted in both `news-studio/scripts/build-static-news-seo.mjs` and `news-studio/static/index.html`
   - operational effect: the article remains live and paginated, but should not appear on page 1 of `news.robot.tv`
+- homepage freshness note:
+  - `scripts/editorial-pinned-posts.mjs` can still contain older legacy/manual posts because the news build uses the full set for generated pages and redirect targets
+  - but homepage/news listing logic must use the filtered recent subset exported as `homepageEditorialPinnedPosts`, not the full legacy list, or stale items like Jan 2025 posts can resurface on the homepage
+  - as of 2026-03-19, both `robot.tv/index.html` and the `news.robot.tv` homepage payload generator were switched to `homepageEditorialPinnedPosts`
+  - `.github/workflows/deploy-news-public.yml` now explicitly watches `scripts/editorial-pinned-posts.mjs` so pinned-news changes trigger a news-site deploy automatically
 - auto-publish guardrail note:
   - `Auto Publish Robot News` can legitimately have no publishable stories in a cycle when the source guard rejects everything for weak/missing video matches
   - the workflow's feed-freshness threshold was too strict at `24` hours and caused noisy false-failure emails during quiet cycles
