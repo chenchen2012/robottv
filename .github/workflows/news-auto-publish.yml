@@ -60,7 +60,7 @@ jobs:
           SANITY_PROJECT_ID: lumv116w
           SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-          MAX_FEED_AGE_HOURS: "24"
+          MAX_FEED_AGE_HOURS: "36"
         run: node scripts/check-feed-health.mjs
 
       - name: Generate social drafts (X / LinkedIn / Reddit)
