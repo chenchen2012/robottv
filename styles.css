@@ -2168,6 +2168,14 @@ a {
         linear-gradient(160deg, #101a2a, #111b2a);
 }
 
+.companies-hero h1 {
+    margin: 0.4rem 0 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.9rem, 5.4vw, 3.55rem);
+    line-height: 1.04;
+    letter-spacing: 0.02em;
+}
+
 .companies-grid {
     margin-top: 1rem;
     display: grid;
