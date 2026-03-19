@@ -2169,6 +2169,9 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
    - follow-up cache note:
      - if a newsroom card looks correct for a moment and then reverts after refresh, suspect stale cached `scripts/preloaded-news-posts.js` or `scripts/editorial-pinned-posts.js`
      - both the news homepage and the root homepage now load the newsroom data scripts with an explicit version query string so fresh deploys replace cached payloads more reliably
-   - additional UX note:
-     - on the news homepage, if a card image appears to switch right after refresh, it may be the desktop hover-preview iframe replacing the thumbnail because the cursor is already resting over the card
-     - `news-studio/static/index.html` now arms hover previews only after a real pointer move, so reloads should keep the intended cover image stable while still preserving intentional hover previews
+ - additional UX note:
+   - on the news homepage, if a card image appears to switch right after refresh, it may be the desktop hover-preview iframe replacing the thumbnail because the cursor is already resting over the card
+   - `news-studio/static/index.html` now arms hover previews only after a real pointer move, so reloads should keep the intended cover image stable while still preserving intentional hover previews
+ - listing-priority note:
+   - `inside-the-new-living-lab-advancing-agricultural-robotics` is intentionally demoted in both `news-studio/scripts/build-static-news-seo.mjs` and `news-studio/static/index.html`
+   - operational effect: the article remains live and paginated, but should not appear on page 1 of `news.robot.tv`

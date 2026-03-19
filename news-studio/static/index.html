@@ -403,20 +403,6 @@
         </article>
         <article class="card ">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/7Ee_uBCCUF4/hqdefault.jpg" alt="Inside the new ‘Living Lab’ advancing agricultural robotics thumbnail" loading="lazy">
-            <span class="thumb-preview" aria-hidden="true"></span>
-          </span>
-          <div class="content">
-            <p class="meta">Mar 18, 2026</p>
-            <h3><a href="/inside-the-new-living-lab-advancing-agricultural-robotics/">Inside the new ‘Living Lab’ advancing agricultural robotics</a></h3>
-            <p>A new &#39;Living Lab&#39; for agricultural robotics is being framed as a real-world testing environment for field robots in active farm operations, where developers can work through the messy conditions that lab demos miss.</p>
-            <div class="row">
-              <a class="btn btn-primary" href="/inside-the-new-living-lab-advancing-agricultural-robotics/">Read Robot News</a>
-            </div>
-          </div>
-        </article>
-        <article class="card ">
-          <span class="thumb-shell">
             <img class="thumb" src="https://img.youtube.com/vi/pcdU3giLI7Q/hqdefault.jpg" alt="Gecko Robotics lands the largest U.S. Navy robotics deal yet thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
@@ -555,6 +541,20 @@
             </div>
           </div>
         </article>
+        <article class="card ">
+          <span class="thumb-shell">
+            <img class="thumb" src="https://img.youtube.com/vi/htMpI5XK3Po/hqdefault.jpg" alt="&#39;I never left&#39;: Travis Kalanick launches new robotics company Atoms with manifesto thumbnail" loading="lazy">
+            <span class="thumb-preview" aria-hidden="true"></span>
+          </span>
+          <div class="content">
+            <p class="meta">Mar 14, 2026</p>
+            <h3><a href="/i-never-left-travis-kalanick-launches-new-robotics-company-atoms-with-manifesto/">&#39;I never left&#39;: Travis Kalanick launches new robotics company Atoms with manifesto</a></h3>
+            <p>Travis Kalanick has launched a new robotics company called Atoms, accompanied by a public manifesto. The move marks his return to the tech sector with a focus on robotics commercialization.</p>
+            <div class="row">
+              <a class="btn btn-primary" href="/i-never-left-travis-kalanick-launches-new-robotics-company-atoms-with-manifesto/">Read Robot News</a>
+            </div>
+          </div>
+        </article>
         </div>
       </section>
       <section class="panel topic-hub">
@@ -680,6 +680,9 @@
       "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
       "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
       "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp"
+    ]);
+    const demotedListingSlugs = new Set([
+      "inside-the-new-living-lab-advancing-agricultural-robotics"
     ]);
     const editorialPinnedPosts = Array.isArray(window.__ROBOTTV_EDITORIAL_PINNED_POSTS__)
       ? window.__ROBOTTV_EDITORIAL_PINNED_POSTS__
@@ -1283,6 +1286,9 @@
     };
     const sortPostsByPublishedAtDesc = (posts) =>
       [...posts].sort((a, b) => {
+        const aDemoted = demotedListingSlugs.has(String(a?.slug || "").trim());
+        const bDemoted = demotedListingSlugs.has(String(b?.slug || "").trim());
+        if (aDemoted !== bDemoted) return aDemoted ? 1 : -1;
         const aTime = new Date(a?.publishedAt || 0).getTime();
         const bTime = new Date(b?.publishedAt || 0).getTime();
         return bTime - aTime;

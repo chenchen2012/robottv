@@ -68,6 +68,9 @@ const hiddenListingSlugs = new Set([
   "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
   "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
 ]);
+const demotedListingSlugs = new Set([
+  "inside-the-new-living-lab-advancing-agricultural-robotics",
+]);
 const blocksFromParagraphs = (paragraphs = []) =>
   paragraphs
     .map((paragraph) => toPlainText(paragraph))
@@ -803,6 +806,9 @@ const dedupeListingPosts = (posts) => {
 };
 const sortPostsByPublishedAtDesc = (posts) =>
   [...posts].sort((a, b) => {
+    const aDemoted = demotedListingSlugs.has(normalizeSlug(a?.slug));
+    const bDemoted = demotedListingSlugs.has(normalizeSlug(b?.slug));
+    if (aDemoted !== bDemoted) return aDemoted ? 1 : -1;
     const aTime = new Date(a?.publishedAt || 0).getTime();
     const bTime = new Date(b?.publishedAt || 0).getTime();
     return bTime - aTime;
