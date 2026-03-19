@@ -2166,3 +2166,6 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
      - `news-studio/static/index.html`
    - root homepage information order was improved by moving the `Latest Robot News` section directly below the live ticker in `index.html`, ahead of the robot-index spotlight and route cards
    - editorial rule: when newsroom cards are refreshed, keep the root homepage news block visually current and near the top of the page because it is one of the main freshness signals for both users and Google
+   - follow-up cache note:
+     - if a newsroom card looks correct for a moment and then reverts after refresh, suspect stale cached `scripts/preloaded-news-posts.js` or `scripts/editorial-pinned-posts.js`
+     - both the news homepage and the root homepage now load the newsroom data scripts with an explicit version query string so fresh deploys replace cached payloads more reliably
