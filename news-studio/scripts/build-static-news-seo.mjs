@@ -1589,7 +1589,7 @@ const buildHomepageStaticMarkup = (posts) => {
     .join("\n");
   return `      <section class="panel hero">
         <p class="kicker">ROBOTICS NEWSROOM</p>
-        <h1>Daily robotics news and insights</h1>
+        <h1>Daily Robotics News and Insights</h1>
         <p class="copy">From humanoid robot news to AI robotics news and startup execution velocity, robot.tv News tracks the biggest robot news stories with video-first reporting.</p>
         <div class="actions">
           <a class="btn btn-ghost" href="https://robot.tv">Back to robot.tv</a>
