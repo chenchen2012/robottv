@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { editorialPinnedPosts } from "../../scripts/editorial-pinned-posts.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || "lumv116w";
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
@@ -8,6 +9,7 @@ const staticDir = path.resolve("static");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
 const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
+const editorialPinnedPostsScriptPath = path.join(staticDir, "scripts", "editorial-pinned-posts.js");
 const STATIC_RESERVED_DIRS = new Set(["scripts"]);
 const HOMEPAGE_PAGE_SIZE = 12;
 const HOMEPAGE_PRELOAD_DEPTH = 60;
@@ -66,336 +68,6 @@ const hiddenListingSlugs = new Set([
   "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
   "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
 ]);
-const editorialPinnedPosts = [
-  {
-    title: "How humanoid robots joined this factory's workforce",
-    excerpt:
-      "A Wall Street Journal video offers a more concrete look at how humanoid robots are entering factory workflows, where the real questions are supervision, task fit, and whether deployment can move past show-floor optics.",
-    publishedAt: "2026-03-18T09:30:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=BQ0UMqh8ixk",
-    videoSummary:
-      "The Wall Street Journal video focuses on humanoids inside a real factory context rather than a polished stage demo. The useful signal is not novelty alone, but how these machines are being framed against labor, workflow, and deployment expectations on the factory floor.",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This video-based robot.tv briefing looks at a simple but important shift in humanoid coverage: instead of presenting humanoids only as viral demos, it places them inside a factory workforce conversation where task fit, supervision, and operating usefulness matter more.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "That framing is useful because factory deployment is where humanoid ambition meets harder questions. Can the system handle repetition, human-adjacent workflows, and the discipline of industrial operations without creating too much intervention overhead?",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "The next thing to watch is whether more factory-side humanoid stories start showing measurable contribution instead of only broad labor-replacement narratives. For robot.tv, that is where the category becomes operationally interesting.",
-          },
-        ],
-      },
-    ],
-    slug: "how-humanoid-robots-joined-this-factorys-workforce",
-    author: "Chen Chen",
-    categories: ["Humanoid Robots", "Manufacturing", "Operations"],
-    sourceName: "The Wall Street Journal",
-    sourceSiteUrl: "https://www.wsj.com/",
-  },
-  {
-    title: "NVIDIA bets on robotics to drive future growth",
-    excerpt:
-      "NVIDIA is positioning robotics as a major long-term growth driver, with accelerated compute and software stacks aimed at real deployment workloads.",
-    publishedAt: "2025-01-31T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=XGcfdbOu_uc",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy post tracks how NVIDIA's robotics strategy links AI models, simulation, and edge deployment hardware.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: compute availability and software tooling are still major constraints for scaling robot deployments.",
-          },
-        ],
-      },
-    ],
-    slug: "nvidia-bets-on-robotics-to-drive-future-growth",
-    author: "Chen Chen",
-    categories: ["Robotics News", "AI", "NVIDIA"],
-  },
-  {
-    title: "Robot news: weekly robotics signals to watch",
-    excerpt:
-      "A compact roundup of notable robotics developments across humanoids, autonomy, industrial deployments, and AI software tools.",
-    publishedAt: "2025-01-31T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy roundup page summarizes practical signals that matter for robotics builders and operators.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Coverage focus includes deployment proof points, reliability progress, and commercialization milestones.",
-          },
-        ],
-      },
-    ],
-    slug: "robot-news",
-    author: "Chen Chen",
-    categories: ["Robotics News", "Roundup"],
-  },
-  {
-    title: "Robots learn faster with new AI techniques",
-    excerpt:
-      "New AI training approaches are reducing iteration time for robot learning and improving transfer from simulation to physical systems.",
-    publishedAt: "2025-01-26T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=sa2qSF9f9Ks",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy post highlights how faster robot learning loops can accelerate time-to-deployment.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: reducing training and integration cycles can materially improve robotics program ROI.",
-          },
-        ],
-      },
-    ],
-    slug: "robots-learn-faster-with-new-ai-techniques",
-    author: "Chen Chen",
-    categories: ["AI", "Robotics News", "Research"],
-  },
-  {
-    title: "NVIDIA readies Jetson Thor computers for humanoid robots in 2025",
-    excerpt:
-      "NVIDIA's Jetson Thor roadmap is aimed at bringing higher-performance onboard compute to next-wave humanoid robot platforms.",
-    publishedAt: "2025-01-21T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=EwMH8-JKm3k",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy post follows the Jetson Thor timeline and what it could unlock for humanoid perception and control stacks.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: on-robot compute limits often define practical autonomy boundaries in production settings.",
-          },
-        ],
-      },
-    ],
-    slug: "nvidia-readies-jetson-thor-computers-for-humanoid-robots-in-2025",
-    author: "Chen Chen",
-    categories: ["Humanoid Robots", "NVIDIA", "Robotics News"],
-  },
-  {
-    title: "Chinese EV manufacturers enter the humanoid robot market",
-    excerpt:
-      "Major Chinese EV players are extending manufacturing and supply-chain capabilities into humanoid robotics programs.",
-    publishedAt: "2025-01-17T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=s4SmxpIO2qk",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy post tracks automotive-to-robotics convergence and the strategic push from EV manufacturers.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: EV-scale production discipline could accelerate cost-down curves for humanoid components.",
-          },
-        ],
-      },
-    ],
-    slug: "chinese-ev-manufacturers-enter-humanoid-robot-market",
-    author: "Chen Chen",
-    categories: ["Humanoid Robots", "China", "Robotics News"],
-  },
-  {
-    title: "Boston Dynamics unveils a new Atlas chapter",
-    excerpt:
-      "Boston Dynamics' Atlas updates reflect a shift toward more practical, product-aligned humanoid capabilities.",
-    publishedAt: "2024-12-23T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=h3iT9oUUZx0",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy post captures market reaction to the latest Atlas direction and deployment expectations.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: hardware announcements now face stronger scrutiny on manufacturability and operational readiness.",
-          },
-        ],
-      },
-    ],
-    slug: "boston-dynamics-new-atlas",
-    author: "Chen Chen",
-    categories: ["Humanoid Robots", "Boston Dynamics", "Robotics News"],
-  },
-  {
-    title: "Biggest AI news today in robotics",
-    excerpt:
-      "A fast briefing on the day's most important AI developments that impact robotics software and real-world autonomy.",
-    publishedAt: "2024-11-26T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=NL2zbYhC5Z4",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy page provides a concise AI-focused view of developments relevant to robotics teams.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Coverage centers on model capability, deployment constraints, and measurable operational impact.",
-          },
-        ],
-      },
-    ],
-    slug: "biggest-ai-news-today",
-    author: "Chen Chen",
-    categories: ["AI", "Robotics News"],
-  },
-  {
-    title: "The biggest robot news today",
-    excerpt:
-      "A daily robotics snapshot covering notable launches, deployments, funding moves, and industrial signals.",
-    publishedAt: "2024-11-22T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=LPEGve_U1cY",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored legacy page summarizes high-signal robotics updates for operators, builders, and investors.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Focus remains on practical evidence of adoption and progress beyond demo-stage announcements.",
-          },
-        ],
-      },
-    ],
-    slug: "the-biggest-robot-news-today",
-    author: "Chen Chen",
-    categories: ["Robotics News", "Roundup"],
-  },
-  {
-    title: "Chinese robotics firms showcase advanced quadruped robots for practical applications",
-    excerpt:
-      "Chinese robotics firms are showing advanced quadruped robots in practical industrial and field scenarios, signaling stronger real-world deployment readiness.",
-    publishedAt: "2025-01-01T00:00:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=X2UxtKLZnNo",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "This restored briefing tracks how Chinese robotics firms are positioning quadruped platforms for practical applications beyond demonstrations.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: commercialization momentum depends on reliability, uptime, and repeatable task performance in real operating environments.",
-          },
-        ],
-      },
-    ],
-    slug: "chinese-robotics-firms-showcase-advanced-quadruped-robots-for-practical-applications",
-    author: "Chen Chen",
-    categories: ["Quadrupeds", "Robotics News", "Operations"],
-  },
-  {
-    title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
-    excerpt:
-      "A growing share of warehouse humanoid programs are moving from proof-of-concept demos to measured operational deployment plans in 2026.",
-    publishedAt: "2026-03-07T08:30:00.000Z",
-    youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
-    body: [
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Editorial brief: 2026 deployment signals suggest warehouse humanoids are being evaluated against throughput, safety, and task reliability metrics rather than demo novelty.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "Why it matters: this shift from pilot headlines to operations benchmarks is where long-term robotics adoption and recurring budget decisions are made.",
-          },
-        ],
-      },
-      {
-        _type: "block",
-        children: [
-          {
-            text: "robot.tv will continue tracking execution milestones, site-level rollout pacing, and clear evidence of repeatable workflow impact.",
-          },
-        ],
-      },
-    ],
-    slug: "humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026",
-    author: "Chen Chen",
-    categories: ["Humanoid Robots", "Operations", "Robotics News"],
-  },
-];
 const blocksFromParagraphs = (paragraphs = []) =>
   paragraphs
     .map((paragraph) => toPlainText(paragraph))
@@ -1861,6 +1533,13 @@ const writeHomepagePreloadScript = async (posts) => {
     "utf8"
   );
 };
+const writeEditorialPinnedPostsScript = async () => {
+  await fs.writeFile(
+    editorialPinnedPostsScriptPath,
+    `window.__ROBOTTV_EDITORIAL_PINNED_POSTS__ = ${JSON.stringify(editorialPinnedPosts)};\n`,
+    "utf8"
+  );
+};
 const buildHomepageStaticMarkup = (posts) => {
   const listingPosts = getHomepageListingPosts(posts);
   const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
@@ -2055,6 +1734,7 @@ const main = async () => {
   await writeSitemap(posts);
   await writeFeed(posts);
   await writeHomepagePreloadScript(posts);
+  await writeEditorialPinnedPostsScript();
   await writeHomepageIndex(posts);
   console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };

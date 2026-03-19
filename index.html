@@ -564,27 +564,17 @@
         </footer>
     </div>
     <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
-    <script>
+    <script type="module">
+      import { editorialPinnedPosts as sharedEditorialPinnedPosts } from "/scripts/editorial-pinned-posts.mjs";
+
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
       const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,"slug":slug.current,"cats":categories[]->title}`;
-      const editorialPinnedPosts = [
-        {
-          title: "How humanoid robots joined this factory's workforce",
-          excerpt: "A Wall Street Journal video offers a more concrete look at how humanoid robots are entering factory workflows, where the real questions are supervision, task fit, and whether deployment can move past show-floor optics.",
-          youtubeUrl: "https://www.youtube.com/watch?v=BQ0UMqh8ixk",
-          slug: "how-humanoid-robots-joined-this-factorys-workforce",
-          cats: ["Humanoid Robots", "Manufacturing", "Operations", "Robotics News"]
-        },
-        {
-          title: "Humanoid warehouse rollouts are shifting from pilot to operations in 2026",
-          excerpt: "A growing share of warehouse humanoid programs are moving from proof-of-concept demos to measured operational deployment plans in 2026.",
-          youtubeUrl: "https://www.youtube.com/watch?v=2zCh_6GO49c",
-          slug: "humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026",
-          cats: ["Humanoid Robots", "Operations", "Robotics News"]
-        }
-      ];
+      const editorialPinnedPosts = sharedEditorialPinnedPosts.map((post) => ({
+        ...post,
+        cats: Array.isArray(post.categories) ? post.categories : Array.isArray(post.cats) ? post.cats : []
+      }));
 
       const toPostUrl = (slug) => slug ? `https://news.robot.tv/${slug}/` : "https://news.robot.tv/";
       const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));

@@ -2149,3 +2149,10 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - `news-studio/static/index.html`
   - `news-studio/scripts/build-static-news-seo.mjs`
 - When manual newsroom-only items are added or updated (for example the WSJ humanoid-factory post), the root homepage pinned array must be kept in sync too or `robot.tv` can show stale/mismatched homepage content even when `news.robot.tv` is already corrected.
+- Later on 2026-03-19 this mismatch class was removed by moving pinned newsroom items into a shared source module:
+  - `scripts/editorial-pinned-posts.mjs`
+- Current automation pattern:
+  - root homepage `index.html` imports the shared module directly for its client-side hydration
+  - `news-studio/scripts/build-static-news-seo.mjs` imports the same shared module for static homepage/article generation
+  - the news build also writes `news-studio/static/scripts/editorial-pinned-posts.js` so `news-studio/static/index.html` runtime hydration reads the same shared pinned list
+- Result: manual newsroom pinned-post changes only need to be made once, and both `robot.tv` homepage + `news.robot.tv` homepage stay aligned on future builds/deploys
