@@ -1590,7 +1590,7 @@ const buildHomepageStaticMarkup = (posts) => {
   return `      <section class="panel hero">
         <p class="kicker">ROBOTICS NEWSROOM</p>
         <h1>Daily Robotics News and Insights</h1>
-        <p class="copy">From humanoid robot news to AI robotics news and startup execution velocity, robot.tv News tracks the biggest robot news stories with video-first reporting.</p>
+        <p class="copy">Daily robotics news, humanoid robot updates, AI robotics coverage, and startup execution signals with video-first reporting from robot.tv News.</p>
         <div class="actions">
           <a class="btn btn-ghost" href="https://robot.tv">Back to robot.tv</a>
         </div>
@@ -1614,6 +1614,8 @@ ${cardsHtml}
           <a class="btn btn-ghost" href="https://robot.tv/industrial-inspection-robots.html">Open Inspection Hub</a>
           <a class="btn btn-ghost" href="https://robot.tv/robotics-startup-execution.html">Open Startup Guide</a>
           <a class="btn btn-ghost" href="https://robot.tv/collaborative-robot-integration.html">Open Cobot Guide</a>
+          <a class="btn btn-ghost" href="https://robot.tv/humanoid-robots.html">Open Humanoid Guide</a>
+          <a class="btn btn-ghost" href="https://robot.tv/companies.html">Open Companies Guide</a>
           <a class="btn btn-ghost" href="https://robot.tv/company-unitree.html">See Unitree Guide</a>
           <a class="btn btn-ghost" href="https://robot.tv/company-tesla.html">See Tesla Guide</a>
         </div>
