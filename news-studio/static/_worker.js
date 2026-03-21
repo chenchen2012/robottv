@@ -79,6 +79,10 @@ export default {
       return Response.redirect(withSearch(url, "/"), 301)
     }
 
+    if (path === "/contact" || path === "/contact/") {
+      return Response.redirect(withSearch(url, "/"), 301)
+    }
+
     if (LEGACY_POST_MAP.has(path)) {
       return Response.redirect(withSearch(url, LEGACY_POST_MAP.get(path)), 301)
     }
