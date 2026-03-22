@@ -293,6 +293,22 @@ const editorialEnhancementsBySlug = new Map([
     },
   ],
   [
+    "how-humanoid-robots-joined-this-factorys-workforce",
+    {
+      excerpt:
+        "A factory-floor humanoid story matters most when it shows how robots are being placed into mixed human-robot workflows with a clearer operating role, not just as future-of-work spectacle.",
+      videoSummary:
+        "The embedded coverage is useful because it frames humanoids as workforce tools inside a live factory context. The real signal is whether these systems can fit into practical handoffs, safety rules, and repeatable task structures.",
+      bodyParagraphs: [
+        "Stories about humanoids joining a factory workforce are only meaningful when they reveal how the robot is actually being used. The strongest signal is not the headline itself, but whether the deployment is tied to a narrow task, a stable work cell, or a workflow that operators can evaluate over time.",
+        "That is why this story fits the warehouse-and-factory humanoid cluster on robot.tv. Readers in this topic usually want to know whether humanoids are moving closer to operational credibility inside structured environments where uptime, safety behavior, and supervision burden can be judged.",
+        "The important follow-up is whether the deployment stays productive after the novelty window closes. If a factory installation improves handoffs, reduces repetitive strain, or supports a repeatable motion pattern without creating too much recovery work, it becomes a stronger market signal than another polished demo reel.",
+      ],
+      categories: ["Warehouse Robotics", "Operations", "Humanoid Robots"],
+      relatedResource: warehouseHumanoidHubResource,
+    },
+  ],
+  [
     "quadrupeds-routine-industrial-inspection-scale",
     {
       excerpt:
@@ -324,6 +340,22 @@ const editorialEnhancementsBySlug = new Map([
       ],
       categories: ["Quadruped Robots", "Inspection", "China"],
       relatedResource: inspectionRobotsHubResource,
+    },
+  ],
+  [
+    "inside-chinas-robotics-revolution",
+    {
+      excerpt:
+        "China's robotics rise looks bigger than a single humanoid headline. Manufacturing depth, policy support, and industrial ambition may be combining into a broader competitive advantage.",
+      videoSummary:
+        "The coverage matters because it widens the frame from one company or one robot category to China's full robotics ecosystem. For robot.tv, that makes it a strong bridge between humanoid momentum and broader industrial strength.",
+      bodyParagraphs: [
+        "When coverage shifts from one robot launch to China's broader robotics revolution, the key question becomes structural: what parts of the ecosystem are giving local companies more room to move quickly on cost, iteration, and deployment ambition?",
+        "That matters for humanoids because category leadership may emerge from manufacturing and industrial depth as much as from any one breakout model. If the wider robotics stack keeps improving, humanoid teams inside that environment may benefit from faster hardware cycles and stronger supplier leverage.",
+        "robot.tv uses this story to connect China humanoid coverage to a bigger market thesis. The strongest SEO opportunity is not only the Unitree question, but the larger ecosystem question of whether China's robotics base is becoming a sustained global pressure point.",
+      ],
+      categories: ["China", "Robotics News"],
+      relatedResource: chinaHumanoidHubResource,
     },
   ],
   [
@@ -378,6 +410,22 @@ const editorialEnhancementsBySlug = new Map([
       categories: ["Robotics Startups", "Operations", "Strategy"],
       sourceName: "The Robot Report",
       sourceSiteUrl: "https://www.therobotreport.com/",
+      relatedResource: startupExecutionGuideResource,
+    },
+  ],
+  [
+    "building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry",
+    {
+      excerpt:
+        "Bedrock Robotics is a useful startup-execution story because it ties robotics ambition to a concrete industry workflow, where customer adoption depends on operating fit rather than broad platform hype.",
+      videoSummary:
+        "The embedded coverage focuses on Bedrock's role in construction robotics. For robot.tv, the deeper signal is how robotics startups earn credibility by solving one workflow well enough to matter inside a hard industry environment.",
+      bodyParagraphs: [
+        "Construction robotics is a demanding proving ground for startup execution because the environment is messy, labor-sensitive, and difficult to impress with polished demos alone. That makes Bedrock a useful case study in how a robotics company can build around a real industry constraint instead of a general story about future automation.",
+        "This is exactly the kind of signal the robot.tv startup-execution guide is built to capture. Readers want to know which startups are grounding their narrative in deployment logic, customer pain points, and believable operating scope.",
+        "The important follow-up is whether companies like Bedrock can show repeatable field value, not just technical promise. If the startup keeps narrowing its workflow, proving site fit, and avoiding overreach, it becomes a better benchmark for disciplined robotics execution.",
+      ],
+      categories: ["Robotics Startups", "Industrial Robotics"],
       relatedResource: startupExecutionGuideResource,
     },
   ],
