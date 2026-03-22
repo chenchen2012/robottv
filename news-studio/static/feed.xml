@@ -5,8 +5,58 @@
     <link>https://news.robot.tv/</link>
     <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 Mar 2026 13:52:46 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 21 Mar 2026 13:13:14 GMT</lastBuildDate>
     <atom:link href="https://news.robot.tv/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Amazon acquires robotic doorstep delivery provider RIVR</title>
+      <link>https://news.robot.tv/amazon-acquires-robotic-doorstep-delivery-provider-rivr/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-acquires-robotic-doorstep-delivery-provider-rivr/</guid>
+      <pubDate>Sat, 21 Mar 2026 13:13:14 GMT</pubDate>
+      <description>Amazon has acquired RIVR, a startup specializing in robotic doorstep delivery. The move signals a direct push to automate the final, most complex segment of the logistics chain.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Building tomorrow: How Bedrock Robotics is changing the construction industry</title>
+      <link>https://news.robot.tv/building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry/</link>
+      <guid isPermaLink="true">https://news.robot.tv/building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry/</guid>
+      <pubDate>Sat, 21 Mar 2026 02:48:11 GMT</pubDate>
+      <description>Bedrock Robotics is developing new automation systems for construction sites. The company&#39;s approach focuses on integrating robotic platforms directly into complex, unstructured building environments.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Amazon acquires Rivr, maker of a stair-climbing delivery robot</title>
+      <link>https://news.robot.tv/amazon-acquires-rivr-maker-of-a-stair-climbing-delivery-robot/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-acquires-rivr-maker-of-a-stair-climbing-delivery-robot/</guid>
+      <pubDate>Fri, 20 Mar 2026 03:10:50 GMT</pubDate>
+      <description>Amazon has acquired Rivr, a startup developing a stair-climbing delivery robot. The move signals a deeper investment in last-mile automation for complex urban environments.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Inside China’s robotics revolution</title>
+      <link>https://news.robot.tv/inside-chinas-robotics-revolution/</link>
+      <guid isPermaLink="true">https://news.robot.tv/inside-chinas-robotics-revolution/</guid>
+      <pubDate>Thu, 19 Mar 2026 07:38:21 GMT</pubDate>
+      <description>Details the scale and strategic drivers of China&#39;s robotics expansion. The analysis provides a critical, ground-level view of the industrial and policy forces reshaping global automation.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>How humanoid robots joined this factory&#39;s workforce</title>
+      <link>https://news.robot.tv/how-humanoid-robots-joined-this-factorys-workforce/</link>
+      <guid isPermaLink="true">https://news.robot.tv/how-humanoid-robots-joined-this-factorys-workforce/</guid>
+      <pubDate>Wed, 18 Mar 2026 09:30:00 GMT</pubDate>
+      <description>A Wall Street Journal video offers a more concrete look at how humanoid robots are entering factory workflows, where the real questions are supervision, task fit, and whether deployment can move past show-floor optics.</description>
+      <category>Humanoid Robots</category>
+      <category>Manufacturing</category>
+      <category>Operations</category>
+    </item>
+    <item>
+      <title>Inside the new ‘Living Lab’ advancing agricultural robotics</title>
+      <link>https://news.robot.tv/inside-the-new-living-lab-advancing-agricultural-robotics/</link>
+      <guid isPermaLink="true">https://news.robot.tv/inside-the-new-living-lab-advancing-agricultural-robotics/</guid>
+      <pubDate>Wed, 18 Mar 2026 03:21:16 GMT</pubDate>
+      <description>A new &#39;Living Lab&#39; for agricultural robotics is being framed as a real-world testing environment for field robots in active farm operations, where developers can work through the messy conditions that lab demos miss.</description>
+      <category>Robotics Startups</category>
+    </item>
     <item>
       <title>Gecko Robotics lands the largest U.S. Navy robotics deal yet</title>
       <link>https://news.robot.tv/gecko-robotics-lands-the-largest-us-navy-robotics-deal-yet/</link>
@@ -295,65 +345,6 @@
       <category>Humanoid Robots</category>
       <category>China</category>
       <category>Robotics News</category>
-    </item>
-    <item>
-      <title>How to integrate collaborative robots into existing production lines without disruption</title>
-      <link>https://news.robot.tv/how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption/</link>
-      <guid isPermaLink="true">https://news.robot.tv/how-to-integrate-collaborative-robots-into-existing-production-lines-without-disruption/</guid>
-      <pubDate>Sat, 28 Feb 2026 12:41:25 GMT</pubDate>
-      <description>Collaborative robot integration works best when teams redesign flow, safety, and operator handoffs around a real bottleneck instead of dropping a cobot into the line as a stand-alone demo.</description>
-      <category>Robotics Startups</category>
-      <category>Industrial Robots</category>
-      <category>Operations</category>
-      <category>Manufacturing</category>
-    </item>
-    <item>
-      <title>Vision-language-action models are the next leap in autonomous robotics</title>
-      <link>https://news.robot.tv/vision-language-action-models-are-the-next-leap-in-autonomous-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/vision-language-action-models-are-the-next-leap-in-autonomous-robotics/</guid>
-      <pubDate>Sat, 28 Feb 2026 12:41:25 GMT</pubDate>
-      <description>Vision-language-action models matter because they promise to connect perception, language, and control in one robotics stack, but the real test is whether they reduce task engineering outside demo conditions.</description>
-      <category>Robotics Startups</category>
-      <category>Physical AI</category>
-      <category>Robot Learning</category>
-      <category>Robotics Software</category>
-    </item>
-    <item>
-      <title>AI’s role in the future of robotics: Insights from 3Laws</title>
-      <link>https://news.robot.tv/ais-role-in-the-future-of-robotics-insights-from-3laws/</link>
-      <guid isPermaLink="true">https://news.robot.tv/ais-role-in-the-future-of-robotics-insights-from-3laws/</guid>
-      <pubDate>Sat, 28 Feb 2026 01:45:51 GMT</pubDate>
-      <description>AI only becomes valuable in robotics when it reduces brittle task engineering, improves deployment speed, and gives operators more reliable behavior outside controlled demos.</description>
-      <category>Robotics Startups</category>
-      <category>Physical AI</category>
-      <category>Robot Learning</category>
-      <category>Strategy</category>
-    </item>
-    <item>
-      <title>Hyundai to show MobED at AW as robotics, AI expand in manufacturing</title>
-      <link>https://news.robot.tv/hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing/</link>
-      <guid isPermaLink="true">https://news.robot.tv/hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing/</guid>
-      <pubDate>Fri, 27 Feb 2026 12:55:34 GMT</pubDate>
-      <description>Hyundai will showcase its MobED platform at an upcoming automation event. This follows a broader industry trend of integrating advanced robotics and AI into manufacturing environments.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Hyundai Motor to unveil multi-billion-dollar investment in South Korea, source says</title>
-      <link>https://news.robot.tv/hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says/</link>
-      <guid isPermaLink="true">https://news.robot.tv/hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says/</guid>
-      <pubDate>Thu, 26 Feb 2026 13:02:14 GMT</pubDate>
-      <description>Hyundai Motor is reportedly preparing a multi-billion-dollar investment in South Korea. The capital infusion signals a major strategic commitment to its domestic industrial base.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Intrinsic is joining Google to advance physical AI in robotics</title>
-      <link>https://news.robot.tv/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/intrinsic-is-joining-google-to-advance-physical-ai-in-robotics/</guid>
-      <pubDate>Thu, 26 Feb 2026 13:02:13 GMT</pubDate>
-      <description>Intrinsic joining Google matters because physical AI may be moving from a specialized robotics-software effort into a broader platform bet around models, tooling, and developer leverage.</description>
-      <category>Robotics Startups</category>
-      <category>Physical AI</category>
-      <category>Robotics Software</category>
     </item>
   </channel>
 </rss>

@@ -12,6 +12,8 @@ const requiredFiles = [
   "feed.xml",
   "robots.txt",
   "sitemap.xml",
+  "fonts/space-grotesk-latin.woff2",
+  "fonts/orbitron-latin.woff2",
   "scripts/ga-lazy.js",
   "scripts/preloaded-news-posts.js"
 ]
