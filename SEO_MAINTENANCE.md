@@ -132,6 +132,9 @@ node scripts/build-static-profile-news.mjs
 # Generate DeepSeek-backed evergreen draft packs (requires DEEPSEEK_API_KEY)
 node scripts/generate-evergreen-seo-drafts.mjs
 
+# Turn the automation report into AI-assisted SEO upgrade briefs
+node scripts/generate-seo-ai-briefs.mjs
+
 # Run the same checks used by GitHub Actions
 node scripts/seo-weekly-check.mjs
 ```
