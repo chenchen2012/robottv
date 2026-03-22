@@ -5,6 +5,7 @@ const root = process.cwd()
 const distDir = path.join(root, "dist-root-public")
 
 const includeDirs = new Set([
+  "fonts",
   "images",
   "newsletters",
   "scripts"

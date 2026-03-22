@@ -12,6 +12,8 @@ const requiredFiles = [
   "robots.txt",
   "sitemap.xml",
   "styles.css",
+  "fonts/space-grotesk-latin.woff2",
+  "fonts/orbitron-latin.woff2",
   "about.html",
   "live.html",
   "home.html",
