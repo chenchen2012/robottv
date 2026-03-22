@@ -47,6 +47,13 @@
         .quick-link-card { border: 1px solid #304968; border-radius: 10px; padding: 0.72rem; background: rgba(12, 21, 34, 0.72); }
         .quick-link-card h3 { margin: 0; font-size: 0.94rem; }
         .quick-link-card p { margin: 0.42rem 0 0; font-size: 0.86rem; color: #bfd0ec; line-height: 1.55; }
+        .video-launcher { position: relative; display: block; width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; color: inherit; text-align: left; }
+        .video-launcher img { display: block; width: 100%; height: auto; border-radius: 14px; }
+        .video-launcher::after { content: ""; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(180deg, rgba(6, 10, 18, 0.12), rgba(6, 10, 18, 0.62)); }
+        .video-launcher-copy { position: absolute; inset: auto 1rem 1rem 1rem; z-index: 1; display: grid; gap: 0.35rem; }
+        .video-launcher-badge { display: inline-flex; width: fit-content; align-items: center; gap: 0.4rem; border-radius: 999px; padding: 0.28rem 0.7rem; background: rgba(10, 18, 31, 0.82); border: 1px solid #37527a; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: #dce8ff; }
+        .video-launcher-copy strong { font-size: 1rem; color: #f5f8ff; }
+        .video-launcher-copy span { color: #d3def2; font-size: 0.88rem; line-height: 1.45; max-width: 38ch; }
         @media (max-width: 980px) { .reference-grid { grid-template-columns: 1fr; } }
         @media (max-width: 980px) { .quick-links { grid-template-columns: 1fr; } }
     </style>
@@ -475,9 +482,21 @@
 
                 <article class="panel company-panel">
                     <h2>Featured Video</h2>
-                    <p>Autoplays muted for quick product-context scanning.</p>
-                    <div class="detail-frame">
-                        <iframe src="https://www.youtube.com/embed/Ykiuz1ZdGBc?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1" title="Unitree feature video" loading="eager" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <p>Click to load the featured video only when you want it, which keeps the page lighter on first render.</p>
+                    <div class="detail-frame" data-featured-video-shell>
+                        <button
+                            class="video-launcher"
+                            type="button"
+                            data-featured-video-trigger
+                            data-embed-src="https://www.youtube.com/embed/Ykiuz1ZdGBc?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1"
+                            aria-label="Play Unitree feature video">
+                            <img src="https://img.youtube.com/vi/Ykiuz1ZdGBc/hqdefault.jpg" alt="Unitree feature video thumbnail" loading="eager" fetchpriority="high" decoding="async">
+                            <span class="video-launcher-copy">
+                                <span class="video-launcher-badge">Play Featured Video</span>
+                                <strong>Unitree feature video</strong>
+                                <span>Open the embedded video when you are ready to review motion, product context, and footage directly on the page.</span>
+                            </span>
+                        </button>
                     </div>
                 </article>
             </section>
@@ -669,6 +688,26 @@
     </div>
 
     <script src="scripts/company-videos.js?v=20260220-v3"></script>
+    <script>
+    (function () {
+        const trigger = document.querySelector('[data-featured-video-trigger]');
+        const shell = document.querySelector('[data-featured-video-shell]');
+        if (!trigger || !shell) return;
+        trigger.addEventListener('click', function () {
+            const src = trigger.getAttribute('data-embed-src');
+            if (!src) return;
+            const iframe = document.createElement('iframe');
+            iframe.src = src;
+            iframe.title = 'Unitree feature video';
+            iframe.loading = 'lazy';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+            iframe.allowFullscreen = true;
+            shell.innerHTML = '';
+            shell.appendChild(iframe);
+        }, { once: true });
+    })();
+    </script>
     <script src="scripts/share-tools.js?v=20260221-share1"></script>
     <script src="scripts/entity-latest-news.js?v=20260307-static1"></script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
