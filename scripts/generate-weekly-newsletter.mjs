@@ -10,7 +10,7 @@ const TIME_ZONE = process.env.NEWSLETTER_TIMEZONE || "America/Los_Angeles";
 const LOCALE = process.env.NEWSLETTER_LOCALE || "en-US";
 const ISSUE_PREFIX = process.env.NEWSLETTER_SLUG_PREFIX || "robot-weekly";
 const REPORT_DIR = process.env.NEWSLETTER_REPORT_DIR || path.join("ops-private", "reports", "newsletter");
-const ARCHIVE_PATH = `${OUTPUT_DIR}/`;
+const ARCHIVE_PATH = "newsletters";
 
 const decodeHtml = (input) =>
   String(input || "")
@@ -681,11 +681,11 @@ const run = async () => {
     feedUrl: `${SITE_URL}/newsletter-feed.xml`,
     siteUrl: SITE_URL,
   });
-  await fs.writeFile(path.join(outputDir, "index.html"), archiveHtml, "utf8");
+  await fs.writeFile(path.join(root, "newsletters.html"), archiveHtml, "utf8");
 
   console.log(`Generated newsletter issue: ${issuePath}`);
   console.log(`Generated newsletter text: ${textPath}`);
-  console.log(`Generated newsletter archive: ${path.join(outputDir, "index.html")}`);
+  console.log(`Generated newsletter archive: ${path.join(root, "newsletters.html")}`);
   console.log(`Newsletter report: ${path.join(reportDir, "latest-issue.md")}`);
 };
 
