@@ -1,0 +1,37 @@
+Amazon's Last-Mile Push & China's Robotics Rise
+Mar 22, 2026
+
+From Chen Chen, Editor at robot.tv
+
+EDITORIAL NOTE
+This week, a major acquisition shows where one giant is placing its automation bets. Meanwhile, the scale of China's robotics push is becoming clearer. Let's get into it.
+
+LEAD SIGNAL
+Amazon acquires Rivr, maker of a stair-climbing delivery robot
+Amazon has acquired Rivr, a startup developing a stair-climbing delivery robot. The move signals a deeper investment in last-mile automation for complex urban environments.
+This is a direct attempt to automate the final, most complex segment of the logistics chain, moving beyond simple curb-side drops.
+https://news.robot.tv/amazon-acquires-rivr-maker-of-a-stair-climbing-delivery-robot/
+
+WHAT ELSE MATTERED
+- Inside China’s robotics revolution
+  China's robotics rise looks bigger than a single humanoid headline. Manufacturing depth, policy support, and industrial ambition may be combining into a broader competitive advantage.
+  It signals a structural shift in global robotics competition, driven by more than just hype.
+  https://news.robot.tv/inside-chinas-robotics-revolution/
+
+- How humanoid robots joined this factory's workforce
+  A factory-floor humanoid story matters most when it shows robots being placed into mixed human-robot workflows with a clearer operating role.
+  The real test is integration into existing workflows, not just being a spectacle.
+  https://news.robot.tv/how-humanoid-robots-joined-this-factorys-workforce/
+
+- Building tomorrow: How Bedrock Robotics is changing the construction industry
+  Bedrock Robotics ties robotics ambition to a concrete industry workflow, where customer adoption depends on operating fit rather than broad platform hype.
+  It's a useful case study in solving for specific, gritty industry problems first.
+  https://news.robot.tv/building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry/
+
+WHAT TO WATCH
+That's the briefing for this week. The focus is shifting from what's possible to what works in practice. I'll see you next time.
+
+You’re receiving this because you signed up for Robot Weekly at robot.tv.
+Read more: https://news.robot.tv
+Archive: https://robot.tv/newsletters/robot-weekly-2026-03-23.html
+robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA

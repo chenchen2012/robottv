@@ -7,6 +7,109 @@
     <language>en-us</language>
     <atom:link href="https://robot.tv/newsletter-feed.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Amazon&#39;s Last-Mile Push &amp; China&#39;s Robotics Rise</title>
+      <link>https://robot.tv/newsletters/robot-weekly-2026-03-23.html</link>
+      <guid>https://robot.tv/newsletters/robot-weekly-2026-03-23.html</guid>
+      <pubDate>Mon, 23 Mar 2026 06:57:35 GMT</pubDate>
+      <description>Amazon acquires a stair-climbing delivery bot, while China&#39;s industrial ambition builds a broader competitive edge.</description>
+      <content:encoded><![CDATA[<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon&#39;s Last-Mile Push &amp; China&#39;s Robotics Rise</title>
+  <meta name="description" content="Amazon acquires a stair-climbing delivery bot, while China&#39;s industrial ambition builds a broader competitive edge.">
+  <script src="/scripts/ga-lazy.js?v=20260309-ga-v1" defer></script>
+  <style>
+    body { margin:0; padding:0; background:#eef2f7; color:#182230; font-family:Arial,sans-serif; }
+    .shell { width:100%; padding:24px 12px; }
+    .card { max-width:680px; margin:0 auto; border:1px solid #d5deea; border-radius:18px; background:#ffffff; overflow:hidden; }
+    .hero { padding:28px 28px 20px; background:linear-gradient(180deg,#f7fafd 0%,#eef4fb 100%); border-bottom:1px solid #dbe5f0; }
+    .eyebrow { margin:0 0 8px; color:#6a7f97; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    h1 { margin:0; font-size:30px; line-height:1.18; color:#0f1824; }
+    .meta { margin-top:10px; color:#6b7b90; font-size:14px; }
+    .preheader { margin-top:14px; color:#324458; line-height:1.65; font-size:16px; }
+    .body { padding:0 28px 28px; }
+    .editor-line { padding-top:20px; color:#607389; font-size:14px; }
+    .section { padding-top:24px; }
+    .section h2 { margin:0 0 12px; font-size:20px; color:#132033; }
+    .section p { margin:0; color:#2b3b4d; line-height:1.72; }
+    .lead { border:1px solid #d8e2ee; border-radius:14px; padding:18px; background:#f8fbff; }
+    .lead h3 { margin:0 0 10px; font-size:21px; line-height:1.3; }
+    .lead .why { margin-top:12px; color:#40556d; }
+    ul { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+    li { border:1px solid #dbe4ef; border-radius:14px; padding:16px; background:#ffffff; }
+    li h3 { margin:0 0 10px; font-size:18px; line-height:1.35; }
+    li h3 a { color:#142033; text-decoration:none; }
+    li p { margin:0; color:#304153; line-height:1.68; }
+    li .why { margin-top:10px; color:#4a5f76; }
+    .closing { border-top:1px solid #dde6ef; margin-top:24px; padding-top:24px; }
+    .footer { margin-top:24px; color:#607389; font-size:13px; line-height:1.7; }
+    .footer p { margin:0 0 10px; }
+    a { color:#245ea8; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <div class="hero">
+        <p class="eyebrow">Robot Weekly</p>
+        <h1>Amazon&#39;s Last-Mile Push &amp; China&#39;s Robotics Rise</h1>
+        <div class="meta">Mar 22, 2026</div>
+        <p class="preheader">Amazon acquires a stair-climbing delivery bot, while China&#39;s industrial ambition builds a broader competitive edge.</p>
+      </div>
+      <div class="body">
+        <div class="editor-line">From Chen Chen, Editor at robot.tv</div>
+        <section class="section">
+          <h2>Editorial Note</h2>
+          <p>This week, a major acquisition shows where one giant is placing its automation bets. Meanwhile, the scale of China&#39;s robotics push is becoming clearer. Let&#39;s get into it.</p>
+        </section>
+        <section class="section">
+          <h2>Lead Signal</h2>
+          <div class="lead">
+            <h3><a href="https://news.robot.tv/amazon-acquires-rivr-maker-of-a-stair-climbing-delivery-robot/">Amazon acquires Rivr, maker of a stair-climbing delivery robot</a></h3>
+            <p>Amazon has acquired Rivr, a startup developing a stair-climbing delivery robot. The move signals a deeper investment in last-mile automation for complex urban environments.</p>
+            <p class="why">This is a direct attempt to automate the final, most complex segment of the logistics chain, moving beyond simple curb-side drops.</p>
+          </div>
+        </section>
+        <section class="section">
+          <h2>What Else Mattered</h2>
+          <ul>
+      <li>
+        <h3><a href="https://news.robot.tv/inside-chinas-robotics-revolution/">Inside China’s robotics revolution</a></h3>
+        <p>China&#39;s robotics rise looks bigger than a single humanoid headline. Manufacturing depth, policy support, and industrial ambition may be combining into a broader competitive advantage.</p>
+        <p class="why">It signals a structural shift in global robotics competition, driven by more than just hype.</p>
+      </li>
+
+      <li>
+        <h3><a href="https://news.robot.tv/how-humanoid-robots-joined-this-factorys-workforce/">How humanoid robots joined this factory&#39;s workforce</a></h3>
+        <p>A factory-floor humanoid story matters most when it shows robots being placed into mixed human-robot workflows with a clearer operating role.</p>
+        <p class="why">The real test is integration into existing workflows, not just being a spectacle.</p>
+      </li>
+
+      <li>
+        <h3><a href="https://news.robot.tv/building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry/">Building tomorrow: How Bedrock Robotics is changing the construction industry</a></h3>
+        <p>Bedrock Robotics ties robotics ambition to a concrete industry workflow, where customer adoption depends on operating fit rather than broad platform hype.</p>
+        <p class="why">It&#39;s a useful case study in solving for specific, gritty industry problems first.</p>
+      </li></ul>
+        </section>
+        <section class="section closing">
+          <h2>What To Watch</h2>
+          <p>That&#39;s the briefing for this week. The focus is shifting from what&#39;s possible to what works in practice. I&#39;ll see you next time.</p>
+          <div class="footer">
+            <p>You’re receiving this because you signed up for Robot Weekly at robot.tv.</p>
+            <p>Read more at <a href="https://news.robot.tv">news.robot.tv</a>.</p>
+            <p>Issue archive: <a href="https://robot.tv/newsletters/robot-weekly-2026-03-23.html">https://robot.tv/newsletters/robot-weekly-2026-03-23.html</a></p>
+            <p>robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>]]></content:encoded>
+    </item>
+    <item>
       <title>Robot Weekly | Mar 16, 2026</title>
       <link>https://robot.tv/newsletters/robot-weekly-2026-03-17.html</link>
       <guid>https://robot.tv/newsletters/robot-weekly-2026-03-17.html</guid>

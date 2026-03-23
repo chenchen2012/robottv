@@ -8,6 +8,8 @@ on:
     paths:
       - ".github/workflows/deploy-robot-tv-public.yml"
       - "_redirects"
+      - "newsletter-feed.xml"
+      - "newsletters/**"
       - "robots.txt"
       - "sitemap.xml"
       - "*.html"
