@@ -7,6 +7,7 @@ const EXACT_REDIRECTS = new Map([
   ["/news", "https://news.robot.tv/"],
   ["/news/", "https://news.robot.tv/"],
   ["/news.html", "https://news.robot.tv/"],
+  ["/newsletters.html", "/newsletters/"],
   ["/post", "https://news.robot.tv/"],
   ["/post/", "https://news.robot.tv/"],
   ["/robot-companies", "/companies.html"],
@@ -207,6 +208,10 @@ export default {
 
     if (path.startsWith("/category/") || path.startsWith("/tag/") || path.startsWith("/author/") || path.startsWith("/page/")) {
       return redirect(url, "https://news.robot.tv/", 301)
+    }
+
+    if (path === "/newsletters/") {
+      return servePrettyAsset(request, env, "/newsletters/index.html")
     }
 
     const postHtmlMatch = path.match(/^\/post\/([^/]+)\.html$/)
