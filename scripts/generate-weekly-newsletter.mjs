@@ -10,6 +10,7 @@ const TIME_ZONE = process.env.NEWSLETTER_TIMEZONE || "America/Los_Angeles";
 const LOCALE = process.env.NEWSLETTER_LOCALE || "en-US";
 const ISSUE_PREFIX = process.env.NEWSLETTER_SLUG_PREFIX || "robot-weekly";
 const REPORT_DIR = process.env.NEWSLETTER_REPORT_DIR || path.join("ops-private", "reports", "newsletter");
+const ARCHIVE_PATH = `${OUTPUT_DIR}/`;
 
 const decodeHtml = (input) =>
   String(input || "")
@@ -81,6 +82,12 @@ const formatDate = (date) =>
     dateStyle: "medium",
     timeZone: TIME_ZONE,
   }).format(date);
+
+const formatArchiveDate = (value) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return formatDate(date);
+};
 
 const sentenceFromDescription = (item, fallback) => {
   const description = normalizeWhitespace(item.description || "");
@@ -256,7 +263,20 @@ const buildAiIssue = async (items) => {
   return normalizeAiIssue(parseJsonPayload(content), items);
 };
 
-const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSummary, leadWhyItMatters, highlights, closing, issueDate, issueUrl }) => {
+const buildIssueHtml = ({
+  subject,
+  preheader,
+  intro,
+  leadTitle,
+  leadLink,
+  leadSummary,
+  leadWhyItMatters,
+  highlights,
+  closing,
+  issueDate,
+  issueUrl,
+  archiveUrl,
+}) => {
   const highlightCards = highlights
     .map(
       (item) => `
@@ -338,6 +358,7 @@ const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSu
           <div class="footer">
             <p>You’re receiving this because you signed up for Robot Weekly at robot.tv.</p>
             <p>Read more at <a href="https://news.robot.tv">news.robot.tv</a>.</p>
+            <p>Browse every issue at <a href="${escapeHtml(archiveUrl)}">${escapeHtml(archiveUrl)}</a>.</p>
             <p>Issue archive: <a href="${escapeHtml(issueUrl)}">${escapeHtml(issueUrl)}</a></p>
             <p>robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA</p>
           </div>
@@ -349,7 +370,19 @@ const buildIssueHtml = ({ subject, preheader, intro, leadTitle, leadLink, leadSu
 </html>`;
 };
 
-const buildIssueText = ({ subject, intro, leadTitle, leadLink, leadSummary, leadWhyItMatters, highlights, closing, issueDate, issueUrl }) => {
+const buildIssueText = ({
+  subject,
+  intro,
+  leadTitle,
+  leadLink,
+  leadSummary,
+  leadWhyItMatters,
+  highlights,
+  closing,
+  issueDate,
+  issueUrl,
+  archiveUrl,
+}) => {
   const lines = [
     subject,
     issueDate,
@@ -382,10 +415,102 @@ const buildIssueText = ({ subject, intro, leadTitle, leadLink, leadSummary, lead
   lines.push("");
   lines.push("You’re receiving this because you signed up for Robot Weekly at robot.tv.");
   lines.push("Read more: https://news.robot.tv");
+  lines.push(`Browse every issue: ${archiveUrl}`);
   lines.push(`Archive: ${issueUrl}`);
   lines.push("robot.tv, 8 The Green, Suite 4000, Dover, DE 19901, USA");
 
   return `${lines.join("\n")}\n`;
+};
+
+const buildArchiveHtml = ({ items, archiveUrl, feedUrl, siteUrl }) => {
+  const cards = items
+    .map((item, index) => {
+      const dateLabel = formatArchiveDate(item.pubDate);
+      const itemDescription = normalizeWhitespace(item.description || "Weekly robotics briefing from robot.tv.");
+      return `      <article class="issue-card${index === 0 ? " issue-card-featured" : ""}">
+        <p class="issue-label">${index === 0 ? "Latest issue" : "Archive issue"}</p>
+        <h2><a href="${escapeHtml(item.link)}">${escapeHtml(item.title)}</a></h2>
+        <p class="issue-date">${escapeHtml(dateLabel)}</p>
+        <p class="issue-summary">${escapeHtml(itemDescription)}</p>
+        <div class="issue-actions">
+          <a class="issue-link" href="${escapeHtml(item.link)}">Read issue</a>
+        </div>
+      </article>`;
+    })
+    .join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robot Weekly Archive | robot.tv</title>
+  <meta name="description" content="Browse the full Robot Weekly archive from robot.tv, with the latest issue and past editions in one place.">
+  <link rel="canonical" href="${escapeHtml(archiveUrl)}">
+  <script src="/scripts/ga-lazy.js?v=20260309-ga-v1" defer></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f6fb;
+      --panel: #ffffff;
+      --panel-alt: #eef4fb;
+      --text: #112033;
+      --muted: #5f7288;
+      --line: #d7e1eb;
+      --accent: #1f5ea8;
+      --accent-soft: #e8f1fb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 58%); color: var(--text); }
+    .shell { max-width: 960px; margin: 0 auto; padding: 32px 16px 56px; }
+    .hero { padding: 28px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(180deg, #ffffff 0%, var(--panel-alt) 100%); }
+    .eyebrow { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: 40px; line-height: 1.05; }
+    .hero p { margin: 14px 0 0; max-width: 720px; color: #314255; line-height: 1.7; font-size: 18px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+    .hero-actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border-radius: 999px; text-decoration: none; font-weight: 700; }
+    .hero-actions .primary { background: var(--accent); color: #ffffff; }
+    .hero-actions .secondary { background: var(--accent-soft); color: var(--accent); }
+    .issues { display: grid; gap: 16px; margin-top: 24px; }
+    .issue-card { padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); }
+    .issue-card-featured { background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%); }
+    .issue-label { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .issue-card h2 { margin: 0; font-size: 26px; line-height: 1.2; }
+    .issue-card h2 a { color: inherit; text-decoration: none; }
+    .issue-date { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .issue-summary { margin: 14px 0 0; color: #304153; line-height: 1.7; }
+    .issue-actions { margin-top: 16px; }
+    .issue-link { color: var(--accent); font-weight: 700; text-decoration: none; }
+    .footer { margin-top: 28px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .footer p { margin: 0 0 8px; }
+    @media (max-width: 640px) {
+      h1 { font-size: 32px; }
+      .hero p { font-size: 16px; }
+      .issue-card h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">Robot Weekly</p>
+      <h1>Newsletter archive</h1>
+      <p>Every Robot Weekly issue lives here. Use this page to catch up on the latest briefing, revisit past editions, or subscribe via the RSS archive feed.</p>
+      <div class="hero-actions">
+        <a class="primary" href="${escapeHtml(items[0]?.link || siteUrl)}">Read latest issue</a>
+        <a class="secondary" href="${escapeHtml(feedUrl)}">Open RSS feed</a>
+      </div>
+    </section>
+    <section class="issues">
+${cards}
+    </section>
+    <div class="footer">
+      <p>Robot Weekly is the weekly briefing from robot.tv for builders, operators, and investors.</p>
+      <p>Daily coverage lives at <a href="https://news.robot.tv">news.robot.tv</a>.</p>
+    </div>
+  </main>
+</body>
+</html>`;
 };
 
 const buildFeedXml = ({ items, siteUrl, feedUrl }) => {
@@ -470,8 +595,9 @@ const run = async () => {
   const issueDate = formatDate(now);
   const issueSlug = `${ISSUE_PREFIX}-${now.toISOString().slice(0, 10)}`;
   const issueUrl = `${SITE_URL}/${OUTPUT_DIR}/${issueSlug}.html`;
-  const issueHtml = buildIssueHtml({ ...issue, issueDate, issueUrl });
-  const issueText = buildIssueText({ ...issue, issueDate, issueUrl });
+  const archiveUrl = `${SITE_URL}/${ARCHIVE_PATH}`;
+  const issueHtml = buildIssueHtml({ ...issue, issueDate, issueUrl, archiveUrl });
+  const issueText = buildIssueText({ ...issue, issueDate, issueUrl, archiveUrl });
 
   const outputDir = path.join(process.cwd(), OUTPUT_DIR);
   await fs.mkdir(outputDir, { recursive: true });
@@ -549,9 +675,17 @@ const run = async () => {
     feedUrl: `${SITE_URL}/newsletter-feed.xml`,
   });
   await fs.writeFile(feedPath, feedXml, "utf8");
+  const archiveHtml = buildArchiveHtml({
+    items: combined,
+    archiveUrl,
+    feedUrl: `${SITE_URL}/newsletter-feed.xml`,
+    siteUrl: SITE_URL,
+  });
+  await fs.writeFile(path.join(outputDir, "index.html"), archiveHtml, "utf8");
 
   console.log(`Generated newsletter issue: ${issuePath}`);
   console.log(`Generated newsletter text: ${textPath}`);
+  console.log(`Generated newsletter archive: ${path.join(outputDir, "index.html")}`);
   console.log(`Newsletter report: ${path.join(reportDir, "latest-issue.md")}`);
 };
 

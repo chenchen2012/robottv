@@ -73,6 +73,7 @@ http://www.robot.tv/*   https://robot.tv/:splat  301!
 /test.html   /                 301!
 /news        https://news.robot.tv/ 301!
 /news.html   https://news.robot.tv/ 301!
+/newsletters /newsletters/ 301!
 
 # Enforce .html canonical URLs for direct extensionless hits
 /contact-success /contact-success.html 301!
