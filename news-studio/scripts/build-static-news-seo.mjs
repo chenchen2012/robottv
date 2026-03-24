@@ -1410,6 +1410,7 @@ const buildArticleHtml = (post) => {
         <a href="https://robot.tv/companies.html">Companies</a>
         <a href="https://robot.tv/live.html">Live Now</a>
         <a class="is-active" href="/">News</a>
+        <a href="https://robot.tv/newsletters">Newsletters</a>
         <a href="https://robot.tv/partner.html">Partner</a>
         <a href="https://robot.tv/about.html">About</a>
       </nav>
