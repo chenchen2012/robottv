@@ -3,6 +3,21 @@ const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET 
 const token = process.env.SANITY_API_TOKEN || ''
 const maxFeedAgeHours = Number(process.env.MAX_FEED_AGE_HOURS || 24)
 const guardWindowHours = Number(process.env.GUARD_WINDOW_HOURS || 36)
+const mainstreamSources = new Set([
+  'Reuters',
+  'TechCrunch',
+  'Business Insider',
+  'The Guardian',
+  'Janes',
+  'Bloomberg',
+  'BBC',
+  'CNN',
+  'The Wall Street Journal',
+  'Wall Street Journal',
+  'Financial Times',
+  'Associated Press',
+  'AP'
+])
 
 if (!projectId) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID)')
@@ -43,7 +58,23 @@ const titleKey = (s) => normalizeTitle(s)
   .slice(0, 8)
   .join(' ')
 
-const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,"slug":slug.current}'
+const bodyWordCount = (body = []) =>
+  (Array.isArray(body) ? body : [])
+    .flatMap((block) => Array.isArray(block?.children) ? block.children : [])
+    .map((child) => String(child?.text || '').trim())
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .length
+
+const allowsMissingYoutube = (post) =>
+  mainstreamSources.has(String(post?.sourceName || '').trim()) &&
+  isExcerptStrong(post?.excerpt) &&
+  bodyWordCount(post?.body) >= 80
+
+const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,sourceName,body,"slug":slug.current}'
 const url = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`
 const headers = token ? { Authorization: `Bearer ${token}` } : {}
 const resp = await fetch(url, { headers })
@@ -98,7 +129,7 @@ for (const p of recentGuardPosts) {
   if (!String(p.title || '').trim()) badPosts.push(`${p._id}: missing title`)
   if (!String(p.slug || '').trim()) badPosts.push(`${p._id}: missing slug`)
   if (!isExcerptStrong(p.excerpt)) badPosts.push(`${p._id}: weak excerpt`)
-  if (!ytId) badPosts.push(`${p._id}: missing/invalid YouTube URL`)
+  if (!ytId && !allowsMissingYoutube(p)) badPosts.push(`${p._id}: missing/invalid YouTube URL`)
 
   if (ytId) {
     if (seenYoutube.has(ytId)) youtubeDupes.push([seenYoutube.get(ytId), p])

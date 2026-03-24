@@ -29,6 +29,22 @@ const trustedSources = new Set([
   'Janes'
 ])
 
+const mainstreamSources = new Set([
+  'Reuters',
+  'TechCrunch',
+  'Business Insider',
+  'The Guardian',
+  'Janes',
+  'Bloomberg',
+  'BBC',
+  'CNN',
+  'The Wall Street Journal',
+  'Wall Street Journal',
+  'Financial Times',
+  'Associated Press',
+  'AP'
+])
+
 const topCompanyTokens = [
   'tesla', 'optimus',
   'unitree',
@@ -151,6 +167,14 @@ const getEditorialRejectionReason = (headline, sourceUrl = '') => {
     return 'broad trend/opinion framing without enough robotics specificity'
   }
   return ''
+}
+
+const canPublishWithoutYoutube = (source, editorial) => {
+  const sourceName = String(source || '').trim()
+  const bodyParagraphs = Array.isArray(editorial?.bodyParagraphs) ? editorial.bodyParagraphs : []
+  return mainstreamSources.has(sourceName) &&
+    isExcerptStrong(editorial?.excerpt || '') &&
+    bodyParagraphs.length >= 3
 }
 
 const comparableTitleTokens = (title) => [...new Set(
@@ -404,9 +428,9 @@ for (let i = 0; i < selected.length; i += 1) {
     !h.link ||
     Boolean(getEditorialRejectionReason(h.title, h.link)) ||
     !isExcerptStrong(excerpt) ||
-    !ytId ||
-    Boolean(youtubeCandidate?.hardMismatch) ||
-    usedYoutubeIds.has(ytId) ||
+    (!ytId && !canPublishWithoutYoutube(h.source, editorial)) ||
+    Boolean(ytId && youtubeCandidate?.hardMismatch) ||
+    Boolean(ytId && usedYoutubeIds.has(ytId)) ||
     usedTitleKeys.has(key) ||
     Boolean(nearDuplicateTitle)
 
@@ -416,7 +440,7 @@ for (let i = 0; i < selected.length; i += 1) {
       title: h.title,
       reason: editorialRejectionReason
         ? editorialRejectionReason
-        : !ytId
+        : !ytId && !canPublishWithoutYoutube(h.source, editorial)
         ? 'missing/invalid YouTube video'
         : youtubeCandidate?.hardMismatch
           ? `video/topic mismatch (${youtubeCandidate.headlineFamilies.join(', ') || 'headline'} vs ${youtubeCandidate.videoFamilies.join(', ') || 'video'})`
@@ -449,7 +473,7 @@ for (let i = 0; i < selected.length; i += 1) {
     excerpt,
     videoSummary,
     publishedAt: new Date().toISOString(),
-    youtubeUrl: youtubeCandidate.url,
+    youtubeUrl: ytId ? youtubeCandidate.url : '',
     sourceName: h.source,
     sourceUrl: h.link,
     sourceSiteUrl: h.sourceSiteUrl,

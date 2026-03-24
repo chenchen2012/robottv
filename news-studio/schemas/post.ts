@@ -52,10 +52,10 @@ export const postType = defineType({
       name: 'youtubeUrl',
       title: 'YouTube URL',
       type: 'url',
-      description: 'Use a full watch URL, for example https://www.youtube.com/watch?v=... ',
+      description: 'Optional. Use a full watch URL when strong, relevant footage exists.',
       validation: (rule) =>
-        rule.required().custom((value) => {
-          if (!value) return 'YouTube URL is required'
+        rule.custom((value) => {
+          if (!value) return true
           return youtubeRegex.test(value) ? true : 'Enter a valid YouTube URL'
         }),
     }),

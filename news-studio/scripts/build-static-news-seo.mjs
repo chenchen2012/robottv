@@ -952,6 +952,7 @@ const shouldNoindexNewsPost = (post, paragraphs = getRenderableParagraphs(post))
   isNoindexNewsSlug(post?.slug) || isThinNewsPost(post, paragraphs);
 
 const buildVideoSummary = (post, paragraphs = []) => {
+  if (!videoIdFromUrl(post.youtubeUrl)) return "";
   const manualSummary = toPlainText(post.videoSummary || "");
   if (manualSummary) return manualSummary;
 
@@ -978,7 +979,7 @@ const buildVideoSummary = (post, paragraphs = []) => {
 
 const editorialAboutUrl = "https://robot.tv/about.html#editorial-operations";
 const editorialMethodSummary =
-  "robot.tv rewrites public reporting into concise editorial briefings with embedded video, deployment context, and manual review for low-confidence automation items.";
+  "robot.tv rewrites public reporting into concise editorial briefings with source review, deployment context, and manual review for low-confidence automation items.";
 const knownSourceSites = new Map([
   ["Reuters", "https://www.reuters.com/"],
   ["TechCrunch", "https://techcrunch.com/"],
@@ -1189,6 +1190,7 @@ const buildArticleHtml = (post) => {
   const embedUrl = embedId
     ? `https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&playsinline=1`
     : "";
+  const articleFormatLabel = embedUrl ? "Video-backed robotics briefing" : "Source-backed robotics briefing";
   const robotsContent = shouldNoindexNewsPost(post, paragraphs)
     ? "noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
     : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
@@ -1403,7 +1405,7 @@ const buildArticleHtml = (post) => {
       <a class="cta" href="https://robot.tv/get-featured.html">Get Featured</a>
     </header>
     <article>
-      <p style="margin:0;color:#acbcd7;letter-spacing:.08em;font-size:.75rem;text-transform:uppercase;font-weight:700;">Robotics News</p>
+      <p style="margin:0;color:#acbcd7;letter-spacing:.08em;font-size:.75rem;text-transform:uppercase;font-weight:700;">${articleFormatLabel}</p>
       <h1>${escapeHtml(title)}</h1>
       <div class="article-meta">
         <p class="meta">${escapeHtml(publishedDateDisplay)}</p>
