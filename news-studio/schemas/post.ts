@@ -105,6 +105,13 @@ export const postType = defineType({
       validation: (rule) => rule.uri({allowRelative: false, scheme: ['http', 'https']}),
     }),
     defineField({
+      name: 'sourceImageUrl',
+      title: 'Primary Source Image URL',
+      type: 'url',
+      description: 'Optional original article image used as the cover when no manual hero image is set.',
+      validation: (rule) => rule.uri({allowRelative: false, scheme: ['http', 'https']}),
+    }),
+    defineField({
       name: 'sourcePublishedAt',
       title: 'Primary Source Publish Time',
       type: 'datetime',

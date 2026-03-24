@@ -5,8 +5,16 @@
     <link>https://news.robot.tv/</link>
     <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Mar 2026 13:13:14 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 24 Mar 2026 01:27:36 GMT</lastBuildDate>
     <atom:link href="https://news.robot.tv/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>China&#39;s open-source dominance threatens US AI lead, US advisory body warns</title>
+      <link>https://news.robot.tv/chinas-open-source-dominance-threatens-us-ai-lead-us-advisory-body-warns/</link>
+      <guid isPermaLink="true">https://news.robot.tv/chinas-open-source-dominance-threatens-us-ai-lead-us-advisory-body-warns/</guid>
+      <pubDate>Tue, 24 Mar 2026 01:27:36 GMT</pubDate>
+      <description>A U.S. advisory body warns that China&#39;s lead in open-source AI development poses a direct challenge to American technological leadership. This shift could reshape the foundational tools available for robotics and automation globally.</description>
+      <category>Robotics Startups</category>
+    </item>
     <item>
       <title>Amazon acquires robotic doorstep delivery provider RIVR</title>
       <link>https://news.robot.tv/amazon-acquires-robotic-doorstep-delivery-provider-rivr/</link>
@@ -339,16 +347,6 @@
       <category>Robotics Startups</category>
       <category>Operations</category>
       <category>Strategy</category>
-    </item>
-    <item>
-      <title>Why China’s humanoid robot industry is winning the early market</title>
-      <link>https://news.robot.tv/why-chinas-humanoid-robot-industry-is-winning-the-early-market/</link>
-      <guid isPermaLink="true">https://news.robot.tv/why-chinas-humanoid-robot-industry-is-winning-the-early-market/</guid>
-      <pubDate>Mon, 02 Mar 2026 12:54:50 GMT</pubDate>
-      <description>China&#39;s early lead in humanoid robotics is starting to look structural: dense supply chains, faster hardware iteration, and public pilot visibility are helping local teams move faster than many rivals.</description>
-      <category>Humanoid Robots</category>
-      <category>China</category>
-      <category>Robotics News</category>
     </item>
   </channel>
 </rss>

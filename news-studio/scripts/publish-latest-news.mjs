@@ -478,6 +478,7 @@ for (let i = 0; i < selected.length; i += 1) {
     sourceUrl: h.link,
     sourceSiteUrl: h.sourceSiteUrl,
     sourcePublishedAt,
+    sourceImageUrl: editorial?.sourceContext?.imageUrl || '',
     author: { _type: 'reference', _ref: authorId },
     categories: [{ _type: 'reference', _ref: category }],
     body: blocksFromParagraphs(editorial.bodyParagraphs)

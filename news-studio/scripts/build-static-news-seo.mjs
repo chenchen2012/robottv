@@ -13,7 +13,7 @@ const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
 const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
 const editorialPinnedPostsScriptPath = path.join(staticDir, "scripts", "editorial-pinned-posts.js");
-const STATIC_RESERVED_DIRS = new Set(["scripts"]);
+const STATIC_RESERVED_DIRS = new Set(["images", "scripts"]);
 const HOMEPAGE_PAGE_SIZE = 12;
 const HOMEPAGE_PRELOAD_DEPTH = 60;
 const HOMEPAGE_START_MARKER = "<!-- STATIC_NEWS_HOME_START -->";
@@ -876,6 +876,7 @@ const buildHomepagePreloadPosts = (posts) =>
       excerpt: normalizeExcerpt(post.excerpt || ""),
       publishedAt: post.publishedAt || "",
       youtubeUrl: post.youtubeUrl || "",
+      sourceImageUrl: post.sourceImageUrl || "",
       slug: normalizeSlug(post.slug),
       author: getAuthorName(post.author),
     }));
@@ -887,12 +888,22 @@ const thumbnailOverridesBySlug = new Map([
   ],
 ]);
 
+const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+
 const youtubeThumb = (url, slug = "") => {
   const normalizedSlug = normalizeSlug(slug);
   const override = thumbnailOverridesBySlug.get(normalizedSlug);
   if (override) return override;
   const id = videoIdFromUrl(url);
-  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "https://robot.tv/images/robot_logo.png";
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : fallbackCoverImage;
+};
+
+const coverImageForPost = (post = {}) => {
+  const heroAsset = post?.heroImage?.asset?.url || "";
+  if (heroAsset) return heroAsset;
+  const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
+  if (sourceImageUrl) return sourceImageUrl;
+  return youtubeThumb(post?.youtubeUrl, post?.slug);
 };
 
 const formatDate = (iso) => {
@@ -1178,7 +1189,7 @@ const buildArticleHtml = (post) => {
   const publishedDateDisplay = publishedAtIso ? formatDisplayDate(publishedAtIso) : "";
   assertSafeArticleSlug(slug);
   const canonicalUrl = articleUrlForSlug(slug);
-  const thumb = youtubeThumb(post.youtubeUrl, post.slug);
+  const thumb = coverImageForPost(post);
   const rawParagraphs = blocksToParagraphs(post.body);
   const paragraphs = filterRenderableParagraphs(rawParagraphs);
   const videoSummary = buildVideoSummary(post, paragraphs);
@@ -1477,7 +1488,7 @@ const buildArticleHtml = (post) => {
 
 const fetchPosts = async () => {
   const query =
-    '*[_type=="post" && defined(slug.current)] | order(publishedAt desc)[0...500]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourcePublishedAt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}';
+    '*[_type=="post" && defined(slug.current)] | order(publishedAt desc)[0...500]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourceImageUrl,sourcePublishedAt,publishedAt,youtubeUrl,heroImage{asset->{url}} ,body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}';
   const url = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`;
   const resp = await fetch(url, {
     headers: { Accept: "application/json" },
@@ -1620,10 +1631,10 @@ const buildHomepageStaticMarkup = (posts) => {
       );
       const date = escapeHtml(formatDisplayDate(post.publishedAt));
       const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
-      const thumbUrl = escapeHtml(youtubeThumb(post.youtubeUrl, post.slug));
+      const thumbUrl = escapeHtml(coverImageForPost(post));
       return `        <article class="card ${index === 0 ? "featured" : ""}">
-          <span class="thumb-shell">
-            <img class="thumb" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
+          <span class="thumb-shell ${thumbUrl === escapeHtml(fallbackCoverImage) ? "thumb-shell-fallback" : ""}">
+            <img class="thumb ${thumbUrl === escapeHtml(fallbackCoverImage) ? "thumb-fallback" : ""}" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">

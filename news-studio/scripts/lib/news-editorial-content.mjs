@@ -80,6 +80,24 @@ const extractMeta = (html, pattern) => {
   return match ? stripHtml(match[1]) : "";
 };
 
+const extractImageUrl = (html, baseUrl = "") => {
+  const candidates = [
+    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+property=["']og:image:url["'][^>]+content=["']([^"']+)["']/i,
+  ];
+  for (const pattern of candidates) {
+    const value = extractMeta(html, pattern);
+    if (!value) continue;
+    try {
+      return new URL(value, baseUrl || undefined).toString();
+    } catch {
+      continue;
+    }
+  }
+  return "";
+};
+
 const extractParagraphs = (html) => {
   const mainSectionMatch =
     html.match(/<article[\s\S]*?<\/article>/i) ||
@@ -255,6 +273,7 @@ const fetchSourceContext = async (sourceUrl) => {
     pageTitle: "",
     metaDescription: "",
     ogDescription: "",
+    imageUrl: "",
     paragraphs: [],
   };
   const url = String(sourceUrl || "").trim();
@@ -268,6 +287,7 @@ const fetchSourceContext = async (sourceUrl) => {
       pageTitle: extractMeta(html, /<title>([\s\S]*?)<\/title>/i),
       metaDescription: extractMeta(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"]+)["']/i),
       ogDescription: extractMeta(html, /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"]+)["']/i),
+      imageUrl: extractImageUrl(html, url),
       paragraphs: extractParagraphs(html),
     };
   } catch {

@@ -137,7 +137,9 @@
     .card { border:1px solid var(--line); border-radius:10px; background:linear-gradient(160deg,#101926,#0b131f); overflow:hidden; display:flex; flex-direction:column; min-height:100%; }
     .card.featured { border-color:#3d5378; box-shadow:0 0 0 1px rgba(94,132,255,.18) inset; }
     .thumb { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom:1px solid #24344f; }
-    .thumb-shell { position:relative; display:block; }
+    .thumb-shell { position:relative; display:block; background:linear-gradient(160deg,#0d141f,#09101a); }
+    .thumb-shell-fallback { display:grid; place-items:center; padding:1.2rem; }
+    .thumb-fallback { object-fit:contain; background:transparent; }
     .thumb-preview { position:absolute; inset:0; opacity:0; transition:opacity .15s ease; border-bottom:1px solid #24344f; overflow:hidden; pointer-events:none; background:#000; }
     .thumb-preview iframe { width:100%; height:100%; border:0; display:block; }
     .card.previewing .thumb-preview { opacity:1; }
@@ -388,8 +390,22 @@
         </div>
         <div class="grid">
         <article class="card featured">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/FcF7pvG2KD4/hqdefault.jpg" alt="Amazon acquires robotic doorstep delivery provider RIVR thumbnail" loading="lazy">
+          <span class="thumb-shell thumb-shell-fallback">
+            <img class="thumb thumb-fallback" src="https://news.robot.tv/images/robot-tv-news-cover.png" alt="China&#39;s open-source dominance threatens US AI lead, US advisory body warns thumbnail" loading="lazy">
+            <span class="thumb-preview" aria-hidden="true"></span>
+          </span>
+          <div class="content">
+            <p class="meta">Mar 24, 2026</p>
+            <h3><a href="/chinas-open-source-dominance-threatens-us-ai-lead-us-advisory-body-warns/">China&#39;s open-source dominance threatens US AI lead, US advisory body warns</a></h3>
+            <p>A U.S. advisory body warns that China&#39;s lead in open-source AI development poses a direct challenge to American technological leadership. This shift could reshape the foundational tools available for robotics and automation globally.</p>
+            <div class="row">
+              <a class="btn btn-primary" href="/chinas-open-source-dominance-threatens-us-ai-lead-us-advisory-body-warns/">Read Robot News</a>
+            </div>
+          </div>
+        </article>
+        <article class="card ">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/FcF7pvG2KD4/hqdefault.jpg" alt="Amazon acquires robotic doorstep delivery provider RIVR thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -402,8 +418,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/nSAm2yjc15E/hqdefault.jpg" alt="Building tomorrow: How Bedrock Robotics is changing the construction industry thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/nSAm2yjc15E/hqdefault.jpg" alt="Building tomorrow: How Bedrock Robotics is changing the construction industry thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -416,8 +432,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/2gJid5B8JLQ/hqdefault.jpg" alt="Amazon acquires Rivr, maker of a stair-climbing delivery robot thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/2gJid5B8JLQ/hqdefault.jpg" alt="Amazon acquires Rivr, maker of a stair-climbing delivery robot thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -430,8 +446,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/IGN0taOOoQ8/hqdefault.jpg" alt="Inside China’s robotics revolution thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/IGN0taOOoQ8/hqdefault.jpg" alt="Inside China’s robotics revolution thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -444,8 +460,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/BQ0UMqh8ixk/maxresdefault.jpg" alt="How humanoid robots joined this factory&#39;s workforce thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/BQ0UMqh8ixk/maxresdefault.jpg" alt="How humanoid robots joined this factory&#39;s workforce thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -458,8 +474,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/pcdU3giLI7Q/hqdefault.jpg" alt="Gecko Robotics lands the largest U.S. Navy robotics deal yet thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/pcdU3giLI7Q/hqdefault.jpg" alt="Gecko Robotics lands the largest U.S. Navy robotics deal yet thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -472,8 +488,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/EiyUKK1lLzA/hqdefault.jpg" alt="BEDEX 2026: Sweden receives Blaze interceptor UAVs from Origin Robotics thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/EiyUKK1lLzA/hqdefault.jpg" alt="BEDEX 2026: Sweden receives Blaze interceptor UAVs from Origin Robotics thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -486,8 +502,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/twcPLq9FwY4/hqdefault.jpg" alt="Memories AI is building the visual memory layer for wearables and robotics thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/twcPLq9FwY4/hqdefault.jpg" alt="Memories AI is building the visual memory layer for wearables and robotics thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -500,8 +516,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/0aLvy3S57iQ/hqdefault.jpg" alt="Travis Kalanick launches a new company called Atoms focused on robotics thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/0aLvy3S57iQ/hqdefault.jpg" alt="Travis Kalanick launches a new company called Atoms focused on robotics thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -514,8 +530,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/RuNNtHPusNA/hqdefault.jpg" alt="Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/RuNNtHPusNA/hqdefault.jpg" alt="Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -528,8 +544,8 @@
           </div>
         </article>
         <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/RbXfGwhrGjI/hqdefault.jpg" alt="Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs. thumbnail" loading="lazy">
+          <span class="thumb-shell ">
+            <img class="thumb " src="https://img.youtube.com/vi/RbXfGwhrGjI/hqdefault.jpg" alt="Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs. thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -538,20 +554,6 @@
             <p>Legged robots are now patrolling data center floors, moving beyond pilot programs into active security and inspection roles. Early operators report measurable returns on investment from these deployments.</p>
             <div class="row">
               <a class="btn btn-primary" href="/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/">Read Robot News</a>
-            </div>
-          </div>
-        </article>
-        <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/q2czJLPJ4nA/hqdefault.jpg" alt="Humanoid robotics developers must address a wide range of applications thumbnail" loading="lazy">
-            <span class="thumb-preview" aria-hidden="true"></span>
-          </span>
-          <div class="content">
-            <p class="meta">Mar 16, 2026</p>
-            <h3><a href="/humanoid-robotics-developers-must-address-a-wide-range-of-applications/">Humanoid robotics developers must address a wide range of applications</a></h3>
-            <p>Argues humanoid robotics developers must look beyond a single killer app. Success hinges on designing versatile platforms capable of addressing a wide range of industrial and commercial applications.</p>
-            <div class="row">
-              <a class="btn btn-primary" href="/humanoid-robotics-developers-must-address-a-wide-range-of-applications/">Read Robot News</a>
             </div>
           </div>
         </article>
@@ -1246,13 +1248,21 @@
         ""
       );
     };
+    const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
     const thumb = (u, quality = "hq", slug = "") => {
       const id = videoId(u);
-      if (!id) return "https://robot.tv/images/robot_logo.png";
+      if (!id) return fallbackCoverImage;
       if (String(slug || "").trim() === "how-humanoid-robots-joined-this-factorys-workforce") {
         return "https://img.youtube.com/vi/BQ0UMqh8ixk/maxresdefault.jpg";
       }
       return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    };
+    const coverImageForPost = (post) => {
+      const heroImage = post?.heroImage?.asset?.url || "";
+      if (heroImage) return heroImage;
+      const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
+      if (sourceImageUrl) return sourceImageUrl;
+      return thumb(post?.youtubeUrl, "hq", post?.slug);
     };
     const formatDate = (iso) => {
       const date = new Date(iso);
@@ -1541,7 +1551,7 @@
           "url": authorProfile.url,
           "description": authorProfile.bio
         },
-        "image": [thumb(post.youtubeUrl, "hq", post.slug)]
+        "image": [coverImageForPost(post)]
       };
       if (sourceMeta.url) json.isBasedOn = sourceMeta.url;
 
@@ -1682,8 +1692,8 @@
       if (!pagePosts.length) { empty.hidden = false; return; }
       grid.innerHTML = pagePosts.map((p, i) => `
         <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
-          <span class="thumb-shell">
-            <img class="thumb" src="${esc(thumb(p.youtubeUrl, "hq", p.slug))}" alt="${esc(p.title)} thumbnail" loading="lazy">
+          <span class="thumb-shell ${coverImageForPost(p) === fallbackCoverImage ? "thumb-shell-fallback" : ""}">
+            <img class="thumb ${coverImageForPost(p) === fallbackCoverImage ? "thumb-fallback" : ""}" src="${esc(coverImageForPost(p))}" alt="${esc(p.title)} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
@@ -1850,7 +1860,7 @@
       window.location.replace(`/${legacySlug}/${window.location.search || ""}${window.location.hash || ""}`);
     } else if (isArticlePath(path)) {
       const slug = path.replace(/^\//, "").trim();
-      const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourcePublishedAt,publishedAt,youtubeUrl,body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}`;
+      const query = `*[_type=="post" && slug.current==$slug][0]{title,excerpt,videoSummary,sourceName,sourceUrl,sourceSiteUrl,sourceImageUrl,sourcePublishedAt,publishedAt,youtubeUrl,heroImage{asset->{url}},body,"slug":slug.current,"author":author->{name,bio,"slug":slug.current},"categories":categories[]->title}`;
       fetchJsonWithFallback(sanityUrls(query).map((u) => `${u}&$slug=${sanityParam(slug)}`))
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
@@ -1867,7 +1877,7 @@
         }
       }
 
-      const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,"author":author->name}`;
+      const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,sourceImageUrl,heroImage{asset->{url}},"slug":slug.current,"author":author->name}`;
       fetchJsonWithFallback(sanityUrls(query))
         .then((d) => {
           const fetchedPosts = Array.isArray(d.result) ? d.result : [];
