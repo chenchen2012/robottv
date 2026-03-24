@@ -571,7 +571,8 @@
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
-      const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,"slug":slug.current,"cats":categories[]->title}`;
+      const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+      const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,sourceImageUrl,heroImage{asset->{url}},"slug":slug.current,"cats":categories[]->title}`;
       const preloadedNewsPosts = Array.isArray(window.__ROBOTTV_PRELOADED_POSTS__) ? window.__ROBOTTV_PRELOADED_POSTS__ : [];
       const editorialPinnedPosts = sharedEditorialPinnedPosts.map((post) => ({
         ...post,
@@ -595,7 +596,14 @@
       };
       const thumbFromVideo = (u) => {
         const id = videoIdFromUrl(u);
-        return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+        return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : fallbackCoverImage;
+      };
+      const coverImageForPost = (post) => {
+        const heroImage = post?.heroImage?.asset?.url || "";
+        if (heroImage) return heroImage;
+        const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
+        if (sourceImageUrl) return sourceImageUrl;
+        return thumbFromVideo(post?.youtubeUrl);
       };
       const tuneRailSpeed = () => {
         const rail = document.getElementById("intelligence-rail");
@@ -627,8 +635,15 @@
         const desc = document.getElementById("story-top-desc");
         if (link) link.href = toPostUrl(post.slug);
         if (link) link.dataset.video = post.youtubeUrl || "";
+        if (link) {
+          const shell = link.querySelector(".story-media-shell");
+          if (shell) shell.classList.toggle("story-media-shell-fallback", coverImageForPost(post) === fallbackCoverImage);
+        }
         if (title) title.textContent = post.title || title.textContent;
-        if (thumb) thumb.src = thumbFromVideo(post.youtubeUrl);
+        if (thumb) {
+          thumb.src = coverImageForPost(post);
+          thumb.classList.toggle("story-media-fallback", coverImageForPost(post) === fallbackCoverImage);
+        }
         if (prefix === "top" && desc) desc.textContent = post.excerpt || desc.textContent;
       };
 
@@ -649,7 +664,9 @@
                 ...post,
                 title: override.title || post.title,
                 excerpt: override.excerpt || post.excerpt,
-                youtubeUrl: override.youtubeUrl || post.youtubeUrl
+                youtubeUrl: override.youtubeUrl || post.youtubeUrl,
+                sourceImageUrl: override.sourceImageUrl || post.sourceImageUrl,
+                heroImage: override.heroImage || post.heroImage
               };
             });
             const seen = new Set();

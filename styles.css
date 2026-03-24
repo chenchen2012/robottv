@@ -1126,6 +1126,12 @@ a {
     transition: transform 0.28s ease;
 }
 
+.story-media-fallback {
+    object-fit: contain;
+    padding: 1rem;
+    background: linear-gradient(160deg, #0c1320, #09101a);
+}
+
 .story-media-shell {
     position: relative;
     display: block;
@@ -1136,6 +1142,10 @@ a {
     overflow: hidden;
     margin-bottom: 0.62rem;
     background: #0b121d;
+}
+
+.story-media-shell-fallback {
+    background: linear-gradient(160deg, #0c1320, #09101a);
 }
 
 .story-media-shell::after {
