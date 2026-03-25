@@ -194,8 +194,12 @@
           "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
           "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp"
         ]);
+        const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+        const blockedSourceImagePrefixes = [
+            "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc"
+        ];
         const query = `*[_type=="post"] | order(publishedAt desc)[0...24]{
-          _id,title,excerpt,publishedAt,youtubeUrl,"slug":slug.current,
+          _id,title,excerpt,publishedAt,youtubeUrl,sourceImageUrl,heroImage{asset->{url}},"slug":slug.current,
           "author": author->name,
           "categories": categories[]->title
         }`;
@@ -220,12 +224,33 @@
 
         const escapeHtml = (s) => String(s || "").replace(/[&<>"]/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
         const videoIdFromUrl = (url) => {
-            const match = String(url || "").match(/[?&]v=([^&]+)/) || String(url || "").match(/youtu\.be\/([^?&]+)/);
-            return match ? match[1] : "";
+            const text = String(url || "").trim();
+            if (!text) return "";
+            return (
+                (text.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || [])[1] ||
+                (text.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+                (text.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+                (text.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+                (text.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/) || [])[1] ||
+                ""
+            );
         };
         const thumbFromUrl = (url) => {
             const id = videoIdFromUrl(url);
-            return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "images/robot_logo.png";
+            return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+        };
+        const isBlockedSourceImage = (url) => {
+            const text = String(url || "").trim();
+            return text ? blockedSourceImagePrefixes.some((prefix) => text.startsWith(prefix)) : false;
+        };
+        const coverImageForPost = (post) => {
+            const videoThumb = thumbFromUrl(post?.youtubeUrl);
+            if (videoThumb) return videoThumb;
+            const heroImage = post?.heroImage?.asset?.url || "";
+            if (heroImage) return heroImage;
+            const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
+            if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
+            return fallbackCoverImage;
         };
         const postDate = (iso) => {
             try { return new Date(iso).toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"}); }
@@ -243,7 +268,7 @@
             empty.hidden = true;
             grid.innerHTML = posts.map((post, idx) => `
                 <article class="news-card ${idx === 0 ? "featured" : ""}">
-                    <img class="news-thumb" src="${escapeHtml(thumbFromUrl(post.youtubeUrl))}" alt="${escapeHtml(post.title)} thumbnail" loading="lazy">
+                    <img class="news-thumb" src="${escapeHtml(coverImageForPost(post))}" alt="${escapeHtml(post.title)} thumbnail" loading="lazy">
                     <div class="news-content">
                         <p class="news-meta">${escapeHtml(postDate(post.publishedAt))} | ${escapeHtml(post.author || "robot.tv")}</p>
                         <h3>${escapeHtml(post.title)}</h3>

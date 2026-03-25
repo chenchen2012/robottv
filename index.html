@@ -573,6 +573,9 @@
       const sanityDataset = "production";
       const sanityUrl = `https://${sanityProjectId}.api.sanity.io/v2023-10-01/data/query/${sanityDataset}`;
       const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+      const blockedSourceImagePrefixes = [
+        "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc"
+      ];
       const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,sourceImageUrl,heroImage{asset->{url}},"slug":slug.current,"cats":categories[]->title}`;
       const preloadedNewsPosts = Array.isArray(window.__ROBOTTV_PRELOADED_POSTS__) ? window.__ROBOTTV_PRELOADED_POSTS__ : [];
       const editorialPinnedPosts = sharedEditorialPinnedPosts.map((post) => ({
@@ -597,14 +600,20 @@
       };
       const thumbFromVideo = (u) => {
         const id = videoIdFromUrl(u);
-        return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : fallbackCoverImage;
+        return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+      };
+      const isBlockedSourceImage = (url) => {
+        const text = String(url || "").trim();
+        return text ? blockedSourceImagePrefixes.some((prefix) => text.startsWith(prefix)) : false;
       };
       const coverImageForPost = (post) => {
+        const videoThumb = thumbFromVideo(post?.youtubeUrl);
+        if (videoThumb) return videoThumb;
         const heroImage = post?.heroImage?.asset?.url || "";
         if (heroImage) return heroImage;
         const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
-        if (sourceImageUrl) return sourceImageUrl;
-        return thumbFromVideo(post?.youtubeUrl);
+        if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
+        return fallbackCoverImage;
       };
       const tuneRailSpeed = () => {
         const rail = document.getElementById("intelligence-rail");

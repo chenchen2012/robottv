@@ -889,21 +889,30 @@ const thumbnailOverridesBySlug = new Map([
 ]);
 
 const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+const blockedSourceImagePrefixes = [
+  "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc",
+];
+const isBlockedSourceImage = (url = "") => {
+  const text = String(url || "").trim();
+  return text ? blockedSourceImagePrefixes.some((prefix) => text.startsWith(prefix)) : false;
+};
 
 const youtubeThumb = (url, slug = "") => {
   const normalizedSlug = normalizeSlug(slug);
   const override = thumbnailOverridesBySlug.get(normalizedSlug);
   if (override) return override;
   const id = videoIdFromUrl(url);
-  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : fallbackCoverImage;
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 };
 
 const coverImageForPost = (post = {}) => {
+  const videoThumb = youtubeThumb(post?.youtubeUrl, post?.slug);
+  if (videoThumb) return videoThumb;
   const heroAsset = post?.heroImage?.asset?.url || "";
   if (heroAsset) return heroAsset;
   const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
-  if (sourceImageUrl) return sourceImageUrl;
-  return youtubeThumb(post?.youtubeUrl, post?.slug);
+  if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
+  return fallbackCoverImage;
 };
 
 const formatDate = (iso) => {
