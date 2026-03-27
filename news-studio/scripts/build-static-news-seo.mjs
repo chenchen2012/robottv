@@ -4,6 +4,7 @@ import {
   editorialPinnedPosts,
   homepageEditorialPinnedPosts,
 } from "../../scripts/editorial-pinned-posts.mjs";
+import { coverImageOverrideForPost } from "../../scripts/news-cover-image-overrides.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || "lumv116w";
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
@@ -906,6 +907,8 @@ const youtubeThumb = (url, slug = "") => {
 };
 
 const coverImageForPost = (post = {}) => {
+  const coverOverride = coverImageOverrideForPost(post);
+  if (coverOverride) return coverOverride;
   const videoThumb = youtubeThumb(post?.youtubeUrl, post?.slug);
   if (videoThumb) return videoThumb;
   const heroAsset = post?.heroImage?.asset?.url || "";

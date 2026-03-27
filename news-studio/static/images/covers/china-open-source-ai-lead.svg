@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="China open-source AI cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a111b"/>
+      <stop offset="54%" stop-color="#1e304c"/>
+      <stop offset="100%" stop-color="#611f2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1006" cy="110" r="178" fill="#f24c5c" opacity=".18"/>
+  <circle cx="160" cy="578" r="220" fill="#78a4ff" opacity=".18"/>
+  <rect x="170" y="124" width="860" height="430" rx="32" fill="#101a29" stroke="#5f7599" stroke-opacity=".55"/>
+  <g transform="translate(260 172)">
+    <path d="M0 204h178V0H0z" fill="#dce7ff" opacity=".95"/>
+    <path d="M0 0v204M60 0v204M118 0v204M0 68h178M0 136h178" stroke="#0f2030" stroke-opacity=".16"/>
+    <path d="M40 48h42l18 36 18-36h42l-32 60 34 60h-42l-20-36-18 36H38l34-60z" fill="#0f2030"/>
+  </g>
+  <g transform="translate(648 170)">
+    <circle cx="118" cy="86" r="72" fill="none" stroke="#dce7ff" stroke-width="18"/>
+    <circle cx="118" cy="86" r="28" fill="#79a5ff"/>
+    <path d="M118 0v172M32 86h172M54 28l128 116M54 144 182 28" stroke="#dce7ff" stroke-width="14" stroke-linecap="round"/>
+    <path d="M36 216h164M76 258h84M106 302h24" stroke="#f24c5c" stroke-width="18" stroke-linecap="round"/>
+  </g>
+</svg>

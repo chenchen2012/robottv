@@ -89,6 +89,8 @@ Key analytics + forms
       - decodes HTML entities from feed descriptions correctly
       - generates richer editorial issues with subject, preheader, editorial note, lead signal, highlights, and closing watch section
       - writes both `.html` and `.txt` issue artifacts
+      - writes `newsletters.html` as the canonical public archive page
+      - adds a footer link from each issue back to `https://robot.tv/newsletters`
       - writes QA preview artifacts to `ops-private/reports/newsletter/latest-issue.json` and `.md`
     - `scripts/send-weekly-newsletter-brevo.mjs` now includes `textContent` when a matching `.txt` issue exists
     - `.github/workflows/weekly-newsletter.yml` no longer hardcodes send off in code; it reads repo variable `BREVO_SEND_ENABLED` (default `0`) and uploads preview artifacts on every run
@@ -119,6 +121,11 @@ Key analytics + forms
         - `POST https://editor-api.brevo.com/editor-api/newsletters/5/sendtest`
         - JSON body shape: `{ "emails": ["a@example.com", "b@example.com"] }`
   - 2026-03-11: root deploy was blocked because `scripts/check-root-public-build.mjs` requires GA lazy include on all HTML files; fixed by adding `<script src="/scripts/ga-lazy.js?v=20260309-ga-v1" defer></script>` to the newsletter template and existing `newsletters/robot-weekly-2026-03-11.html`. Deploy then succeeded.
+  - Mar 23, 2026 newsletter archive + deploy hardening:
+    - committed Mar 23 issue and fixed root deploy trigger so newsletter archive publishes automatically when `newsletter-feed.xml`, `newsletters/**`, or `_worker.js` changes
+    - `.github/workflows/weekly-newsletter.yml` commit step now stages only `newsletters` and `newsletter-feed.xml`; it no longer tries to `git add` gitignored `ops-private/reports/newsletter` paths
+    - canonical archive route is `https://robot.tv/newsletters`, which redirects to `https://robot.tv/newsletters.html`
+    - `_worker.js` now explicitly handles newsletter archive routing so `/newsletters/` and `/newsletters/index.html` resolve to the canonical archive page instead of looping
 
 News editorial rules (current)
 - Avoid duplicate topics/headlines (especially repeated Blue Jay / China dancing items).
@@ -139,14 +146,20 @@ Automation status
     - when `DEEPSEEK_API_KEY` is available, it creates excerpt + video summary + 3 body paragraphs via DeepSeek
     - fallback path still generates non-thin deterministic copy if AI is unavailable
     - workflow `news-auto-publish.yml` now passes `DEEPSEEK_API_KEY` into the publish step
-  - Mar 17, 2026 permalink hardening:
-    - root cause of a latest-post 404 was confirmed: post existed in Sanity and local `dist-public`, but live `news.robot.tv` had not yet deployed the new static permalink
-    - `news-studio/scripts/publish-latest-news.mjs` now writes `ops-private/reports/publish/latest-published-news.json` with published slugs/URLs for each run
-    - new script `news-studio/scripts/verify-published-news-deploy.mjs` verifies:
+- Mar 17, 2026 permalink hardening:
+  - root cause of a latest-post 404 was confirmed: post existed in Sanity and local `dist-public`, but live `news.robot.tv` had not yet deployed the new static permalink
+  - `news-studio/scripts/publish-latest-news.mjs` now writes `ops-private/reports/publish/latest-published-news.json` with published slugs/URLs for each run
+  - new script `news-studio/scripts/verify-published-news-deploy.mjs` verifies:
       - newly published slugs exist in local `dist-public/<slug>/index.html` before deploy
       - newly published live URLs return non-404 content after deploy
     - `.github/workflows/news-auto-publish.yml` now runs those checks before and after Cloudflare Pages deploy, and uploads the publish report as an artifact
     - practical effect: auto-publish should now fail loudly if a newly published Sanity post does not become a live permalink on `news.robot.tv`
+- Mar 24, 2026 newsroom publishing policy update:
+  - the six-hour auto-publish cadence remains active in `.github/workflows/news-auto-publish.yml` (`15 */6 * * *`)
+  - hard YouTube dependency was relaxed for strong mainstream-source stories
+  - `news-studio/scripts/publish-latest-news.mjs` may now publish article-only posts when the source is mainstream and the generated editorial package is strong, even if no acceptable YouTube match exists
+  - `news-studio/scripts/check-feed-health.mjs` was updated to allow those source-first posts so scheduled runs do not fail solely because a video is unavailable
+  - Sanity schema `news-studio/schemas/post.ts` now treats `youtubeUrl` as optional, and static article rendering was updated so no-video posts present as source-backed briefings rather than broken video pages
 - Health check: news-studio/scripts/check-feed-health.mjs
   - stale-feed guard (MAX_FEED_AGE_HOURS default 24)
   - duplicate-like headline guard
@@ -258,6 +271,28 @@ Recent operational decisions
 - Mar 18, 2026 regular evergreen refresh automation:
   - expanded `scripts/seo-evergreen-manifest.json` to cover the highest-upside ranking pages:
     - `companies.html`
+-
+- Mar 23, 2026 new intelligence-platform workspace added:
+  - new app path: `/Users/cc801/Documents/New project/robottv/robot-intel`
+  - stack: Next.js App Router + TypeScript + PostgreSQL + Prisma + NextAuth credentials + Tailwind
+  - purpose: structured robotics intelligence backend/frontend for companies, robot models, deployments, funding, partnerships, claims, rankings, search, APIs, and editorial review
+  - key setup files:
+    - `robot-intel/prisma/schema.prisma`
+    - `robot-intel/prisma/seed.ts`
+    - `robot-intel/docker-compose.yml`
+    - `robot-intel/README.md`
+  - public routes shipped:
+    - `/companies`, `/companies/[slug]`, `/robots`, `/robots/[slug]`, `/news`, `/news/[slug]`, `/rankings`, `/search`
+  - admin routes shipped under:
+    - `/admin`
+  - verification checkpoint:
+    - `npm run lint`
+    - `npm run build`
+    - `npm run test`
+    all passed locally in the `robot-intel` workspace
+  - migration note:
+    - checked-in SQL migration generated via `prisma migrate diff --from-empty --to-schema-datamodel`
+    - fastest local setup path remains `npm run db:push && npm run db:seed`
     - `humanoid-robots.html`
     - `industrial-inspection-robots.html`
     - `physical-ai-robot-learning.html`
@@ -2180,9 +2215,371 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - but homepage/news listing logic must use the filtered recent subset exported as `homepageEditorialPinnedPosts`, not the full legacy list, or stale items like Jan 2025 posts can resurface on the homepage
   - as of 2026-03-19, both `robot.tv/index.html` and the `news.robot.tv` homepage payload generator were switched to `homepageEditorialPinnedPosts`
   - `.github/workflows/deploy-news-public.yml` now explicitly watches `scripts/editorial-pinned-posts.mjs` so pinned-news changes trigger a news-site deploy automatically
+  - as of 2026-03-25, homepage/news listing cards should prefer YouTube thumbnails whenever `youtubeUrl` exists; only fall back to `heroImage`, `sourceImageUrl`, or the generic newsroom cover when no YouTube thumbnail is available, so Google News/source-logo images do not take over the card art
+  - as of 2026-03-27, a shared override map in `scripts/news-cover-image-overrides.mjs` can supply curated cover art for specific slugs when auto-published stories have no usable YouTube/hero/source image and would otherwise fall back to `robot-tv-news-cover.png`
+  - the root homepage imports that shared override module at runtime, and `news-studio/scripts/build-static-news-seo.mjs` imports the same module during static news-homepage generation, so both `robot.tv` and `news.robot.tv` stay aligned on manual cover-art fixes
 - auto-publish guardrail note:
   - `Auto Publish Robot News` can legitimately have no publishable stories in a cycle when the source guard rejects everything for weak/missing video matches
   - the workflow's feed-freshness threshold was too strict at `24` hours and caused noisy false-failure emails during quiet cycles
   - `.github/workflows/news-auto-publish.yml` now uses `MAX_FEED_AGE_HOURS: "36"` for the feed-health step so no-op publish windows do not fail quite so easily
   - another false-failure source was the post-deploy live permalink verifier hitting a Cloudflare challenge page (`403` + `Just a moment...`) from GitHub-hosted runners even when the article was already live
   - `news-studio/scripts/verify-published-news-deploy.mjs` now treats Cloudflare challenge pages as inconclusive warnings, not hard failures, after the local generated file and Cloudflare deploy already succeeded
+
+2026-03-22 newsroom public-font packaging fix
+- Resume checkpoint on Mar 22, 2026:
+  - local rebuild confirmed the current newsroom refresh includes newer generated output plus new/untracked story pages such as:
+    - `amazon-acquires-robotic-doorstep-delivery-provider-rivr`
+    - `building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry`
+    - `inside-chinas-robotics-revolution`
+    - `how-humanoid-robots-joined-this-factorys-workforce`
+    - `inside-the-new-living-lab-advancing-agricultural-robotics`
+- Important deployment fix:
+  - browser QA against local `dist-public` showed the news homepage and article templates request:
+    - `/fonts/space-grotesk-latin.woff2`
+    - `/fonts/orbitron-latin.woff2`
+  - these font assets existed only in repo-root `fonts/`, so the news public bundle was shipping pages that could 404 those font requests on `news.robot.tv`
+  - durable fix shipped in build pipeline:
+    - `news-studio/scripts/build-public-dist.mjs` now copies `../fonts` into `dist-public/fonts`
+    - `news-studio/scripts/check-public-build.mjs` now fails if either required font file is missing from `dist-public/fonts`
+- QA note:
+  - after the pipeline fix, local HTTP + Playwright CLI verification showed both font URLs returning `200`
+  - the `Live feed is temporarily unavailable. Showing the latest preloaded stories.` banner can still appear during local static preview because homepage runtime tries live Sanity queries first and falls back to preloaded posts when those fetches fail or are blocked; this is not the same issue as the font packaging bug
+
+2026-03-22 humanoid hub + newsroom SEO routing pass
+- Root SEO hubs strengthened and deployed:
+  - `warehouse-humanoid-robots.html`
+  - `china-humanoid-robots.html`
+  - `industrial-inspection-robots.html`
+  - `humanoid-robots.html`
+- Durable on-page changes:
+  - stronger title/meta targeting around warehouse humanoids, China humanoids, and industrial inspection / robot-dog inspection intent
+  - added clearer search-intent/supporting sections, extra FAQ coverage, and tighter internal links into `digit.html`, `unitree-robots.html`, and related company guides
+  - expanded key hub briefings so newer newsroom stories feed the evergreen pages more directly
+- Newsroom enhancer changes:
+  - `news-studio/scripts/build-static-news-seo.mjs` now adds editorial enhancement + `relatedResource` routing for:
+    - `how-humanoid-robots-joined-this-factorys-workforce` -> warehouse humanoid hub
+    - `inside-chinas-robotics-revolution` -> China humanoid hub
+    - `building-tomorrow-how-bedrock-robotics-is-changing-the-construction-industry` -> robotics startup execution guide
+  - local `npm run build:public` regenerated affected static article pages plus homepage/feed payloads to reflect those new evergreen routes
+- Validation / deploy note:
+  - `node scripts/seo-weekly-check.mjs` passed before shipping
+  - local `news-studio` `npm run build:public` passed before shipping
+  - shipped as two commits:
+    - `0245d6d` `Strengthen humanoid hubs and news SEO routing`
+    - `56a0c7d` `Refresh generated news pages for SEO routing`
+  - successful workflow runs:
+    - `Deploy robot.tv Public Site` `23393897217`
+    - `Deploy Public News Site` `23393897210`
+    - follow-up `Deploy Public News Site` `23393901423`
+
+2026-03-22 humanoid company SEO pass
+- Company guides strengthened and deployed:
+  - `company-agility.html`
+  - `company-figure.html`
+  - `company-tesla.html`
+  - `company-unitree.html`
+- Durable pattern of changes:
+  - stronger title/meta copy for broader company-level search intent instead of narrower profile wording
+  - hero copy now targets company + market + deployment/commercialization intent more explicitly
+  - each page gained an extra search-intent/comparison section to route into the right adjacent hub or company page
+  - each page gained one extra FAQ aimed at ranking for credibility/proof/comparison questions
+- Validation / deploy note:
+  - `node scripts/seo-weekly-check.mjs` passed before shipping
+  - shipped as commit `e92883a` `Strengthen humanoid company SEO guides`
+  - successful workflow run:
+    - `Deploy robot.tv Public Site` `23393976380`
+
+2026-03-22 robot + lineup SEO pass
+- Additional ranking pages strengthened and deployed:
+  - `company-apptronik.html`
+  - `unitree-robots.html`
+  - `digit.html`
+  - `tesla-optimus.html`
+  - `figure-02.html`
+- Durable pattern of changes:
+  - stronger title/meta language for model-comparison and robot-level keyword intent
+  - clearer hero copy so lineup pages target model-selection intent and robot pages target narrow platform intent
+  - extra FAQ coverage added for proof/credibility/comparison follow-up queries
+  - Apptronik company page now matches the broader-intent structure used on Agility/Figure/Tesla/Unitree
+- Validation / deploy note:
+  - `node scripts/seo-weekly-check.mjs` passed before shipping
+  - shipped as commit `0bd34a2` `Expand robot and lineup SEO guides`
+  - successful workflow run:
+    - `Deploy robot.tv Public Site` `23394027637`
+
+2026-03-22 benchmark robot SEO pass
+- Additional benchmark/commercial pages strengthened and deployed:
+  - `apollo.html`
+  - `atlas.html`
+  - `spot.html`
+  - `company-boston-dynamics.html`
+- Durable pattern of changes:
+  - stronger robot-level title/meta framing around deployment context and benchmark/comparison intent
+  - added proof-threshold / why-it-matters FAQ coverage on robot pages
+  - Boston Dynamics company page gained an explicit broad-intent routing section to better separate company, humanoid, and inspection queries
+- Validation / deploy note:
+  - `node scripts/seo-weekly-check.mjs` passed before shipping
+  - shipped as commit `6d4956b` `Refine benchmark robot SEO pages`
+  - successful workflow run:
+    - `Deploy robot.tv Public Site` `23394064707`
+
+2026-03-22 logistics + Unitree robot SEO pass
+- Additional robot-level pages strengthened and deployed:
+  - `stretch.html`
+  - `unitreeg1.html`
+  - `unitreeh1.html`
+  - `unitreeh2.html`
+  - `unitreego2.html`
+  - `unitreeb2.html`
+- Durable pattern of changes:
+  - stronger title/meta phrasing around logistics automation, China humanoids, and inspection/quadruped intent
+  - extra FAQ coverage added for proof/comparison/differentiation queries
+  - maintained the hierarchy:
+    - company pages own broad brand intent
+    - `unitree-robots.html` owns Unitree lineup comparison intent
+    - robot pages own narrow model-specific intent
+- Validation / deploy note:
+  - `node scripts/seo-weekly-check.mjs` passed before shipping
+  - shipped as commit `b0b6748` `Strengthen logistics and Unitree robot SEO pages`
+  - successful workflow run:
+    - `Deploy robot.tv Public Site` `23394142172`
+
+2026-03-22 SEO automation tooling pass
+- Added reusable scripts:
+  - `scripts/seo-automation-report.mjs`
+    - scans `scripts/seo-evergreen-manifest.json` against live HTML pages
+    - flags weak FAQ coverage, weak internal linking, thin content, missing news connections, and keyword-targeting issues
+    - writes JSON + Markdown reports into `ops-private/reports/seo/`
+  - `scripts/cluster-seo-keywords.mjs`
+    - accepts `--input <txt|csv|json>`
+    - outputs clustered keyword suggestions plus article ideas into `ops-private/reports/seo/`
+- Verified behavior:
+  - `node scripts/seo-automation-report.mjs` ran successfully and surfaced immediate opportunities:
+    - `companies.html` wants one more FAQ
+    - `china-humanoid-robots.html`
+    - `industrial-inspection-robots.html`
+    - `physical-ai-robot-learning.html`
+      all would benefit from a visible news / freshness block
+  - `node scripts/cluster-seo-keywords.mjs --input /tmp/robot-tv-keywords.txt` ran successfully and generated sample cluster outputs
+- Validation / deploy note:
+  - shipped as commit `0b52611` `Add SEO automation reporting scripts`
+  - successful workflow run:
+    - `Deploy robot.tv Public Site` `23394265824`
+
+2026-03-22 evergreen cleanup + AI SEO briefing pass
+- Closed the remaining evergreen issues surfaced by the automation report:
+  - added a fourth FAQ item to `companies.html`
+  - added visible `related-news-panel` / freshness blocks to:
+    - `china-humanoid-robots.html`
+    - `industrial-inspection-robots.html`
+    - `physical-ai-robot-learning.html`
+  - added the missing `robotics-startup-execution.html` internal link to `company-agility.html`
+  - tightened `unitree-robots.html` meta description so the exact `unitree robots` keyword appears naturally
+- Added reusable script:
+  - `scripts/generate-seo-ai-briefs.mjs`
+    - ingests `ops-private/reports/seo/seo-automation-report.json`
+    - outputs JSON + Markdown AI briefing artifacts for the top upgrade candidates
+    - uses DeepSeek when `DEEPSEEK_API_KEY` is available and falls back to deterministic briefs otherwise
+- Verified behavior:
+  - `node scripts/seo-automation-report.mjs` now reports zero weak FAQ, zero weak internal linking, zero thin-content, and zero missing-news-connection candidates across the evergreen manifest
+  - `node scripts/seo-weekly-check.mjs` still passes
+  - `node scripts/generate-seo-ai-briefs.mjs --limit 5` ran successfully in fallback mode because `DEEPSEEK_API_KEY` was not present in the current shell environment
+
+2026-03-22 broad-keyword alignment pass
+- Attempted live Google SERP checks with Playwright for `robotics companies` and related queries, but Google returned `sorry` anti-bot pages for clean browser sessions; no reliable direct SERP position sample was available from that path.
+- Because no current `GSC_TOKEN` / `gcloud` auth was available locally either, the practical follow-up was an on-site ranking pass for the broadest target terms:
+  - `companies.html`
+    - broadened title/meta toward `robotics companies`, `humanoid robot companies`, and `industrial robotics companies`
+    - added an explicit keyword-split/comparison section plus a matching FAQ item
+  - `humanoid-robots.html`
+    - broadened title/meta toward `best humanoid robots` and `humanoid robot companies`
+    - added a company-layer comparison section plus a matching FAQ item
+  - `company-unitree.html`
+    - shifted title/meta/schema phrasing from generic `Unitree` toward exact `Unitree Robotics`
+    - refreshed `dateModified` to `2026-03-22`
+- Validation:
+  - `node scripts/seo-automation-report.mjs` still clean with zero flags across the evergreen manifest
+  - `node scripts/seo-weekly-check.mjs` passed
+
+2026-03-22 root font packaging fix
+- Performance sanity-checking with Playwright on live `robot.tv` pages surfaced a real frontend issue unrelated to the SEO copy pass:
+  - `https://robot.tv/fonts/space-grotesk-latin.woff2` returned `404`
+  - `https://robot.tv/fonts/orbitron-latin.woff2` returned `404`
+- Root cause:
+  - `styles.css` references self-hosted fonts in `/fonts/`
+  - `scripts/build-root-public-dist.mjs` was not copying the `fonts/` directory into `dist-root-public/`
+- Fix:
+  - added `fonts` to the root public build include list
+  - added both font files to `scripts/check-root-public-build.mjs` required-file guard
+- Validation:
+  - `node scripts/build-root-public-dist.mjs`
+  - `node scripts/check-root-public-build.mjs`
+  - `dist-root-public/fonts/space-grotesk-latin.woff2` and `dist-root-public/fonts/orbitron-latin.woff2` now exist
+
+2026-03-22 Unitree page performance fix
+- Lighthouse sampling on live ranking pages showed:
+  - `companies.html` performance ~88
+  - `humanoid-robots.html` performance ~90
+  - `company-unitree.html` performance ~67-69 with poor LCP
+- Main cause on `company-unitree.html`:
+  - eager above-the-fold YouTube iframe in the featured-video slot
+- Fix applied:
+  - replaced the eager iframe with a poster + click-to-load embed pattern on `company-unitree.html`
+  - kept the video prominent and crawl-safe while deferring the heavy embed cost until user interaction
+- Validation:
+  - `node scripts/seo-weekly-check.mjs` passed
+  - local Lighthouse comparison via temporary `python3 -m http.server` showed strong improvement:
+    - before/live-style sample: score ~67, LCP ~4.6s
+    - after/local page: score ~92, LCP ~2.6s
+
+2026-03-23 robot-intel product-layer MVP pass
+- The standalone Next.js app at `/Users/cc801/Documents/New project/robottv/robot-intel` was expanded from a data/admin scaffold into a fuller product experience on top of the intelligence DB + ingestion pipeline.
+- New product schema/model layer now includes:
+  - `SubscriptionPlan` on `User`
+  - richer watchlists (`CATEGORY` / `INDUSTRY` / `USE_CASE` support + pinned lists)
+  - `RankingSnapshot` / `RankingEntry`
+  - `NotificationEvent`
+  - `SavedSearch`
+  - `ComparisonSet`
+  - `NewsletterDraft`
+  - `EditorialModule`
+- New public/product routes now exist:
+  - `/`
+  - `/rankings`
+  - `/winning`
+  - `/compare`
+  - `/watchlists`
+  - `/notifications`
+  - `/dashboard`
+  - `/categories/[slug]`
+  - upgraded `/news` and `/search`
+- New product logic modules live in:
+  - `src/lib/product/queries.ts`
+  - `src/lib/product/entitlements.ts`
+  - `src/lib/product/rankings.ts`
+  - `src/lib/product/compare.ts`
+  - `src/lib/product/newsletters.ts`
+  - `src/lib/product/insights.ts`
+  - `src/lib/product/notifications.ts`
+- New APIs now include:
+  - `/api/rankings/companies`
+  - `/api/rankings/robots`
+  - `/api/compare/companies`
+  - `/api/compare/robots`
+  - `/api/watchlists`
+  - `/api/watchlists/[id]/items`
+  - `/api/notifications`
+  - `/api/newsletters/generate-draft`
+  - `/api/search/global`
+  - `/api/dashboard`
+  - `/api/category/[slug]/overview`
+- Admin/editorial layer gained `/admin/newsletters` for draft digest generation from structured data.
+- Seed data now also includes ranking snapshots, notifications, saved searches, comparison sets, editorial modules, and newsletter drafts.
+- Local verification after this pass:
+  - `npm install`
+  - `npx prisma generate`
+  - `npm run lint`
+  - `npm run test`
+  - `npm run build`
+
+2026-03-24 robot-intel local-preview + UX triage pass
+- Connected the local app to a free Neon Postgres database via `robot-intel/.env` and reset/repopulated enough demo data for real product review.
+- Current local preview runs at `http://localhost:3000` from the dev server in `robot-intel`.
+- Data present for preview now includes companies, robots, articles, scorecards, ranking snapshots/entries, watchlists, notifications, newsletters, and editorial modules; `SavedSearch` and `ComparisonSet` are still empty in seed/demo data.
+- Product review in a real browser found two key UX gaps on public pages:
+  - `/compare` previously had no submit action and felt like an internal debug screen.
+  - `/search` previously had no submit action and empty taxonomy sections rendered as blank space.
+- Fixes shipped locally:
+  - `/compare` now has a submit button, clearer instructions, preset comparison links, and explicit free-plan copy that comparison previews are limited to 2 items.
+  - `/search` now has a submit button, suggested query chips, and honest empty states for company/robot/news/taxonomy result groups plus a global no-results card.
+- Temporary backfill helper files used during Neon population (`tmp-backfill.js`, `tmp-finish-backfill.js`) were removed after use so lint/build stay clean.
+- Local verification after the UX triage pass:
+  - `npm run lint`
+  - `npm run build`
+
+2026-03-24 robot-intel canonical seed recovery
+- Goal: replace the mixed manual-recovery Neon dev database with a fully canonical dataset from `robot-intel/prisma/seed.ts`.
+- Issues found and fixed while making the seed canonical:
+  - `npm run db:seed` initially failed because `tsx prisma/seed.ts` did not load `.env`; fixed by adding `process.loadEnvFile?.(".env")` at the top of `prisma/seed.ts`.
+  - Prisma schema operations against the Neon pooled URL hit advisory-lock timeouts (`P1002`) on `prisma migrate reset`; fixed operationally by using a direct Neon URL for schema-sync commands and adding `directUrl = env("DIRECT_DATABASE_URL")` to `prisma/schema.prisma` plus `DIRECT_DATABASE_URL` to `.env.example`.
+  - Canonical seed initially failed because the live database schema lagged the current Prisma schema (`PipelineEvent` missing); fixed by running `npx prisma db push --accept-data-loss` against the direct Neon URL.
+  - Direct-connection seeding later hit transient `P1017 Server has closed the connection`; fixed by adding a Prisma client query extension in `prisma/seed.ts` that retries retryable connection errors (`P1001`, `P1002`, `P1017`, closed-connection message).
+- Final canonical seed result on Neon:
+  - `Seed complete` exited cleanly using a direct-url override for `DATABASE_URL`/`DIRECT_DATABASE_URL`.
+  - Verified target counts matched:
+    - `Company 20`
+    - `RobotModel 30`
+    - `Article 40`
+    - `Deployment 25`
+    - `FundingRound 20`
+    - `Partnership 15`
+    - `Claim 50`
+  - Verified additional key counts:
+    - `Watchlist 2`
+    - `SavedSearch 2`
+    - `ComparisonSet 2`
+    - `RawDocument 6`
+    - `NormalizedDocument 5`
+    - `ProposedClaim 5`
+    - `ProposedEntityLink 10`
+    - `ProposedTaxonomyTag 10`
+  - Integrity checks passed:
+    - all 20 companies have category/use-case/industry links
+    - all 30 robot models are linked to companies
+    - all 40 articles are linked to companies and robot models
+    - `invalidCompanyScorecards = 0`
+    - `invalidRobotScorecards = 0`
+    - both watchlists have items
+- Still intentionally empty after canonical seed:
+  - `Person`
+  - `Organization`
+  - `MediaAsset`
+  - `AuditTrail`
+  - `EntityMerge`
+  - `AIJobRun`
+  - `AIEntityProposal`
+
+2026-03-24 robot-intel post-seed route verification
+- Ran a local end-to-end route sweep against the canonical Neon-backed seed with `next dev` and Playwright/manual fetch checks.
+- Verified working public routes:
+  - `/`
+  - `/companies`
+  - `/companies/boston-dynamics`
+  - `/robots`
+  - `/robots/boston-dynamics-scout-0`
+  - `/news`
+  - `/news/market-intel-story-1`
+  - `/rankings`
+  - `/search?q=boston`
+  - `/compare?type=companies&items=boston-dynamics,unitree`
+- Verified working admin/auth basics:
+  - `/login` with seeded credentials `editor@robot.tv` / `robot-intel-demo`
+  - `/admin`
+  - `/admin/companies/overview`
+  - `/admin/companies/<id>` edit form for the Boston Dynamics seed record
+- No new blocking runtime/query/render/routing issues were found after the canonical reseed.
+- Main non-blocking observation: local page latency is noticeably slow because the local app is backed by a remote Neon database; many SSR pages take roughly 3s-11s in dev mode even when they return `200` cleanly.
+
+2026-03-24 robot-intel system-of-record completion pass
+- Closed concrete v1 SoR gaps without redesigning the existing product shell.
+- Admin CRUD improvements:
+  - `saveArticle` and `ArticleForm` now support article-to-category/use-case/industry relations.
+  - `saveDeployment` and `DeploymentForm` now support `deploymentSiteId`, `industryId`, `geographyId`, `startDate`, and `endDate`.
+  - `saveCompany`/`CompanyForm` expose headquarters city/region and employee count range.
+  - `saveRobotModel`/`RobotForm` expose `announcedAt`.
+  - taxonomy admin now supports `industry` in addition to `category` and `usecase`.
+- Public SoR pages are materially richer now:
+  - `/companies`, `/robots`, `/news`, and `/rankings` each have real URL-driven filter/search forms wired to existing query support.
+  - company detail pages now show linked robots, partnerships, recent claims, score breakdowns, and linked articles.
+  - robot detail pages now show taxonomy badges, score breakdowns, claims, linked maker/news, and technical notes.
+  - article pages now show clickable linked entities plus category/use-case/industry context and stronger source metadata.
+- API improvement:
+  - generic `/api/rankings` now uses `listQuerySchema`, supports companies vs robots via `tab`, and delegates to `getRankingsExperience` instead of the old thin `listRankings` call.
+- Tests added/expanded:
+  - `tests/rankings-route.test.ts` for generic rankings API behavior and validation.
+  - `tests/validation.test.ts` now covers the richer list/ranking filter schema.
+- Verification after this pass:
+  - `npm run lint` passed
+  - `npm run test` passed (`15` files, `28` tests)
+  - `npm run build` passed
+  - live route checks returned `200` for filtered public pages and APIs; unauthenticated admin routes still redirect with `307` as expected.

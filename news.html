@@ -175,7 +175,8 @@
         </main>
     </div>
 
-    <script>
+    <script type="module">
+        import { coverImageOverrideForPost } from "/scripts/news-cover-image-overrides.mjs";
         const projectId = "lumv116w";
         const dataset = "production";
         const hiddenNewsSlugs = new Set([
@@ -244,6 +245,8 @@
             return text ? blockedSourceImagePrefixes.some((prefix) => text.startsWith(prefix)) : false;
         };
         const coverImageForPost = (post) => {
+            const coverOverride = coverImageOverrideForPost(post);
+            if (coverOverride) return coverOverride;
             const videoThumb = thumbFromUrl(post?.youtubeUrl);
             if (videoThumb) return videoThumb;
             const heroImage = post?.heroImage?.asset?.url || "";

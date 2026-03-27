@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Retail logistics robots cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#08121d"/>
+      <stop offset="55%" stop-color="#143149"/>
+      <stop offset="100%" stop-color="#1d513d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1035" cy="102" r="170" fill="#67bfff" opacity=".17"/>
+  <circle cx="132" cy="590" r="212" fill="#6bf0bb" opacity=".14"/>
+  <g opacity=".18">
+    <path d="M110 165h980M110 265h980M110 365h980M110 465h980" stroke="#88aee7"/>
+    <path d="M110 565h980" stroke="#6df1be"/>
+  </g>
+  <g transform="translate(220 210)">
+    <path d="M0 190h225l-22 70H30z" fill="#dce8ff"/>
+    <circle cx="58" cy="288" r="28" fill="#dce8ff"/>
+    <circle cx="172" cy="288" r="28" fill="#dce8ff"/>
+    <rect x="40" y="132" width="96" height="38" rx="16" fill="#9ac0ff"/>
+    <path d="M106 130 142 42h84l-26 90" fill="none" stroke="#dce8ff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(760 182)">
+    <ellipse cx="68" cy="40" rx="56" ry="32" fill="#dff8ff"/>
+    <rect x="14" y="60" width="108" height="116" rx="28" fill="#dff8ff"/>
+    <circle cx="44" cy="112" r="10" fill="#10253a"/>
+    <circle cx="92" cy="112" r="10" fill="#10253a"/>
+    <path d="M38 152h60" stroke="#10253a" stroke-width="10" stroke-linecap="round"/>
+    <path d="M16 210 0 308M120 210 136 308M48 210 42 314M88 210 94 314" stroke="#dff8ff" stroke-width="16" stroke-linecap="round"/>
+  </g>
+</svg>

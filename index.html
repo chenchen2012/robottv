@@ -568,6 +568,7 @@
     <script src="https://news.robot.tv/scripts/preloaded-news-posts.js?v=20260319-news-v2"></script>
     <script type="module">
       import { homepageEditorialPinnedPosts as sharedEditorialPinnedPosts } from "/scripts/editorial-pinned-posts.mjs";
+      import { coverImageOverrideForPost } from "/scripts/news-cover-image-overrides.mjs";
 
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
@@ -607,6 +608,8 @@
         return text ? blockedSourceImagePrefixes.some((prefix) => text.startsWith(prefix)) : false;
       };
       const coverImageForPost = (post) => {
+        const coverOverride = coverImageOverrideForPost(post);
+        if (coverOverride) return coverOverride;
         const videoThumb = thumbFromVideo(post?.youtubeUrl);
         if (videoThumb) return videoThumb;
         const heroImage = post?.heroImage?.asset?.url || "";

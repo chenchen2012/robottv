@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="AI strategy shift cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070f19"/>
+      <stop offset="52%" stop-color="#192b48"/>
+      <stop offset="100%" stop-color="#5a2244"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1000" cy="110" r="180" fill="#d2577a" opacity=".18"/>
+  <circle cx="154" cy="574" r="220" fill="#75a4ff" opacity=".18"/>
+  <g transform="translate(184 116)">
+    <rect x="0" y="0" width="832" height="448" rx="30" fill="#0d1828" stroke="#5a739b" stroke-opacity=".55"/>
+    <path d="M0 118h832M0 298h832" stroke="#304861" stroke-opacity=".8"/>
+    <g transform="translate(80 84)">
+      <circle cx="112" cy="112" r="86" fill="none" stroke="#dce7ff" stroke-width="18"/>
+      <circle cx="210" cy="112" r="86" fill="none" stroke="#dce7ff" stroke-width="18"/>
+      <circle cx="160" cy="196" r="86" fill="none" stroke="#dce7ff" stroke-width="18"/>
+      <circle cx="160" cy="28" r="86" fill="none" stroke="#dce7ff" stroke-width="18"/>
+      <circle cx="160" cy="112" r="32" fill="#79a6ff"/>
+    </g>
+    <path d="M548 150h192M548 198h156M548 246h180" stroke="#7a94bb" stroke-width="20" stroke-linecap="round"/>
+    <path d="M548 330h140M548 378h202M548 426h114" stroke="#7a94bb" stroke-width="20" stroke-linecap="round" opacity=".7"/>
+    <path d="M702 292 820 406" stroke="#d2577a" stroke-width="18" stroke-linecap="round"/>
+    <path d="m820 292-118 114" stroke="#d2577a" stroke-width="18" stroke-linecap="round"/>
+  </g>
+</svg>
