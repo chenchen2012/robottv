@@ -1638,9 +1638,50 @@ const writeEditorialPinnedPostsScript = async () => {
   );
 };
 const writeCoverImageOverridesScript = async () => {
+  const script = `(() => {
+  const overrides = ${JSON.stringify(newsCoverImageOverrides)};
+  const freeCoverFallbacks = {
+    capitol: "https://news.robot.tv/images/covers/photos/us-lawmakers-ban-chinese-robots.jpg",
+    drone: "https://news.robot.tv/images/covers/photos/lucid-bots-window-washing-drones.jpg",
+    humanoid: "https://news.robot.tv/images/covers/photos/amazon-kid-size-humanoid-robots.jpg",
+    robotPortrait: "https://news.robot.tv/images/covers/photos/latest-generation-of-robots.jpg",
+    warehouse: "https://news.robot.tv/images/covers/photos/retail-logistics-robots.jpg",
+    chips: "https://news.robot.tv/images/covers/photos/china-open-source-ai-lead.jpg",
+    aiStrategy: "https://news.robot.tv/images/covers/photos/openai-sora-strategy-shift.jpg",
+    industrialArm: "https://news.robot.tv/images/covers/photos/agile-robots-google-deepmind.jpg"
+  };
+  const normalize = (value = "") => String(value || "").toLowerCase().replace(/[^a-z0-9\\s-]/g, " ").replace(/\\s+/g, " ").trim();
+  const includesAny = (text, terms = []) => terms.some((term) => text.includes(term));
+  const autoCoverImageForPost = (post = {}) => {
+    const title = normalize(post && post.title);
+    const categories = Array.isArray(post && post.cats)
+      ? post.cats.map(normalize).join(" ")
+      : Array.isArray(post && post.categories)
+        ? post.categories.map(normalize).join(" ")
+        : "";
+    const source = normalize(post && post.sourceName);
+    const haystack = (title + " " + categories + " " + source).trim();
+    if (!haystack) return "";
+    if (includesAny(haystack, ["lawmakers", "congress", "senate", "house", "government use", "ban government", "policy", "advisory body"])) return freeCoverFallbacks.capitol;
+    if (includesAny(haystack, ["window-washing", "window washing", "drone", "uav", "facade", "building inspection"])) return freeCoverFallbacks.drone;
+    if (includesAny(haystack, ["warehouse", "logistics", "retail logistics", "fulfillment", "ocado"])) return freeCoverFallbacks.warehouse;
+    if (includesAny(haystack, ["open-source", "open source", "chip", "compute", "semiconductor", "ai lead", "sora", "openai"])) {
+      return includesAny(haystack, ["sora", "openai", "strategy", "app"]) ? freeCoverFallbacks.aiStrategy : freeCoverFallbacks.chips;
+    }
+    if (includesAny(haystack, ["deepmind", "partnership", "partner with", "industrial robot", "robot arm", "factory automation"])) return freeCoverFallbacks.industrialArm;
+    if (includesAny(haystack, ["kid-size humanoid", "kid size humanoid", "child-sized humanoid", "child sized humanoid"])) return freeCoverFallbacks.humanoid;
+    if (includesAny(haystack, ["humanoid", "robotics revolution", "latest generation of robots", "meet the machines", "robot exhibition"])) {
+      return includesAny(haystack, ["humanoid"]) ? freeCoverFallbacks.humanoid : freeCoverFallbacks.robotPortrait;
+    }
+    if (includesAny(haystack, ["robot", "robotics"])) return freeCoverFallbacks.robotPortrait;
+    return "";
+  };
+  window.__ROBOTTV_COVER_IMAGE_OVERRIDES__ = overrides;
+  window.__ROBOTTV_COVER_OVERRIDE_FOR_POST__ = (post = {}) => overrides[String(post && post.slug || "").trim()] || autoCoverImageForPost(post);
+})();\n`;
   await fs.writeFile(
     coverImageOverridesScriptPath,
-    `window.__ROBOTTV_COVER_IMAGE_OVERRIDES__ = ${JSON.stringify(newsCoverImageOverrides)};\n`,
+    script,
     "utf8"
   );
 };
