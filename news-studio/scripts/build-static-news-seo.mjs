@@ -4,7 +4,10 @@ import {
   editorialPinnedPosts,
   homepageEditorialPinnedPosts,
 } from "../../scripts/editorial-pinned-posts.mjs";
-import { coverImageOverrideForPost } from "../../scripts/news-cover-image-overrides.mjs";
+import {
+  coverImageOverrideForPost,
+  newsCoverImageOverrides,
+} from "../../scripts/news-cover-image-overrides.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || "lumv116w";
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
@@ -14,6 +17,7 @@ const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
 const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
 const editorialPinnedPostsScriptPath = path.join(staticDir, "scripts", "editorial-pinned-posts.js");
+const coverImageOverridesScriptPath = path.join(staticDir, "scripts", "cover-image-overrides.js");
 const STATIC_RESERVED_DIRS = new Set(["images", "scripts"]);
 const HOMEPAGE_PAGE_SIZE = 12;
 const HOMEPAGE_PRELOAD_DEPTH = 60;
@@ -1633,6 +1637,13 @@ const writeEditorialPinnedPostsScript = async () => {
     "utf8"
   );
 };
+const writeCoverImageOverridesScript = async () => {
+  await fs.writeFile(
+    coverImageOverridesScriptPath,
+    `window.__ROBOTTV_COVER_IMAGE_OVERRIDES__ = ${JSON.stringify(newsCoverImageOverrides)};\n`,
+    "utf8"
+  );
+};
 const buildHomepageStaticMarkup = (posts) => {
   const listingPosts = getHomepageListingPosts(posts);
   const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
@@ -1830,6 +1841,7 @@ const main = async () => {
   await writeFeed(posts);
   await writeHomepagePreloadScript(posts);
   await writeEditorialPinnedPostsScript();
+  await writeCoverImageOverridesScript();
   await writeHomepageIndex(posts);
   console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };
