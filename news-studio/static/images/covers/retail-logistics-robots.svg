@@ -1,31 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Retail logistics robots cover">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#08121d"/>
-      <stop offset="55%" stop-color="#143149"/>
-      <stop offset="100%" stop-color="#1d513d"/>
+      <stop offset="0%" stop-color="#07131d"/>
+      <stop offset="56%" stop-color="#16324b"/>
+      <stop offset="100%" stop-color="#1c5a45"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="675" fill="url(#bg)"/>
-  <circle cx="1035" cy="102" r="170" fill="#67bfff" opacity=".17"/>
-  <circle cx="132" cy="590" r="212" fill="#6bf0bb" opacity=".14"/>
-  <g opacity=".18">
-    <path d="M110 165h980M110 265h980M110 365h980M110 465h980" stroke="#88aee7"/>
-    <path d="M110 565h980" stroke="#6df1be"/>
+  <circle cx="1030" cy="104" r="174" fill="#6bc5ff" opacity=".16"/>
+  <circle cx="144" cy="578" r="224" fill="#62ebb6" opacity=".16"/>
+  <rect x="82" y="74" width="1036" height="524" rx="34" fill="#0b1624" fill-opacity=".84" stroke="#5d80a8" stroke-opacity=".42"/>
+  <g transform="translate(124 118)">
+    <text x="0" y="0" fill="#97b7db" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="3">RETAIL AUTOMATION</text>
+    <text x="0" y="72" fill="#ffffff" font-family="Arial, sans-serif" font-size="52" font-weight="800">No Arms, No Legs, No Problem</text>
+    <text x="0" y="128" fill="#ffffff" font-family="Arial, sans-serif" font-size="52" font-weight="800">Robots Take Over Retail Logistics</text>
+    <text x="0" y="182" fill="#afc4de" font-family="Arial, sans-serif" font-size="26">Mobile platforms, fulfillment flow, and store-to-warehouse automation</text>
   </g>
-  <g transform="translate(220 210)">
-    <path d="M0 190h225l-22 70H30z" fill="#dce8ff"/>
-    <circle cx="58" cy="288" r="28" fill="#dce8ff"/>
-    <circle cx="172" cy="288" r="28" fill="#dce8ff"/>
-    <rect x="40" y="132" width="96" height="38" rx="16" fill="#9ac0ff"/>
-    <path d="M106 130 142 42h84l-26 90" fill="none" stroke="#dce8ff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <g opacity=".22" stroke="#85abd9">
+    <path d="M124 322h952M124 430h952M124 538h952"/>
   </g>
-  <g transform="translate(760 182)">
-    <ellipse cx="68" cy="40" rx="56" ry="32" fill="#dff8ff"/>
-    <rect x="14" y="60" width="108" height="116" rx="28" fill="#dff8ff"/>
-    <circle cx="44" cy="112" r="10" fill="#10253a"/>
-    <circle cx="92" cy="112" r="10" fill="#10253a"/>
-    <path d="M38 152h60" stroke="#10253a" stroke-width="10" stroke-linecap="round"/>
-    <path d="M16 210 0 308M120 210 136 308M48 210 42 314M88 210 94 314" stroke="#dff8ff" stroke-width="16" stroke-linecap="round"/>
+  <g transform="translate(148 318)">
+    <rect x="0" y="0" width="214" height="190" rx="24" fill="#132438"/>
+    <path d="M28 44h158M28 82h158M28 120h158" stroke="#7d98be" stroke-width="14" stroke-linecap="round"/>
+    <path d="M28 158h98" stroke="#7d98be" stroke-width="14" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(450 350)">
+    <rect x="0" y="84" width="228" height="84" rx="28" fill="#dbe8ff"/>
+    <rect x="44" y="34" width="140" height="82" rx="22" fill="#c2d5ff"/>
+    <circle cx="58" cy="182" r="20" fill="#dbe8ff"/>
+    <circle cx="170" cy="182" r="20" fill="#dbe8ff"/>
+    <path d="M62 74h102" stroke="#102337" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(796 312)">
+    <rect x="0" y="0" width="220" height="196" rx="24" fill="#132438"/>
+    <path d="M36 42h148M36 80h148M36 118h148M36 156h84" stroke="#7d98be" stroke-width="14" stroke-linecap="round"/>
+    <g transform="translate(110 88)">
+      <rect x="-54" y="52" width="108" height="52" rx="18" fill="#6df0bb"/>
+      <path d="M-20 78h40" stroke="#102337" stroke-width="10" stroke-linecap="round"/>
+      <path d="M-42 116h84" stroke="#6df0bb" stroke-width="12" stroke-linecap="round"/>
+    </g>
   </g>
 </svg>

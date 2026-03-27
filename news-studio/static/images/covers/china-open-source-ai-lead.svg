@@ -1,24 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="China open-source AI cover">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="China open-source AI and U.S. lead cover">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0a111b"/>
-      <stop offset="54%" stop-color="#1e304c"/>
-      <stop offset="100%" stop-color="#611f2e"/>
+      <stop offset="0%" stop-color="#08111b"/>
+      <stop offset="55%" stop-color="#1d304c"/>
+      <stop offset="100%" stop-color="#65202d"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="675" fill="url(#bg)"/>
-  <circle cx="1006" cy="110" r="178" fill="#f24c5c" opacity=".18"/>
-  <circle cx="160" cy="578" r="220" fill="#78a4ff" opacity=".18"/>
-  <rect x="170" y="124" width="860" height="430" rx="32" fill="#101a29" stroke="#5f7599" stroke-opacity=".55"/>
-  <g transform="translate(260 172)">
-    <path d="M0 204h178V0H0z" fill="#dce7ff" opacity=".95"/>
-    <path d="M0 0v204M60 0v204M118 0v204M0 68h178M0 136h178" stroke="#0f2030" stroke-opacity=".16"/>
-    <path d="M40 48h42l18 36 18-36h42l-32 60 34 60h-42l-20-36-18 36H38l34-60z" fill="#0f2030"/>
+  <circle cx="1028" cy="102" r="170" fill="#f04d5e" opacity=".16"/>
+  <circle cx="138" cy="578" r="220" fill="#76a5ff" opacity=".16"/>
+  <rect x="84" y="74" width="1036" height="526" rx="34" fill="#0c1725" fill-opacity=".84" stroke="#617ea6" stroke-opacity=".42"/>
+  <g transform="translate(124 118)">
+    <text x="0" y="0" fill="#a3b8db" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="3">OPEN-SOURCE AI COMPETITION</text>
+    <text x="0" y="72" fill="#ffffff" font-family="Arial, sans-serif" font-size="50" font-weight="800">China's Open-Source Lead</text>
+    <text x="0" y="128" fill="#ffffff" font-family="Arial, sans-serif" font-size="50" font-weight="800">Pressures U.S. AI Position</text>
+    <text x="0" y="182" fill="#b4c5de" font-family="Arial, sans-serif" font-size="26">Advisory warning, model ecosystems, and strategic AI infrastructure</text>
   </g>
-  <g transform="translate(648 170)">
-    <circle cx="118" cy="86" r="72" fill="none" stroke="#dce7ff" stroke-width="18"/>
-    <circle cx="118" cy="86" r="28" fill="#79a5ff"/>
-    <path d="M118 0v172M32 86h172M54 28l128 116M54 144 182 28" stroke="#dce7ff" stroke-width="14" stroke-linecap="round"/>
-    <path d="M36 216h164M76 258h84M106 302h24" stroke="#f24c5c" stroke-width="18" stroke-linecap="round"/>
+  <g transform="translate(132 290)">
+    <rect x="0" y="0" width="308" height="236" rx="28" fill="#122438"/>
+    <rect x="34" y="38" width="110" height="138" rx="22" fill="#dce7ff"/>
+    <path d="M58 64h62M58 96h62M58 128h62" stroke="#102337" stroke-width="12" stroke-linecap="round"/>
+    <path d="M192 68h84M192 110h84M192 152h64" stroke="#89a8d0" stroke-width="14" stroke-linecap="round"/>
+    <text x="34" y="208" fill="#f05a66" font-family="Arial, sans-serif" font-size="24" font-weight="800">OPEN SOURCE</text>
+  </g>
+  <g transform="translate(512 304)">
+    <circle cx="116" cy="108" r="96" fill="none" stroke="#dce7ff" stroke-width="16"/>
+    <path d="M20 108h192M116 12v192M44 44l144 128M44 172 188 44" stroke="#dce7ff" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="116" cy="108" r="28" fill="#76a5ff"/>
+  </g>
+  <g transform="translate(844 296)">
+    <rect x="0" y="0" width="226" height="220" rx="28" fill="#122438"/>
+    <path d="M42 70h140" stroke="#f05a66" stroke-width="14" stroke-linecap="round"/>
+    <path d="M42 112h112" stroke="#76a5ff" stroke-width="14" stroke-linecap="round"/>
+    <path d="M42 154h164" stroke="#f05a66" stroke-width="14" stroke-linecap="round"/>
+    <text x="42" y="198" fill="#c0cee3" font-family="Arial, sans-serif" font-size="22" font-weight="700">MODEL RACE</text>
   </g>
 </svg>
