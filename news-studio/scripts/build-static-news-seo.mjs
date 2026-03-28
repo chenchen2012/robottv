@@ -4,10 +4,7 @@ import {
   editorialPinnedPosts,
   homepageEditorialPinnedPosts,
 } from "../../scripts/editorial-pinned-posts.mjs";
-import {
-  coverImageOverrideForPost,
-  newsCoverImageOverrides,
-} from "../../scripts/news-cover-image-overrides.mjs";
+import { newsCoverImageOverrides } from "../../scripts/news-cover-image-overrides.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || "lumv116w";
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
@@ -18,6 +15,7 @@ const feedPath = path.join(staticDir, "feed.xml");
 const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
 const editorialPinnedPostsScriptPath = path.join(staticDir, "scripts", "editorial-pinned-posts.js");
 const coverImageOverridesScriptPath = path.join(staticDir, "scripts", "cover-image-overrides.js");
+const generatedCoverDir = path.join(staticDir, "images", "covers", "generated");
 const STATIC_RESERVED_DIRS = new Set(["images", "scripts"]);
 const HOMEPAGE_PAGE_SIZE = 12;
 const HOMEPAGE_PRELOAD_DEPTH = 60;
@@ -894,6 +892,8 @@ const thumbnailOverridesBySlug = new Map([
 ]);
 
 const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+const generatedCoverUrlForSlug = (slug = "") => `${siteUrl}/images/covers/generated/${normalizeSlug(slug)}.svg`;
+let resolvedCoverImageBySlug = new Map();
 const blockedSourceImagePrefixes = [
   "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc",
 ];
@@ -910,16 +910,135 @@ const youtubeThumb = (url, slug = "") => {
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 };
 
-const coverImageForPost = (post = {}) => {
-  const coverOverride = coverImageOverrideForPost(post);
-  if (coverOverride) return coverOverride;
-  const videoThumb = youtubeThumb(post?.youtubeUrl, post?.slug);
+const baseCoverCandidateForPost = (post = {}) => {
+  const slug = normalizeSlug(post?.slug);
+  const manualOverride = newsCoverImageOverrides[slug] || "";
+  if (manualOverride) return manualOverride;
+  const videoThumb = youtubeThumb(post?.youtubeUrl, slug);
   if (videoThumb) return videoThumb;
   const heroAsset = post?.heroImage?.asset?.url || "";
   if (heroAsset) return heroAsset;
   const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
   if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
+  return "";
+};
+
+const buildResolvedCoverImageMap = (posts = []) => {
+  const usedCoverUrls = new Set();
+  const resolved = new Map();
+  for (const post of posts) {
+    const slug = normalizeSlug(post?.slug);
+    if (!slug) continue;
+    const candidate = baseCoverCandidateForPost(post);
+    if (!candidate) {
+      resolved.set(slug, generatedCoverUrlForSlug(slug));
+      continue;
+    }
+    const coverKey = String(candidate).trim().toLowerCase();
+    if (!coverKey || usedCoverUrls.has(coverKey)) {
+      resolved.set(slug, generatedCoverUrlForSlug(slug));
+      continue;
+    }
+    usedCoverUrls.add(coverKey);
+    resolved.set(slug, candidate);
+  }
+  return resolved;
+};
+
+const coverImageForPost = (post = {}) => {
+  const slug = normalizeSlug(post?.slug);
+  if (slug && resolvedCoverImageBySlug.has(slug)) {
+    return resolvedCoverImageBySlug.get(slug);
+  }
   return fallbackCoverImage;
+};
+
+const escapeSvg = (value = "") =>
+  String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+const wrapCoverTitle = (title = "", maxChars = 22, maxLines = 4) => {
+  const words = String(title || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .split(" ")
+    .filter(Boolean);
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if (next.length <= maxChars || !current) {
+      current = next;
+      continue;
+    }
+    lines.push(current);
+    current = word;
+    if (lines.length === maxLines - 1) break;
+  }
+  if (current && lines.length < maxLines) {
+    lines.push(current);
+  }
+  if (!lines.length) {
+    return ["robot.tv News"];
+  }
+  if (lines.length === maxLines && words.join(" ").length > lines.join(" ").length) {
+    const lastIndex = lines.length - 1;
+    lines[lastIndex] = lines[lastIndex].slice(0, Math.max(0, maxChars - 1)).trimEnd() + "…";
+  }
+  return lines;
+};
+
+const buildGeneratedCoverSvg = (post = {}) => {
+  const slug = normalizeSlug(post?.slug);
+  const title = toPlainText(post?.title || "robot.tv News");
+  const source = toPlainText(post?.sourceName || "robot.tv News").slice(0, 40);
+  const categories = Array.isArray(post?.categories) ? post.categories.map(toPlainText).filter(Boolean) : [];
+  const categoryLabel = categories[0] || "Robotics News";
+  const lines = wrapCoverTitle(title);
+  const titleYStart = 410 - (lines.length - 1) * 54;
+  const lineMarkup = lines
+    .map(
+      (line, index) =>
+        `<text x="88" y="${titleYStart + index * 60}" font-family="Space Grotesk, Arial, sans-serif" font-size="52" font-weight="700" fill="#f5f8ff">${escapeSvg(line)}</text>`
+    )
+    .join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title-${slug}">
+  <defs>
+    <linearGradient id="bg-${slug}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#071018" />
+      <stop offset="55%" stop-color="#101f33" />
+      <stop offset="100%" stop-color="#1b2f4d" />
+    </linearGradient>
+    <linearGradient id="accent-${slug}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef2d52" />
+      <stop offset="100%" stop-color="#5e84ff" />
+    </linearGradient>
+  </defs>
+  <title id="title-${slug}">${escapeSvg(title)}</title>
+  <rect width="1200" height="630" fill="url(#bg-${slug})" />
+  <circle cx="1030" cy="108" r="180" fill="#ef2d52" opacity="0.16" />
+  <circle cx="1010" cy="140" r="120" fill="#5e84ff" opacity="0.18" />
+  <rect x="88" y="84" width="168" height="8" rx="4" fill="url(#accent-${slug})" />
+  <text x="88" y="142" font-family="Orbitron, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="2" fill="#8ea8d7">ROBOT.TV NEWS</text>
+  <text x="88" y="198" font-family="Space Grotesk, Arial, sans-serif" font-size="24" font-weight="600" fill="#c9d6ec">${escapeSvg(categoryLabel.toUpperCase())}</text>
+  ${lineMarkup}
+  <rect x="88" y="510" width="1024" height="1" fill="#32507c" opacity="0.8" />
+  <text x="88" y="556" font-family="Space Grotesk, Arial, sans-serif" font-size="24" font-weight="500" fill="#b9c9e6">${escapeSvg(source)}</text>
+  <text x="1112" y="556" text-anchor="end" font-family="Space Grotesk, Arial, sans-serif" font-size="22" font-weight="500" fill="#8ea8d7">${escapeSvg(formatDisplayDate(post?.publishedAt || new Date().toISOString()))}</text>
+</svg>`;
+};
+
+const writeGeneratedCoverImages = async (posts = []) => {
+  await fs.mkdir(generatedCoverDir, { recursive: true });
+  for (const post of posts) {
+    const slug = normalizeSlug(post?.slug);
+    if (!slug) continue;
+    const svg = buildGeneratedCoverSvg(post);
+    await fs.writeFile(path.join(generatedCoverDir, `${slug}.svg`), svg, "utf8");
+  }
 };
 
 const formatDate = (iso) => {
@@ -1639,45 +1758,9 @@ const writeEditorialPinnedPostsScript = async () => {
 };
 const writeCoverImageOverridesScript = async () => {
   const script = `(() => {
-  const overrides = ${JSON.stringify(newsCoverImageOverrides)};
-  const freeCoverFallbacks = {
-    capitol: "https://news.robot.tv/images/covers/photos/us-lawmakers-ban-chinese-robots.jpg",
-    drone: "https://news.robot.tv/images/covers/photos/lucid-bots-window-washing-drones.jpg",
-    humanoid: "https://news.robot.tv/images/covers/photos/amazon-kid-size-humanoid-robots.jpg",
-    robotPortrait: "https://news.robot.tv/images/covers/photos/latest-generation-of-robots.jpg",
-    warehouse: "https://news.robot.tv/images/covers/photos/retail-logistics-robots.jpg",
-    chips: "https://news.robot.tv/images/covers/photos/china-open-source-ai-lead.jpg",
-    aiStrategy: "https://news.robot.tv/images/covers/photos/openai-sora-strategy-shift.jpg",
-    industrialArm: "https://news.robot.tv/images/covers/photos/agile-robots-google-deepmind.jpg"
-  };
-  const normalize = (value = "") => String(value || "").toLowerCase().replace(/[^a-z0-9\\s-]/g, " ").replace(/\\s+/g, " ").trim();
-  const includesAny = (text, terms = []) => terms.some((term) => text.includes(term));
-  const autoCoverImageForPost = (post = {}) => {
-    const title = normalize(post && post.title);
-    const categories = Array.isArray(post && post.cats)
-      ? post.cats.map(normalize).join(" ")
-      : Array.isArray(post && post.categories)
-        ? post.categories.map(normalize).join(" ")
-        : "";
-    const source = normalize(post && post.sourceName);
-    const haystack = (title + " " + categories + " " + source).trim();
-    if (!haystack) return "";
-    if (includesAny(haystack, ["lawmakers", "congress", "senate", "house", "government use", "ban government", "policy", "advisory body"])) return freeCoverFallbacks.capitol;
-    if (includesAny(haystack, ["window-washing", "window washing", "drone", "uav", "facade", "building inspection"])) return freeCoverFallbacks.drone;
-    if (includesAny(haystack, ["warehouse", "logistics", "retail logistics", "fulfillment", "ocado"])) return freeCoverFallbacks.warehouse;
-    if (includesAny(haystack, ["open-source", "open source", "chip", "compute", "semiconductor", "ai lead", "sora", "openai"])) {
-      return includesAny(haystack, ["sora", "openai", "strategy", "app"]) ? freeCoverFallbacks.aiStrategy : freeCoverFallbacks.chips;
-    }
-    if (includesAny(haystack, ["deepmind", "partnership", "partner with", "industrial robot", "robot arm", "factory automation"])) return freeCoverFallbacks.industrialArm;
-    if (includesAny(haystack, ["kid-size humanoid", "kid size humanoid", "child-sized humanoid", "child sized humanoid"])) return freeCoverFallbacks.humanoid;
-    if (includesAny(haystack, ["humanoid", "robotics revolution", "latest generation of robots", "meet the machines", "robot exhibition"])) {
-      return includesAny(haystack, ["humanoid"]) ? freeCoverFallbacks.humanoid : freeCoverFallbacks.robotPortrait;
-    }
-    if (includesAny(haystack, ["robot", "robotics"])) return freeCoverFallbacks.robotPortrait;
-    return "";
-  };
+  const overrides = ${JSON.stringify(Object.fromEntries(resolvedCoverImageBySlug))};
   window.__ROBOTTV_COVER_IMAGE_OVERRIDES__ = overrides;
-  window.__ROBOTTV_COVER_OVERRIDE_FOR_POST__ = (post = {}) => overrides[String(post && post.slug || "").trim()] || autoCoverImageForPost(post);
+  window.__ROBOTTV_COVER_OVERRIDE_FOR_POST__ = (post = {}) => overrides[String(post && post.slug || "").trim()] || "";
 })();\n`;
   await fs.writeFile(
     coverImageOverridesScriptPath,
@@ -1875,7 +1958,9 @@ const writeRetiredRedirectPages = async () => {
 
 const main = async () => {
   const posts = await fetchPosts();
+  resolvedCoverImageBySlug = buildResolvedCoverImageMap(posts);
   await ensureCleanPostDir();
+  await writeGeneratedCoverImages(posts);
   await writePosts(posts);
   await writeRetiredRedirectPages();
   await writeSitemap(posts);

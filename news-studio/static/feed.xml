@@ -5,8 +5,96 @@
     <link>https://news.robot.tv/</link>
     <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Mar 2026 01:27:36 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 27 Mar 2026 13:44:06 GMT</lastBuildDate>
     <atom:link href="https://news.robot.tv/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Inside Project Kobe: Amazon&#39;s plan to build Walmart-style supercenters powered by warehouse robots and AI</title>
+      <link>https://news.robot.tv/inside-project-kobe-amazons-plan-to-build-walmart-style-supercenters-powered-by-warehouse-/</link>
+      <guid isPermaLink="true">https://news.robot.tv/inside-project-kobe-amazons-plan-to-build-walmart-style-supercenters-powered-by-warehouse-/</guid>
+      <pubDate>Fri, 27 Mar 2026 13:44:06 GMT</pubDate>
+      <description>Amazon is developing large-format retail supercenters, internally codenamed Project Kobe, that integrate warehouse robotics and AI. This move signals a direct operational shift to compete with established big-box physical retail models.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>US lawmakers to introduce bill to ban government use of Chinese robots</title>
+      <link>https://news.robot.tv/us-lawmakers-to-introduce-bill-to-ban-government-use-of-chinese-robots/</link>
+      <guid isPermaLink="true">https://news.robot.tv/us-lawmakers-to-introduce-bill-to-ban-government-use-of-chinese-robots/</guid>
+      <pubDate>Thu, 26 Mar 2026 13:59:30 GMT</pubDate>
+      <description>U.S. lawmakers are preparing legislation to prohibit federal agencies from using Chinese-made robots. The move directly targets government procurement and supply chains.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>3 robotics trends from NVIDIA GTC 2026</title>
+      <link>https://news.robot.tv/3-robotics-trends-from-nvidia-gtc-2026/</link>
+      <guid isPermaLink="true">https://news.robot.tv/3-robotics-trends-from-nvidia-gtc-2026/</guid>
+      <pubDate>Thu, 26 Mar 2026 03:27:57 GMT</pubDate>
+      <description>NVIDIA&#39;s 2026 GTC conference highlighted three key robotics trends. These developments signal where computational demands and investment are shifting for next-generation systems.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Lucid Bots raises $20M to keep up with demand for its window-washing drones</title>
+      <link>https://news.robot.tv/lucid-bots-raises-20m-to-keep-up-with-demand-for-its-window-washing-drones/</link>
+      <guid isPermaLink="true">https://news.robot.tv/lucid-bots-raises-20m-to-keep-up-with-demand-for-its-window-washing-drones/</guid>
+      <pubDate>Wed, 25 Mar 2026 19:12:52 GMT</pubDate>
+      <description>Lucid Bots has secured $20 million in new funding. The capital injection is aimed at scaling production to meet rising demand for its commercial window-cleaning drones.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Meet the machines: The latest generation of robots</title>
+      <link>https://news.robot.tv/meet-the-machines-the-latest-generation-of-robots/</link>
+      <guid isPermaLink="true">https://news.robot.tv/meet-the-machines-the-latest-generation-of-robots/</guid>
+      <pubDate>Wed, 25 Mar 2026 19:12:35 GMT</pubDate>
+      <description>On the latest generation of robots entering the market. The coverage highlights new hardware and software capabilities from emerging companies.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>No arms, no legs, no problem: the robots taking over retail logistics</title>
+      <link>https://news.robot.tv/no-arms-no-legs-no-problem-the-robots-taking-over-retail-logistics/</link>
+      <guid isPermaLink="true">https://news.robot.tv/no-arms-no-legs-no-problem-the-robots-taking-over-retail-logistics/</guid>
+      <pubDate>Wed, 25 Mar 2026 13:51:38 GMT</pubDate>
+      <description>A new wave of wheeled, armless robots is automating material transport in warehouses and retail backrooms. These systems prioritize simple navigation and high-volume movement over complex manipulation.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Amazon acquires humanoid developer Fauna Robotics</title>
+      <link>https://news.robot.tv/amazon-acquires-humanoid-developer-fauna-robotics/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-acquires-humanoid-developer-fauna-robotics/</guid>
+      <pubDate>Wed, 25 Mar 2026 13:51:14 GMT</pubDate>
+      <description>Amazon has acquired Fauna Robotics, a developer specializing in humanoid systems. The move signals a strategic push into advanced automation for logistics and fulfillment.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Amazon just bought a startup making kid-size humanoid robots</title>
+      <link>https://news.robot.tv/amazon-just-bought-a-startup-making-kid-size-humanoid-robots/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-just-bought-a-startup-making-kid-size-humanoid-robots/</guid>
+      <pubDate>Wed, 25 Mar 2026 07:19:16 GMT</pubDate>
+      <description>Amazon has acquired a startup developing child-sized humanoid robots. The move signals a strategic push into a new form factor for potential logistics or consumer applications.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>OpenAI is scrapping the Sora app to chase bigger AI goals</title>
+      <link>https://news.robot.tv/openai-is-scrapping-the-sora-app-to-chase-bigger-ai-goals/</link>
+      <guid isPermaLink="true">https://news.robot.tv/openai-is-scrapping-the-sora-app-to-chase-bigger-ai-goals/</guid>
+      <pubDate>Wed, 25 Mar 2026 03:19:56 GMT</pubDate>
+      <description>OpenAI has discontinued its Sora application, shifting focus to broader AI development. This move signals a strategic pivot away from a specific product to concentrate on core research and infrastructure.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>TI partners with NVIDIA to accelerate robot deployments</title>
+      <link>https://news.robot.tv/ti-partners-with-nvidia-to-accelerate-robot-deployments/</link>
+      <guid isPermaLink="true">https://news.robot.tv/ti-partners-with-nvidia-to-accelerate-robot-deployments/</guid>
+      <pubDate>Tue, 24 Mar 2026 19:30:51 GMT</pubDate>
+      <description>Texas Instruments and NVIDIA have announced a partnership to accelerate robot deployment. The collaboration aims to streamline development and integration processes for robotics systems.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Agile Robots becomes the latest robotics company to partner with Google DeepMind</title>
+      <link>https://news.robot.tv/agile-robots-becomes-the-latest-robotics-company-to-partner-with-google-deepmind/</link>
+      <guid isPermaLink="true">https://news.robot.tv/agile-robots-becomes-the-latest-robotics-company-to-partner-with-google-deepmind/</guid>
+      <pubDate>Tue, 24 Mar 2026 13:52:14 GMT</pubDate>
+      <description>Agile Robots has entered a partnership with Google DeepMind. This collaboration signals a strategic move to integrate advanced AI research with commercial robotics hardware.</description>
+      <category>Robotics Startups</category>
+    </item>
     <item>
       <title>China&#39;s open-source dominance threatens US AI lead, US advisory body warns</title>
       <link>https://news.robot.tv/chinas-open-source-dominance-threatens-us-ai-lead-us-advisory-body-warns/</link>
@@ -246,107 +334,6 @@
       <category>Robotics Startups</category>
       <category>Physical AI</category>
       <category>Defense</category>
-    </item>
-    <item>
-      <title>A key robotics staffer at OpenAI quits after the company&#39;s Pentagon deal: &#39;This was about principle&#39;</title>
-      <link>https://news.robot.tv/a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri/</link>
-      <guid isPermaLink="true">https://news.robot.tv/a-key-robotics-staffer-at-openai-quits-after-the-companys-pentagon-deal-this-was-about-pri/</guid>
-      <pubDate>Mon, 09 Mar 2026 07:18:52 GMT</pubDate>
-      <description>A senior robotics researcher at OpenAI has resigned, citing ethical objections to the company&#39;s new contract with the Pentagon. The departure highlights internal tensions over the direction of AI development for defense applications.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Plug-and-Play AI: Transforming robotics with modular skills</title>
-      <link>https://news.robot.tv/plug-and-play-ai-transforming-robotics-with-modular-skills/</link>
-      <guid isPermaLink="true">https://news.robot.tv/plug-and-play-ai-transforming-robotics-with-modular-skills/</guid>
-      <pubDate>Sun, 08 Mar 2026 18:53:02 GMT</pubDate>
-      <description>Modular robotics skills matter because physical AI becomes more deployable when teams can reuse capabilities across tasks instead of rebuilding each workflow from scratch.</description>
-      <category>Robotics Startups</category>
-      <category>Physical AI</category>
-      <category>Robot Learning</category>
-      <category>Robotics Software</category>
-    </item>
-    <item>
-      <title>These robots are coming for the jobs no one wants — and could fill workforce gaps</title>
-      <link>https://news.robot.tv/these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps/</link>
-      <guid isPermaLink="true">https://news.robot.tv/these-robots-are-coming-for-the-jobs-no-one-wants-and-could-fill-workforce-gaps/</guid>
-      <pubDate>Sun, 08 Mar 2026 13:11:28 GMT</pubDate>
-      <description>Workforce-gap robotics stories matter because automation wins fastest where jobs are repetitive, difficult to staff, or operationally unattractive rather than where robots chase the broadest labor replacement narrative.</description>
-      <category>Robotics Startups</category>
-      <category>Automation</category>
-      <category>Workforce</category>
-      <category>Robotics Markets</category>
-    </item>
-    <item>
-      <title>OpenAI Robotics head resigns after deal with Pentagon</title>
-      <link>https://news.robot.tv/openai-robotics-head-resigns-after-deal-with-pentagon/</link>
-      <guid isPermaLink="true">https://news.robot.tv/openai-robotics-head-resigns-after-deal-with-pentagon/</guid>
-      <pubDate>Sun, 08 Mar 2026 03:13:02 GMT</pubDate>
-      <description>OpenAI&#39;s head of robotics has resigned. The departure follows the company&#39;s decision to enter into a deal with the Pentagon.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Humanoid developer Agility Robotics rebrands</title>
-      <link>https://news.robot.tv/humanoid-developer-agility-robotics-rebrands/</link>
-      <guid isPermaLink="true">https://news.robot.tv/humanoid-developer-agility-robotics-rebrands/</guid>
-      <pubDate>Sat, 07 Mar 2026 18:51:24 GMT</pubDate>
-      <description>An Agility Robotics rebrand matters because company positioning in the humanoid market now affects recruiting, customer expectations, and how seriously operators interpret the path from pilot programs to scaled deployments.</description>
-      <category>Humanoid Robots</category>
-      <category>Warehouse Robotics</category>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Humanoid warehouse rollouts are shifting from pilot to operations in 2026</title>
-      <link>https://news.robot.tv/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/</link>
-      <guid isPermaLink="true">https://news.robot.tv/humanoid-warehouse-rollouts-shift-from-pilot-to-operations-2026/</guid>
-      <pubDate>Sat, 07 Mar 2026 08:30:00 GMT</pubDate>
-      <description>Warehouse humanoids are entering a stricter phase in 2026: operators are moving beyond pilot headlines and starting to judge programs on throughput, intervention rate, safety, and real workflow fit.</description>
-      <category>Humanoid Robots</category>
-      <category>Operations</category>
-      <category>Robotics News</category>
-      <category>Warehouse Robotics</category>
-    </item>
-    <item>
-      <title>Amazon cuts jobs in strategically important robotics division</title>
-      <link>https://news.robot.tv/amazon-cuts-jobs-in-strategically-important-robotics-division/</link>
-      <guid isPermaLink="true">https://news.robot.tv/amazon-cuts-jobs-in-strategically-important-robotics-division/</guid>
-      <pubDate>Thu, 05 Mar 2026 13:37:46 GMT</pubDate>
-      <description>Amazon is reducing headcount within its strategic robotics division. This move signals a shift in how the company is allocating resources for its automation efforts.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Amazon cuts more jobs; this time in robotics unit</title>
-      <link>https://news.robot.tv/amazon-cuts-more-jobs-this-time-in-robotics-unit/</link>
-      <guid isPermaLink="true">https://news.robot.tv/amazon-cuts-more-jobs-this-time-in-robotics-unit/</guid>
-      <pubDate>Thu, 05 Mar 2026 13:37:45 GMT</pubDate>
-      <description>Amazon has initiated another round of job cuts, this time within its robotics division. The move follows broader layoffs across the company&#39;s tech and retail units.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>AW 2026 features Korea humanoid debuts as industry seeks digital transformation</title>
-      <link>https://news.robot.tv/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation/</link>
-      <guid isPermaLink="true">https://news.robot.tv/aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation/</guid>
-      <pubDate>Thu, 05 Mar 2026 01:56:55 GMT</pubDate>
-      <description>Multiple Korean humanoid robots are set to debut at AW 2026. The event highlights a growing industry focus on digital transformation.</description>
-      <category>Humanoid Robots</category>
-    </item>
-    <item>
-      <title>Breakingviews - Hyundai Motor&#39;s robots herald hardware reboot</title>
-      <link>https://news.robot.tv/breakingviews-hyundai-motors-robots-herald-hardware-reboot/</link>
-      <guid isPermaLink="true">https://news.robot.tv/breakingviews-hyundai-motors-robots-herald-hardware-reboot/</guid>
-      <pubDate>Wed, 04 Mar 2026 12:53:16 GMT</pubDate>
-      <description>Hyundai Motor is shifting its robotics strategy toward a hardware-first approach. This signals a deeper commitment to physical platforms over pure software or service models.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>6 lessons I learned watching a robotics startup die from the inside</title>
-      <link>https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/</link>
-      <guid isPermaLink="true">https://news.robot.tv/6-lessons-i-learned-watching-a-robotics-startup-die-from-the-inside/</guid>
-      <pubDate>Tue, 03 Mar 2026 01:59:57 GMT</pubDate>
-      <description>Robotics startup failure stories matter because execution risk in this industry usually comes from focus, deployment discipline, and operating burn, not from a lack of technical ambition alone.</description>
-      <category>Robotics Startups</category>
-      <category>Operations</category>
-      <category>Strategy</category>
     </item>
   </channel>
 </rss>

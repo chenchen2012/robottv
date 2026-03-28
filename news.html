@@ -176,7 +176,7 @@
     </div>
 
     <script type="module">
-        import { coverImageOverrideForPost } from "/scripts/news-cover-image-overrides.mjs";
+        import { coverImageOverrideForPost, generatedCoverImageForSlug } from "/scripts/news-cover-image-overrides.mjs";
         const projectId = "lumv116w";
         const dataset = "production";
         const hiddenNewsSlugs = new Set([
@@ -253,6 +253,8 @@
             if (heroImage) return heroImage;
             const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
             if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
+            const generatedCover = generatedCoverImageForSlug(post?.slug);
+            if (generatedCover) return generatedCover;
             return fallbackCoverImage;
         };
         const postDate = (iso) => {

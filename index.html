@@ -568,7 +568,7 @@
     <script src="https://news.robot.tv/scripts/preloaded-news-posts.js?v=20260319-news-v2"></script>
     <script type="module">
       import { homepageEditorialPinnedPosts as sharedEditorialPinnedPosts } from "/scripts/editorial-pinned-posts.mjs";
-      import { coverImageOverrideForPost } from "/scripts/news-cover-image-overrides.mjs";
+      import { coverImageOverrideForPost, generatedCoverImageForSlug } from "/scripts/news-cover-image-overrides.mjs";
 
       const sanityProjectId = "lumv116w";
       const sanityDataset = "production";
@@ -616,6 +616,8 @@
         if (heroImage) return heroImage;
         const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
         if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
+        const generatedCover = generatedCoverImageForSlug(post?.slug);
+        if (generatedCover) return generatedCover;
         return fallbackCoverImage;
       };
       const tuneRailSpeed = () => {

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title-amazon-just-bought-a-startup-making-kid-size-humanoid-robots">
+  <defs>
+    <linearGradient id="bg-amazon-just-bought-a-startup-making-kid-size-humanoid-robots" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#071018" />
+      <stop offset="55%" stop-color="#101f33" />
+      <stop offset="100%" stop-color="#1b2f4d" />
+    </linearGradient>
+    <linearGradient id="accent-amazon-just-bought-a-startup-making-kid-size-humanoid-robots" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef2d52" />
+      <stop offset="100%" stop-color="#5e84ff" />
+    </linearGradient>
+  </defs>
+  <title id="title-amazon-just-bought-a-startup-making-kid-size-humanoid-robots">Amazon just bought a startup making kid-size humanoid robots</title>
+  <rect width="1200" height="630" fill="url(#bg-amazon-just-bought-a-startup-making-kid-size-humanoid-robots)" />
+  <circle cx="1030" cy="108" r="180" fill="#ef2d52" opacity="0.16" />
+  <circle cx="1010" cy="140" r="120" fill="#5e84ff" opacity="0.18" />
+  <rect x="88" y="84" width="168" height="8" rx="4" fill="url(#accent-amazon-just-bought-a-startup-making-kid-size-humanoid-robots)" />
+  <text x="88" y="142" font-family="Orbitron, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="2" fill="#8ea8d7">ROBOT.TV NEWS</text>
+  <text x="88" y="198" font-family="Space Grotesk, Arial, sans-serif" font-size="24" font-weight="600" fill="#c9d6ec">HUMANOID ROBOTS</text>
+  <text x="88" y="248" font-family="Space Grotesk, Arial, sans-serif" font-size="52" font-weight="700" fill="#f5f8ff">Amazon just bought a</text><text x="88" y="308" font-family="Space Grotesk, Arial, sans-serif" font-size="52" font-weight="700" fill="#f5f8ff">startup making</text><text x="88" y="368" font-family="Space Grotesk, Arial, sans-serif" font-size="52" font-weight="700" fill="#f5f8ff">kid-size humanoid</text><text x="88" y="428" font-family="Space Grotesk, Arial, sans-serif" font-size="52" font-weight="700" fill="#f5f8ff">robots</text>
+  <rect x="88" y="510" width="1024" height="1" fill="#32507c" opacity="0.8" />
+  <text x="88" y="556" font-family="Space Grotesk, Arial, sans-serif" font-size="24" font-weight="500" fill="#b9c9e6">TechCrunch</text>
+  <text x="1112" y="556" text-anchor="end" font-family="Space Grotesk, Arial, sans-serif" font-size="22" font-weight="500" fill="#8ea8d7">Mar 25, 2026</text>
+</svg>
