@@ -168,6 +168,10 @@ Automation status
     - if a candidate image is missing or already used by a newer post, fall back to a per-slug generated SVG cover in `news-studio/static/images/covers/generated/`
   - generated article verification after this pass showed zero duplicate `og:image` URLs across the current static newsroom pages
   - root-site news surfaces (`index.html`, `news.html`) now use the same per-slug generated covers when a post has no strong native image, which avoids repeated generic thumbnails on `robot.tv`
+- Mar 28, 2026 editorial priority update:
+  - broad corporate/retail strategy stories with weak robot-product specificity should usually be skipped, especially when they do not have a strong relevant YouTube embed
+  - robot.tv should prioritize stories tied to specific robotics products, platforms, deployments, or clearly identifiable robot systems with embedded video when possible
+  - the live Project Kobe Amazon supercenter story was allowed to remain published but was explicitly removed from homepage/news listing surfaces via hidden-slug filters on both `news.robot.tv` and `robot.tv`
 - Health check: news-studio/scripts/check-feed-health.mjs
   - stale-feed guard (MAX_FEED_AGE_HOURS default 24)
   - duplicate-like headline guard

@@ -71,6 +71,7 @@ const hiddenListingSlugs = new Set([
   "dancing-robots-bring-support-company-to-barcelona-elderly",
   "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
   "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
+  "inside-project-kobe-amazons-plan-to-build-walmart-style-supercenters-powered-by-warehouse-",
   "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
   "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
 ]);

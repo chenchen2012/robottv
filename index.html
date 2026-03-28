@@ -579,6 +579,9 @@
       ];
       const q = `*[_type == "post"] | order(publishedAt desc)[0...18]{title,excerpt,youtubeUrl,sourceImageUrl,heroImage{asset->{url}},"slug":slug.current,"cats":categories[]->title}`;
       const preloadedNewsPosts = Array.isArray(window.__ROBOTTV_PRELOADED_POSTS__) ? window.__ROBOTTV_PRELOADED_POSTS__ : [];
+      const hiddenHomepageNewsSlugs = new Set([
+        "inside-project-kobe-amazons-plan-to-build-walmart-style-supercenters-powered-by-warehouse-"
+      ]);
       const editorialPinnedPosts = sharedEditorialPinnedPosts.map((post) => ({
         ...post,
         cats: Array.isArray(post.categories) ? post.categories : Array.isArray(post.cats) ? post.cats : []
@@ -688,7 +691,7 @@
             // Keep newest fetched posts first; pinned items are fallback context, not top-story overrides.
             const posts = [...fetchedPosts, ...editorialPinnedPosts].filter((p) => {
               const slug = String(p?.slug || "");
-              if (!slug || seen.has(slug)) return false;
+              if (!slug || seen.has(slug) || hiddenHomepageNewsSlugs.has(slug)) return false;
               seen.add(slug);
               return true;
             });

@@ -166,13 +166,29 @@ const getEditorialRejectionReason = (headline, sourceUrl = '') => {
   if (/(the jobs no one wants|golden age)/.test(title)) {
     return 'broad trend/opinion framing without enough robotics specificity'
   }
+  if (
+    /(project [a-z0-9]+|codenamed|code named|supercenter|supercenters|retail store|retail expansion|big box)/.test(title) &&
+    /(amazon|walmart|retail|store|stores|grocery)/.test(title) &&
+    /(robot|robots|robotics|warehouse)/.test(title)
+  ) {
+    return 'broad retail/corporate strategy story without specific robot product focus'
+  }
   return ''
 }
 
-const canPublishWithoutYoutube = (source, editorial) => {
+const isSpecificRobotProductStory = (headline = '') => {
+  const title = normalizeText(headline)
+  return (
+    /(humanoid|quadruped|robot dog|cobot|drone|uav|delivery robot|robotic hand|inspection robot|warehouse robot|mobile robot)/.test(title) ||
+    /(digit|atlas|spot|optimus|apollo|rivr|alphabot|jetson thor|blaze|ottumn|rbtx|fauna robotics)/.test(title)
+  )
+}
+
+const canPublishWithoutYoutube = (headline, source, editorial) => {
   const sourceName = String(source || '').trim()
   const bodyParagraphs = Array.isArray(editorial?.bodyParagraphs) ? editorial.bodyParagraphs : []
   return mainstreamSources.has(sourceName) &&
+    isSpecificRobotProductStory(headline) &&
     isExcerptStrong(editorial?.excerpt || '') &&
     bodyParagraphs.length >= 3
 }
@@ -428,7 +444,7 @@ for (let i = 0; i < selected.length; i += 1) {
     !h.link ||
     Boolean(getEditorialRejectionReason(h.title, h.link)) ||
     !isExcerptStrong(excerpt) ||
-    (!ytId && !canPublishWithoutYoutube(h.source, editorial)) ||
+    (!ytId && !canPublishWithoutYoutube(h.title, h.source, editorial)) ||
     Boolean(ytId && youtubeCandidate?.hardMismatch) ||
     Boolean(ytId && usedYoutubeIds.has(ytId)) ||
     usedTitleKeys.has(key) ||
@@ -440,7 +456,7 @@ for (let i = 0; i < selected.length; i += 1) {
       title: h.title,
       reason: editorialRejectionReason
         ? editorialRejectionReason
-        : !ytId && !canPublishWithoutYoutube(h.source, editorial)
+        : !ytId && !canPublishWithoutYoutube(h.title, h.source, editorial)
         ? 'missing/invalid YouTube video'
         : youtubeCandidate?.hardMismatch
           ? `video/topic mismatch (${youtubeCandidate.headlineFamilies.join(', ') || 'headline'} vs ${youtubeCandidate.videoFamilies.join(', ') || 'video'})`
