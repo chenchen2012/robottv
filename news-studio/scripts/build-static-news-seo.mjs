@@ -1561,6 +1561,11 @@ const buildArticleHtml = (post) => {
       <p class="excerpt">${escapeHtml(excerpt)}</p>
       ${embedUrl ? `<div class="video"><iframe src="${escapeHtml(embedUrl)}" title="${escapeHtml(title)} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : ""}
       ${embedUrl && videoSummary ? `<section class="video-summary"><h2>Video Summary</h2><p>${escapeHtml(videoSummary)}</p></section>` : ""}
+      <section class="body">
+        ${(paragraphs.length ? paragraphs : ["This article is part of robot.tv's video-first robotics coverage."])
+          .map((p) => `<p>${escapeHtml(p)}</p>`)
+          .join("")}
+      </section>
       <section class="insight-grid" aria-label="Source and author details">
         <section class="insight-card">
           <p class="eyebrow">${visibleSource.eyebrow}</p>
@@ -1582,11 +1587,6 @@ const buildArticleHtml = (post) => {
         </section>`
             : ""
         }
-      </section>
-      <section class="body">
-        ${(paragraphs.length ? paragraphs : ["This article is part of robot.tv's video-first robotics coverage."])
-          .map((p) => `<p>${escapeHtml(p)}</p>`)
-          .join("")}
       </section>
       ${categories.length ? `<ul class="tags">${categories.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>` : ""}
     </article>
