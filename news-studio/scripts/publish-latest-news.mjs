@@ -102,6 +102,8 @@ const extractYoutubeId = (url) => {
   return ''
 }
 
+const hasUsableImageUrl = (url) => /^https?:\/\/\S+/i.test(String(url || '').trim())
+
 const normalizeUrl = (url) => String(url || '')
   .trim()
   .toLowerCase()
@@ -187,10 +189,16 @@ const isSpecificRobotProductStory = (headline = '') => {
 const canPublishWithoutYoutube = (headline, source, editorial) => {
   const sourceName = String(source || '').trim()
   const bodyParagraphs = Array.isArray(editorial?.bodyParagraphs) ? editorial.bodyParagraphs : []
-  return mainstreamSources.has(sourceName) &&
-    isSpecificRobotProductStory(headline) &&
+  const sourceImageUrl = editorial?.sourceContext?.imageUrl || ''
+  return (mainstreamSources.has(sourceName) || trustedSources.has(sourceName)) &&
     isExcerptStrong(editorial?.excerpt || '') &&
-    bodyParagraphs.length >= 3
+    bodyParagraphs.length >= 3 &&
+    hasUsableImageUrl(sourceImageUrl) &&
+    (
+      isSpecificRobotProductStory(headline) ||
+      hasTopCompanySignal(headline) ||
+      /partnership|funding|raises|launch|deployment|manufacturing|delivery|sdk|api|platform/i.test(headline)
+    )
 }
 
 const comparableTitleTokens = (title) => [...new Set(
@@ -430,6 +438,7 @@ for (let i = 0; i < selected.length; i += 1) {
   })
   const excerpt = editorial.excerpt
   const videoSummary = editorial.videoSummary
+  const sourceImageUrl = editorial?.sourceContext?.imageUrl || ''
   const key = titleKey(h.title)
   const nearDuplicateTitle = findNearDuplicateTitle(h.title, usedComparableTitles)
   const sourcePublishedAt = (() => {
@@ -457,7 +466,7 @@ for (let i = 0; i < selected.length; i += 1) {
       reason: editorialRejectionReason
         ? editorialRejectionReason
         : !ytId && !canPublishWithoutYoutube(h.title, h.source, editorial)
-        ? 'missing/invalid YouTube video'
+        ? 'missing/invalid YouTube video and no usable source image fallback'
         : youtubeCandidate?.hardMismatch
           ? `video/topic mismatch (${youtubeCandidate.headlineFamilies.join(', ') || 'headline'} vs ${youtubeCandidate.videoFamilies.join(', ') || 'video'})`
         : !isExcerptStrong(excerpt)
@@ -494,7 +503,7 @@ for (let i = 0; i < selected.length; i += 1) {
     sourceUrl: h.link,
     sourceSiteUrl: h.sourceSiteUrl,
     sourcePublishedAt,
-    sourceImageUrl: editorial?.sourceContext?.imageUrl || '',
+    sourceImageUrl,
     author: { _type: 'reference', _ref: authorId },
     categories: [{ _type: 'reference', _ref: category }],
     body: blocksFromParagraphs(editorial.bodyParagraphs)

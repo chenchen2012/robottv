@@ -45,6 +45,8 @@ const extractYoutubeId = (url) => {
   return ''
 }
 
+const hasUsableImageUrl = (url) => /^https?:\/\/\S+/i.test(String(url || '').trim())
+
 const isExcerptStrong = (excerpt) => {
   const text = String(excerpt || '').trim()
   if (text.length < 120 || text.length > 260) return false
@@ -70,11 +72,21 @@ const bodyWordCount = (body = []) =>
     .length
 
 const allowsMissingYoutube = (post) =>
-  mainstreamSources.has(String(post?.sourceName || '').trim()) &&
+  (mainstreamSources.has(String(post?.sourceName || '').trim()) || trustedSources.has(String(post?.sourceName || '').trim())) &&
   isExcerptStrong(post?.excerpt) &&
-  bodyWordCount(post?.body) >= 80
+  bodyWordCount(post?.body) >= 80 &&
+  hasUsableImageUrl(post?.sourceImageUrl)
 
-const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,sourceName,body,"slug":slug.current}'
+const trustedSources = new Set([
+  'Reuters',
+  'TechCrunch',
+  'The Robot Report',
+  'Business Insider',
+  'The Guardian',
+  'Janes'
+])
+
+const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,sourceName,sourceImageUrl,body,"slug":slug.current}'
 const url = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`
 const headers = token ? { Authorization: `Bearer ${token}` } : {}
 const resp = await fetch(url, { headers })
