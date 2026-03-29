@@ -1251,7 +1251,7 @@
         ""
       );
     };
-    const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+    const fallbackCoverImage = "https://news.robot.tv/images/covers/photos/latest-generation-of-robots.jpg";
     const blockedSourceImagePrefixes = [
       "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc"
     ];
@@ -1267,6 +1267,12 @@
       const text = String(url || "").trim();
       return text ? blockedSourceImagePrefixes.some((prefix) => text.startsWith(prefix)) : false;
     };
+    const generatedCoverImageForSlug = (slug = "") => {
+      const normalizedSlug = String(slug || "").trim();
+      return normalizedSlug
+        ? `https://news.robot.tv/images/covers/generated/${normalizedSlug}.svg`
+        : "";
+    };
     const coverImageForPost = (post) => {
       const coverOverride = typeof window.__ROBOTTV_COVER_OVERRIDE_FOR_POST__ === "function"
         ? window.__ROBOTTV_COVER_OVERRIDE_FOR_POST__(post)
@@ -1278,7 +1284,7 @@
       if (heroImage) return heroImage;
       const sourceImageUrl = String(post?.sourceImageUrl || "").trim();
       if (sourceImageUrl && !isBlockedSourceImage(sourceImageUrl)) return sourceImageUrl;
-      return fallbackCoverImage;
+      return generatedCoverImageForSlug(post?.slug) || fallbackCoverImage;
     };
     const formatDate = (iso) => {
       const date = new Date(iso);
@@ -1709,8 +1715,8 @@
       if (!pagePosts.length) { empty.hidden = false; return; }
       grid.innerHTML = pagePosts.map((p, i) => `
         <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
-          <span class="thumb-shell ${coverImageForPost(p) === fallbackCoverImage ? "thumb-shell-fallback" : ""}">
-            <img class="thumb ${coverImageForPost(p) === fallbackCoverImage ? "thumb-fallback" : ""}" src="${esc(coverImageForPost(p))}" alt="${esc(p.title)} thumbnail" loading="lazy">
+          <span class="thumb-shell">
+            <img class="thumb" src="${esc(coverImageForPost(p))}" alt="${esc(p.title)} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
