@@ -1,4 +1,8 @@
 export const newsCoverImageOverrides = {
+  "agile-robots-to-deploy-google-deepmind-foundation-models-on-its-humanoid":
+    "https://news.robot.tv/images/covers/photos/agile-robots-google-deepmind.jpg",
+  "mind-robotics-raises-series-a-to-develop-ai-driven-industrial-automation":
+    "https://news.robot.tv/images/covers/photos/latest-generation-of-robots.jpg",
   "us-lawmakers-to-introduce-bill-to-ban-government-use-of-chinese-robots":
     "https://news.robot.tv/images/covers/photos/us-lawmakers-ban-chinese-robots.jpg",
   "lucid-bots-raises-20m-to-keep-up-with-demand-for-its-window-washing-drones":

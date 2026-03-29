@@ -892,7 +892,7 @@ const thumbnailOverridesBySlug = new Map([
   ],
 ]);
 
-const fallbackCoverImage = "https://news.robot.tv/images/robot-tv-news-cover.png";
+const defaultNewsPhotoCover = "https://news.robot.tv/images/covers/photos/latest-generation-of-robots.jpg";
 const generatedCoverUrlForSlug = (slug = "") => `${siteUrl}/images/covers/generated/${normalizeSlug(slug)}.svg`;
 let resolvedCoverImageBySlug = new Map();
 const blockedSourceImagePrefixes = [
@@ -951,7 +951,7 @@ const coverImageForPost = (post = {}) => {
   if (slug && resolvedCoverImageBySlug.has(slug)) {
     return resolvedCoverImageBySlug.get(slug);
   }
-  return fallbackCoverImage;
+  return slug ? generatedCoverUrlForSlug(slug) : defaultNewsPhotoCover;
 };
 
 const escapeSvg = (value = "") =>
@@ -1782,8 +1782,8 @@ const buildHomepageStaticMarkup = (posts) => {
       const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
       const thumbUrl = escapeHtml(coverImageForPost(post));
       return `        <article class="card ${index === 0 ? "featured" : ""}">
-          <span class="thumb-shell ${thumbUrl === escapeHtml(fallbackCoverImage) ? "thumb-shell-fallback" : ""}">
-            <img class="thumb ${thumbUrl === escapeHtml(fallbackCoverImage) ? "thumb-fallback" : ""}" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
+          <span class="thumb-shell">
+            <img class="thumb" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
