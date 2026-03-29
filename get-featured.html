@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Get your robotics company, product, or demo featured on robot.tv. Submit once and receive a review within 72 hours.">
+    <meta name="description" content="Publish your robotics company news on robot.tv with a cleaner release page, shorter shareable link, and optional editorial support.">
     <meta property="og:title" content="Get Featured | robot.tv">
-    <meta property="og:description" content="Submit your robotics story and video to robot.tv. Editorial review within 72 hours.">
+    <meta property="og:description" content="Publish robotics company news on a short, memorable domain with optional editorial support from robot.tv.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://robot.tv/get-featured.html">
     <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Get Featured | robot.tv">
-    <meta name="twitter:description" content="Submit your robotics story and video to robot.tv. Editorial review within 72 hours.">
+    <meta name="twitter:description" content="Publish robotics company news on a short, memorable domain with optional editorial support from robot.tv.">
     <meta name="twitter:image" content="https://robot.tv/images/robot_logo.png">
     <meta name="twitter:url" content="https://robot.tv/get-featured.html">
     <title>Get Featured | robot.tv</title>
@@ -22,20 +22,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=20260221-featured1">
     <style>
-        .featured-layout {
+        .featured-page {
             margin-top: 1rem;
             display: grid;
-            grid-template-columns: 1.05fr 1fr;
-            gap: 0.9rem;
+            gap: 0.95rem;
+        }
+        .featured-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.82fr);
+            gap: 0.95rem;
+            align-items: start;
         }
         .featured-panel { padding: 1rem; }
         .featured-panel h1 {
             margin: 0.4rem 0 0;
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.45rem, 4.1vw, 2.2rem);
+            font-size: clamp(1.8rem, 4.8vw, 3rem);
             line-height: 1.15;
         }
         .featured-panel p { margin: 0.7rem 0 0; color: var(--muted); line-height: 1.6; }
+        .featured-lead {
+            font-size: 1.04rem;
+            color: #d9e5f7;
+            max-width: 63ch;
+        }
+        .featured-stat-row {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.72rem;
+        }
+        .featured-stat {
+            border: 1px solid #2f4465;
+            border-radius: 12px;
+            padding: 0.9rem;
+            background: rgba(11, 20, 33, 0.7);
+        }
+        .featured-stat strong {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.02rem;
+            color: #f4f8ff;
+        }
+        .featured-stat span {
+            display: block;
+            margin-top: 0.32rem;
+            color: #b9cbe6;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
         .featured-list {
             margin: 0.9rem 0 0;
             padding-left: 1rem;
@@ -46,7 +81,7 @@
         .featured-grid {
             margin-top: 0.78rem;
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 0.58rem;
         }
         .featured-item {
@@ -65,6 +100,10 @@
             font-size: 0.9rem;
             color: #bfd0ec;
         }
+        .featured-form-panel {
+            position: sticky;
+            top: 1rem;
+        }
         .featured-form { display: grid; gap: 0.72rem; margin-top: 0.9rem; }
         .featured-form .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.68rem; }
         .featured-form label { display: grid; gap: 0.28rem; font-size: 0.9rem; color: #b7c8e5; }
@@ -81,9 +120,119 @@
         .featured-form textarea { min-height: 130px; resize: vertical; }
         .featured-note { margin-top: 0.4rem; color: #9cb0d2; font-size: 0.84rem; }
         .hidden-field { position: absolute; left: -5000px; }
+        .feature-points {
+            margin-top: 1rem;
+            display: grid;
+            gap: 0.72rem;
+        }
+        .feature-point {
+            border-left: 3px solid rgba(94, 132, 255, 0.58);
+            padding-left: 0.82rem;
+        }
+        .feature-point h3 {
+            margin: 0;
+            font-size: 1.02rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .feature-point p {
+            margin-top: 0.4rem;
+            color: #c6d4ea;
+        }
+        .featured-sections {
+            display: grid;
+            gap: 0.95rem;
+        }
+        .featured-copy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+        }
+        .featured-copy-card {
+            padding: 1rem;
+            border: 1px solid #24344f;
+            border-radius: 12px;
+            background: rgba(9, 16, 27, 0.78);
+        }
+        .featured-copy-card h2,
+        .featured-copy-card h3 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+        }
+        .featured-copy-card p {
+            margin-top: 0.52rem;
+            color: #c4d3e8;
+        }
+        .featured-steps {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.72rem;
+            margin-top: 0.9rem;
+        }
+        .featured-step {
+            border: 1px solid #2f4465;
+            border-radius: 12px;
+            padding: 0.92rem;
+            background: rgba(11, 20, 33, 0.72);
+        }
+        .featured-step .step-num {
+            display: inline-flex;
+            width: 2rem;
+            height: 2rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(239,45,82,0.9), rgba(94,132,255,0.9));
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+        .featured-step h3 {
+            margin: 0.72rem 0 0;
+            font-size: 0.98rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .featured-step p {
+            margin-top: 0.42rem;
+            color: #bfd0ec;
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+        .featured-bullets {
+            margin: 0.7rem 0 0;
+            padding-left: 1rem;
+            display: grid;
+            gap: 0.42rem;
+            color: #c6d4ea;
+        }
+        .featured-faq {
+            display: grid;
+            gap: 0.72rem;
+            margin-top: 0.85rem;
+        }
+        .faq-item {
+            border: 1px solid #24344f;
+            border-radius: 12px;
+            padding: 0.95rem 1rem;
+            background: rgba(9, 16, 27, 0.78);
+        }
+        .faq-item h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .faq-item p {
+            margin-top: 0.5rem;
+            color: #c4d3e8;
+        }
         @media (max-width: 980px) {
-            .featured-layout { grid-template-columns: 1fr; }
+            .featured-hero,
+            .featured-copy-grid,
+            .featured-steps { grid-template-columns: 1fr; }
+            .featured-stat-row { grid-template-columns: 1fr; }
             .featured-form .grid { grid-template-columns: 1fr; }
+            .featured-grid { grid-template-columns: 1fr; }
+            .featured-form-panel { position: static; }
         }
     </style>
     <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
@@ -110,89 +259,255 @@
             <a class="nav-cta" href="get-featured.html">Get Featured</a>
         </header>
 
-        <main class="featured-layout">
+        <main class="featured-page">
+            <section class="featured-hero">
+                <section class="panel featured-panel">
+                    <p class="kicker">GET FEATURED ON ROBOT.TV</p>
+                    <h1>Publish Your News on Robot.TV</h1>
+                    <p class="featured-lead">If your company is building something worth noticing, your news deserves better than a buried blog post or a long, forgettable URL. robot.tv gives robotics companies a cleaner, smarter way to publish official news on a short, memorable, industry-relevant domain built for visibility, credibility, and sharing.</p>
+                    <p>From product launches and partnerships to funding announcements, major deployments, event highlights, and platform updates, robot.tv helps you turn company news into a public release page that looks more professional, travels more easily, and is easier for people to remember.</p>
+                    <p><strong>Robotics companies can publish on robot.tv and receive one free edited release per month.</strong></p>
+
+                    <div class="featured-stat-row" aria-label="Key benefits">
+                        <article class="featured-stat">
+                            <strong>One Free Edited Release</strong>
+                            <span>Approved companies may receive one free edited release per month on news.robot.tv.</span>
+                        </article>
+                        <article class="featured-stat">
+                            <strong>Shorter, Stronger Links</strong>
+                            <span>Publish on a domain people can actually remember, share, and repeat back correctly.</span>
+                        </article>
+                        <article class="featured-stat">
+                            <strong>Editorial Support</strong>
+                            <span>robot.tv editors help shape clearer, more natural, more credible English-language releases.</span>
+                        </article>
+                    </div>
+
+                    <div class="feature-points" aria-label="Why robot.tv">
+                        <article class="feature-point">
+                            <h3>A short domain that actually sticks in people’s minds</h3>
+                            <p>This is the biggest advantage. robot.tv is short, clear, and instantly relevant. It is much easier to remember and share than a company URL hidden deep inside a website. That matters when you are sending an announcement to customers, investors, journalists, partners, distributors, or potential hires.</p>
+                        </article>
+                        <article class="feature-point">
+                            <h3>Give your news a better home</h3>
+                            <p>A lot of robotics companies have important news, but not all of them have a strong newsroom on their own website. Publishing on robot.tv gives your announcement a cleaner home: focused, readable, and built to be shared.</p>
+                        </article>
+                        <article class="feature-point">
+                            <h3>Built to travel</h3>
+                            <p>You want one clean link you can send everywhere: LinkedIn, X, email outreach, investor updates, media outreach, sales conversations, WhatsApp, WeChat, and event materials. That is exactly what a robot.tv release page is for.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="panel featured-panel featured-form-panel">
+                    <p class="kicker">SUBMISSION FORM</p>
+                    <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Apply To Get Featured On robot.tv</h2>
+                    <p>Submit your company news, draft, or key information. Keep it simple. If the story is strong, we can help shape it into a cleaner public release page.</p>
+
+                    <form name="robottv-featured" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" class="featured-form">
+                        <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
+                        <input type="hidden" name="_subject" value="robot.tv get-featured submission">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
+                        <input type="hidden" name="topic" value="get-featured">
+                        <input type="hidden" name="source" value="get-featured-page">
+
+                        <div class="grid">
+                            <label>
+                                Your Name
+                                <input type="text" name="name" required>
+                            </label>
+                            <label>
+                                Company / Team
+                                <input type="text" name="company" required>
+                            </label>
+                        </div>
+
+                        <div class="grid">
+                            <label>
+                                Work Email
+                                <input type="email" name="email" required>
+                            </label>
+                            <label>
+                                Role (Optional)
+                                <input type="text" name="role" placeholder="Founder, PM, Comms, etc.">
+                            </label>
+                        </div>
+
+                        <div class="grid">
+                            <label>
+                                YouTube Video URL
+                                <input type="url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." required>
+                            </label>
+                            <label>
+                                Official Source URL
+                                <input type="url" name="source_url" placeholder="Company post / press release / official page" required>
+                            </label>
+                        </div>
+
+                        <label>
+                            What should we know?
+                            <textarea name="summary" placeholder="Share the draft, key facts, release outline, launch details, deployment update, or other important context." required></textarea>
+                        </label>
+
+                        <div class="hero-actions">
+                            <button class="btn btn-primary" type="submit">Apply To Get Featured</button>
+                        </div>
+                        <p class="featured-note">By submitting, you confirm you have the right to share this information and links.</p>
+                    </form>
+                </section>
+            </section>
+
             <section class="panel featured-panel">
-                <p class="kicker">GET FEATURED</p>
-                <h1>One Submission, One Editorial Review Path</h1>
-                <p>Submit your robot, company update, or demo once. We review every qualified submission and reply within <strong>72 hours</strong>.</p>
-
-                <ul class="featured-list">
-                    <li>Single intake form for all editorial submissions.</li>
-                    <li>Review SLA: response within 72 hours.</li>
-                    <li>YouTube link required for fastest review.</li>
-                </ul>
-
-                <div class="featured-grid" aria-label="What you get">
-                    <article class="featured-item">
-                        <h3>What You Get</h3>
-                        <p>If accepted, we may publish in the newsroom, feature your robot on index/company pages, and queue for live-feed rotation.</p>
+                <p class="kicker">WHY PUBLISH ON ROBOT.TV?</p>
+                <div class="featured-copy-grid">
+                    <article class="featured-copy-card">
+                        <h2>Stronger context for visibility and discoverability</h2>
+                        <p>Where your news lives shapes how easily people can find it and understand it. A release published on robot.tv sits on a domain closely tied to robotics. That gives your announcement stronger topical context than posting it on a generic or poorly structured page.</p>
+                        <p>Combined with clear headlines, clean URLs, structured page design, and relevant categories, that can support stronger long-term discoverability.</p>
                     </article>
-                    <article class="featured-item">
-                        <h3>Required for Review</h3>
-                        <p>Official source link, working video link, and a concise explanation of what is new and why it matters.</p>
+                    <article class="featured-copy-card">
+                        <h2>More than a posting slot</h2>
+                        <p>robot.tv is not just a place to upload text and hope for the best. robot.tv editors have professional experience in news writing and editing, helping companies present their announcements in clear, natural, credible English.</p>
+                        <p>That is especially useful when the draft was written by a technical team, the English needs polish, the update sounds too promotional, or the company wants to communicate better with global readers.</p>
                     </article>
-                    <article class="featured-item">
-                        <h3>Editorial Standard</h3>
-                        <p>Video evidence first. Marketing claims without clear visual proof are usually not prioritized.</p>
+                    <article class="featured-copy-card">
+                        <h2>One free edited release per month</h2>
+                        <p>Approved companies may receive one free edited release per month on news.robot.tv. That monthly release may include headline improvement, summary polishing, English editing, clarity and flow improvement, and light restructuring for readability.</p>
+                    </article>
+                    <article class="featured-copy-card">
+                        <h2>Extra English polishing is available</h2>
+                        <p>robot.tv can also provide additional editorial support, including English polishing, deeper rewriting, stronger headlines and summaries, restructuring for a more natural news-style flow, adapting technical updates for broader readers, and turning rough drafts or non-English materials into cleaner English releases.</p>
                     </article>
                 </div>
             </section>
 
             <section class="panel featured-panel">
-                <p class="kicker">SUBMISSION FORM</p>
-                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Submit To robot.tv</h2>
+                <p class="kicker">WHAT CAN BE FEATURED?</p>
+                <div class="featured-grid">
+                    <article class="featured-item">
+                        <h3>Accepted News Types</h3>
+                        <ul class="featured-bullets">
+                            <li>Product launches</li>
+                            <li>Partnership announcements</li>
+                            <li>Funding news</li>
+                            <li>Deployment updates</li>
+                            <li>Manufacturing and delivery milestones</li>
+                            <li>SDK, API, or platform launches</li>
+                            <li>Event announcements</li>
+                            <li>Major customer cases</li>
+                            <li>Official company statements</li>
+                            <li>Key hiring or leadership changes</li>
+                        </ul>
+                    </article>
+                    <article class="featured-item">
+                        <h3>Best-Fit Companies</h3>
+                        <ul class="featured-bullets">
+                            <li>Robotics startups</li>
+                            <li>Humanoid robotics companies</li>
+                            <li>Industrial automation firms</li>
+                            <li>Warehouse and logistics robotics companies</li>
+                            <li>Embodied AI companies</li>
+                            <li>Robot software platform teams</li>
+                            <li>Robotics suppliers and ecosystem partners</li>
+                            <li>Companies expanding internationally</li>
+                            <li>Teams that want stronger English-language communications</li>
+                        </ul>
+                    </article>
+                </div>
+                <p>robot.tv accepts official company releases related to robotics, automation, embodied AI, industrial systems, and closely related fields. We are most interested in real, concrete, useful company news — not empty promotional language.</p>
+            </section>
 
-                <form name="robottv-featured" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" class="featured-form">
-                    <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
-                    <input type="hidden" name="_subject" value="robot.tv get-featured submission">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
-                    <input type="hidden" name="topic" value="get-featured">
-                    <input type="hidden" name="source" value="get-featured-page">
+            <section class="panel featured-panel">
+                <p class="kicker">WHY NOT JUST USE YOUR OWN WEBSITE?</p>
+                <p>You should absolutely publish important updates on your own website. But robot.tv offers something different:</p>
+                <ul class="featured-list">
+                    <li>A shorter, stronger, easier-to-remember link</li>
+                    <li>A more robotics-specific publishing context</li>
+                    <li>A cleaner public-facing release page</li>
+                    <li>Easier sharing across channels</li>
+                    <li>Optional English editing</li>
+                    <li>A second credible home for your announcement</li>
+                </ul>
+                <p>For many companies, that combination is genuinely useful.</p>
+            </section>
 
-                    <div class="grid">
-                        <label>
-                            Your Name
-                            <input type="text" name="name" required>
-                        </label>
-                        <label>
-                            Company / Team
-                            <input type="text" name="company" required>
-                        </label>
-                    </div>
+            <section class="panel featured-panel">
+                <p class="kicker">HOW SIMPLE IS IT?</p>
+                <div class="featured-steps">
+                    <article class="featured-step">
+                        <span class="step-num">1</span>
+                        <h3>Submit</h3>
+                        <p>Send your company news, draft, press release, or key information through the form.</p>
+                    </article>
+                    <article class="featured-step">
+                        <span class="step-num">2</span>
+                        <h3>Review</h3>
+                        <p>robot.tv reviews the submission and, where appropriate, lightly edits or polishes the English.</p>
+                    </article>
+                    <article class="featured-step">
+                        <span class="step-num">3</span>
+                        <h3>Publish</h3>
+                        <p>Once approved, the release is published as a clean public page on news.robot.tv.</p>
+                    </article>
+                    <article class="featured-step">
+                        <span class="step-num">4</span>
+                        <h3>Share</h3>
+                        <p>You receive a single public link you can use across communications, outreach, and media materials.</p>
+                    </article>
+                </div>
+                <p>No complicated publishing system. No heavy setup. No need to build a newsroom from scratch.</p>
+            </section>
 
-                    <div class="grid">
-                        <label>
-                            Work Email
-                            <input type="email" name="email" required>
-                        </label>
-                        <label>
-                            Role (Optional)
-                            <input type="text" name="role" placeholder="Founder, PM, Comms, etc.">
-                        </label>
-                    </div>
+            <section class="panel featured-panel">
+                <p class="kicker">QUALITY MATTERS</p>
+                <p>robot.tv is not an open, unfiltered posting platform. To protect the quality of the domain and the value of the publishing environment, submissions are reviewed before publication. We focus on relevance, clarity, and quality. That helps keep robot.tv useful, credible, and worth publishing on.</p>
+            </section>
 
-                    <div class="grid">
-                        <label>
-                            YouTube Video URL
-                            <input type="url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." required>
-                        </label>
-                        <label>
-                            Official Source URL
-                            <input type="url" name="source_url" placeholder="Company post / press release / official page" required>
-                        </label>
-                    </div>
-
-                    <label>
-                        What should we know?
-                        <textarea name="summary" placeholder="What is new, what changed, and why this matters." required></textarea>
-                    </label>
-
-                    <div class="hero-actions">
-                        <button class="btn btn-primary" type="submit">Submit For Review</button>
-                    </div>
-                    <p class="featured-note">By submitting, you confirm you have the right to share this information and links.</p>
-                </form>
+            <section class="panel featured-panel">
+                <p class="kicker">FAQ</p>
+                <div class="featured-faq">
+                    <article class="faq-item">
+                        <h3>Do I need to be a large company to apply?</h3>
+                        <p>No. Startups, growth-stage companies, and established robotics firms are all welcome, as long as the news is relevant and worth sharing.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Can I submit a draft that is not in perfect English?</h3>
+                        <p>Yes. That is one of the main reasons this service exists. robot.tv can help polish the English and make the release clearer and more natural for public readers.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Do I need a finished press release before submitting?</h3>
+                        <p>No. You can submit a rough draft, key facts, or even a simple announcement outline. A polished newsroom-style draft is helpful, but not required.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Is publication guaranteed?</h3>
+                        <p>No. Submissions are reviewed before publication to maintain the quality and relevance of the platform.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Can I publish more than once per month?</h3>
+                        <p>Yes. Approved companies may receive one free edited release per month, and additional publishing or editorial support may also be available.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Can I submit materials originally written in Chinese?</h3>
+                        <p>Yes. If the news is strong and relevant, robot.tv can help shape it into clearer English for international readers.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Does publishing on robot.tv help with SEO?</h3>
+                        <p>It can. While no serious platform should promise rankings, publishing on a short, robotics-focused domain with clear structure and stronger editorial presentation can improve the way your news is understood, shared, and discovered over time. It gives your release a better runway, not a magic trick.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>Why use robot.tv if I already have a company website?</h3>
+                        <p>Because sometimes you want more than a standard company news post. robot.tv gives you a shorter link, a robotics-specific context, a cleaner public page, and optional editorial help.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>How long does the process take?</h3>
+                        <p>That depends on the submission and editing needs, but the goal is to keep the process simple and fast, especially for straightforward releases.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>What kind of companies are the best fit?</h3>
+                        <p>Companies in robotics, automation, embodied AI, industrial systems, and related fields are the strongest fit, especially if they want a better way to present news to customers, partners, investors, or global audiences.</p>
+                    </article>
+                </div>
             </section>
         </main>
 
