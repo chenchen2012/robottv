@@ -1803,6 +1803,7 @@ const buildHomepageStaticMarkup = (posts) => {
         <p class="copy">Daily robotics news, humanoid robot updates, AI robotics coverage, and startup execution signals with video-first reporting from robot.tv News.</p>
         <div class="actions">
           <a class="btn btn-ghost" href="https://robot.tv">Back to robot.tv</a>
+          <a class="btn btn-primary" href="https://robot.tv/get-featured.html">Get Featured</a>
         </div>
       </section>
       <section class="section">
