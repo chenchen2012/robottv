@@ -16,7 +16,10 @@ const mainstreamSources = new Set([
   'Wall Street Journal',
   'Financial Times',
   'Associated Press',
-  'AP'
+  'AP',
+  'CNBC',
+  'VentureBeat',
+  'IEEE Spectrum'
 ])
 
 if (!projectId) {
@@ -83,7 +86,18 @@ const trustedSources = new Set([
   'The Robot Report',
   'Business Insider',
   'The Guardian',
-  'Janes'
+  'Janes',
+  'Bloomberg',
+  'BBC',
+  'CNN',
+  'The Wall Street Journal',
+  'Wall Street Journal',
+  'Financial Times',
+  'Associated Press',
+  'AP',
+  'CNBC',
+  'VentureBeat',
+  'IEEE Spectrum'
 ])
 
 const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,sourceName,sourceImageUrl,body,"slug":slug.current}'
