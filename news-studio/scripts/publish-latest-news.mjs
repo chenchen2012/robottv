@@ -26,7 +26,18 @@ const trustedSources = new Set([
   'The Robot Report',
   'Business Insider',
   'The Guardian',
-  'Janes'
+  'Janes',
+  'Bloomberg',
+  'BBC',
+  'CNN',
+  'The Wall Street Journal',
+  'Wall Street Journal',
+  'Financial Times',
+  'Associated Press',
+  'AP',
+  'CNBC',
+  'VentureBeat',
+  'IEEE Spectrum'
 ])
 
 const mainstreamSources = new Set([
@@ -42,7 +53,10 @@ const mainstreamSources = new Set([
   'Wall Street Journal',
   'Financial Times',
   'Associated Press',
-  'AP'
+  'AP',
+  'CNBC',
+  'VentureBeat',
+  'IEEE Spectrum'
 ])
 
 const topCompanyTokens = [
