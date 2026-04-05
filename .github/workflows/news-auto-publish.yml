@@ -15,21 +15,58 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Detect Cloudflare Pages configuration
+      - name: Detect Cloudflare API credentials
         id: cf
         env:
           CF_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
           CF_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CF_PROJECT: ${{ secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME }}
         run: |
-          if [ -n "$CF_API_KEY" ] && [ -n "$CF_EMAIL" ] && [ -n "$CF_ACCOUNT_ID" ] && [ -n "$CF_PROJECT" ]; then
+          if [ -n "$CF_API_KEY" ] && [ -n "$CF_EMAIL" ] && [ -n "$CF_ACCOUNT_ID" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
-            echo "skip_public_deploy_hook=1" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "skip_public_deploy_hook=0" >> "$GITHUB_OUTPUT"
-            echo "Cloudflare Pages secrets missing; scheduled publish will continue using NEWS_PUBLIC_DEPLOY_HOOK_URL if available."
+            echo "Cloudflare Pages credentials missing; scheduled publish cannot deploy public sites."
+          fi
+
+      - name: Detect Pages project configuration
+        id: pages
+        env:
+          NEWS_PROJECT: ${{ secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME }}
+          ROOT_PROJECT: ${{ secrets.CLOUDFLARE_MAIN_PAGES_PROJECT_NAME }}
+        run: |
+          if [ -n "$NEWS_PROJECT" ]; then
+            echo "news_enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "news_enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Missing CLOUDFLARE_NEWS_PAGES_PROJECT_NAME; news.robot.tv deploy will be skipped."
+          fi
+
+          if [ -n "$ROOT_PROJECT" ]; then
+            echo "root_enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "root_enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Missing CLOUDFLARE_MAIN_PAGES_PROJECT_NAME; robot.tv deploy will be skipped."
+          fi
+
+          if [ -n "$NEWS_PROJECT" ] && [ -n "$ROOT_PROJECT" ]; then
+            echo "all_enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "all_enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Assert Pages deploy prerequisites before publish
+        working-directory: .
+        run: |
+          if [ "${{ steps.cf.outputs.enabled }}" != "true" ]; then
+            echo "Cloudflare Pages credentials are required before publishing to Sanity."
+            echo "Missing one or more of: CLOUDFLARE_API_KEY, CLOUDFLARE_EMAIL, CLOUDFLARE_ACCOUNT_ID."
+            exit 1
+          fi
+
+          if [ "${{ steps.pages.outputs.all_enabled }}" != "true" ]; then
+            echo "Cloudflare Pages deployment requires both CLOUDFLARE_NEWS_PAGES_PROJECT_NAME and CLOUDFLARE_MAIN_PAGES_PROJECT_NAME before publishing to Sanity."
+            exit 1
           fi
 
       - name: Setup Node
@@ -43,16 +80,25 @@ jobs:
         run: npm ci
 
       - name: Publish latest trusted stories
+        id: publish
         env:
           SANITY_PROJECT_ID: lumv116w
           SANITY_DATASET: production
           SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
           SANITY_AUTHOR_ID: ${{ secrets.SANITY_AUTHOR_ID }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          NEWS_PUBLIC_DEPLOY_HOOK_URL: ${{ secrets.NEWS_PUBLIC_DEPLOY_HOOK_URL }}
-          SKIP_PUBLIC_DEPLOY_HOOK: ${{ steps.cf.outputs.skip_public_deploy_hook }}
+          DEEPSEEK_API_URL: ${{ vars.DEEPSEEK_API_URL || '' }}
+          DEEPSEEK_MODEL: ${{ vars.DEEPSEEK_MODEL || '' }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_API_URL: ${{ vars.YOUTUBE_API_URL || '' }}
           NEWS_PUBLISH_REPORT_PATH: ops-private/reports/publish/latest-published-news.json
-          PUBLISH_COUNT: "1"
+          PUBLISH_COUNT: "8"
+          NEWS_MAX_POSTS_PER_DAY: "8"
+          NEWS_RECENT_DUPLICATE_WINDOW_DAYS: "7"
+          NEWS_DEEPSEEK_TIMEOUT_MS: "20000"
+          YOUTUBE_MAX_CANDIDATES: "5"
+          YOUTUBE_MAX_VIDEO_AGE_DAYS: "45"
+          YOUTUBE_REQUIRE_TRUSTED_CHANNEL: "1"
         run: node scripts/publish-latest-news.mjs
 
       - name: Verify feed freshness and duplicate guard
@@ -82,17 +128,20 @@ jobs:
           if-no-files-found: warn
 
       - name: Build public news site
-        if: steps.cf.outputs.enabled == 'true'
+        id: build_news
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.news_enabled == 'true'
         run: npm run build:public
 
       - name: Verify generated permalinks for published posts
-        if: steps.cf.outputs.enabled == 'true'
+        id: verify_news_generated
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.news_enabled == 'true'
         env:
           NEWS_PUBLISH_REPORT_PATH: ops-private/reports/publish/latest-published-news.json
         run: node scripts/verify-published-news-deploy.mjs
 
       - name: Deploy public news site to Cloudflare Pages
-        if: steps.cf.outputs.enabled == 'true'
+        id: deploy_news
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.news_enabled == 'true'
         env:
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
@@ -100,13 +149,85 @@ jobs:
         run: npx wrangler@4 pages deploy dist-public --project-name="${{ secrets.CLOUDFLARE_NEWS_PAGES_PROJECT_NAME }}"
 
       - name: Verify live permalinks after deploy
-        if: steps.cf.outputs.enabled == 'true'
+        id: verify_news_live
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.news_enabled == 'true'
         env:
           NEWS_PUBLISH_REPORT_PATH: ops-private/reports/publish/latest-published-news.json
           NEWS_VERIFY_LIVE: "1"
           NEWS_VERIFY_RETRIES: "12"
           NEWS_VERIFY_DELAY_MS: "5000"
         run: node scripts/verify-published-news-deploy.mjs
+
+      - name: Build root public site
+        id: build_root
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.root_enabled == 'true'
+        working-directory: .
+        run: node scripts/build-root-public-dist.mjs
+
+      - name: Verify root public site
+        id: verify_root
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.root_enabled == 'true'
+        working-directory: .
+        run: node scripts/check-root-public-build.mjs
+
+      - name: Deploy root public site to Cloudflare Pages
+        id: deploy_root
+        if: steps.cf.outputs.enabled == 'true' && steps.pages.outputs.root_enabled == 'true'
+        working-directory: .
+        env:
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler@4 pages deploy dist-root-public --project-name="${{ secrets.CLOUDFLARE_MAIN_PAGES_PROJECT_NAME }}"
+
+      - name: Summarize public site refreshes
+        if: always()
+        working-directory: .
+        run: |
+          publish_status="${{ steps.publish.conclusion }}"
+          news_build_status="${{ steps.build_news.conclusion || 'skipped' }}"
+          news_verify_generated_status="${{ steps.verify_news_generated.conclusion || 'skipped' }}"
+          news_deploy_status="${{ steps.deploy_news.conclusion || 'skipped' }}"
+          news_verify_live_status="${{ steps.verify_news_live.conclusion || 'skipped' }}"
+          root_build_status="${{ steps.build_root.conclusion || 'skipped' }}"
+          root_verify_status="${{ steps.verify_root.conclusion || 'skipped' }}"
+          root_deploy_status="${{ steps.deploy_root.conclusion || 'skipped' }}"
+
+          if [ "$news_build_status" = "success" ] && \
+             [ "$news_verify_generated_status" = "success" ] && \
+             [ "$news_deploy_status" = "success" ] && \
+             [ "$news_verify_live_status" = "success" ]; then
+            news_refresh_status="success"
+          elif [ "$news_build_status" = "skipped" ] && \
+               [ "$news_verify_generated_status" = "skipped" ] && \
+               [ "$news_deploy_status" = "skipped" ] && \
+               [ "$news_verify_live_status" = "skipped" ]; then
+            news_refresh_status="skipped"
+          else
+            news_refresh_status="failed"
+          fi
+
+          if [ "$root_build_status" = "success" ] && \
+             [ "$root_verify_status" = "success" ] && \
+             [ "$root_deploy_status" = "success" ]; then
+            root_refresh_status="success"
+          elif [ "$root_build_status" = "skipped" ] && \
+               [ "$root_verify_status" = "skipped" ] && \
+               [ "$root_deploy_status" = "skipped" ]; then
+            root_refresh_status="skipped"
+          else
+            root_refresh_status="failed"
+          fi
+
+          {
+            echo "## Public Site Refresh Summary"
+            echo ""
+            echo "| Target | Result | Build | Verify | Deploy | Post-deploy verify |"
+            echo "| --- | --- | --- | --- | --- | --- |"
+            echo "| Sanity publish | $publish_status | n/a | n/a | n/a | n/a |"
+            echo "| news.robot.tv | $news_refresh_status | $news_build_status | $news_verify_generated_status | $news_deploy_status | $news_verify_live_status |"
+            echo "| robot.tv | $root_refresh_status | $root_build_status | $root_verify_status | $root_deploy_status | n/a |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload publish verification artifact
         if: always()

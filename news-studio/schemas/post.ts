@@ -28,6 +28,14 @@ export const postType = defineType({
       validation: (rule) => rule.max(240),
     }),
     defineField({
+      name: 'whyItMatters',
+      title: 'Why It Matters',
+      type: 'text',
+      rows: 3,
+      description: 'Short internal/editorial line explaining the operational implication of the post.',
+      validation: (rule) => rule.max(180),
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
@@ -91,6 +99,20 @@ export const postType = defineType({
       validation: (rule) => rule.max(120),
     }),
     defineField({
+      name: 'sourceTrustTier',
+      title: 'Source Trust Tier',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Allow', value: 'allow'},
+          {title: 'Caution', value: 'caution'},
+          {title: 'Unknown', value: 'unknown'},
+          {title: 'Block', value: 'block'},
+        ],
+      },
+      validation: (rule) => rule.max(24),
+    }),
+    defineField({
       name: 'sourceUrl',
       title: 'Primary Source URL',
       type: 'url',
@@ -130,6 +152,19 @@ export const postType = defineType({
       type: 'array',
       of: [{type: 'reference', to: [{type: 'category'}]}],
       validation: (rule) => rule.min(1),
+    }),
+    defineField({
+      name: 'homepageEligible',
+      title: 'Homepage Eligible',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'internalLinkTarget',
+      title: 'Internal Link Target',
+      type: 'url',
+      description: 'Optional approved robot.tv page for related internal linking context.',
+      validation: (rule) => rule.uri({allowRelative: false, scheme: ['https']}),
     }),
     defineField({
       name: 'body',

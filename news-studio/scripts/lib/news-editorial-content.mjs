@@ -410,29 +410,14 @@ export const buildEditorialPackage = async ({
 }) => {
   const sourceContext = await fetchSourceContext(sourceUrl);
 
-  const fallback = (() => {
-    const excerpt = buildFallbackExcerpt({ headline, source, sourceContext });
-    return {
-      excerpt,
-      videoSummary: buildFallbackVideoSummary({ headline, source, sourceContext, excerpt }),
-      bodyParagraphs: buildFallbackBodyParagraphs({ headline, source, sourceContext }),
-      sourceContext,
-      generationMode: "fallback",
-    };
-  })();
-
-  if (!DEEPSEEK_API_KEY) return fallback;
-
-  try {
-    const aiResponse = await callDeepSeekEditorial(
-      buildAiPrompt({ headline, source, sourceUrl, pubDate, sourceContext, categoryHint })
-    );
-    const normalized = normalizeAiPackage(aiResponse);
-    if (!normalized) return fallback;
-    return { ...normalized, sourceContext, generationMode: "deepseek" };
-  } catch {
-    return fallback;
-  }
+  const excerpt = buildFallbackExcerpt({ headline, source, sourceContext });
+  return {
+    excerpt,
+    videoSummary: buildFallbackVideoSummary({ headline, source, sourceContext, excerpt }),
+    bodyParagraphs: buildFallbackBodyParagraphs({ headline, source, sourceContext }),
+    sourceContext,
+    generationMode: "fallback",
+  };
 };
 
 export const renderEditorialReport = ({ title, editorialPackage, source }) => {

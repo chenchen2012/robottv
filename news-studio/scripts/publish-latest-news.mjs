@@ -1,609 +1,351 @@
-import { buildEditorialPackage, blocksFromParagraphs } from "./lib/news-editorial-content.mjs"
 import fs from 'node:fs/promises'
 import path from 'node:path'
+
+import { buildEditorialPackage, blocksFromParagraphs } from './lib/news-editorial-content.mjs'
+import { callDeepSeekJson } from './lib/deepseek-provider.mjs'
+import {
+  NEWS_MAX_POSTS_PER_DAY,
+  NEWS_PUBLISH_BATCH_LIMIT,
+  NEWS_RECENT_DUPLICATE_WINDOW_DAYS,
+  RSS_URL,
+} from './lib/news-publish-config.mjs'
+import {
+  buildFallbackQcEnrichment,
+  buildQcPrompt,
+  choosePreferredCandidate,
+  findHardDuplicate,
+  findSoftDuplicate,
+  getSourceTrustTier,
+  isPromotionalLikely,
+  normalizeText,
+  normalizeUrl,
+  normalizeWhitespace,
+  rankCandidate,
+  slugify,
+  stripHtml,
+  titleKey,
+  validateQcEnrichment,
+} from './lib/news-publish-quality.mjs'
+import { matchYouTubeVideo } from './lib/youtube-provider.mjs'
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || 'production'
 const token = process.env.SANITY_API_TOKEN
 const authorId = process.env.SANITY_AUTHOR_ID || 'author-chen-chen'
-const maxPosts = Number(process.env.PUBLISH_COUNT || 2)
 const dryRun = process.env.DRY_RUN === '1'
-const newsPublicDeployHookUrl = String(process.env.NEWS_PUBLIC_DEPLOY_HOOK_URL || '').trim()
-const skipPublicDeployHook = process.env.SKIP_PUBLIC_DEPLOY_HOOK === '1'
-const NEAR_DUPLICATE_LOOKBACK_DAYS = 7
-const publishReportPath = process.env.NEWS_PUBLISH_REPORT_PATH || path.join('ops-private', 'reports', 'publish', 'latest-published-news.json')
+const publishReportPath =
+  process.env.NEWS_PUBLISH_REPORT_PATH || path.join('ops-private', 'reports', 'publish', 'latest-published-news.json')
 
 if (!projectId || !token) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID) and SANITY_API_TOKEN')
   process.exit(1)
 }
 
-const rssUrl = 'https://news.google.com/rss/search?q=robotics&hl=en-US&gl=US&ceid=US:en'
-
-const trustedSources = new Set([
-  'Reuters',
-  'TechCrunch',
-  'The Robot Report',
-  'Business Insider',
-  'The Guardian',
-  'Janes',
-  'Bloomberg',
-  'BBC',
-  'CNN',
-  'The Wall Street Journal',
-  'Wall Street Journal',
-  'Financial Times',
-  'Associated Press',
-  'AP',
-  'CNBC',
-  'VentureBeat',
-  'IEEE Spectrum'
-])
-
-const mainstreamSources = new Set([
-  'Reuters',
-  'TechCrunch',
-  'Business Insider',
-  'The Guardian',
-  'Janes',
-  'Bloomberg',
-  'BBC',
-  'CNN',
-  'The Wall Street Journal',
-  'Wall Street Journal',
-  'Financial Times',
-  'Associated Press',
-  'AP',
-  'CNBC',
-  'VentureBeat',
-  'IEEE Spectrum'
-])
-
-const topCompanyTokens = [
-  'tesla', 'optimus',
-  'unitree',
-  'boston dynamics', 'atlas', 'spot',
-  'figure', 'figure ai',
-  'agility robotics', 'digit',
-  'apptronik', 'apollo',
-  '1x', 'neo',
-  'ubtech',
-  'xiaomi',
-  'honda asimo',
-  'toyota thr3'
-]
-
-const companyCategoryTokens = [
-  'tesla', 'unitree', 'boston dynamics', 'figure', 'agility', 'apptronik', '1x', 'ubtech', 'xiaomi', 'honda', 'toyota'
-]
-
-const stripHtml = (s) => String(s || '')
-  .replace(/<[^>]*>/g, '')
-  .replace(/&amp;/g, '&')
-  .replace(/&quot;/g, '"')
-  .replace(/&#39;/g, "'")
-  .replace(/&#x27;/g, "'")
-  .replace(/&lt;/g, '<')
-  .replace(/&gt;/g, '>')
-  .trim()
-
-const slugify = (s) => String(s || '')
-  .toLowerCase()
-  .replace(/[^a-z0-9\s-]/g, '')
-  .trim()
-  .replace(/\s+/g, '-')
-  .replace(/-+/g, '-')
-  .slice(0, 90)
-
-const normalizeText = (s) => String(s || '')
-  .toLowerCase()
-  .replace(/['’]/g, '')
-  .replace(/[^a-z0-9\s]/g, ' ')
-  .replace(/\s+/g, ' ')
-  .trim()
-
-const wordCount = (s) => String(s || '').trim().split(/\s+/).filter(Boolean).length
-
-const extractYoutubeId = (url) => {
-  const value = String(url || '').trim()
-  if (!value) return ''
-  const short = value.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/)
-  if (short) return short[1]
-  const watch = value.match(/[?&]v=([a-zA-Z0-9_-]{11})/)
-  if (watch) return watch[1]
-  const embed = value.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/)
-  if (embed) return embed[1]
-  return ''
-}
-
-const hasUsableImageUrl = (url) => /^https?:\/\/\S+/i.test(String(url || '').trim())
-
-const normalizeUrl = (url) => String(url || '')
-  .trim()
-  .toLowerCase()
-  .replace(/^https?:\/\//, '')
-  .replace(/\/+$/, '')
-
-const isExcerptStrong = (excerpt) => {
-  const text = String(excerpt || '').trim()
-  if (text.length < 120 || text.length > 260) return false
-  return wordCount(text) >= 18
-}
-
-const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'for', 'to', 'of', 'in', 'on', 'with', 'after', 'than', 'into', 'from'])
-
-const titleKey = (s) => normalizeText(s)
-  .split(' ')
-  .filter((w) => w && !STOPWORDS.has(w))
-  .slice(0, 8)
-  .join(' ')
-
-const normalizeTitleToken = (token) => {
-  const word = String(token || '').trim()
-  if (!word) return ''
-  if (word.length > 5 && word.endsWith('ies')) return `${word.slice(0, -3)}y`
-  if (word.length > 5 && word.endsWith('ing')) return word.slice(0, -3)
-  if (word.length > 4 && word.endsWith('ed')) return word.slice(0, -2)
-  if (word.length > 4 && word.endsWith('s')) return word.slice(0, -1)
-  return word
-}
-
-const isPromotionalEventPost = (headline, sourceUrl = '') => {
-  const title = normalizeText(headline)
-  const url = normalizeUrl(sourceUrl)
-  const hasEventToken = /(summit|conference|expo|event|register|registration|ticket|agenda|speaker|keynote)/.test(title)
-  const hasPromoToken = /(early bird|save the date|register now|discount|deadline|ends march|on sale|tickets)/.test(title)
-  const sourceLooksPromotional = /(roboticssummit|eventbrite|10times|conference|expo|register|registration)/.test(url)
-  return (hasEventToken && hasPromoToken) || (hasPromoToken && sourceLooksPromotional)
-}
-
-const getEditorialRejectionReason = (headline, sourceUrl = '') => {
-  const title = normalizeText(headline)
-
-  if (isPromotionalEventPost(headline, sourceUrl)) {
-    return 'promotional event/registration post'
-  }
-  if (
-    /\b(\d+|ten|eleven|twelve)\b/.test(title) &&
-    /(women|people|leaders|founders|startups|companies|robots)/.test(title) &&
-    /(shaping the future|to watch|you should know|changing robotics)/.test(title)
-  ) {
-    return 'listicle/profile roundup with weak news value'
-  }
-  if (/(medal|rising star|award|awards|winner|winners|fellowship cohort|cohort)/.test(title)) {
-    return 'recognition/awards coverage with weak deployment value'
-  }
-  if (/(to discuss|panel discussion|roundtable|webinar|fireside chat)/.test(title)) {
-    return 'panel or discussion preview without standalone news value'
-  }
-  if (/(dancing robots|support company to elderly|companionship)/.test(title)) {
-    return 'human-interest robotics feature outside newsroom focus'
-  }
-  if (/(the jobs no one wants|golden age)/.test(title)) {
-    return 'broad trend/opinion framing without enough robotics specificity'
-  }
-  if (
-    /(project [a-z0-9]+|codenamed|code named|supercenter|supercenters|retail store|retail expansion|big box)/.test(title) &&
-    /(amazon|walmart|retail|store|stores|grocery)/.test(title) &&
-    /(robot|robots|robotics|warehouse)/.test(title)
-  ) {
-    return 'broad retail/corporate strategy story without specific robot product focus'
-  }
-  return ''
-}
-
-const isSpecificRobotProductStory = (headline = '') => {
-  const title = normalizeText(headline)
-  return (
-    /(humanoid|quadruped|robot dog|cobot|drone|uav|delivery robot|robotic hand|inspection robot|warehouse robot|mobile robot)/.test(title) ||
-    /(digit|atlas|spot|optimus|apollo|rivr|alphabot|jetson thor|blaze|ottumn|rbtx|fauna robotics)/.test(title)
-  )
-}
-
-const canPublishWithoutYoutube = (headline, source, editorial) => {
-  const sourceName = String(source || '').trim()
-  const bodyParagraphs = Array.isArray(editorial?.bodyParagraphs) ? editorial.bodyParagraphs : []
-  const sourceImageUrl = editorial?.sourceContext?.imageUrl || ''
-  return (mainstreamSources.has(sourceName) || trustedSources.has(sourceName)) &&
-    isExcerptStrong(editorial?.excerpt || '') &&
-    bodyParagraphs.length >= 3 &&
-    hasUsableImageUrl(sourceImageUrl) &&
-    (
-      isSpecificRobotProductStory(headline) ||
-      hasTopCompanySignal(headline) ||
-      /partnership|funding|raises|launch|deployment|manufacturing|delivery|sdk|api|platform/i.test(headline)
-    )
-}
-
-const comparableTitleTokens = (title) => [...new Set(
-  normalizeText(title)
-    .split(' ')
-    .map((token) => normalizeTitleToken(token))
-    .filter((token) => token && token.length > 2 && !STOPWORDS.has(token))
-)]
-
-const findNearDuplicateTitle = (title, candidates = []) => {
-  const titleTokens = comparableTitleTokens(title)
-  if (titleTokens.length < 4) return ''
-  const titleTokenSet = new Set(titleTokens)
-  for (const candidate of candidates) {
-    const candidateTokens = comparableTitleTokens(candidate)
-    if (candidateTokens.length < 4) continue
-    const overlap = candidateTokens.filter((token) => titleTokenSet.has(token)).length
-    const union = new Set([...titleTokens, ...candidateTokens]).size
-    const similarity = union ? overlap / union : 0
-    if (overlap >= 4 && similarity >= 0.8) {
-      return candidate
-    }
-  }
-  return ''
-}
-
-const hasTopCompanySignal = (text) => {
-  const n = normalizeText(text)
-  return topCompanyTokens.some((token) => n.includes(token))
-}
-
-const sourceToCategory = (source, title) => {
-  const t = normalizeText(`${title} ${source}`)
-  if (t.includes('humanoid') || t.includes('biped') || companyCategoryTokens.some((x) => t.includes(x))) {
-    return 'category-humanoid-robots'
-  }
-  if (t.includes('quadruped') || t.includes('spot')) return 'category-quadruped-robots'
-  return 'category-robotics-startups'
-}
-
-const topicFamilies = [
-  { name: 'agriculture', patterns: [/\bagricultur/, /\bfarm/, /\bcrop/, /\bharvest/, /\bweeding?/, /\bvineyard/, /\borchard/] },
-  { name: 'humanoid', patterns: [/\bhumanoid/, /\bbiped/, /\boptimus/, /\bdigit\b/, /\batlas\b/, /\bapollo\b/] },
-  { name: 'factory', patterns: [/\bfactory/, /\bmanufactur/, /\bassembly/, /\bproduction/, /\bworkforce/] },
-  { name: 'warehouse', patterns: [/\bwarehouse/, /\bfulfillment/, /\blogistics/, /\bdistribution/] },
-  { name: 'inspection', patterns: [/\binspection/, /\bpatrol/, /\bdata center/, /\binfrastructure/, /\bmaintenance/] },
-  { name: 'quadruped', patterns: [/\bquadruped/, /\brobot dog/, /\bspot\b/] },
-  { name: 'medical', patterns: [/\bsurgery/, /\bmedical/, /\bhospital/, /\bhealthcare/, /\bpatient/] },
-  { name: 'defense', patterns: [/\bdefen[cs]e/, /\bmilitary/, /\buav\b/, /\bdrone/, /\bnavy/, /\binterceptor/] },
-]
-
-const detectTopicFamilies = (text) => {
-  const normalized = normalizeText(text)
-  return new Set(
-    topicFamilies
-      .filter(({ patterns }) => patterns.some((pattern) => pattern.test(normalized)))
-      .map(({ name }) => name)
-  )
-}
-
-const analyzeVideoMatch = (headline, title = '', channel = '') => {
-  const queryTokens = comparableTitleTokens(headline)
-  const videoTokens = comparableTitleTokens(`${title} ${channel}`)
-  const queryTokenSet = new Set(queryTokens)
-  const overlap = videoTokens.filter((token) => queryTokenSet.has(token)).length
-  const union = new Set([...queryTokens, ...videoTokens]).size
-  const similarity = union ? overlap / union : 0
-
-  const headlineFamilies = detectTopicFamilies(headline)
-  const videoFamilies = detectTopicFamilies(`${title} ${channel}`)
-  const sharedFamilies = [...headlineFamilies].filter((family) => videoFamilies.has(family))
-  const hardMismatch =
-    headlineFamilies.size > 0 &&
-    videoFamilies.size > 0 &&
-    sharedFamilies.length === 0
-
-  return {
-    overlap,
-    similarity,
-    headlineFamilies: [...headlineFamilies],
-    videoFamilies: [...videoFamilies],
-    hardMismatch,
-  }
-}
-
-const youtubeFromQuery = async (q) => {
-  const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
-  const html = await fetch(url).then((r) => r.text())
-  const initialDataMatch =
-    html.match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/) ||
-    html.match(/ytInitialData\s*=\s*(\{[\s\S]*?\});/)
-
-  if (initialDataMatch) {
-    try {
-      const data = JSON.parse(initialDataMatch[1])
-      const sections =
-        data?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents || []
-      let best = null
-      for (const section of sections) {
-        const contents = section?.itemSectionRenderer?.contents || []
-        for (const item of contents) {
-          const video = item?.videoRenderer
-          if (!video?.videoId) continue
-          const title = (video.title?.runs || []).map((run) => run.text || '').join('').trim()
-          const channel = (video.ownerText?.runs || []).map((run) => run.text || '').join('').trim()
-          const analysis = analyzeVideoMatch(q, title, channel)
-          const score = analysis.overlap >= 3 && !analysis.hardMismatch ? analysis.similarity : 0
-          if (!best || score > best.score) {
-            best = { score, videoId: video.videoId, title, channel, ...analysis }
-          }
-        }
-      }
-      if (best && best.score >= 0.34) {
-        return {
-          url: `https://www.youtube.com/watch?v=${best.videoId}`,
-          videoId: best.videoId,
-          title: best.title,
-          channel: best.channel,
-          score: best.score,
-          overlap: best.overlap,
-          similarity: best.similarity,
-          headlineFamilies: best.headlineFamilies,
-          videoFamilies: best.videoFamilies,
-          hardMismatch: best.hardMismatch,
-        }
-      }
-      return null
-    } catch {
-      // Fall through to the old regex-based extraction as a last resort.
-    }
-  }
-
-  const m = html.match(/"videoId":"([^"]+)"/)
-  return m
-    ? {
-        url: `https://www.youtube.com/watch?v=${m[1]}`,
-        videoId: m[1],
-        title: '',
-        channel: '',
-        score: 0,
-        overlap: 0,
-        similarity: 0,
-        headlineFamilies: [...detectTopicFamilies(q)],
-        videoFamilies: [],
-        hardMismatch: false,
-      }
-    : null
-}
+const utcDayStartIso = (date = new Date()) =>
+  new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())).toISOString()
 
 const parseRssItems = (xml) => {
-  const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1])
+  const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((match) => match[1])
   return items.map((itemXml) => {
     const titleRaw = (itemXml.match(/<title>([\s\S]*?)<\/title>/) || [, ''])[1]
     const link = stripHtml((itemXml.match(/<link>([\s\S]*?)<\/link>/) || [, ''])[1])
     const pubDate = stripHtml((itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [, ''])[1])
-    const sourceUrl = stripHtml((itemXml.match(/<source[^>]*url="([^"]+)"/) || [, ''])[1])
+    const sourceSiteUrl = stripHtml((itemXml.match(/<source[^>]*url="([^"]+)"/) || [, ''])[1])
     const source = stripHtml((itemXml.match(/<source[^>]*>([\s\S]*?)<\/source>/) || [, 'Unknown'])[1])
     const title = stripHtml(titleRaw).replace(/\s+-\s+[^-]+$/, '').trim()
-    return { title, link, pubDate, source, sourceSiteUrl: sourceUrl }
+    return {
+      title,
+      sourceName: source,
+      sourceUrl: link,
+      sourceSiteUrl,
+      sourcePublishedAt: pubDate,
+    }
   })
 }
 
-const existingQuery = encodeURIComponent(`*[_type=="post"]{"title":title,"slug":slug.current,"youtubeUrl":youtubeUrl,"sourceUrl":sourceUrl,"publishedAt":publishedAt}`)
+const existingQuery = encodeURIComponent(
+  '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc){_id,title,"slug":slug.current,sourceName,sourceUrl,sourceSiteUrl,publishedAt}'
+)
 const existingResp = await fetch(`https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${existingQuery}`)
-const existingJson = await existingResp.json()
-const existingTitleKeys = new Set((existingJson?.result || []).map((p) => titleKey(p.title)).filter(Boolean))
-const existingSlugs = new Set((existingJson?.result || []).map((p) => String(p.slug || '').trim()).filter(Boolean))
-const existingYoutubeIds = new Set((existingJson?.result || []).map((p) => extractYoutubeId(p.youtubeUrl)).filter(Boolean))
-const existingSourceUrls = new Set((existingJson?.result || []).map((p) => normalizeUrl(p.sourceUrl)).filter(Boolean))
-const nearDuplicateCutoff = Date.now() - (NEAR_DUPLICATE_LOOKBACK_DAYS * 24 * 60 * 60 * 1000)
-const recentExistingTitles = (existingJson?.result || [])
-  .filter((p) => {
-    const publishedAt = new Date(p.publishedAt || '').getTime()
-    return Number.isFinite(publishedAt) && publishedAt >= nearDuplicateCutoff
-  })
-  .map((p) => String(p.title || '').trim())
-  .filter(Boolean)
-
-const xml = await fetch(rssUrl).then((r) => r.text())
-const parsed = parseRssItems(xml)
-
-const scored = parsed
-  .filter((x) => trustedSources.has(x.source))
-  .map((x) => {
-    const k = titleKey(x.title)
-    const normalized = normalizeText(x.title)
-    let score = 0
-    if (hasTopCompanySignal(x.title)) score += 4
-    if (normalized.includes('humanoid') || normalized.includes('robot')) score += 1
-    if (x.source === 'Reuters') score += 1
-    return { ...x, titleKey: k, score, topCompany: hasTopCompanySignal(x.title) }
-  })
-  .sort((a, b) => b.score - a.score)
-
-const selected = []
-const seen = new Set(existingTitleKeys)
-const seenSourceUrls = new Set(existingSourceUrls)
-for (const item of scored) {
-  if (!item.titleKey || seen.has(item.titleKey)) continue
-  const slug = slugify(item.title)
-  const sourceUrl = normalizeUrl(item.link)
-  if (!slug || existingSlugs.has(slug)) continue
-  if (sourceUrl && seenSourceUrls.has(sourceUrl)) continue
-  seen.add(item.titleKey)
-  if (sourceUrl) seenSourceUrls.add(sourceUrl)
-  selected.push(item)
-  if (selected.length >= maxPosts * 8) break
+if (!existingResp.ok) {
+  const text = await existingResp.text()
+  console.error('Failed to fetch existing posts:', existingResp.status, text)
+  process.exit(1)
 }
 
-if (!selected.length) {
-  console.log('No trusted non-duplicate headlines found in RSS feed. No-op for this cycle.')
+const existingJson = await existingResp.json()
+const existingPosts = existingJson?.result || []
+
+const todayStart = utcDayStartIso()
+const publishedTodayCount = existingPosts.filter((post) => String(post?.publishedAt || '') >= todayStart).length
+const remainingDailySlots = Math.max(0, NEWS_MAX_POSTS_PER_DAY - publishedTodayCount)
+
+if (!remainingDailySlots) {
+  console.log(`UTC daily cap reached (${publishedTodayCount}/${NEWS_MAX_POSTS_PER_DAY}). No-op for this cycle.`)
   process.exit(0)
 }
 
-const docs = []
-const skipped = []
-const usedYoutubeIds = new Set(existingYoutubeIds)
-const usedTitleKeys = new Set()
-const usedComparableTitles = [...recentExistingTitles]
-const hasTopCompanyCandidate = selected.some((x) => x.topCompany)
-if (!hasTopCompanyCandidate) {
-  console.log('No top-company candidate found in this cycle; allowing vetted fallback stories to publish.')
-}
-for (let i = 0; i < selected.length; i += 1) {
-  if (docs.length >= maxPosts) break
-  const h = selected[i]
-  const slug = slugify(h.title)
-  const youtubeCandidate = await youtubeFromQuery(`${h.title} ${h.source} robotics`)
-  const ytId = extractYoutubeId(youtubeCandidate?.url || '')
-  const category = sourceToCategory(h.source, h.title)
-  const editorial = await buildEditorialPackage({
-    headline: h.title,
-    source: h.source,
-    sourceUrl: h.link,
-    pubDate: h.pubDate,
-    categoryHint: category
+const xml = await fetch(RSS_URL).then((response) => response.text())
+const parsed = parseRssItems(xml)
+
+const normalizedCandidates = parsed
+  .map((item) => {
+    const slug = slugify(item.title)
+    const sourceTrustTier = getSourceTrustTier(item)
+    return {
+      ...item,
+      slug,
+      normalizedTitle: normalizeText(item.title),
+      sourceTrustTier,
+      titleKey: titleKey(item.title),
+    }
   })
-  const excerpt = editorial.excerpt
-  const videoSummary = editorial.videoSummary
-  const sourceImageUrl = editorial?.sourceContext?.imageUrl || ''
-  const key = titleKey(h.title)
-  const nearDuplicateTitle = findNearDuplicateTitle(h.title, usedComparableTitles)
-  const sourcePublishedAt = (() => {
-    const parsed = new Date(h.pubDate || '')
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString()
-  })()
+  .filter((item) => item.title && item.slug && item.sourceUrl)
+  .sort((a, b) => rankCandidate(b) - rankCandidate(a))
 
-  const hasGuardIssue =
-    !h.title ||
-    !slug ||
-    !key ||
-    !h.link ||
-    Boolean(getEditorialRejectionReason(h.title, h.link)) ||
-    !isExcerptStrong(excerpt) ||
-    (!ytId && !canPublishWithoutYoutube(h.title, h.source, editorial)) ||
-    Boolean(ytId && youtubeCandidate?.hardMismatch) ||
-    Boolean(ytId && usedYoutubeIds.has(ytId)) ||
-    usedTitleKeys.has(key) ||
-    Boolean(nearDuplicateTitle)
+const candidatePool = []
+const seenPoolKeys = new Map()
+for (const candidate of normalizedCandidates) {
+  const hardDup = findHardDuplicate(candidate, existingPosts)
+  if (candidate.sourceTrustTier === 'block' || hardDup) continue
 
-  if (hasGuardIssue) {
-    const editorialRejectionReason = getEditorialRejectionReason(h.title, h.link)
-    skipped.push({
-      title: h.title,
-      reason: editorialRejectionReason
-        ? editorialRejectionReason
-        : !ytId && !canPublishWithoutYoutube(h.title, h.source, editorial)
-        ? 'missing/invalid YouTube video and no usable source image fallback'
-        : youtubeCandidate?.hardMismatch
-          ? `video/topic mismatch (${youtubeCandidate.headlineFamilies.join(', ') || 'headline'} vs ${youtubeCandidate.videoFamilies.join(', ') || 'video'})`
-        : !isExcerptStrong(excerpt)
-          ? 'excerpt quality below threshold'
-          : usedYoutubeIds.has(ytId)
-            ? 'duplicate YouTube video in batch'
-            : usedTitleKeys.has(key)
-              ? 'duplicate headline in batch'
-              : nearDuplicateTitle
-                ? `near-duplicate topic within ${NEAR_DUPLICATE_LOOKBACK_DAYS} days`
-              : 'required field guard failed'
+  const existing = seenPoolKeys.get(candidate.titleKey)
+  if (!existing) {
+    seenPoolKeys.set(candidate.titleKey, candidate)
+    candidatePool.push(candidate)
+    continue
+  }
+
+  const preferred = choosePreferredCandidate(candidate, existing)
+  if (preferred === candidate) {
+    seenPoolKeys.set(candidate.titleKey, candidate)
+    const index = candidatePool.findIndex((item) => item.titleKey === candidate.titleKey)
+    if (index >= 0) candidatePool[index] = candidate
+  }
+}
+
+const docs = []
+const acceptedReviews = []
+const rejectedReviews = []
+const acceptedForDupChecks = [...existingPosts]
+
+const writePublishReport = async () => {
+  await fs.mkdir(path.dirname(publishReportPath), { recursive: true })
+  await fs.writeFile(
+    publishReportPath,
+    JSON.stringify(
+      {
+        generatedAt: new Date().toISOString(),
+        utcDayStart: todayStart,
+        publishedTodayCount,
+        remainingDailySlots,
+        maxPostsPerDay: NEWS_MAX_POSTS_PER_DAY,
+        published: docs.length,
+        acceptedReviews,
+        rejectedReviews,
+        docs: docs.map((doc) => ({
+          id: doc._id,
+          title: doc.title,
+          slug: doc.slug?.current || '',
+          url: doc.slug?.current ? `https://news.robot.tv/${doc.slug.current}/` : '',
+          homepageEligible: doc.homepageEligible,
+          sourceTrustTier: doc.sourceTrustTier,
+          internalLinkTarget: doc.internalLinkTarget || '',
+        })),
+      },
+      null,
+      2
+    )
+  )
+}
+
+for (const candidate of candidatePool) {
+  if (docs.length >= Math.min(remainingDailySlots, NEWS_PUBLISH_BATCH_LIMIT)) break
+
+  if (candidate.sourceTrustTier === 'block') {
+    rejectedReviews.push({ title: candidate.title, reason: 'blocked source tier', tier: candidate.sourceTrustTier })
+    continue
+  }
+
+  const hardDuplicate = findHardDuplicate(candidate, acceptedForDupChecks)
+  if (hardDuplicate) {
+    rejectedReviews.push({ title: candidate.title, reason: 'hard duplicate', tier: candidate.sourceTrustTier })
+    continue
+  }
+
+  const softDuplicate = findSoftDuplicate(candidate, acceptedForDupChecks, NEWS_RECENT_DUPLICATE_WINDOW_DAYS)
+  if (softDuplicate) {
+    rejectedReviews.push({
+      title: candidate.title,
+      reason: `near-duplicate within ${NEWS_RECENT_DUPLICATE_WINDOW_DAYS} days`,
+      tier: candidate.sourceTrustTier,
+      duplicateOf: softDuplicate.title,
     })
     continue
   }
 
-  const lowConfidence = !h.topCompany && hasTopCompanyCandidate
-  const idBase = `post-auto-${slug}`
-  const docId = lowConfidence ? `drafts.${idBase}` : idBase
-
-  usedYoutubeIds.add(ytId)
-  usedTitleKeys.add(key)
-  usedComparableTitles.push(h.title)
-
-  docs.push({
-    _id: docId,
-    _type: 'post',
-    title: h.title,
-    slug: { _type: 'slug', current: slug || `news-${Date.now()}-${i + 1}` },
-    excerpt,
-    videoSummary,
-    publishedAt: new Date().toISOString(),
-    youtubeUrl: ytId ? youtubeCandidate.url : '',
-    sourceName: h.source,
-    sourceUrl: h.link,
-    sourceSiteUrl: h.sourceSiteUrl,
-    sourcePublishedAt,
-    sourceImageUrl,
-    author: { _type: 'reference', _ref: authorId },
-    categories: [{ _type: 'reference', _ref: category }],
-    body: blocksFromParagraphs(editorial.bodyParagraphs)
+  const editorial = await buildEditorialPackage({
+    headline: candidate.title,
+    source: candidate.sourceName,
+    sourceUrl: candidate.sourceUrl,
+    pubDate: candidate.sourcePublishedAt,
+    categoryHint: '',
   })
-}
 
-if (skipped.length) {
-  console.log('Guard skipped items:')
-  skipped.forEach((x) => console.log(`- ${x.title}: ${x.reason}`))
+  if (isPromotionalLikely({ title: candidate.title, sourceName: candidate.sourceName, sourceUrl: candidate.sourceUrl, sourceContext: editorial.sourceContext })) {
+    rejectedReviews.push({ title: candidate.title, reason: 'promotional or low-value source page', tier: candidate.sourceTrustTier })
+    continue
+  }
+
+  const fallbackQc = buildFallbackQcEnrichment({ candidate, editorial })
+  const deepSeekResult = await callDeepSeekJson({
+    systemPrompt: 'You are a strict robotics news quality-control reviewer. Return strict JSON only and do not invent facts.',
+    userPrompt: buildQcPrompt({ candidate, editorial }),
+    maxTokens: 420,
+  })
+
+  const normalizedModelOutput = validateQcEnrichment(deepSeekResult.data)
+  const normalizedFallback = validateQcEnrichment(fallbackQc)
+  const enrichment =
+    normalizedModelOutput.ok ? normalizedModelOutput.data : normalizedFallback.ok ? normalizedFallback.data : null
+
+  if (!enrichment) {
+    rejectedReviews.push({
+      title: candidate.title,
+      reason: normalizedModelOutput.reason || normalizedFallback.reason || 'no_safe_enrichment',
+      tier: candidate.sourceTrustTier,
+    })
+    continue
+  }
+
+  if (deepSeekResult.ok && enrichment.reject) {
+    rejectedReviews.push({
+      title: candidate.title,
+      reason: enrichment.reject_reason || 'model_reject',
+      tier: candidate.sourceTrustTier,
+    })
+    continue
+  }
+
+  if (candidate.sourceTrustTier === 'unknown') {
+    rejectedReviews.push({
+      title: candidate.title,
+      reason: 'unknown source trust tier',
+      tier: candidate.sourceTrustTier,
+    })
+    continue
+  }
+
+  const sourcePublishedAt = (() => {
+    const parsedDate = new Date(candidate.sourcePublishedAt || '')
+    return Number.isNaN(parsedDate.getTime()) ? undefined : parsedDate.toISOString()
+  })()
+
+  const doc = {
+    _id: `post-auto-${candidate.slug}`,
+    _type: 'post',
+    title: candidate.title,
+    slug: { _type: 'slug', current: candidate.slug },
+    excerpt: enrichment.summary,
+    whyItMatters: enrichment.why_it_matters,
+    homepageEligible: enrichment.homepage_eligible,
+    sourceTrustTier: candidate.sourceTrustTier,
+    internalLinkTarget: enrichment.internal_link_target || undefined,
+    publishedAt: new Date().toISOString(),
+    youtubeUrl: '',
+    sourceName: candidate.sourceName,
+    sourceUrl: candidate.sourceUrl,
+    sourceSiteUrl: candidate.sourceSiteUrl,
+    sourcePublishedAt,
+    sourceImageUrl: editorial?.sourceContext?.imageUrl || '',
+    author: { _type: 'reference', _ref: authorId },
+    categories: [{ _type: 'reference', _ref: enrichment.category }],
+    body: blocksFromParagraphs(editorial.bodyParagraphs),
+  }
+
+  const youtubeDecision = await matchYouTubeVideo({
+    story: {
+      title: doc.title,
+      sourceName: doc.sourceName,
+      sourcePublishedAt,
+    },
+    youtubeSearchQuery: enrichment.youtube_search_query || '',
+  })
+
+  if (youtubeDecision.attached && youtubeDecision.match?.youtubeUrl) {
+    doc.youtubeUrl = youtubeDecision.match.youtubeUrl
+  }
+
+  docs.push(doc)
+  acceptedForDupChecks.unshift({
+    title: doc.title,
+    slug: doc.slug.current,
+    sourceUrl: doc.sourceUrl,
+    publishedAt: doc.publishedAt,
+  })
+
+  acceptedReviews.push({
+    title: candidate.title,
+    mode: deepSeekResult.ok ? 'deepseek' : 'fallback',
+    tier: candidate.sourceTrustTier,
+    homepageEligible: enrichment.homepage_eligible,
+    youtubeSearchQuery: enrichment.youtube_search_query || '',
+    youtube: {
+      attached: youtubeDecision.attached,
+      reason: youtubeDecision.reason,
+      channel: youtubeDecision.match?.channelTitle || '',
+      title: youtubeDecision.match?.videoTitle || '',
+    },
+  })
+
+  console.log(
+    `YouTube ${youtubeDecision.attached ? 'attached' : 'skipped'} for "${candidate.title}": ${youtubeDecision.reason}` +
+      `${youtubeDecision.match?.channelTitle ? ` | ${youtubeDecision.match.channelTitle}` : ''}` +
+      `${youtubeDecision.match?.videoTitle ? ` | ${youtubeDecision.match.videoTitle}` : ''}`
+  )
 }
 
 if (!docs.length) {
-  console.log('Publish guard blocked all candidate posts. No-op for this cycle.')
+  await writePublishReport()
+  console.log('Quality-control layer rejected all candidates. No-op for this cycle.')
+  if (rejectedReviews.length) {
+    rejectedReviews.forEach((item) => console.log(`- ${item.title}: ${item.reason}`))
+  }
   process.exit(0)
 }
 
 if (dryRun) {
   console.log('Dry run selected docs:')
-  docs.forEach((d) => console.log(`- ${d._id} | ${d.title}`))
+  docs.forEach((doc) => console.log(`- ${doc._id} | ${doc.title}`))
   process.exit(0)
 }
 
 const mutateUrl = `https://${projectId}.api.sanity.io/v2023-10-01/data/mutate/${dataset}`
-const body = { mutations: docs.map((doc) => ({ createIfNotExists: doc })) }
+const mutationBody = { mutations: docs.map((doc) => ({ createIfNotExists: doc })) }
 
-const resp = await fetch(mutateUrl, {
+const mutateResp = await fetch(mutateUrl, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   },
-  body: JSON.stringify(body)
+  body: JSON.stringify(mutationBody),
 })
 
-if (!resp.ok) {
-  const text = await resp.text()
-  console.error('Sanity mutation failed:', resp.status, text)
+if (!mutateResp.ok) {
+  const text = await mutateResp.text()
+  console.error('Sanity mutation failed:', mutateResp.status, text)
   process.exit(1)
 }
 
-const result = await resp.json()
-const published = docs.filter((d) => !d._id.startsWith('drafts.')).length
-const drafted = docs.length - published
+const result = await mutateResp.json()
 
-await fs.mkdir(path.dirname(publishReportPath), { recursive: true })
-await fs.writeFile(
-  publishReportPath,
-  JSON.stringify(
-    {
-      generatedAt: new Date().toISOString(),
-      published,
-      drafted,
-      docs: docs.map((doc) => ({
-        id: doc._id,
-        title: doc.title,
-        slug: doc.slug?.current || '',
-        isDraft: doc._id.startsWith('drafts.'),
-        url: doc.slug?.current ? `https://news.robot.tv/${doc.slug.current}/` : ''
-      }))
-    },
-    null,
-    2
-  )
-)
+await writePublishReport()
 
-console.log('Created docs:', docs.map((d) => d._id).join(', '))
-console.log(`Published: ${published}, Drafted: ${drafted}`)
+console.log('Created docs:', docs.map((doc) => doc._id).join(', '))
+console.log(`Published: ${docs.length}`)
 if (result?.results) {
   console.log('Mutation results:', result.results.length)
 }
 console.log(`Publish report: ${publishReportPath}`)
-
-if (skipPublicDeployHook) {
-  console.log('SKIP_PUBLIC_DEPLOY_HOOK=1; skipped deploy-hook trigger because CI will publish public news directly.')
-} else if (newsPublicDeployHookUrl) {
-  try {
-    const hookResp = await fetch(newsPublicDeployHookUrl, { method: 'POST' })
-    if (!hookResp.ok) {
-      const hookText = await hookResp.text()
-      console.warn(`Public news deploy hook failed: HTTP ${hookResp.status} ${hookText}`.trim())
-    } else {
-      console.log('Triggered public news site rebuild via deploy hook.')
-    }
-  } catch (err) {
-    console.warn(`Public news deploy hook request failed: ${err?.message || err}`)
-  }
-} else {
-  console.log('NEWS_PUBLIC_DEPLOY_HOOK_URL not set; skipped automatic public news site rebuild trigger.')
-}
+console.log('Public site rebuilds are handled by GitHub Actions + Cloudflare Pages after publish.')

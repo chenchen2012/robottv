@@ -7,6 +7,7 @@
     "build:seo": "node scripts/build-static-news-seo.mjs",
     "check:public": "node scripts/check-public-build.mjs",
     "build:public": "npm run build:seo && node scripts/build-public-dist.mjs && npm run check:public",
+    "test:publish-quality": "node scripts/test-news-publish-quality.mjs",
     "dev": "sanity dev",
     "build:studio": "COLUMNS=120 LINES=40 sanity build",
     "build": "npm run build:studio",
