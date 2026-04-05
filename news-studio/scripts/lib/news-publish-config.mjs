@@ -17,6 +17,7 @@ export const NEWS_DEEPSEEK_TIMEOUT_MS = parsePositiveNumber(process.env.NEWS_DEE
 export const YOUTUBE_MAX_CANDIDATES = parsePositiveNumber(process.env.YOUTUBE_MAX_CANDIDATES, 5)
 export const YOUTUBE_MAX_VIDEO_AGE_DAYS = parsePositiveNumber(process.env.YOUTUBE_MAX_VIDEO_AGE_DAYS, 45)
 export const YOUTUBE_REQUIRE_TRUSTED_CHANNEL = String(process.env.YOUTUBE_REQUIRE_TRUSTED_CHANNEL || '1') !== '0'
+export const YOUTUBE_ENABLE_SCRAPE_FALLBACK = String(process.env.YOUTUBE_ENABLE_SCRAPE_FALLBACK || '1') !== '0'
 
 export const TAXONOMY = [
   {
@@ -166,6 +167,7 @@ export const YOUTUBE_ENV = {
   maxCandidates: YOUTUBE_MAX_CANDIDATES,
   maxVideoAgeDays: YOUTUBE_MAX_VIDEO_AGE_DAYS,
   requireTrustedChannel: YOUTUBE_REQUIRE_TRUSTED_CHANNEL,
+  enableScrapeFallback: YOUTUBE_ENABLE_SCRAPE_FALLBACK,
 }
 
 export const isValidCategoryId = (value) => TAXONOMY_BY_ID.has(String(value || '').trim())

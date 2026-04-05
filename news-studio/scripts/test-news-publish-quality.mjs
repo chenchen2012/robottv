@@ -9,7 +9,7 @@ import {
   isPromotionalLikely,
   validateQcEnrichment,
 } from './lib/news-publish-quality.mjs'
-import { evaluateYouTubeCandidate } from './lib/youtube-provider.mjs'
+import { evaluateYouTubeCandidate, matchYouTubeVideo } from './lib/youtube-provider.mjs'
 import { TRUSTED_YOUTUBE_CHANNELS } from './lib/youtube-trusted-channels.mjs'
 
 const now = new Date().toISOString()
@@ -153,5 +153,53 @@ const noVideoCandidate = evaluateYouTubeCandidate({
 })
 assert.equal(noVideoCandidate.accepted, false)
 assert.equal(noVideoCandidate.reason, 'missing_video_fields')
+
+const originalFetch = global.fetch
+const scrapedInitialData = JSON.stringify({
+  contents: {
+    twoColumnSearchResultsRenderer: {
+      primaryContents: {
+        sectionListRenderer: {
+          contents: [
+            {
+              itemSectionRenderer: {
+                contents: [
+                  {
+                    videoRenderer: {
+                      videoId: 'abc123def45',
+                      title: { runs: [{ text: 'Figure humanoid robots join a factory workforce' }] },
+                      ownerText: { runs: [{ text: 'The Wall Street Journal' }] },
+                      publishedTimeText: { simpleText: '2 days ago' },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+})
+global.fetch = async (url) => {
+  const target = String(url || '')
+  if (target.includes('googleapis.com/youtube/v3/search')) {
+    throw new Error('simulated_api_failure')
+  }
+  return {
+    ok: true,
+    text: async () => `<script>var ytInitialData = ${scrapedInitialData};</script>`,
+  }
+}
+
+const scrapeFallbackMatch = await matchYouTubeVideo({
+  story: { title: 'Humanoid robots join a factory workforce at Figure' },
+  youtubeSearchQuery: 'Figure humanoid factory workforce',
+})
+assert.equal(scrapeFallbackMatch.attached, true)
+assert.equal(scrapeFallbackMatch.match?.channelTitle, 'The Wall Street Journal')
+assert.match(scrapeFallbackMatch.reason, /_scrape$/)
+
+global.fetch = originalFetch
 
 console.log('news publish quality tests passed')
