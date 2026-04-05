@@ -20,9 +20,24 @@ Owner preferences
 Sites + stack
 - Main site: https://robot.tv (static HTML/CSS/JS on Cloudflare Pages project `robottv-main`).
 - News site: https://news.robot.tv (Sanity-backed frontend in news-studio/static/index.html, deployed on Cloudflare Pages project `robottv-news`).
-- Repo: /Users/cc801/Documents/New project/robottv
+- Current repo path: /Users/administrator/robottv
+- Historical repo path note: older memory entries may still mention `/Users/cc801/Documents/New project/robottv`; use `/Users/administrator/robottv` for the active workspace.
 - News Sanity project: lumv116w, dataset: production.
 - Historical note: older entries below may still mention Netlify because they document the pre-cutover path; production traffic for both public domains is now on Cloudflare Pages.
+
+Current architecture guardrails
+- Sanity is the canonical content source for newsroom content.
+- `news.robot.tv` homepage news must remain build-time generated from Sanity.
+- `robot.tv` homepage news must remain build-time generated from Sanity.
+- Do not reintroduce browser-side homepage fetch from Sanity.
+- Do not reintroduce `preloaded-news-posts.js` as homepage truth.
+- Do not reintroduce browser `localStorage` homepage cache for homepage news rendering.
+- Pinned analysis lives in one explicit build-time config: `scripts/editorial-pinned-posts.mjs`.
+- Content between homepage generation markers in `index.html` is generated output, not hand-edited source content.
+- `dist-public/`, `dist-root-public/`, and generated support files are outputs, not canonical source.
+- Cloudflare Pages is the only production deploy target.
+- GitHub Actions is the only deploy mechanism.
+- Preserve redirects, canonical URLs, feed generation, sitemap generation, and static article generation unless a deliberate migration requires otherwise.
 
 Key analytics + forms
 - GA4 measurement ID: G-WC8XB1DN1E.
@@ -238,6 +253,53 @@ Recent operational decisions
     - panel/discussion preview posts
     - human-interest novelty coverage outside newsroom focus
     - broad opinion/trend framing with weak robotics specificity
+
+Phase 2 presentation status (April 2026)
+- Architecture cleanup status:
+  - root source file `robottv/index.html` is no longer mutated during root public build
+  - root homepage/news assembly remains build-time only
+  - workflow summary logic in `.github/workflows/news-auto-publish.yml` was updated earlier to report actual publish/build/deploy outcomes from step conclusions instead of only config presence
+- `robot.tv` homepage latest-news block:
+  - current MVP presentation is 2 featured visual stories + 1 text-first signal slot
+  - selection logic lives in `scripts/homepage-news-rules.mjs`
+  - rendering lives in `scripts/build-root-homepage-news.mjs`
+  - dedicated root homepage section styling lives in `styles.css`
+  - latest follow-up fixed unprofessional layout issues in generated sections by giving:
+    - `Pinned Analysis` its own 2-column featured grid
+    - `Evergreen Hubs` its own 3-column curated grid
+  - do not revisit `robot.tv` homepage unless explicitly requested in a new batch
+- `news.robot.tv` latest/news presentation:
+  - this is the current active refinement surface
+  - keep work limited to `news-studio/static/index.html` unless a very strong reason requires otherwise
+  - current editorial distinction:
+    - posts with embedded YouTube render as stronger visual lead items
+    - non-video items render as intentional text-first `Signal Brief` items
+  - current wording rules on the newsroom latest section:
+    - `Featured Story` is the visual label
+    - `Signal Brief` is the text-first label
+    - CTA for text-first items: `Read brief`
+    - CTA for visual items: `Watch story`
+  - current summary/listing behavior:
+    - listing summaries should be implication-led, not generic source-description copy
+    - prefer one concrete fact + one implication
+    - prefer editorial verbs such as `signals`, `suggests`, `shows`, `reflects`, `marks`, `points to`
+    - avoid weak patterns like `X discusses`, `X explores`, `X highlights`
+    - implementation currently uses `buildListingSummary(post)` plus `listingSummaryOverrides` in `news-studio/static/index.html`
+  - current UI intent for `Signal Brief`:
+    - compact, deliberate, text-led, and clearly not a visual card missing an image
+    - lighter CTA treatment (`signal-link`) instead of a heavy primary button
+    - tighter spacing and left accent line for intentional editorial framing
+
+Immediate next step for future sessions
+- Start with manual UX/editorial review feedback on `news.robot.tv` only.
+- Do not touch architecture, deploy logic, source-of-truth logic, build-time generation, or `robot.tv` homepage until the user explicitly asks.
+- First inspect and iterate on:
+  - `/Users/administrator/robottv/news-studio/static/index.html`
+  - built output `/Users/administrator/robottv/news-studio/dist-public/index.html`
+- Verify with:
+  - `cd /Users/administrator/robottv/news-studio && node scripts/build-public-dist.mjs`
+- Local review URL:
+  - `file:///Users/administrator/robottv/news-studio/dist-public/index.html`
   - retired low-value live posts from Sanity and mapped them to stronger targets in `retiredLegacyRedirects` plus `news-studio/static/_redirects`:
     - `11-women-shaping-the-future-of-robotics` -> `robot-news`
     - `robotics-medal-and-rising-star-winners-reflect-on-their-work-advancing-women-in-robotics` -> `robot-news`
@@ -2641,3 +2703,77 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - billing is not yet connected to a real payment processor
   - report download endpoint currently tracks access and returns asset metadata rather than signed file delivery
   - invitation acceptance, account switching, and seat-limit enforcement are still MVP scaffolding rather than full production workflow
+
+2026-04-05 newsroom auto-publish QC + YouTube status
+- `news.robot.tv` homepage presentation fixes are already live; latest newsroom automation work is now also pushed to GitHub `main`.
+- Auto-publish cadence:
+  - `.github/workflows/news-auto-publish.yml` now runs every 3 hours via `15 */3 * * *`
+  - target cap is up to 8 published posts per UTC calendar day
+- Current newsroom auto-publish architecture remains unchanged:
+  - Sanity is the source of truth
+  - pipeline is publish -> build -> verify -> deploy
+  - static deploy target remains Cloudflare Pages
+- QC/publishing upgrade commit:
+  - `805c329` - `Add QC and safe YouTube matching to news auto-publish`
+  - adds deterministic source trust tiers, hard/soft duplicate checks, UTC daily publish cap, DeepSeek JSON QC enrichment, validation, publish/reject decisions, and conservative YouTube matching
+- New newsroom QC modules introduced in that pass:
+  - `news-studio/scripts/lib/deepseek-provider.mjs`
+  - `news-studio/scripts/lib/news-publish-config.mjs`
+  - `news-studio/scripts/lib/news-publish-quality.mjs`
+  - `news-studio/scripts/lib/youtube-provider.mjs`
+  - `news-studio/scripts/lib/youtube-trusted-channels.mjs`
+- Current DeepSeek QC contract:
+  - returns only `summary`, `why_it_matters`, `category`, `homepage_eligible`, `reject`, `reject_reason`, optional `internal_link_target`, and optional `youtube_search_query`
+  - malformed or unavailable model output must not break the pipeline; deterministic fallback enrichment is used when validation passes
+- Minimal Sanity schema additions now in use for newsroom posts:
+  - `whyItMatters`
+  - `homepageEligible`
+  - `sourceTrustTier`
+  - `internalLinkTarget`
+  - canonical summary field remains existing `excerpt`
+  - canonical video field remains existing `youtubeUrl`
+- Trusted YouTube matching status:
+  - earlier newsroom auto-publish historically found videos using unofficial YouTube search-page scraping from `youtube.com/results?search_query=...`
+  - source-page extraction in `news-editorial-content.mjs` was used for text/image enrichment, not YouTube discovery
+  - frontend `scripts/live-feed-rotator.js` uses YouTube `oEmbed` only to validate already-attached videos, not to discover them
+  - official YouTube Data API v3 search-only matching was introduced in `805c329`
+- Fallback update on Apr 5, 2026:
+  - commit `fe2bc02` - `Add YouTube scrape fallback for auto-publish`
+  - current rule is:
+    - if `YOUTUBE_API_KEY` exists and official API works -> use official API
+    - if official API fails or key is missing -> optionally fall back to the old search-page scraping matcher
+    - if both fail -> publish anyway without a video
+  - fallback remains conservative:
+    - trusted/allowlisted channels only by default
+    - attach only on strong title/topic/entity overlap
+    - stale or ambiguous matches must be rejected
+- Current trusted YouTube allowlist seed is intentionally small and lives in `news-studio/scripts/lib/youtube-trusted-channels.mjs`
+- Current newsroom YouTube config/env knobs:
+  - `YOUTUBE_API_KEY`
+  - optional `YOUTUBE_API_URL`
+  - `YOUTUBE_MAX_CANDIDATES`
+  - `YOUTUBE_MAX_VIDEO_AGE_DAYS`
+  - `YOUTUBE_REQUIRE_TRUSTED_CHANNEL`
+  - `YOUTUBE_ENABLE_SCRAPE_FALLBACK`
+- DeepSeek config/env knobs in active use:
+  - `DEEPSEEK_API_KEY`
+  - optional `DEEPSEEK_API_URL`
+  - optional `DEEPSEEK_MODEL`
+  - `NEWS_DEEPSEEK_TIMEOUT_MS`
+- Publish/QC config/env knobs in active use:
+  - `NEWS_MAX_POSTS_PER_DAY`
+  - `NEWS_RECENT_DUPLICATE_WINDOW_DAYS`
+  - `PUBLISH_COUNT`
+  - `NEWS_PUBLISH_REPORT_PATH`
+- GitHub repo status as of Apr 5, 2026:
+  - `YOUTUBE_API_KEY` was added in GitHub Actions secrets after the new provider landed
+  - temporary PATs were generated during this session to push workflow changes; revoke them after use
+- Verification completed locally on Apr 5, 2026:
+  - `npm run test:publish-quality` passed
+  - `npm run build:public` passed
+- Workflow/run tracking note:
+  - latest observed scheduled run before `fe2bc02` was `Auto Publish Robot News #198`
+  - run URL: `https://github.com/chenchen2012/robottv/actions/runs/24002386645`
+  - it ran commit `805c329`, not yet `fe2bc02`
+  - status observed from public page: `Failure`
+  - next debugging step in a future session should inspect the authenticated workflow logs for the failing `publish` job and confirm the first scheduled run that executes `fe2bc02`
