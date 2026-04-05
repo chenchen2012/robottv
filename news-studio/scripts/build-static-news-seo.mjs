@@ -5,6 +5,12 @@ import {
   homepageEditorialPinnedPosts,
 } from "../../scripts/editorial-pinned-posts.mjs";
 import { newsCoverImageOverrides } from "../../scripts/news-cover-image-overrides.mjs";
+import {
+  classifyHomepageStory,
+  getHomepageListingPosts,
+  normalizeHomepageSlug,
+  selectHomepageStoryLayout,
+} from "../../scripts/homepage-news-rules.mjs";
 
 const projectId = process.env.SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || "lumv116w";
 const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || "production";
@@ -12,13 +18,11 @@ const siteUrl = "https://news.robot.tv";
 const staticDir = path.resolve("static");
 const sitemapPath = path.join(staticDir, "sitemap.xml");
 const feedPath = path.join(staticDir, "feed.xml");
-const preloadedPostsScriptPath = path.join(staticDir, "scripts", "preloaded-news-posts.js");
 const editorialPinnedPostsScriptPath = path.join(staticDir, "scripts", "editorial-pinned-posts.js");
 const coverImageOverridesScriptPath = path.join(staticDir, "scripts", "cover-image-overrides.js");
 const generatedCoverDir = path.join(staticDir, "images", "covers", "generated");
 const STATIC_RESERVED_DIRS = new Set(["images", "scripts"]);
 const HOMEPAGE_PAGE_SIZE = 12;
-const HOMEPAGE_PRELOAD_DEPTH = 60;
 const HOMEPAGE_START_MARKER = "<!-- STATIC_NEWS_HOME_START -->";
 const HOMEPAGE_END_MARKER = "<!-- STATIC_NEWS_HOME_END -->";
 const RESERVED_ARTICLE_SLUGS = new Set([
@@ -56,28 +60,6 @@ const retiredLegacyRedirects = {
   "dancing-robots-bring-support-company-to-barcelona-elderly": "robot-news",
   "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp": "robot-news",
 };
-const hiddenListingSlugs = new Set([
-  "biggest-ai-news-today",
-  "the-biggest-robot-news-today",
-  "robots-learn-faster-with-new-ai-techniques",
-  "alphabet-owned-robotics-software-company-intrinsic-joins-google",
-  "amazon-halts-blue-jay-robotics-project-after-less-than-6-months",
-  "11-women-shaping-the-future-of-robotics",
-  "amazon-cuts-jobs-in-strategically-important-robotics-division",
-  "amazon-cuts-more-jobs-this-time-in-robotics-unit",
-  "aw-2026-features-korea-humanoid-debuts-as-industry-seeks-digital-transformation",
-  "breakingviews-hyundai-motors-robots-herald-hardware-reboot",
-  "chinas-dancing-robots-how-worried-should-we-be",
-  "dancing-robots-bring-support-company-to-barcelona-elderly",
-  "hyundai-motor-to-unveil-multi-billion-dollar-investment-in-south-korea-source-says",
-  "hyundai-to-show-mobed-at-aw-as-robotics-ai-expand-in-manufacturing",
-  "inside-project-kobe-amazons-plan-to-build-walmart-style-supercenters-powered-by-warehouse-",
-  "tesollo-commercializes-its-lightweight-compact-robotic-hand-for-humanoids",
-  "the-cows-beat-the-shit-out-of-the-robots-the-first-day-the-tech-revolution-designed-to-imp",
-]);
-const demotedListingSlugs = new Set([
-  "inside-the-new-living-lab-advancing-agricultural-robotics",
-]);
 const blocksFromParagraphs = (paragraphs = []) =>
   paragraphs
     .map((paragraph) => toPlainText(paragraph))
@@ -755,16 +737,6 @@ const normalizeCompareText = (value) =>
     .replace(/[^a-z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-const normalizeListingTitle = (value) =>
-  normalizeCompareText(value)
-    .split(" ")
-    .filter(
-      (word) =>
-        word &&
-        !["the", "a", "an", "and", "for", "to", "of", "in", "on", "with", "after", "than"].includes(word)
-    )
-    .slice(0, 8)
-    .join(" ");
 const countWords = (value) => toPlainText(value).split(/\s+/).filter(Boolean).length;
 
 const mergeUniqueText = (...groups) => {
@@ -782,7 +754,7 @@ const mergeUniqueText = (...groups) => {
   return merged;
 };
 
-const normalizeSlug = (slug) => String(slug || "").trim().replace(/^\/+|\/+$/g, "");
+const normalizeSlug = normalizeHomepageSlug;
 const normalizeExcerpt = (value) => {
   const text = toPlainText(value || "").trim();
   if (!text) return text;
@@ -850,41 +822,6 @@ const applyEditorialEnhancements = (post) => {
   if (Object.prototype.hasOwnProperty.call(enhancement, "relatedResource")) enhancedPost.relatedResource = enhancement.relatedResource;
   return enhancedPost;
 };
-const dedupeListingPosts = (posts) => {
-  const seen = new Set();
-  return posts.filter((post) => {
-    const key = normalizeListingTitle(post?.title);
-    if (!key || seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-};
-const sortPostsByPublishedAtDesc = (posts) =>
-  [...posts].sort((a, b) => {
-    const aDemoted = demotedListingSlugs.has(normalizeSlug(a?.slug));
-    const bDemoted = demotedListingSlugs.has(normalizeSlug(b?.slug));
-    if (aDemoted !== bDemoted) return aDemoted ? 1 : -1;
-    const aTime = new Date(a?.publishedAt || 0).getTime();
-    const bTime = new Date(b?.publishedAt || 0).getTime();
-    return bTime - aTime;
-  });
-const filterVisibleListingPosts = (posts) =>
-  posts.filter((post) => !hiddenListingSlugs.has(normalizeSlug(post?.slug)));
-const getHomepageListingPosts = (posts) =>
-  dedupeListingPosts(sortPostsByPublishedAtDesc(filterVisibleListingPosts(posts)));
-const buildHomepagePreloadPosts = (posts) =>
-  getHomepageListingPosts(posts)
-    .slice(0, HOMEPAGE_PRELOAD_DEPTH)
-    .map((post) => ({
-      title: toPlainText(post.title || ""),
-      excerpt: normalizeExcerpt(post.excerpt || ""),
-      publishedAt: post.publishedAt || "",
-      youtubeUrl: post.youtubeUrl || "",
-      sourceImageUrl: post.sourceImageUrl || "",
-      slug: normalizeSlug(post.slug),
-      author: getAuthorName(post.author),
-    }));
-
 const thumbnailOverridesBySlug = new Map([
   [
     "how-humanoid-robots-joined-this-factorys-workforce",
@@ -1741,15 +1678,6 @@ ${categories.map((category) => `      <category>${escapeHtml(category)}</categor
 
   await fs.writeFile(feedPath, xml, "utf8");
 };
-const writeHomepagePreloadScript = async (posts) => {
-  const preloadPosts = buildHomepagePreloadPosts(posts);
-  const payload = JSON.stringify(preloadPosts);
-  await fs.writeFile(
-    preloadedPostsScriptPath,
-    `window.__ROBOTTV_PRELOADED_POSTS__ = ${payload};\n`,
-    "utf8"
-  );
-};
 const writeEditorialPinnedPostsScript = async () => {
   await fs.writeFile(
     editorialPinnedPostsScriptPath,
@@ -1769,33 +1697,162 @@ const writeCoverImageOverridesScript = async () => {
     "utf8"
   );
 };
-const buildHomepageStaticMarkup = (posts) => {
-  const listingPosts = getHomepageListingPosts(posts);
-  const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
-  const cardsHtml = pagePosts
-    .map((post, index) => {
-      const title = escapeHtml(toPlainText(post.title || "robot.tv News"));
-      const excerpt = escapeHtml(
-        normalizeExcerpt(post.excerpt || "Latest robotics intelligence from robot.tv.")
-      );
-      const date = escapeHtml(formatDisplayDate(post.publishedAt));
-      const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
-      const thumbUrl = escapeHtml(coverImageForPost(post));
-      return `        <article class="card ${index === 0 ? "featured" : ""}">
+const listingSummaryOverrides = new Map([
+  [
+    "learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit",
+    "A stronger focus on human-friendly warehouse robotics suggests the market is moving past pure automation and toward deployment fit, operator acceptance, and workflow trust.",
+  ],
+  [
+    "the-future-of-realsense-3d-vision-with-chris-matthieu",
+    "Intel's RealSense push matters because 3D vision still sits near the center of robotics perception, navigation, and deployment reliability.",
+  ],
+  [
+    "video-friday-digit-learns-to-dancevirtually-overnight",
+    "Faster progress in robot motion suggests the market is raising the bar from novelty demos to repeatable control, adaptability, and real-world performance.",
+  ],
+  [
+    "chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist",
+    "UBTech's $18 million AI talent bid signals how aggressively humanoid teams now view core autonomy as a strategic bottleneck, not a support function.",
+  ],
+  [
+    "sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation",
+    "Sanctuary AI's zero-shot hand result suggests dexterous robotics is starting to move from scripted manipulation toward more adaptable real-world handling.",
+  ],
+  [
+    "gill-pratt-says-humanoid-robots-moment-is-finally-here",
+    "Gill Pratt's call suggests humanoids are no longer being judged as distant research projects, but against the harder standard of practical deployment readiness.",
+  ],
+  [
+    "picknik-robotics-gives-moveit-pro-90-enhanced-perception-to-motion-teleop-capabilities",
+    "PickNik's MoveIt Pro update signals that robotics software buyers still want tighter links between perception, teleoperation, and real production workflows.",
+  ],
+  [
+    "europe-vies-to-be-humanoid-robot-leader-in-global-tech-race",
+    "Europe's humanoid push suggests the category is now being treated as industrial strategy, not just startup experimentation or research branding.",
+  ],
+  [
+    "china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push",
+    "Record Q1 funding in China points to a market where robotics and adjacent strategic technologies are being backed at ecosystem scale, not company by company.",
+  ],
+  [
+    "surgical-robotics-why-motion-architecture-matters-more-than-ever",
+    "Motion architecture remains a decisive surgical robotics constraint, and current industry attention shows that commercialization still depends on precision before scale.",
+  ],
+  [
+    "agibot-rolls-out-10000th-humanoid-robot",
+    "AGIBOT's 10,000-unit milestone marks a shift from prototype theater toward manufacturing scale, where supply chain discipline starts to matter more than headline novelty.",
+  ],
+  [
+    "figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors",
+    "Figure's framing of the OpenAI split points to a robotics market where foundation-model alignment is becoming a competitive issue, not just a partnership story.",
+  ],
+]);
+const tightenListingSummary = (value, { maxWords = 16, maxChars = 132 } = {}) => {
+  const text = toPlainText(value);
+  if (!text) return "";
+  const words = text.split(/\s+/).filter(Boolean);
+  let shortened = text;
+  if (words.length > maxWords) {
+    shortened = `${words.slice(0, maxWords).join(" ")}...`;
+  }
+  if (shortened.length > maxChars) {
+    shortened = `${shortened.slice(0, maxChars).replace(/\s+\S*$/, "").trimEnd()}...`;
+  }
+  return shortened;
+};
+const genericListingLeadPattern =
+  /^(?:[A-Z][A-Za-z0-9&.'"\- ]{2,80}\s+(?:discusses|explores|highlights|covers|looks at)|Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News\.?\s*)/i;
+const implicationVerbPattern = /\b(signals|suggests|shows|reflects|marks|points to)\b/i;
+const highSignalPattern =
+  /\b(deploy(?:ment|s)?|pilot|factory|warehouse|supply chain|manufactur(?:e|ing)|funding|raises?|valuation|acquires?|acquisition|partners?|rolls out|milestone|orders?|production|commerciali[sz]ation|teleop|dexter|surgical|vision|foundation model|humanoid)\b/i;
+const concreteFactPattern =
+  /\b(\$[\d,.]+(?:\s?(?:m|b|million|billion))?|\d[\d,]*(?:st|nd|rd|th)?|digit|ubtech|figure|agibot|amazon|google|intel|toyota|picknik|surgery|humanoid)\b/i;
+const getListingSummary = (post) => {
+  const override = listingSummaryOverrides.get(String(post?.slug || "").trim());
+  if (override) return tightenListingSummary(override);
+  const cleaned = normalizeExcerpt(post?.excerpt || "Latest robotics intelligence from robot.tv.");
+  const sentences = cleaned
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => toPlainText(sentence))
+    .filter(Boolean);
+  const implicationSentence = sentences.find(
+    (sentence) => implicationVerbPattern.test(sentence) && concreteFactPattern.test(sentence)
+  );
+  if (implicationSentence) return tightenListingSummary(implicationSentence);
+  const fallbackSentence = sentences.find(
+    (sentence, index) => (!index || !genericListingLeadPattern.test(sentence)) && implicationVerbPattern.test(sentence)
+  );
+  if (fallbackSentence) return tightenListingSummary(fallbackSentence);
+  const cleanedLead = (sentences.find((sentence) => !genericListingLeadPattern.test(sentence)) || cleaned)
+    .replace(genericListingLeadPattern, "")
+    .trim();
+  if (implicationVerbPattern.test(cleanedLead)) return tightenListingSummary(cleanedLead);
+  if (highSignalPattern.test(cleanedLead) && concreteFactPattern.test(cleanedLead)) {
+    return tightenListingSummary(`${cleanedLead.replace(/[.!?]+$/, "")} signals a broader robotics shift.`);
+  }
+  return tightenListingSummary(cleanedLead || cleaned);
+};
+const renderStaticVisualStory = (post, { featured = false } = {}) => {
+  const title = escapeHtml(toPlainText(post.title || "robot.tv News"));
+  const date = escapeHtml(formatDisplayDate(post.publishedAt));
+  const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
+  const thumbUrl = escapeHtml(coverImageForPost(post));
+  const summary = escapeHtml(getListingSummary(post));
+  return `        <article class="visual-story${featured ? " visual-story-featured" : ""}" data-video="${escapeHtml(
+    post.youtubeUrl || ""
+  )}">
           <span class="thumb-shell">
             <img class="thumb" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
+            <span class="story-type">Featured Story</span>
             <p class="meta">${date}</p>
             <h3><a href="${articleUrl}">${title}</a></h3>
-            <p>${excerpt}</p>
+            <p>${summary}</p>
             <div class="row">
-              <a class="btn btn-primary" href="${articleUrl}">Read Robot News</a>
+              <a class="btn btn-primary" href="${articleUrl}">Watch story</a>
             </div>
           </div>
         </article>`;
-    })
+};
+const renderStaticSignalStory = (post, { featured = false } = {}) => {
+  const title = escapeHtml(toPlainText(post.title || "robot.tv News"));
+  const date = escapeHtml(formatDisplayDate(post.publishedAt));
+  const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
+  const summary = escapeHtml(getListingSummary(post));
+  return `        <article class="signal-story${featured ? " featured-signal" : ""}">
+          <div class="signal-story-header">
+            <span class="story-type">Signal Brief</span>
+            <p class="meta">${date}</p>
+          </div>
+          <h3><a href="${articleUrl}">${title}</a></h3>
+          <p>${summary}</p>
+          <div class="row">
+            <a class="signal-link" href="${articleUrl}">Read brief</a>
+          </div>
+        </article>`;
+};
+const buildHomepageStaticMarkup = (posts) => {
+  const listingPosts = getHomepageListingPosts(posts);
+  const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
+  const { lead, leadKind, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts);
+  const leadHtml = lead
+    ? leadKind === "lead-brief"
+      ? renderStaticSignalStory(lead, { featured: true })
+      : renderStaticVisualStory(lead, { featured: true })
+    : "";
+  const railHtml = railBriefs.length
+    ? `        <div class="brief-rail">
+${railBriefs.map((post) => renderStaticSignalStory(post)).join("\n")}
+        </div>`
+    : "";
+  const restHtml = remainder
+    .map((post) =>
+      classifyHomepageStory(post).kind === "signal-brief"
+        ? renderStaticSignalStory(post)
+        : renderStaticVisualStory(post)
+    )
     .join("\n");
   return `      <section class="panel hero">
         <p class="kicker">ROBOTICS NEWSROOM</p>
@@ -1810,8 +1867,14 @@ const buildHomepageStaticMarkup = (posts) => {
         <div class="section-head">
           <h2>Latest Robot News</h2>
         </div>
-        <div class="grid">
-${cardsHtml}
+        <div class="latest-feed">
+${leadHtml || railHtml ? `        <div class="homepage-top">
+${leadHtml}
+${railHtml}
+        </div>` : ""}
+${restHtml ? `        <div class="homepage-rest">
+${restHtml}
+        </div>` : ""}
         </div>
       </section>
       <section class="panel topic-hub">
@@ -1967,7 +2030,6 @@ const main = async () => {
   await writeRetiredRedirectPages();
   await writeSitemap(posts);
   await writeFeed(posts);
-  await writeHomepagePreloadScript(posts);
   await writeEditorialPinnedPostsScript();
   await writeCoverImageOverridesScript();
   await writeHomepageIndex(posts);

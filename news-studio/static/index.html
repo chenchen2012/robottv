@@ -158,6 +158,204 @@
     }
     .row { margin-top:auto; padding-top:.75rem; display:flex; gap:.6rem; flex-wrap:wrap; }
     .empty { margin-top:1rem; padding:1rem; color:var(--muted); }
+    .latest-feed { display:grid; gap:1rem; }
+    .homepage-top {
+      display:grid;
+      grid-template-columns:minmax(0, 1.55fr) minmax(280px, .95fr);
+      gap:1rem;
+      align-items:start;
+    }
+    .brief-rail {
+      display:grid;
+      gap:.7rem;
+      align-content:start;
+    }
+    .visual-story {
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:linear-gradient(160deg,#101926,#0b131f);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns:minmax(280px, 360px) 1fr;
+      min-height:100%;
+      box-shadow:0 10px 24px rgba(6, 11, 18, 0.2);
+    }
+    .visual-story.visual-story-featured { border-color:#3d5378; box-shadow:0 0 0 1px rgba(94,132,255,.18) inset, 0 12px 28px rgba(6,11,18,.22); }
+    .visual-story .thumb-shell { min-height:100%; }
+    .visual-story .thumb { height:100%; aspect-ratio:auto; border-bottom:0; }
+    .visual-story .thumb-preview { border-bottom:0; }
+    .visual-story .content { padding:.92rem .96rem .96rem; }
+    .visual-story .meta { margin-top:.36rem; }
+    .visual-story h3 { margin:.5rem 0 0; }
+    .visual-story p {
+      margin:.5rem 0 0;
+      line-height:1.5;
+      max-width:28ch;
+    }
+    .visual-story .row {
+      margin-top:.8rem;
+      padding-top:0;
+    }
+    .story-type {
+      display:inline-flex;
+      align-items:center;
+      width:max-content;
+      border:1px solid #415d86;
+      border-radius:999px;
+      padding:.12rem .48rem;
+      font-size:.7rem;
+      letter-spacing:.07em;
+      color:#c9daf7;
+      background:rgba(17, 29, 47, 0.66);
+      text-transform:uppercase;
+    }
+    .signal-story {
+      border-top:1px solid rgba(72,100,142,.48);
+      border-radius:0;
+      padding:.78rem 0 .16rem;
+      background:
+        radial-gradient(280px 84px at 100% 0%, rgba(94,132,255,.06), transparent 56%),
+        linear-gradient(180deg, rgba(10,17,27,.56), rgba(10,17,27,.22));
+      box-shadow:none;
+      position:relative;
+    }
+    .brief-rail .signal-story:first-child { border-top:0; padding-top:0; }
+    .signal-story::before {
+      content:"";
+      position:absolute;
+      left:0;
+      top:.88rem;
+      bottom:.66rem;
+      width:2px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(94,132,255,.72), rgba(239,45,82,.34));
+    }
+    .signal-story.featured-signal {
+      border-top-color:#6b8fc4;
+      padding:1rem 0 .22rem;
+      background:
+        radial-gradient(340px 110px at 100% 0%, rgba(94,132,255,.1), transparent 58%),
+        linear-gradient(180deg, rgba(10,17,27,.78), rgba(10,17,27,.28));
+    }
+    .signal-story-header {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:.48rem .8rem;
+      padding-left:.8rem;
+    }
+    .signal-story h3 {
+      margin:.48rem 0 0;
+      padding-left:.8rem;
+      font-size:.98rem;
+      line-height:1.26;
+    }
+    .signal-story p {
+      margin:.42rem 0 0;
+      padding-left:.8rem;
+      color:#c3d0e8;
+      line-height:1.5;
+      font-size:.88rem;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+    .signal-story .row {
+      padding-top:.54rem;
+      padding-left:.8rem;
+    }
+    .signal-story .story-type {
+      border-color:#3d567d;
+      background:rgba(16, 27, 44, 0.6);
+      color:#d7e5ff;
+      font-size:.66rem;
+    }
+    .signal-story .meta {
+      font-size:.72rem;
+      color:#8fa6ca;
+    }
+    .signal-story.featured-signal h3 { font-size:1.04rem; }
+    .signal-story.featured-signal p {
+      -webkit-line-clamp:3;
+      font-size:.89rem;
+    }
+    .signal-link {
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      color:#dce8ff;
+      font-weight:650;
+      font-size:.82rem;
+      letter-spacing:.01em;
+      text-decoration:underline;
+      text-decoration-color:rgba(220,232,255,.42);
+      text-underline-offset:.18em;
+    }
+    .signal-link:hover { color:#f3f8ff; text-decoration-color:rgba(243,248,255,.72); }
+    .homepage-rest {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:1rem;
+      align-items:start;
+    }
+    .homepage-rest .signal-story {
+      border:1px solid rgba(58,82,119,.5);
+      border-radius:10px;
+      padding:.74rem .78rem .14rem;
+      background:
+        radial-gradient(260px 90px at 100% 0%, rgba(94,132,255,.07), transparent 58%),
+        linear-gradient(160deg, rgba(10,17,27,.92), rgba(11,18,29,.92));
+    }
+    .homepage-rest .signal-story::before { top:12px; bottom:12px; }
+    .homepage-rest .signal-story-header,
+    .homepage-rest .signal-story h3,
+    .homepage-rest .signal-story p,
+    .homepage-rest .signal-story .row { padding-left:.62rem; }
+    .homepage-rest > * {
+      align-self:start;
+      min-height:0;
+    }
+    .homepage-rest .visual-story {
+      display:block;
+      border:1px solid rgba(58,82,119,.5);
+      border-radius:10px;
+      background:
+        radial-gradient(260px 90px at 100% 0%, rgba(94,132,255,.07), transparent 58%),
+        linear-gradient(160deg, rgba(10,17,27,.92), rgba(11,18,29,.92));
+      box-shadow:none;
+      min-height:0;
+    }
+    .homepage-rest .visual-story .thumb-shell { display:none; }
+    .homepage-rest .visual-story .content { padding:.82rem .85rem .88rem; }
+    .homepage-rest .visual-story .story-type { display:none; }
+    .homepage-rest .visual-story .meta { margin-top:0; }
+    .homepage-rest .visual-story h3 {
+      margin:.38rem 0 0;
+      line-height:1.28;
+      font-size:.98rem;
+    }
+    .homepage-rest .visual-story p {
+      margin:.36rem 0 0;
+      color:#c3d0e8;
+      line-height:1.45;
+      font-size:.88rem;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      min-height:0;
+    }
+    .homepage-rest .visual-story .row {
+      margin-top:.56rem;
+      padding-top:0;
+    }
+    .homepage-rest .visual-story .btn {
+      padding:.48rem .82rem;
+      font-size:.84rem;
+      border-radius:9px;
+    }
 
     .article { margin-top:1rem; display:grid; grid-template-columns:1fr; gap:.9rem; min-width:0; }
     .article-main,.article-side { padding:1rem; min-width:0; }
@@ -350,8 +548,19 @@
     .pagination .btn[aria-disabled="true"] { opacity:.45; pointer-events:none; }
     .pagination-status { color:#9cb0d2; font-size:.88rem; align-self:center; }
 
-    @media (max-width:980px){ .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); justify-content:stretch;} .article{grid-template-columns:1fr;} }
-    @media (max-width:760px){ .header{flex-direction:column; align-items:flex-start;} .grid{grid-template-columns:1fr;} }
+    @media (max-width:980px){
+      .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); justify-content:stretch;}
+      .article{grid-template-columns:1fr;}
+      .homepage-top{grid-template-columns:1fr;}
+      .homepage-rest{grid-template-columns:1fr;}
+      .visual-story{grid-template-columns:1fr;}
+      .visual-story .thumb{aspect-ratio:16/9;}
+    }
+    @media (max-width:760px){
+      .header{flex-direction:column; align-items:flex-start;}
+      .grid{grid-template-columns:1fr;}
+      .signal-story-header{align-items:flex-start;}
+    }
   </style>
 </head>
 <body>
@@ -390,175 +599,189 @@
         <div class="section-head">
           <h2>Latest Robot News</h2>
         </div>
-        <div class="grid">
-        <article class="card featured">
+        <div class="latest-feed">
+        <div class="homepage-top">
+        <article class="visual-story visual-story-featured" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/agile-robots-google-deepmind.jpg" alt="Agile Robots to deploy Google DeepMind foundation models on its humanoid thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit.svg" alt="Learn to build warehouse robots people enjoy working with at the Robotics Summit thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 29, 2026</p>
-            <h3><a href="/agile-robots-to-deploy-google-deepmind-foundation-models-on-its-humanoid/">Agile Robots to deploy Google DeepMind foundation models on its humanoid</a></h3>
-            <p>Agile Robots will integrate Google DeepMind&#39;s foundation models into its humanoid platform. This move signals a strategic shift toward leveraging advanced AI for real-world robotic control and reasoning.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 4, 2026</p>
+            <h3><a href="/learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit/">Learn to build warehouse robots people enjoy working with at the Robotics Summit</a></h3>
+            <p>A stronger focus on human-friendly warehouse robotics suggests the market is moving past pure automation and...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/agile-robots-to-deploy-google-deepmind-foundation-models-on-its-humanoid/">Read Robot News</a>
+              <a class="btn btn-primary" href="/learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <div class="brief-rail">
+        <article class="signal-story">
+          <div class="signal-story-header">
+            <span class="story-type">Signal Brief</span>
+            <p class="meta">Apr 3, 2026</p>
+          </div>
+          <h3><a href="/sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation/">Sanctuary AI’s robotic hand demonstrates zero-shot in-hand manipulation</a></h3>
+          <p>Sanctuary AI&#39;s zero-shot hand result suggests dexterous robotics is starting to move from scripted manipulation toward...</p>
+          <div class="row">
+            <a class="signal-link" href="/sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation/">Read brief</a>
+          </div>
+        </article>
+        </div>
+        </div>
+        <div class="homepage-rest">
+        <article class="visual-story" data-video="https://www.youtube.com/watch?v=TnV2h4dy3Dc">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/latest-generation-of-robots.jpg" alt="Mind Robotics raises Series A to develop AI-driven industrial automation thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/TnV2h4dy3Dc/hqdefault.jpg" alt="The future of RealSense 3D vision with Chris Matthieu thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 29, 2026</p>
-            <h3><a href="/mind-robotics-raises-series-a-to-develop-ai-driven-industrial-automation/">Mind Robotics raises Series A to develop AI-driven industrial automation</a></h3>
-            <p>Mind Robotics has secured a Series A round to advance its AI-driven industrial automation platform. The funding will support development and scaling of its core technology.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 4, 2026</p>
+            <h3><a href="/the-future-of-realsense-3d-vision-with-chris-matthieu/">The future of RealSense 3D vision with Chris Matthieu</a></h3>
+            <p>Intel&#39;s RealSense push matters because 3D vision still sits near the center of robotics perception, navigation,...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/mind-robotics-raises-series-a-to-develop-ai-driven-industrial-automation/">Read Robot News</a>
+              <a class="btn btn-primary" href="/the-future-of-realsense-3d-vision-with-chris-matthieu/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/us-lawmakers-ban-chinese-robots.jpg" alt="US lawmakers to introduce bill to ban government use of Chinese robots thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/video-friday-digit-learns-to-dancevirtually-overnight.svg" alt="Video Friday: Digit Learns to Dance—Virtually Overnight thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 26, 2026</p>
-            <h3><a href="/us-lawmakers-to-introduce-bill-to-ban-government-use-of-chinese-robots/">US lawmakers to introduce bill to ban government use of Chinese robots</a></h3>
-            <p>U.S. lawmakers are preparing legislation to prohibit federal agencies from using Chinese-made robots. The move directly targets government procurement and supply chains.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 4, 2026</p>
+            <h3><a href="/video-friday-digit-learns-to-dancevirtually-overnight/">Video Friday: Digit Learns to Dance—Virtually Overnight</a></h3>
+            <p>Faster progress in robot motion suggests the market is raising the bar from novelty demos to...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/us-lawmakers-to-introduce-bill-to-ban-government-use-of-chinese-robots/">Read Robot News</a>
+              <a class="btn btn-primary" href="/video-friday-digit-learns-to-dancevirtually-overnight/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/jw_o0xr8MWU/hqdefault.jpg" alt="3 robotics trends from NVIDIA GTC 2026 thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist.svg" alt="Chinese Robot Pioneer UBTech Offers $18 Million for AI Scientist thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 26, 2026</p>
-            <h3><a href="/3-robotics-trends-from-nvidia-gtc-2026/">3 robotics trends from NVIDIA GTC 2026</a></h3>
-            <p>NVIDIA&#39;s 2026 GTC conference highlighted three key robotics trends. These developments signal where computational demands and investment are shifting for next-generation systems.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 3, 2026</p>
+            <h3><a href="/chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist/">Chinese Robot Pioneer UBTech Offers $18 Million for AI Scientist</a></h3>
+            <p>UBTech&#39;s $18 million AI talent bid signals how aggressively humanoid teams now view core autonomy as...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/3-robotics-trends-from-nvidia-gtc-2026/">Read Robot News</a>
+              <a class="btn btn-primary" href="/chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/lucid-bots-window-washing-drones.jpg" alt="Lucid Bots raises $20M to keep up with demand for its window-washing drones thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/gill-pratt-says-humanoid-robots-moment-is-finally-here.svg" alt="Gill Pratt Says Humanoid Robots’ Moment Is Finally Here thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 26, 2026</p>
-            <h3><a href="/lucid-bots-raises-20m-to-keep-up-with-demand-for-its-window-washing-drones/">Lucid Bots raises $20M to keep up with demand for its window-washing drones</a></h3>
-            <p>Lucid Bots has secured $20 million in new funding. The capital injection is aimed at scaling production to meet rising demand for its commercial window-cleaning drones.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 3, 2026</p>
+            <h3><a href="/gill-pratt-says-humanoid-robots-moment-is-finally-here/">Gill Pratt Says Humanoid Robots’ Moment Is Finally Here</a></h3>
+            <p>Gill Pratt&#39;s call suggests humanoids are no longer being judged as distant research projects, but against...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/lucid-bots-raises-20m-to-keep-up-with-demand-for-its-window-washing-drones/">Read Robot News</a>
+              <a class="btn btn-primary" href="/gill-pratt-says-humanoid-robots-moment-is-finally-here/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="https://www.youtube.com/watch?v=xwWMelc4T-0">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/generated/meet-the-machines-the-latest-generation-of-robots.svg" alt="Meet the machines: The latest generation of robots thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/xwWMelc4T-0/hqdefault.jpg" alt="PickNik Robotics gives MoveIt Pro 9.0 enhanced perception-to-motion, teleop capabilities thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 26, 2026</p>
-            <h3><a href="/meet-the-machines-the-latest-generation-of-robots/">Meet the machines: The latest generation of robots</a></h3>
-            <p>On the latest generation of robots entering the market. The coverage highlights new hardware and software capabilities from emerging companies.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 2, 2026</p>
+            <h3><a href="/picknik-robotics-gives-moveit-pro-90-enhanced-perception-to-motion-teleop-capabilities/">PickNik Robotics gives MoveIt Pro 9.0 enhanced perception-to-motion, teleop capabilities</a></h3>
+            <p>PickNik&#39;s MoveIt Pro update signals that robotics software buyers still want tighter links between perception, teleoperation,...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/meet-the-machines-the-latest-generation-of-robots/">Read Robot News</a>
+              <a class="btn btn-primary" href="/picknik-robotics-gives-moveit-pro-90-enhanced-perception-to-motion-teleop-capabilities/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/retail-logistics-robots.jpg" alt="No arms, no legs, no problem: the robots taking over retail logistics thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/europe-vies-to-be-humanoid-robot-leader-in-global-tech-race.svg" alt="Europe Vies to Be Humanoid Robot Leader in Global Tech Race thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 25, 2026</p>
-            <h3><a href="/no-arms-no-legs-no-problem-the-robots-taking-over-retail-logistics/">No arms, no legs, no problem: the robots taking over retail logistics</a></h3>
-            <p>A new wave of wheeled, armless robots is automating material transport in warehouses and retail backrooms. These systems prioritize simple navigation and high-volume movement over complex manipulation.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 2, 2026</p>
+            <h3><a href="/europe-vies-to-be-humanoid-robot-leader-in-global-tech-race/">Europe Vies to Be Humanoid Robot Leader in Global Tech Race</a></h3>
+            <p>Europe&#39;s humanoid push suggests the category is now being treated as industrial strategy, not just startup...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/no-arms-no-legs-no-problem-the-robots-taking-over-retail-logistics/">Read Robot News</a>
+              <a class="btn btn-primary" href="/europe-vies-to-be-humanoid-robot-leader-in-global-tech-race/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/ohjA3vPuoBg/hqdefault.jpg" alt="Amazon acquires humanoid developer Fauna Robotics thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push.svg" alt="China venture capital funding set to hit record in Q1 on state-led tech push thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 25, 2026</p>
-            <h3><a href="/amazon-acquires-humanoid-developer-fauna-robotics/">Amazon acquires humanoid developer Fauna Robotics</a></h3>
-            <p>Amazon has acquired Fauna Robotics, a developer specializing in humanoid systems. The move signals a strategic push into advanced automation for logistics and fulfillment.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 2, 2026</p>
+            <h3><a href="/china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push/">China venture capital funding set to hit record in Q1 on state-led tech push</a></h3>
+            <p>Record Q1 funding in China points to a market where robotics and adjacent strategic technologies are...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/amazon-acquires-humanoid-developer-fauna-robotics/">Read Robot News</a>
+              <a class="btn btn-primary" href="/china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="https://www.youtube.com/watch?v=J-fRSaIZqNw">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/amazon-kid-size-humanoid-robots.jpg" alt="Amazon just bought a startup making kid-size humanoid robots thumbnail" loading="lazy">
+            <img class="thumb" src="https://img.youtube.com/vi/J-fRSaIZqNw/hqdefault.jpg" alt="Surgical robotics: Why motion architecture matters more than ever thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 25, 2026</p>
-            <h3><a href="/amazon-just-bought-a-startup-making-kid-size-humanoid-robots/">Amazon just bought a startup making kid-size humanoid robots</a></h3>
-            <p>Amazon has acquired a startup developing child-sized humanoid robots. The move signals a strategic push into a new form factor for potential logistics or consumer applications.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 1, 2026</p>
+            <h3><a href="/surgical-robotics-why-motion-architecture-matters-more-than-ever/">Surgical robotics: Why motion architecture matters more than ever</a></h3>
+            <p>Motion architecture remains a decisive surgical robotics constraint, and current industry attention shows that commercialization...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/amazon-just-bought-a-startup-making-kid-size-humanoid-robots/">Read Robot News</a>
+              <a class="btn btn-primary" href="/surgical-robotics-why-motion-architecture-matters-more-than-ever/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/photos/openai-sora-strategy-shift.jpg" alt="OpenAI is scrapping the Sora app to chase bigger AI goals thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/agibot-rolls-out-10000th-humanoid-robot.svg" alt="AGIBOT rolls out 10,000th humanoid robot thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 25, 2026</p>
-            <h3><a href="/openai-is-scrapping-the-sora-app-to-chase-bigger-ai-goals/">OpenAI is scrapping the Sora app to chase bigger AI goals</a></h3>
-            <p>OpenAI has discontinued its Sora application, shifting focus to broader AI development. This move signals a strategic pivot away from a specific product to concentrate on core research and infrastructure.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 1, 2026</p>
+            <h3><a href="/agibot-rolls-out-10000th-humanoid-robot/">AGIBOT rolls out 10,000th humanoid robot</a></h3>
+            <p>AGIBOT&#39;s 10,000-unit milestone marks a shift from prototype theater toward manufacturing scale, where supply chain discipline...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/openai-is-scrapping-the-sora-app-to-chase-bigger-ai-goals/">Read Robot News</a>
+              <a class="btn btn-primary" href="/agibot-rolls-out-10000th-humanoid-robot/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
+        <article class="visual-story" data-video="">
           <span class="thumb-shell">
-            <img class="thumb" src="https://img.youtube.com/vi/UXwL-v-4IlY/hqdefault.jpg" alt="TI partners with NVIDIA to accelerate robot deployments thumbnail" loading="lazy">
+            <img class="thumb" src="https://news.robot.tv/images/covers/generated/figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors.svg" alt="Figure CEO speaks out on OpenAI split: &#39;We&#39;re going to be competitors&#39; thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <p class="meta">Mar 25, 2026</p>
-            <h3><a href="/ti-partners-with-nvidia-to-accelerate-robot-deployments/">TI partners with NVIDIA to accelerate robot deployments</a></h3>
-            <p>Texas Instruments and NVIDIA have announced a partnership to accelerate robot deployment. The collaboration aims to streamline development and integration processes for robotics systems.</p>
+            <span class="story-type">Featured Story</span>
+            <p class="meta">Apr 1, 2026</p>
+            <h3><a href="/figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors/">Figure CEO speaks out on OpenAI split: &#39;We&#39;re going to be competitors&#39;</a></h3>
+            <p>Figure&#39;s framing of the OpenAI split points to a robotics market where foundation-model alignment is becoming...</p>
             <div class="row">
-              <a class="btn btn-primary" href="/ti-partners-with-nvidia-to-accelerate-robot-deployments/">Read Robot News</a>
+              <a class="btn btn-primary" href="/figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors/">Watch story</a>
             </div>
           </div>
         </article>
-        <article class="card ">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/generated/agile-robots-becomes-the-latest-robotics-company-to-partner-with-google-deepmind.svg" alt="Agile Robots becomes the latest robotics company to partner with Google DeepMind thumbnail" loading="lazy">
-            <span class="thumb-preview" aria-hidden="true"></span>
-          </span>
-          <div class="content">
-            <p class="meta">Mar 24, 2026</p>
-            <h3><a href="/agile-robots-becomes-the-latest-robotics-company-to-partner-with-google-deepmind/">Agile Robots becomes the latest robotics company to partner with Google DeepMind</a></h3>
-            <p>Agile Robots has entered a partnership with Google DeepMind. This collaboration signals a strategic move to integrate advanced AI research with commercial robotics hardware.</p>
-            <div class="row">
-              <a class="btn btn-primary" href="/agile-robots-becomes-the-latest-robotics-company-to-partner-with-google-deepmind/">Read Robot News</a>
-            </div>
-          </div>
-        </article>
+        </div>
         </div>
       </section>
       <section class="panel topic-hub">
@@ -645,7 +868,6 @@
     </footer>
   </div>
 
-  <script src="scripts/preloaded-news-posts.js?v=20260329-news-v3"></script>
   <script src="scripts/editorial-pinned-posts.js?v=20260329-news-v3"></script>
   <script src="scripts/cover-image-overrides.js?v=20260328-cover-rules-v2"></script>
   <script>
@@ -667,8 +889,7 @@
     const dataset = "production";
     const PAGE_SIZE = 12;
     const FETCH_DEPTH = 60;
-    const CACHE_KEY = "robot_tv_news_cache_v3";
-    const preloadedPosts = Array.isArray(window.__ROBOTTV_PRELOADED_POSTS__) ? window.__ROBOTTV_PRELOADED_POSTS__ : [];
+    const isHomepagePath = path === "/";
     const hiddenListingSlugs = new Set([
       "biggest-ai-news-today",
       "the-biggest-robot-news-today",
@@ -1373,6 +1594,131 @@
       }
       return cleaned;
     };
+    const listingSummaryOverrides = new Map([
+      [
+        "learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit",
+        "A stronger focus on human-friendly warehouse robotics suggests the market is moving past pure automation and toward deployment fit, operator acceptance, and workflow trust."
+      ],
+      [
+        "the-future-of-realsense-3d-vision-with-chris-matthieu",
+        "Intel's RealSense push matters because 3D vision still sits near the center of robotics perception, navigation, and deployment reliability."
+      ],
+      [
+        "video-friday-digit-learns-to-dancevirtually-overnight",
+        "Faster progress in robot motion suggests the market is raising the bar from novelty demos to repeatable control, adaptability, and real-world performance."
+      ],
+      [
+        "chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist",
+        "UBTech's $18 million AI talent bid signals how aggressively humanoid teams now view core autonomy as a strategic bottleneck, not a support function."
+      ],
+      [
+        "sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation",
+        "Sanctuary AI's zero-shot hand result suggests dexterous robotics is starting to move from scripted manipulation toward more adaptable real-world handling."
+      ],
+      [
+        "gill-pratt-says-humanoid-robots-moment-is-finally-here",
+        "Gill Pratt's call suggests humanoids are no longer being judged as distant research projects, but against the harder standard of practical deployment readiness."
+      ],
+      [
+        "picknik-robotics-gives-moveit-pro-90-enhanced-perception-to-motion-teleop-capabilities",
+        "PickNik's MoveIt Pro update signals that robotics software buyers still want tighter links between perception, teleoperation, and real production workflows."
+      ],
+      [
+        "europe-vies-to-be-humanoid-robot-leader-in-global-tech-race",
+        "Europe's humanoid push suggests the category is now being treated as industrial strategy, not just startup experimentation or research branding."
+      ],
+      [
+        "china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push",
+        "Record Q1 funding in China points to a market where robotics and adjacent strategic technologies are being backed at ecosystem scale, not company by company."
+      ],
+      [
+        "surgical-robotics-why-motion-architecture-matters-more-than-ever",
+        "Motion architecture remains a decisive surgical robotics constraint, and current industry attention shows that commercialization still depends on precision before scale."
+      ],
+      [
+        "agibot-rolls-out-10000th-humanoid-robot",
+        "AGIBOT's 10,000-unit milestone marks a shift from prototype theater toward manufacturing scale, where supply chain discipline starts to matter more than headline novelty."
+      ],
+      [
+      "figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors",
+      "Figure's framing of the OpenAI split points to a robotics market where foundation-model alignment is becoming a competitive issue, not just a partnership story."
+      ]
+    ]);
+    const tightenListingSummary = (value, { maxWords = 16, maxChars = 132 } = {}) => {
+      const text = toPlain(value);
+      if (!text) return "";
+      const words = text.split(/\s+/).filter(Boolean);
+      let shortened = text;
+      if (words.length > maxWords) {
+        shortened = `${words.slice(0, maxWords).join(" ")}...`;
+      }
+      if (shortened.length > maxChars) {
+        shortened = `${shortened.slice(0, maxChars).replace(/\s+\S*$/, "").trimEnd()}...`;
+      }
+      return shortened;
+    };
+    const genericListingLeadPattern =
+      /^(?:[A-Z][A-Za-z0-9&.'"\- ]{2,80}\s+(?:discusses|explores|highlights|covers|looks at)|Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News\.?\s*)/i;
+    const implicationVerbPattern = /\b(signals|suggests|shows|reflects|marks|points to)\b/i;
+    const highSignalPattern =
+      /\b(deploy(?:ment|s)?|pilot|factory|warehouse|supply chain|manufactur(?:e|ing)|funding|raises?|valuation|acquires?|acquisition|partners?|rolls out|milestone|orders?|production|commerciali[sz]ation|teleop|dexter|surgical|vision|foundation model|humanoid)\b/i;
+    const concreteFactPattern =
+      /\b(\$[\d,.]+(?:\s?(?:m|b|million|billion))?|\d[\d,]*(?:st|nd|rd|th)?|digit|ubtech|figure|agibot|amazon|google|intel|toyota|picknik|surgery|humanoid)\b/i;
+    const prominentSourceNames = new Set([
+      "reuters",
+      "techcrunch",
+      "bloomberg",
+      "financial times",
+      "the wall street journal",
+      "wall street journal",
+      "associated press",
+      "ap",
+      "business insider",
+      "the robot report"
+    ]);
+    const priorityTopicNames = new Set([
+      "humanoids",
+      "warehouse robotics",
+      "operations",
+      "robotics business",
+      "physical ai",
+      "autonomy",
+      "manufacturing",
+      "industrial robotics",
+      "china"
+    ]);
+    const homepageLeadFeaturePreferredSlugs = new Set([]);
+    const homepageVisualFeaturePreferredSlugs = new Set([]);
+    const homepageTextSignalPreferredSlugs = new Set([]);
+    const normalizeTopicToken = (value) => normalizeCompareText(value).replace(/\brobotics\b/g, "robotics").trim();
+    const getSentenceCandidates = (value) =>
+      normalizeExcerpt(value || "")
+        .split(/(?<=[.!?])\s+/)
+        .map((sentence) => toPlain(sentence))
+        .filter(Boolean);
+    const buildListingSummary = (post) => {
+      const override = listingSummaryOverrides.get(String(post?.slug || "").trim());
+      if (override) return tightenListingSummary(override);
+      const cleaned = normalizeExcerpt(post?.excerpt || "Latest robotics intelligence from robot.tv.");
+      const sentences = getSentenceCandidates(cleaned);
+      const implicationSentence = sentences.find((sentence) =>
+        implicationVerbPattern.test(sentence) && concreteFactPattern.test(sentence)
+      );
+      if (implicationSentence) return tightenListingSummary(implicationSentence);
+      const fallbackSentence = sentences.find((sentence, index) =>
+        (!index || !genericListingLeadPattern.test(sentence)) &&
+        implicationVerbPattern.test(sentence)
+      );
+      if (fallbackSentence) return tightenListingSummary(fallbackSentence);
+      const cleanedLead = (sentences.find((sentence) => !genericListingLeadPattern.test(sentence)) || cleaned)
+        .replace(genericListingLeadPattern, "")
+        .trim();
+      if (implicationVerbPattern.test(cleanedLead)) return tightenListingSummary(cleanedLead);
+      if (highSignalPattern.test(cleanedLead) && concreteFactPattern.test(cleanedLead)) {
+        return tightenListingSummary(`${cleanedLead.replace(/[.!?]+$/, "")} signals a broader robotics shift.`);
+      }
+      return tightenListingSummary(cleanedLead || cleaned);
+    };
     const mergeUniqueText = (...groups) => {
       const merged = [];
       const seen = new Set();
@@ -1443,6 +1789,112 @@
 
       const combined = parts.join(" ");
       return combined.length > 340 ? `${combined.slice(0, 337).trimEnd()}...` : combined;
+    };
+    const normalizeHomepageSlug = (slug) => String(slug || "").trim().replace(/^\/+|\/+$/g, "");
+    const hasEmbeddedVideo = (post) => Boolean(videoId(post?.youtubeUrl));
+    const hasStrongVisualSupport = (post) =>
+      homepageLeadFeaturePreferredSlugs.has(normalizeHomepageSlug(post?.slug)) ||
+      homepageVisualFeaturePreferredSlugs.has(normalizeHomepageSlug(post?.slug)) ||
+      hasEmbeddedVideo(post) ||
+      Boolean(toPlain(post?.sourceImageUrl || "")) ||
+      Boolean(toPlain(post?.heroImage?.asset?.url || ""));
+    const getEditorialScore = (post) => {
+      const slug = normalizeHomepageSlug(post?.slug);
+      const title = toPlain(post?.title || "");
+      const excerpt = toPlain(post?.excerpt || "");
+      const sourceName = normalizeCompareText(post?.sourceName || "");
+      const categories = Array.isArray(post?.categories) ? post.categories : [];
+      const publishedAt = new Date(post?.publishedAt || 0).getTime();
+      const ageHours = publishedAt ? (Date.now() - publishedAt) / 36e5 : Number.POSITIVE_INFINITY;
+      let score = 0;
+
+      if (homepageLeadFeaturePreferredSlugs.has(slug)) score += 5;
+      if (homepageVisualFeaturePreferredSlugs.has(slug)) score += 3;
+      if (homepageTextSignalPreferredSlugs.has(slug)) score -= 1;
+      if (categories.some((category) => priorityTopicNames.has(normalizeTopicToken(category)))) score += 2;
+      if (highSignalPattern.test(`${title} ${excerpt}`)) score += 2;
+      if (concreteFactPattern.test(`${title} ${excerpt}`)) score += 1;
+      if (prominentSourceNames.has(sourceName)) score += 1;
+      if (ageHours <= 48) score += 1;
+      else if (ageHours > 168) score -= 1;
+
+      return score;
+    };
+    const classifyHomepageStory = (post) => {
+      const slug = normalizeHomepageSlug(post?.slug);
+      const editorialScore = getEditorialScore(post);
+      const strongVisual = hasStrongVisualSupport(post);
+      if (homepageLeadFeaturePreferredSlugs.has(slug)) {
+        return { kind: "lead-feature", editorialScore, strongVisual };
+      }
+      if (strongVisual && editorialScore >= 4) {
+        return { kind: "lead-feature", editorialScore, strongVisual };
+      }
+      if (homepageVisualFeaturePreferredSlugs.has(slug) || (strongVisual && editorialScore >= 3)) {
+        return { kind: "featured", editorialScore, strongVisual };
+      }
+      return { kind: "signal-brief", editorialScore, strongVisual };
+    };
+    const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) => {
+      const entries = (Array.isArray(posts) ? posts : []).map((post) => ({
+        post,
+        classification: classifyHomepageStory(post)
+      }));
+      const leadEntry =
+        entries.find((entry) => entry.classification.kind === "lead-feature") ||
+        entries.find((entry) => entry.classification.kind === "featured") ||
+        entries[0] ||
+        null;
+      const lead = leadEntry?.post || null;
+      const leadKind = leadEntry && leadEntry.classification.kind === "signal-brief" ? "lead-brief" : "featured";
+      const leadSlug = normalizeHomepageSlug(lead?.slug);
+      const remainingEntries = entries.filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug);
+      const railBriefs = [];
+      const remainder = [];
+      for (const entry of remainingEntries) {
+        if (railBriefs.length < railBriefSlots && entry.classification.kind === "signal-brief") {
+          railBriefs.push(entry.post);
+          continue;
+        }
+        remainder.push(entry.post);
+      }
+      return { lead, leadKind, railBriefs, remainder };
+    };
+    const renderVisualStory = (post, { featured = false } = {}) => `
+      <article class="visual-story${featured ? " visual-story-featured" : ""}" data-video="${esc(post.youtubeUrl || "")}">
+        <span class="thumb-shell">
+          <img class="thumb" src="${esc(coverImageForPost(post))}" alt="${esc(post.title)} thumbnail" loading="lazy">
+          <span class="thumb-preview" aria-hidden="true"></span>
+        </span>
+        <div class="content">
+            <span class="story-type">Featured Story</span>
+            <p class="meta">${esc(formatDate(post.publishedAt))}</p>
+            <h3><a href="/${esc(post.slug)}/">${esc(post.title)}</a></h3>
+          <p>${esc(buildListingSummary(post))}</p>
+          <div class="row">
+            <a class="btn btn-primary" href="/${esc(post.slug)}/">Watch story</a>
+          </div>
+        </div>
+      </article>
+    `;
+    const renderSignalStory = (post, { featured = false } = {}) => `
+      <article class="signal-story${featured ? " featured-signal" : ""}">
+        <div class="signal-story-header">
+          <span class="story-type">Signal Brief</span>
+          <p class="meta">${esc(formatDate(post.publishedAt))}</p>
+        </div>
+        <h3><a href="/${esc(post.slug)}/">${esc(post.title)}</a></h3>
+        <p>${esc(buildListingSummary(post))}</p>
+        <div class="row">
+          <a class="signal-link" href="/${esc(post.slug)}/">Read brief</a>
+        </div>
+      </article>
+    `;
+    const renderHomepageFeedItem = (post, index) => {
+      if (classifyHomepageStory(post).kind !== "signal-brief") {
+        return renderVisualStory(post, { featured: index === 0 });
+      }
+      return renderSignalStory(post, { featured: index === 0 });
     };
 
     const editorialAboutUrl = "https://robot.tv/about.html#editorial-operations";
@@ -1586,28 +2038,6 @@
       document.head.appendChild(script);
     };
 
-    const getCachedPosts = () => {
-      try {
-        const raw = localStorage.getItem(CACHE_KEY);
-        if (!raw) return [];
-        const parsed = JSON.parse(raw);
-        if (!parsed || !Array.isArray(parsed.posts)) return [];
-        return parsed.posts;
-      } catch (_) {
-        return [];
-      }
-    };
-
-    const cachePosts = (posts) => {
-      try {
-        if (!Array.isArray(posts) || !posts.length) return;
-        localStorage.setItem(CACHE_KEY, JSON.stringify({
-          savedAt: new Date().toISOString(),
-          posts
-        }));
-      } catch (_) {}
-    };
-
     const renderList = (posts, options = {}) => {
       const { warning = "", emptyMessage = "No published posts yet. Check back soon for updates." } = options;
       document.title = "Daily Robotics News, Humanoid Robot News & Industry Insights | robot.tv";
@@ -1627,7 +2057,7 @@
 	          <h2>Latest Robot News</h2>
         </div>
         ${warning ? `<div class="panel empty" style="margin-bottom:.7rem;">${esc(warning)}</div>` : ""}
-          <div id="grid" class="grid"></div>
+          <div id="grid" class="latest-feed"></div>
         <div id="empty" class="panel empty" hidden>${esc(emptyMessage)}</div>
       </section>
       <section class="panel topic-hub">
@@ -1713,22 +2143,24 @@
       const from = (page - 1) * PAGE_SIZE;
       const pagePosts = uniquePosts.slice(from, from + PAGE_SIZE);
       if (!pagePosts.length) { empty.hidden = false; return; }
-      grid.innerHTML = pagePosts.map((p, i) => `
-        <article class="card ${i === 0 ? "featured" : ""}" data-video="${esc(p.youtubeUrl || "")}">
-          <span class="thumb-shell">
-            <img class="thumb" src="${esc(coverImageForPost(p))}" alt="${esc(p.title)} thumbnail" loading="lazy">
-            <span class="thumb-preview" aria-hidden="true"></span>
-          </span>
-          <div class="content">
-            <p class="meta">${esc(formatDate(p.publishedAt))}</p>
-            <h3><a href="/${esc(p.slug)}/">${esc(p.title)}</a></h3>
-            <p>${esc(normalizeExcerpt(p.excerpt || "Latest robotics intelligence from robot.tv."))}</p>
-            <div class="row">
-	              <a class="btn btn-primary" href="/${esc(p.slug)}/">Read Robot News</a>
-            </div>
-          </div>
-        </article>
-      `).join("");
+      const { lead, leadKind, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts);
+      const topParts = [];
+      if (lead) {
+        topParts.push(
+          leadKind === "lead-brief"
+            ? renderSignalStory(lead, { featured: true })
+            : renderVisualStory(lead, { featured: true })
+        );
+      }
+      if (railBriefs.length) {
+        topParts.push(`<div class="brief-rail">${railBriefs.map((post) => renderSignalStory(post)).join("")}</div>`);
+      }
+      const restPosts = remainder.length ? remainder : pagePosts.filter((post) => normalizeHomepageSlug(post?.slug) !== normalizeHomepageSlug(lead?.slug));
+      const restHtml = restPosts.map((post, index) => renderHomepageFeedItem(post, index + 1)).join("");
+      grid.innerHTML = `
+        ${topParts.length ? `<div class="homepage-top">${topParts.join("")}</div>` : ""}
+        ${restHtml ? `<div class="homepage-rest">${restHtml}</div>` : ""}
+      `;
 
       if (totalPages > 1) {
         const section = grid.closest(".section");
@@ -1773,11 +2205,12 @@
         card.classList.remove("previewing");
       };
 
-      grid.querySelectorAll(".card").forEach((card) => {
+      grid.querySelectorAll(".visual-story").forEach((card) => {
+        if (!card.dataset.video) return;
         card.addEventListener("mouseenter", () => startPreview(card, "hover"));
         card.addEventListener("mouseleave", () => stopPreview(card));
         card.addEventListener("focusin", () => startPreview(card, "focus"));
-        card.addEventListener("blur", () => stopPreview(card));
+        card.addEventListener("focusout", () => stopPreview(card));
       });
     };
 
@@ -1887,34 +2320,18 @@
       fetchJsonWithFallback(sanityUrls(query).map((u) => `${u}&$slug=${sanityParam(slug)}`))
         .then((d) => renderArticle(d.result || null))
         .catch(() => renderArticle(null));
+    } else if (isHomepagePath) {
+      // Homepage content is fully rendered at build time from Sanity.
     } else {
-      if (preloadedPosts.length) {
-        cachePosts(preloadedPosts);
-        renderList(preloadedPosts);
-      } else {
-        const cached = getCachedPosts();
-        if (cached.length) {
-          renderList(cached, { warning: "Loading latest updates..." });
-        } else {
-          renderList([], { emptyMessage: "Loading latest stories..." });
-        }
-      }
-
       const query = `*[_type=="post"] | order(publishedAt desc)[0...${FETCH_DEPTH}]{title,excerpt,publishedAt,youtubeUrl,sourceImageUrl,heroImage{asset->{url}},"slug":slug.current,"author":author->name}`;
       fetchJsonWithFallback(sanityUrls(query))
         .then((d) => {
           const fetchedPosts = Array.isArray(d.result) ? d.result : [];
           const posts = getListingPosts(fetchedPosts);
-          if (posts.length) cachePosts(posts);
           renderList(posts);
         })
         .catch(() => {
-          const fallbackPosts = preloadedPosts.length ? preloadedPosts : getCachedPosts();
-          if (fallbackPosts.length) {
-            renderList(fallbackPosts, { warning: "Live feed is temporarily unavailable. Showing the latest preloaded stories." });
-          } else {
-            renderList([], { emptyMessage: "Live feed is temporarily unavailable. Please refresh shortly." });
-          }
+          renderList([], { emptyMessage: "Live feed is temporarily unavailable. Please refresh shortly." });
         });
     }
   </script>
