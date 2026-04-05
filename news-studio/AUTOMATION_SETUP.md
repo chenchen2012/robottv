@@ -1,4 +1,4 @@
-# Auto Publish Setup (Every 6 Hours + Public Rebuild Hook)
+# Auto Publish Setup (Every 6 Hours + Cloudflare Pages Deploy)
 
 A GitHub Actions workflow is included at `../.github/workflows/news-auto-publish.yml` (repository root).
 
@@ -14,17 +14,18 @@ Set these secrets in your repository settings (`Settings -> Secrets and variable
 
 - `SANITY_API_TOKEN` = Sanity write token
 - `SANITY_AUTHOR_ID` = `author-chen-chen` (optional)
-- `NEWS_PUBLIC_DEPLOY_HOOK_URL` = optional fallback deploy hook for the public `news.robot.tv` build
 - `CLOUDFLARE_API_KEY` = Cloudflare Global API key
 - `CLOUDFLARE_EMAIL` = Cloudflare account email
 - `CLOUDFLARE_ACCOUNT_ID` = Cloudflare account id that owns the Pages project
 - `CLOUDFLARE_NEWS_PAGES_PROJECT_NAME` = Pages project name for the public `news.robot.tv` site
+- `CLOUDFLARE_MAIN_PAGES_PROJECT_NAME` = Pages project name for the public `robot.tv` site
 
 Note:
 - Workflow is pinned to project `lumv116w` and dataset `production` directly in `../.github/workflows/news-auto-publish.yml` to avoid secret drift.
 - Studio deployment is separate. The editor should live at `robottv.sanity.studio`, not under `news.robot.tv/studio`.
-- If the Cloudflare secrets are present, the auto-publish workflow builds `dist-public/` and deploys it straight to Cloudflare Pages via `wrangler pages deploy`. In that mode the script skips the deploy-hook POST automatically.
-- If the Cloudflare secrets are not present yet, the workflow keeps using `NEWS_PUBLIC_DEPLOY_HOOK_URL` as the public rebuild trigger.
+- If the Cloudflare secrets are present, the auto-publish workflow deploys both `news.robot.tv` and `robot.tv` directly to Cloudflare Pages after publishing to Sanity.
+- Production deploys are Pages-only. Do not configure fallback production deploy hooks.
+- Homepage freshness now depends on GitHub Actions rebuilding both public sites from Sanity-backed content after publish. Do not add browser-side homepage fallback logic to compensate for deploy issues.
 
 ## Create Sanity API Token
 
@@ -32,24 +33,19 @@ Note:
 2. Create token with write access to dataset `production`.
 3. Copy token into GitHub secret `SANITY_API_TOKEN`.
 
-## Cloudflare Pages Path (Preferred)
+## Cloudflare Pages Path (Required)
 
 1. Create a Cloudflare Pages project for the public `news.robot.tv` site.
-2. Keep the Pages build command empty if you plan to use direct deploy from GitHub Actions.
-3. Add these GitHub secrets:
+2. Create a Cloudflare Pages project for the public `robot.tv` site.
+3. Keep the Pages build command empty if you plan to use direct deploy from GitHub Actions.
+4. Add these GitHub secrets:
    - `CLOUDFLARE_API_KEY`
    - `CLOUDFLARE_EMAIL`
    - `CLOUDFLARE_ACCOUNT_ID`
    - `CLOUDFLARE_NEWS_PAGES_PROJECT_NAME`
-4. Run `Deploy Public News Site` from GitHub Actions once to confirm the project accepts `dist-public/`.
-5. After that, scheduled auto-publish runs will deploy directly to Cloudflare Pages without using Netlify.
-
-## Create Public Deploy Hook (Fallback / Manual Publish)
-
-1. Open your public hosting project for `news.robot.tv`.
-2. Create a deploy hook/build hook for the production branch.
-3. Copy the generated URL into GitHub secret `NEWS_PUBLIC_DEPLOY_HOOK_URL`.
-4. Confirm the hook rebuilds the static public news site when triggered with `POST`.
+   - `CLOUDFLARE_MAIN_PAGES_PROJECT_NAME`
+5. Run `Deploy Public News Site` and `Deploy robot.tv Public Site` from GitHub Actions once to confirm both projects accept their static output.
+6. After that, scheduled auto-publish runs will publish to Sanity, rebuild both public sites, and deploy both directly to Cloudflare Pages.
 
 ## Run Immediately
 
@@ -62,13 +58,12 @@ The workflow runs automatically every 6 hours via cron and now includes:
 - top-company weighted selection
 - draft fallback for low-confidence items
 - feed health check (`MAX_FEED_AGE_HOURS`, default `24`)
-- automatic public-site rebuild trigger after successful publish
+- automatic rebuild + deploy of both public sites after successful publish
 
-## Optional: Instant Rebuild On Manual Sanity Publish
+## Manual Publish Guidance
 
-If you publish articles manually in Sanity Studio and are not relying solely on scheduled GitHub Actions deploys, add a Sanity webhook that posts to the same deploy hook URL:
+If you publish content manually in Sanity Studio, trigger the GitHub Actions workflow instead of using an external deploy hook:
 
-1. In Sanity project settings, open `API -> Webhooks`.
-2. Trigger on `create`, `update`, and `delete` for document type `post`.
-3. Target URL: your public-site deploy hook URL.
-4. This ensures static SEO pages and sitemap refresh immediately after manual edits.
+1. Open the repository `Actions` tab.
+2. Run `Auto Publish Robot News` or the specific deploy workflow you need.
+3. Confirm both Cloudflare Pages projects show fresh deploy timestamps after the run.

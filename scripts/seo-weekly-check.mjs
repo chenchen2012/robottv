@@ -13,7 +13,6 @@ const REQUIRED_SUPPORT_FILES = [
   path.join(".github", "workflows", "deploy-news-studio.yml")
 ];
 const NEWS_STATIC_INDEX = path.join("news-studio", "static", "index.html");
-const NEWS_PRELOAD_SCRIPT = path.join("news-studio", "static", "scripts", "preloaded-news-posts.js");
 const NEWS_STATIC_HOME_START = "<!-- STATIC_NEWS_HOME_START -->";
 const NEWS_STATIC_HOME_END = "<!-- STATIC_NEWS_HOME_END -->";
 const CONFIG_SNIPPET_CHECKS = [
@@ -316,12 +315,14 @@ async function run() {
   }
 
   const newsStaticIndexHtml = await readOptionalFile(NEWS_STATIC_INDEX);
-  const newsPreloadScript = await readOptionalFile(NEWS_PRELOAD_SCRIPT);
   if (!newsStaticIndexHtml) {
     newsHomepageIssues.push(`Missing news static homepage template: ${NEWS_STATIC_INDEX}`);
   } else {
-    if (!/<script src="scripts\/preloaded-news-posts\.js(?:\?[^"]*)?"><\/script>/.test(newsStaticIndexHtml)) {
-      newsHomepageIssues.push("News homepage template is missing the preloaded posts script include");
+    if (/<script src="scripts\/preloaded-news-posts\.js(?:\?[^"]*)?"><\/script>/.test(newsStaticIndexHtml)) {
+      newsHomepageIssues.push("News homepage template should not depend on the preloaded posts script include");
+    }
+    if (newsStaticIndexHtml.includes("localStorage.getItem(") || newsStaticIndexHtml.includes("localStorage.setItem(")) {
+      newsHomepageIssues.push("News homepage template should not use localStorage for homepage news rendering");
     }
     const staticHomeBlock = extractBetween(
       newsStaticIndexHtml,
@@ -344,16 +345,6 @@ async function run() {
       if (/\?page=\d+/i.test(staticHomeBlock)) {
         newsHomepageIssues.push("News homepage static fallback exposes query pagination links");
       }
-    }
-  }
-  if (!newsPreloadScript) {
-    newsHomepageIssues.push(`Missing news homepage preload script: ${NEWS_PRELOAD_SCRIPT}`);
-  } else {
-    if (!newsPreloadScript.includes("window.__ROBOTTV_PRELOADED_POSTS__ = [")) {
-      newsHomepageIssues.push("News homepage preload script is missing the expected post payload");
-    }
-    if (newsPreloadScript.includes("/post/")) {
-      newsHomepageIssues.push("News homepage preload script still contains legacy /post/ URLs");
     }
   }
 

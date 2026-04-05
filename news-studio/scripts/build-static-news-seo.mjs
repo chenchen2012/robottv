@@ -756,14 +756,24 @@ const mergeUniqueText = (...groups) => {
 };
 
 const normalizeSlug = normalizeHomepageSlug;
-const normalizeExcerpt = (value) => {
+const syndicatedBoilerplatePatterns = [
+  /(?:^|\s*)Comprehensive up-to-date news coverage,\s*aggregated from sources all over the world by Google News\.?/gi,
+];
+const stripSyndicatedBoilerplate = (value) => {
+  let cleaned = String(value || "");
+  for (const pattern of syndicatedBoilerplatePatterns) {
+    cleaned = cleaned.replace(pattern, " ");
+  }
+  return cleaned.replace(/\s+/g, " ").trim();
+};
+export const normalizeExcerpt = (value) => {
   const text = toPlainText(value || "").trim();
   if (!text) return text;
-  let cleaned = text.replace(
+  let cleaned = stripSyndicatedBoilerplate(text).replace(
     /^(multiple outlets report(?: that)?|[A-Z][A-Za-z0-9&.'"\- ]{2,80}?)\s+(reports|report|says|said)\s+/i,
     ""
   ).trim();
-  if (!cleaned) return text;
+  if (!cleaned) return stripSyndicatedBoilerplate(text);
   if (cleaned[0] && cleaned[0] === cleaned[0].toLowerCase()) {
     cleaned = cleaned[0].toUpperCase() + cleaned.slice(1);
   }
@@ -1009,7 +1019,7 @@ const blocksToParagraphs = (body) => {
   return body
     .filter((b) => b && b._type === "block" && Array.isArray(b.children))
     .map((b) => b.children.map((c) => c?.text || "").join("").trim())
-    .map((p) => toPlainText(p))
+    .map((p) => stripSyndicatedBoilerplate(toPlainText(p)))
     .filter((p) => p.length > 0)
     .slice(0, 12);
 };
@@ -2038,7 +2048,9 @@ const main = async () => {
   console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}

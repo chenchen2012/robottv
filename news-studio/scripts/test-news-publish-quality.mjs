@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 
+import { normalizeExcerpt } from './build-static-news-seo.mjs'
 import { callDeepSeekJson } from './lib/deepseek-provider.mjs'
 import {
   buildFallbackQcEnrichment,
@@ -13,6 +14,14 @@ import { evaluateYouTubeCandidate, matchYouTubeVideo } from './lib/youtube-provi
 import { TRUSTED_YOUTUBE_CHANNELS } from './lib/youtube-trusted-channels.mjs'
 
 const now = new Date().toISOString()
+
+const sanitizedExcerpt = normalizeExcerpt(
+  'Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News. Nvidia CEO Jensen Huang predicts that every industrial company will become a robotics company.'
+)
+assert.equal(
+  sanitizedExcerpt,
+  'Nvidia CEO Jensen Huang predicts that every industrial company will become a robotics company.'
+)
 
 const trusted = getSourceTrustTier({ sourceName: 'Reuters', sourceUrl: 'https://www.reuters.com/world/robotics-story' })
 assert.equal(trusted, 'allow')

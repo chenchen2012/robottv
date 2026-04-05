@@ -5,8 +5,200 @@
     <link>https://news.robot.tv/</link>
     <description>Video-first robot news and robotics news from robot.tv covering humanoids, physical AI, quadrupeds, and deployment signals.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Mar 2026 11:27:57 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 05 Apr 2026 20:50:51 GMT</lastBuildDate>
     <atom:link href="https://news.robot.tv/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>In Japan, the robot isn’t coming for your job; it’s filling the one nobody wants</title>
+      <link>https://news.robot.tv/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants/</link>
+      <guid isPermaLink="true">https://news.robot.tv/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants/</guid>
+      <pubDate>Sun, 05 Apr 2026 20:50:51 GMT</pubDate>
+      <description>TechCrunch is framing the update as a signal for robotics commercialization.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Is Chevron&#39;s Robotics Strategy the Future of Oilfields?</title>
+      <link>https://news.robot.tv/is-chevrons-robotics-strategy-the-future-of-oilfields/</link>
+      <guid isPermaLink="true">https://news.robot.tv/is-chevrons-robotics-strategy-the-future-of-oilfields/</guid>
+      <pubDate>Sun, 05 Apr 2026 13:22:24 GMT</pubDate>
+      <description>That matters because buyers care less about robot demos than about whether fleets can lower inspection costs, reduce...</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>&#39;Every Industrial Company Will Become A Robotics Company,&#39; Nvidia CEO Jensen Huang Says</title>
+      <link>https://news.robot.tv/every-industrial-company-will-become-a-robotics-company-nvidia-ceo-jensen-huang-says/</link>
+      <guid isPermaLink="true">https://news.robot.tv/every-industrial-company-will-become-a-robotics-company-nvidia-ceo-jensen-huang-says/</guid>
+      <pubDate>Sun, 05 Apr 2026 13:22:19 GMT</pubDate>
+      <description>Nvidia CEO Jensen Huang predicts that every industrial company will become a robotics company, highlighting the growing importance of compute choices for model latency, on-robot autonomy, and deployment speed.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Gecko Robotics brings its AI to U.S. Navy ship repair in latest next-gen defense tech deal</title>
+      <link>https://news.robot.tv/gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal/</link>
+      <guid isPermaLink="true">https://news.robot.tv/gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal/</guid>
+      <pubDate>Sun, 05 Apr 2026 13:22:05 GMT</pubDate>
+      <description>CNBC is framing the update as a signal for robotics commercialization.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Qualcomm joins MassRobotics, to support startups with Dragonwing Robotics Hub</title>
+      <link>https://news.robot.tv/qualcomm-joins-massrobotics-to-support-startups-with-dragonwing-robotics-hub/</link>
+      <guid isPermaLink="true">https://news.robot.tv/qualcomm-joins-massrobotics-to-support-startups-with-dragonwing-robotics-hub/</guid>
+      <pubDate>Sun, 05 Apr 2026 13:22:01 GMT</pubDate>
+      <description>That matters because compute choices are becoming a gating factor for model latency, on-robot autonomy, and how...</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Wi-Fi That Can Withstand a Nuclear Reactor</title>
+      <link>https://news.robot.tv/wi-fi-that-can-withstand-a-nuclear-reactor/</link>
+      <guid isPermaLink="true">https://news.robot.tv/wi-fi-that-can-withstand-a-nuclear-reactor/</guid>
+      <pubDate>Sun, 05 Apr 2026 13:21:56 GMT</pubDate>
+      <description>IEEE Spectrum is framing the update as a signal for robotics commercialization.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Learn to build warehouse robots people enjoy working with at the Robotics Summit</title>
+      <link>https://news.robot.tv/learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit/</link>
+      <guid isPermaLink="true">https://news.robot.tv/learn-to-build-warehouse-robots-people-enjoy-working-with-at-the-robotics-summit/</guid>
+      <pubDate>Sat, 04 Apr 2026 13:20:46 GMT</pubDate>
+      <description>The Robotics Summit will feature a session on designing warehouse robots for positive human interaction. This focus on collaborative experience signals a shift in deployment priorities beyond pure automation.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>The future of RealSense 3D vision with Chris Matthieu</title>
+      <link>https://news.robot.tv/the-future-of-realsense-3d-vision-with-chris-matthieu/</link>
+      <guid isPermaLink="true">https://news.robot.tv/the-future-of-realsense-3d-vision-with-chris-matthieu/</guid>
+      <pubDate>Fri, 03 Apr 2026 21:50:50 GMT</pubDate>
+      <description>Chris Matthieu discusses the strategic direction of Intel&#39;s RealSense 3D vision technology. The conversation focuses on its evolving role in robotics and spatial computing.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Video Friday: Digit Learns to Dance—Virtually Overnight</title>
+      <link>https://news.robot.tv/video-friday-digit-learns-to-dancevirtually-overnight/</link>
+      <guid isPermaLink="true">https://news.robot.tv/video-friday-digit-learns-to-dancevirtually-overnight/</guid>
+      <pubDate>Fri, 03 Apr 2026 19:06:30 GMT</pubDate>
+      <description>That matters because the market is shifting from concept demos toward proof that humanoids can hold up in real factory,...</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Chinese Robot Pioneer UBTech Offers $18 Million for AI Scientist</title>
+      <link>https://news.robot.tv/chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist/</link>
+      <guid isPermaLink="true">https://news.robot.tv/chinese-robot-pioneer-ubtech-offers-18-million-for-ai-scientist/</guid>
+      <pubDate>Fri, 03 Apr 2026 07:38:05 GMT</pubDate>
+      <description>UBTech Robotics is making a significant talent acquisition play, offering $18 million to recruit a top AI scientist. This move signals a direct investment in core autonomy capabilities for its humanoid platforms.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Sanctuary AI’s robotic hand demonstrates zero-shot in-hand manipulation</title>
+      <link>https://news.robot.tv/sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation/</link>
+      <guid isPermaLink="true">https://news.robot.tv/sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation/</guid>
+      <pubDate>Thu, 02 Apr 2026 19:16:10 GMT</pubDate>
+      <description>Sanctuary AI&#39;s robotic hand has achieved zero-shot in-hand manipulation, a significant step in dexterous autonomy. This capability allows the system to handle objects it has never explicitly trained on.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Gill Pratt Says Humanoid Robots’ Moment Is Finally Here</title>
+      <link>https://news.robot.tv/gill-pratt-says-humanoid-robots-moment-is-finally-here/</link>
+      <guid isPermaLink="true">https://news.robot.tv/gill-pratt-says-humanoid-robots-moment-is-finally-here/</guid>
+      <pubDate>Thu, 02 Apr 2026 16:12:04 GMT</pubDate>
+      <description>Toyota Research Institute CEO Gill Pratt asserts that the long-anticipated era of practical humanoid robots has arrived. His statement, reported by IEEE Spectrum, signals a pivotal shift from research to real-world application.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>PickNik Robotics gives MoveIt Pro 9.0 enhanced perception-to-motion, teleop capabilities</title>
+      <link>https://news.robot.tv/picknik-robotics-gives-moveit-pro-90-enhanced-perception-to-motion-teleop-capabilities/</link>
+      <guid isPermaLink="true">https://news.robot.tv/picknik-robotics-gives-moveit-pro-90-enhanced-perception-to-motion-teleop-capabilities/</guid>
+      <pubDate>Thu, 02 Apr 2026 13:57:21 GMT</pubDate>
+      <description>PickNik Robotics has released MoveIt Pro 9.0, adding new perception-to-motion and teleoperation features. The update aims to streamline complex robotic workflows for developers and integrators.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Europe Vies to Be Humanoid Robot Leader in Global Tech Race</title>
+      <link>https://news.robot.tv/europe-vies-to-be-humanoid-robot-leader-in-global-tech-race/</link>
+      <guid isPermaLink="true">https://news.robot.tv/europe-vies-to-be-humanoid-robot-leader-in-global-tech-race/</guid>
+      <pubDate>Thu, 02 Apr 2026 03:26:14 GMT</pubDate>
+      <description>European nations are mobilizing public and private capital to establish a competitive humanoid robotics sector. This strategic push aims to reduce dependency on foreign technology and capture a significant share of the emerging global market.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>China venture capital funding set to hit record in Q1 on state-led tech push</title>
+      <link>https://news.robot.tv/china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push/</link>
+      <guid isPermaLink="true">https://news.robot.tv/china-venture-capital-funding-set-to-hit-record-in-q1-on-state-led-tech-push/</guid>
+      <pubDate>Wed, 01 Apr 2026 16:14:49 GMT</pubDate>
+      <description>Chinese venture capital funding is projected to reach a record high in Q1 2026, driven by a state-led push into strategic technologies. This surge signals a significant capital influx into sectors prioritized by national policy.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Surgical robotics: Why motion architecture matters more than ever</title>
+      <link>https://news.robot.tv/surgical-robotics-why-motion-architecture-matters-more-than-ever/</link>
+      <guid isPermaLink="true">https://news.robot.tv/surgical-robotics-why-motion-architecture-matters-more-than-ever/</guid>
+      <pubDate>Wed, 01 Apr 2026 14:05:29 GMT</pubDate>
+      <description>Recent industry reporting is framing the update as a signal for robotics commercialization.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>AGIBOT rolls out 10,000th humanoid robot</title>
+      <link>https://news.robot.tv/agibot-rolls-out-10000th-humanoid-robot/</link>
+      <guid isPermaLink="true">https://news.robot.tv/agibot-rolls-out-10000th-humanoid-robot/</guid>
+      <pubDate>Tue, 31 Mar 2026 21:55:45 GMT</pubDate>
+      <description>AGIBOT has produced its 10,000th humanoid robot, marking a significant manufacturing milestone. This volume signals a shift from prototype batches to scaled production.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Figure CEO speaks out on OpenAI split: &#39;We&#39;re going to be competitors&#39;</title>
+      <link>https://news.robot.tv/figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors/</link>
+      <guid isPermaLink="true">https://news.robot.tv/figure-ceo-speaks-out-on-openai-split-were-going-to-be-competitors/</guid>
+      <pubDate>Tue, 31 Mar 2026 19:19:42 GMT</pubDate>
+      <description>Figure&#39;s CEO has publicly framed the company&#39;s split from OpenAI as a move toward direct competition. This clarifies the strategic landscape for humanoid robotics development.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Uber Eats delivery robots vandalised in Sheffield suburb</title>
+      <link>https://news.robot.tv/uber-eats-delivery-robots-vandalised-in-sheffield-suburb/</link>
+      <guid isPermaLink="true">https://news.robot.tv/uber-eats-delivery-robots-vandalised-in-sheffield-suburb/</guid>
+      <pubDate>Tue, 31 Mar 2026 14:02:49 GMT</pubDate>
+      <description>Uber Eats delivery robots were vandalized in a Sheffield suburb, according to the BBC. The incident highlights physical security challenges for sidewalk robotics operations.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Humanoid completes live HMND PoC with SAP and Martur Fompak</title>
+      <link>https://news.robot.tv/humanoid-completes-live-hmnd-poc-with-sap-and-martur-fompak/</link>
+      <guid isPermaLink="true">https://news.robot.tv/humanoid-completes-live-hmnd-poc-with-sap-and-martur-fompak/</guid>
+      <pubDate>Tue, 31 Mar 2026 03:30:09 GMT</pubDate>
+      <description>A humanoid robot has successfully completed a live proof-of-concept for a hybrid manufacturing and distribution task with SAP and Martur Fompak. The demonstration validates the robot&#39;s ability to execute a real-world logistics workflow.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Google partners with Agile Robots, growing its AI robotics footprint</title>
+      <link>https://news.robot.tv/google-partners-with-agile-robots-growing-its-ai-robotics-footprint/</link>
+      <guid isPermaLink="true">https://news.robot.tv/google-partners-with-agile-robots-growing-its-ai-robotics-footprint/</guid>
+      <pubDate>Mon, 30 Mar 2026 21:58:07 GMT</pubDate>
+      <description>Google has formed a partnership with robotics company Agile Robots. This move expands Google&#39;s strategic presence in AI-driven robotics.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Voyager, Icarus Robotics to test free-flying robot on space station</title>
+      <link>https://news.robot.tv/voyager-icarus-robotics-to-test-free-flying-robot-on-space-station/</link>
+      <guid isPermaLink="true">https://news.robot.tv/voyager-icarus-robotics-to-test-free-flying-robot-on-space-station/</guid>
+      <pubDate>Mon, 30 Mar 2026 19:19:48 GMT</pubDate>
+      <description>Voyager Space and Icarus Robotics will test a free-flying robot on the International Space Station. The demonstration aims to validate autonomous servicing capabilities in microgravity.</description>
+      <category>Robotics Startups</category>
+    </item>
+    <item>
+      <title>Amazon acquires &#39;approachable&#39; humanoid maker Fauna Robotics</title>
+      <link>https://news.robot.tv/amazon-acquires-approachable-humanoid-maker-fauna-robotics/</link>
+      <guid isPermaLink="true">https://news.robot.tv/amazon-acquires-approachable-humanoid-maker-fauna-robotics/</guid>
+      <pubDate>Mon, 30 Mar 2026 09:52:17 GMT</pubDate>
+      <description>Amazon has acquired Fauna Robotics, a developer of humanoid robots described as &#39;approachable.&#39; The deal signals a major strategic move into advanced, human-centric automation.</description>
+      <category>Humanoid Robots</category>
+    </item>
+    <item>
+      <title>Meet Figure AI: The company behind the humanoid robot hosted by Melania Trump</title>
+      <link>https://news.robot.tv/meet-figure-ai-the-company-behind-the-humanoid-robot-hosted-by-melania-trump/</link>
+      <guid isPermaLink="true">https://news.robot.tv/meet-figure-ai-the-company-behind-the-humanoid-robot-hosted-by-melania-trump/</guid>
+      <pubDate>Mon, 30 Mar 2026 09:49:55 GMT</pubDate>
+      <description>Figure AI&#39;s humanoid robot was featured at an event hosted by Melania Trump, according to CNBC. The appearance signals a strategic move to gain visibility beyond traditional tech and industrial circles.</description>
+      <category>Humanoid Robots</category>
+    </item>
     <item>
       <title>Agile Robots to deploy Google DeepMind foundation models on its humanoid</title>
       <link>https://news.robot.tv/agile-robots-to-deploy-google-deepmind-foundation-models-on-its-humanoid/</link>
@@ -135,203 +327,6 @@
       <description>Bedrock Robotics is a useful startup-execution story because it ties robotics ambition to a concrete industry workflow, where customer adoption depends on operating fit rather than broad platform hype.</description>
       <category>Robotics Startups</category>
       <category>Industrial Robotics</category>
-    </item>
-    <item>
-      <title>Amazon acquires Rivr, maker of a stair-climbing delivery robot</title>
-      <link>https://news.robot.tv/amazon-acquires-rivr-maker-of-a-stair-climbing-delivery-robot/</link>
-      <guid isPermaLink="true">https://news.robot.tv/amazon-acquires-rivr-maker-of-a-stair-climbing-delivery-robot/</guid>
-      <pubDate>Fri, 20 Mar 2026 03:10:50 GMT</pubDate>
-      <description>Amazon has acquired Rivr, a startup developing a stair-climbing delivery robot. The move signals a deeper investment in last-mile automation for complex urban environments.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Inside China’s robotics revolution</title>
-      <link>https://news.robot.tv/inside-chinas-robotics-revolution/</link>
-      <guid isPermaLink="true">https://news.robot.tv/inside-chinas-robotics-revolution/</guid>
-      <pubDate>Thu, 19 Mar 2026 07:38:21 GMT</pubDate>
-      <description>China&#39;s robotics rise looks bigger than a single humanoid headline. Manufacturing depth, policy support, and industrial ambition may be combining into a broader competitive advantage.</description>
-      <category>Robotics Startups</category>
-      <category>China</category>
-      <category>Robotics News</category>
-    </item>
-    <item>
-      <title>How humanoid robots joined this factory&#39;s workforce</title>
-      <link>https://news.robot.tv/how-humanoid-robots-joined-this-factorys-workforce/</link>
-      <guid isPermaLink="true">https://news.robot.tv/how-humanoid-robots-joined-this-factorys-workforce/</guid>
-      <pubDate>Wed, 18 Mar 2026 09:30:00 GMT</pubDate>
-      <description>A factory-floor humanoid story matters most when it shows how robots are being placed into mixed human-robot workflows with a clearer operating role, not just as future-of-work spectacle.</description>
-      <category>Humanoid Robots</category>
-      <category>Manufacturing</category>
-      <category>Operations</category>
-      <category>Warehouse Robotics</category>
-    </item>
-    <item>
-      <title>Inside the new ‘Living Lab’ advancing agricultural robotics</title>
-      <link>https://news.robot.tv/inside-the-new-living-lab-advancing-agricultural-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/inside-the-new-living-lab-advancing-agricultural-robotics/</guid>
-      <pubDate>Wed, 18 Mar 2026 03:21:16 GMT</pubDate>
-      <description>A new &#39;Living Lab&#39; for agricultural robotics is being framed as a real-world testing environment for field robots in active farm operations, where developers can work through the messy conditions that lab demos miss.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Gecko Robotics lands the largest U.S. Navy robotics deal yet</title>
-      <link>https://news.robot.tv/gecko-robotics-lands-the-largest-us-navy-robotics-deal-yet/</link>
-      <guid isPermaLink="true">https://news.robot.tv/gecko-robotics-lands-the-largest-us-navy-robotics-deal-yet/</guid>
-      <pubDate>Tue, 17 Mar 2026 13:52:46 GMT</pubDate>
-      <description>Gecko Robotics has secured the largest robotics contract to date from the U.S. Navy. This deal marks a significant milestone for the company&#39;s expansion into defense infrastructure.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>BEDEX 2026: Sweden receives Blaze interceptor UAVs from Origin Robotics</title>
-      <link>https://news.robot.tv/bedex-2026-sweden-receives-blaze-interceptor-uavs-from-origin-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/bedex-2026-sweden-receives-blaze-interceptor-uavs-from-origin-robotics/</guid>
-      <pubDate>Tue, 17 Mar 2026 07:19:49 GMT</pubDate>
-      <description>Sweden has taken delivery of Blaze interceptor UAVs from Origin Robotics. The handover occurred at the BEDEX 2026 defense exhibition.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Memories AI is building the visual memory layer for wearables and robotics</title>
-      <link>https://news.robot.tv/memories-ai-is-building-the-visual-memory-layer-for-wearables-and-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/memories-ai-is-building-the-visual-memory-layer-for-wearables-and-robotics/</guid>
-      <pubDate>Tue, 17 Mar 2026 03:13:30 GMT</pubDate>
-      <description>Memories AI is developing a visual memory layer for wearables and robotics. The startup aims to enable devices to understand and recall their visual experiences.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Travis Kalanick launches a new company called Atoms focused on robotics</title>
-      <link>https://news.robot.tv/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/</link>
-      <guid isPermaLink="true">https://news.robot.tv/travis-kalanick-launches-a-new-company-called-atoms-focused-on-robotics/</guid>
-      <pubDate>Mon, 16 Mar 2026 19:21:18 GMT</pubDate>
-      <description>Travis Kalanick, the former Uber CEO, has launched a new robotics company named Atoms. The venture&#39;s specific focus and initial product details remain undisclosed.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Don’t miss Neuralink pioneer Noland Arbaugh keynote at the 2026 Robotics Summit</title>
-      <link>https://news.robot.tv/dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit/</link>
-      <guid isPermaLink="true">https://news.robot.tv/dont-miss-neuralink-pioneer-noland-arbaugh-keynote-at-the-2026-robotics-summit/</guid>
-      <pubDate>Mon, 16 Mar 2026 13:55:16 GMT</pubDate>
-      <description>Noland Arbaugh, a pioneering Neuralink patient, is confirmed as a keynote speaker for the 2026 Robotics Summit. His firsthand experience with a brain-computer interface offers a unique perspective for the robotics community.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Robot Dogs Are Protecting Data Centers. Operators Are Seeing Payoffs.</title>
-      <link>https://news.robot.tv/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/</link>
-      <guid isPermaLink="true">https://news.robot.tv/robot-dogs-are-protecting-data-centers-operators-are-seeing-payoffs/</guid>
-      <pubDate>Mon, 16 Mar 2026 13:55:16 GMT</pubDate>
-      <description>Legged robots are now patrolling data center floors, moving beyond pilot programs into active security and inspection roles. Early operators report measurable returns on investment from these deployments.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Humanoid robotics developers must address a wide range of applications</title>
-      <link>https://news.robot.tv/humanoid-robotics-developers-must-address-a-wide-range-of-applications/</link>
-      <guid isPermaLink="true">https://news.robot.tv/humanoid-robotics-developers-must-address-a-wide-range-of-applications/</guid>
-      <pubDate>Mon, 16 Mar 2026 03:34:47 GMT</pubDate>
-      <description>Argues humanoid robotics developers must look beyond a single killer app. Success hinges on designing versatile platforms capable of addressing a wide range of industrial and commercial applications.</description>
-      <category>Humanoid Robots</category>
-    </item>
-    <item>
-      <title>Rivian’s RJ Scaringe thinks we’re doing robots all wrong</title>
-      <link>https://news.robot.tv/rivians-rj-scaringe-thinks-were-doing-robots-all-wrong/</link>
-      <guid isPermaLink="true">https://news.robot.tv/rivians-rj-scaringe-thinks-were-doing-robots-all-wrong/</guid>
-      <pubDate>Sun, 15 Mar 2026 18:59:25 GMT</pubDate>
-      <description>Rivian CEO RJ Scaringe critiques the prevailing approach to robotics development. He argues for a fundamental shift in how the industry builds and deploys autonomous systems.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Why Travis Kalanick believes humans are on the verge of a &#39;golden age&#39;</title>
-      <link>https://news.robot.tv/why-travis-kalanick-believes-humans-are-on-the-verge-of-a-golden-age/</link>
-      <guid isPermaLink="true">https://news.robot.tv/why-travis-kalanick-believes-humans-are-on-the-verge-of-a-golden-age/</guid>
-      <pubDate>Sun, 15 Mar 2026 07:14:06 GMT</pubDate>
-      <description>Travis Kalanick argues that a convergence of technologies is setting the stage for a &#39;golden age&#39; for humanity. His perspective, reported by Business Insider, frames this as a pivotal moment for innovation and commercial application.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Data security is the foundation of trust in physical AI</title>
-      <link>https://news.robot.tv/data-security-is-the-foundation-of-trust-in-physical-ai/</link>
-      <guid isPermaLink="true">https://news.robot.tv/data-security-is-the-foundation-of-trust-in-physical-ai/</guid>
-      <pubDate>Sat, 14 Mar 2026 18:58:08 GMT</pubDate>
-      <description>Emphasizes data security as the critical foundation for trust in physical AI systems. This focus addresses core operational and commercial vulnerabilities as robots move into sensitive environments.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>&#39;I never left&#39;: Travis Kalanick launches new robotics company Atoms with manifesto</title>
-      <link>https://news.robot.tv/i-never-left-travis-kalanick-launches-new-robotics-company-atoms-with-manifesto/</link>
-      <guid isPermaLink="true">https://news.robot.tv/i-never-left-travis-kalanick-launches-new-robotics-company-atoms-with-manifesto/</guid>
-      <pubDate>Sat, 14 Mar 2026 02:51:22 GMT</pubDate>
-      <description>Travis Kalanick has launched a new robotics company called Atoms, accompanied by a public manifesto. The move marks his return to the tech sector with a focus on robotics commercialization.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Uber co-founder Kalanick launches Atoms in specialized robotics push</title>
-      <link>https://news.robot.tv/uber-co-founder-kalanick-launches-atoms-in-specialized-robotics-push/</link>
-      <guid isPermaLink="true">https://news.robot.tv/uber-co-founder-kalanick-launches-atoms-in-specialized-robotics-push/</guid>
-      <pubDate>Sat, 14 Mar 2026 02:51:20 GMT</pubDate>
-      <description>Uber co-founder Travis Kalanick has launched Atoms, a new venture focused on specialized robotics. The move signals a significant strategic push into a targeted segment of the automation market.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Three companies demonstrate global commercialization potential at AW 2026</title>
-      <link>https://news.robot.tv/three-companies-demonstrate-global-commercialization-potential-at-aw-2026/</link>
-      <guid isPermaLink="true">https://news.robot.tv/three-companies-demonstrate-global-commercialization-potential-at-aw-2026/</guid>
-      <pubDate>Fri, 13 Mar 2026 13:34:49 GMT</pubDate>
-      <description>Three robotics companies demonstrated significant progress toward global commercialization at AW 2026. Their showcases highlight a tangible shift from pilot projects to scalable, real-world deployment.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>STMicroelectronics plans robots, retraining to avoid closures</title>
-      <link>https://news.robot.tv/stmicroelectronics-plans-robots-retraining-to-avoid-closures/</link>
-      <guid isPermaLink="true">https://news.robot.tv/stmicroelectronics-plans-robots-retraining-to-avoid-closures/</guid>
-      <pubDate>Fri, 13 Mar 2026 13:34:48 GMT</pubDate>
-      <description>STMicroelectronics is deploying robotics and retraining programs to keep its European chip plants open. The move counters high energy costs and aims to preserve its manufacturing footprint.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Elon Musk says Tesla expects to increase its human workforce as AI and robotics boost productivity</title>
-      <link>https://news.robot.tv/elon-musk-says-tesla-expects-to-increase-its-human-workforce-as-ai-and-robotics-boost-prod/</link>
-      <guid isPermaLink="true">https://news.robot.tv/elon-musk-says-tesla-expects-to-increase-its-human-workforce-as-ai-and-robotics-boost-prod/</guid>
-      <pubDate>Fri, 13 Mar 2026 07:13:14 GMT</pubDate>
-      <description>Tesla plans to expand its human workforce, citing productivity gains from AI and robotics. This hiring strategy contrasts with typical automation narratives.</description>
-      <category>Humanoid Robots</category>
-    </item>
-    <item>
-      <title>Rhoda AI exits stealth with $450M to train robots from video</title>
-      <link>https://news.robot.tv/rhoda-ai-exits-stealth-with-450m-to-train-robots-from-video/</link>
-      <guid isPermaLink="true">https://news.robot.tv/rhoda-ai-exits-stealth-with-450m-to-train-robots-from-video/</guid>
-      <pubDate>Fri, 13 Mar 2026 03:09:14 GMT</pubDate>
-      <description>Rhoda AI has emerged from stealth with a $450 million funding round. The capital is earmarked for training robots using video data.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>MassRobotics, NVIDIA, and AWS announce second Physical AI Fellowship cohort</title>
-      <link>https://news.robot.tv/massrobotics-nvidia-and-aws-announce-second-physical-ai-fellowship-cohort/</link>
-      <guid isPermaLink="true">https://news.robot.tv/massrobotics-nvidia-and-aws-announce-second-physical-ai-fellowship-cohort/</guid>
-      <pubDate>Fri, 13 Mar 2026 03:09:13 GMT</pubDate>
-      <description>MassRobotics, NVIDIA, and AWS have selected the second cohort for their Physical AI Fellowship. The program supports early-stage startups working on embodied AI and robotics.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Humanoid robotics maker Sunday reaches $1.15B valuation to build household robots</title>
-      <link>https://news.robot.tv/humanoid-robotics-maker-sunday-reaches-115b-valuation-to-build-household-robots/</link>
-      <guid isPermaLink="true">https://news.robot.tv/humanoid-robotics-maker-sunday-reaches-115b-valuation-to-build-household-robots/</guid>
-      <pubDate>Thu, 12 Mar 2026 19:12:49 GMT</pubDate>
-      <description>Humanoid robotics startup Sunday has reached a $1.15 billion valuation. The capital will fund its push to develop robots for household applications.</description>
-      <category>Humanoid Robots</category>
-    </item>
-    <item>
-      <title>Rivian spin-out Mind Robotics raises $500M for industrial AI-powered robots</title>
-      <link>https://news.robot.tv/rivian-spin-out-mind-robotics-raises-500m-for-industrial-ai-powered-robots/</link>
-      <guid isPermaLink="true">https://news.robot.tv/rivian-spin-out-mind-robotics-raises-500m-for-industrial-ai-powered-robots/</guid>
-      <pubDate>Wed, 11 Mar 2026 19:11:38 GMT</pubDate>
-      <description>Mind Robotics, a spin-out from Rivian, has secured $500 million in funding. The capital is designated for developing industrial robots powered by AI.</description>
-      <category>Robotics Startups</category>
-    </item>
-    <item>
-      <title>Teradyne sues Chinese cobot maker over UR software</title>
-      <link>https://news.robot.tv/teradyne-sues-chinese-cobot-maker-over-ur-software/</link>
-      <guid isPermaLink="true">https://news.robot.tv/teradyne-sues-chinese-cobot-maker-over-ur-software/</guid>
-      <pubDate>Tue, 10 Mar 2026 19:09:22 GMT</pubDate>
-      <description>Teradyne has filed a lawsuit against a Chinese collaborative robot manufacturer, alleging infringement of Universal Robots&#39; software. The legal action centers on the core programming that defines the UR cobot platform&#39;s functionality.</description>
-      <category>Robotics Startups</category>
     </item>
   </channel>
 </rss>

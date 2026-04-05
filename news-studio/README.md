@@ -73,15 +73,33 @@ The build now includes a verification step that fails if required public files o
 Preferred production path:
 
 1. Create a Cloudflare Pages project for `news.robot.tv`.
-2. Use the repo workflow `Deploy Public News Site` for code-driven public deploys.
-3. Add GitHub secrets:
+2. Create a Cloudflare Pages project for `robot.tv`.
+3. Use the repo workflows `Deploy Public News Site` and `Deploy robot.tv Public Site` for code-driven public deploys.
+4. Add GitHub secrets:
    - `CLOUDFLARE_API_KEY`
    - `CLOUDFLARE_EMAIL`
    - `CLOUDFLARE_ACCOUNT_ID`
    - `CLOUDFLARE_NEWS_PAGES_PROJECT_NAME`
-4. Keep `NEWS_PUBLIC_DEPLOY_HOOK_URL` only if you want a fallback rebuild trigger for manual publish flows.
+   - `CLOUDFLARE_MAIN_PAGES_PROJECT_NAME`
 
-When the Cloudflare secrets are present, the scheduled auto-publish workflow deploys directly to Pages after it publishes new Sanity posts.
+When the Cloudflare secrets are present, the scheduled auto-publish workflow publishes to Sanity, rebuilds `news.robot.tv`, rebuilds `robot.tv`, and deploys both directly to Cloudflare Pages.
+Production deploys should not rely on fallback deploy hooks.
+
+## Homepage architecture
+
+Homepage news now follows one build-time model across both public sites:
+
+- Sanity is the only canonical source for homepage news posts.
+- `news.robot.tv/` is rendered at build time into the static public site.
+- `robot.tv/` homepage news is also rendered at build time from Sanity before the root public site is packaged.
+- Pinned analysis remains an explicit build-time display rule.
+- Homepage sections should stay clear and stable:
+  - `Latest News`
+  - `Pinned Analysis`
+  - `Evergreen Hubs`
+
+Do not treat preload scripts, browser cache, or generated dist files as homepage sources of truth.
+Do not reintroduce browser-side homepage fetch or homepage `localStorage` fallback.
 
 ## Content model
 

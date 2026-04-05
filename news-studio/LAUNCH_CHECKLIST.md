@@ -49,22 +49,29 @@ Use this checklist to run the public news site and Studio as separate surfaces.
 ## 5b) Cloudflare Pages production setup
 
 - Create a Pages project for the public `news.robot.tv` site.
+- Create a Pages project for the public `robot.tv` site.
 - Add GitHub secrets:
   - `CLOUDFLARE_API_KEY`
   - `CLOUDFLARE_EMAIL`
   - `CLOUDFLARE_ACCOUNT_ID`
   - `CLOUDFLARE_NEWS_PAGES_PROJECT_NAME`
+  - `CLOUDFLARE_MAIN_PAGES_PROJECT_NAME`
 - Run the `Deploy Public News Site` workflow once.
+- Run the `Deploy robot.tv Public Site` workflow once.
 - Confirm the preview/production Pages URL serves the news homepage, article pages, `feed.xml`, and `sitemap.xml` correctly.
-- If scheduled auto-publish should deploy directly, keep the Cloudflare secrets set in GitHub Actions.
-- Keep `NEWS_PUBLIC_DEPLOY_HOOK_URL` only if you still want a fallback rebuild trigger for manual edits.
+- Confirm the root-site Pages URL serves `robot.tv` correctly.
+- Confirm both homepages are rendered from build output and do not depend on browser-side Sanity fetch, preload homepage scripts, or homepage `localStorage` cache.
+- Keep the Cloudflare secrets set in GitHub Actions so scheduled auto-publish can rebuild and deploy both public sites directly.
+- Do not keep a fallback production deploy hook for `news.robot.tv`.
 
 ## 6) DNS cutover
 
 - Point `news.robot.tv` to the public static host.
+- Point `robot.tv` to its public Pages host.
 - Keep Studio on `robottv.sanity.studio`.
 - Wait for DNS propagation.
 - Open `https://news.robot.tv` and verify reading/browsing.
+- Open `https://robot.tv` and verify the root public site.
 - Open `https://robottv.sanity.studio` and verify editing/login.
 
 ## 7) URL continuity
@@ -75,6 +82,7 @@ Use this checklist to run the public news site and Studio as separate surfaces.
 ## 8) Post-cutover checks
 
 - Publish one test post and verify it appears correctly.
+- Confirm both Cloudflare Pages projects show fresh deployment timestamps after the publish flow completes.
 - Confirm YouTube embeds/links render correctly.
 - Confirm analytics is firing as expected.
 - Verify mobile view and desktop view.

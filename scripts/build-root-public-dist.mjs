@@ -1,5 +1,6 @@
 import fs from "node:fs/promises"
 import path from "node:path"
+import { buildRootHomepageNews } from "./build-root-homepage-news.mjs"
 
 const root = process.cwd()
 const distDir = path.join(root, "dist-root-public")
@@ -44,6 +45,8 @@ const run = async () => {
     if (!includeFiles.has(entry.name) && !includeFileByExtension(entry.name)) continue
     await fs.copyFile(path.join(root, entry.name), path.join(distDir, entry.name))
   }
+
+  await buildRootHomepageNews({ outputPath: path.join(distDir, "index.html") })
 
   console.log("Copied root public site into dist-root-public/.")
 }

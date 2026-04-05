@@ -21,6 +21,8 @@ const requiredFiles = [
   "scripts/ga-lazy.js",
   "images/robot_logo.png"
 ]
+const ROOT_HOME_NEWS_START = "<!-- ROOT_HOME_NEWS_START -->"
+const ROOT_HOME_NEWS_END = "<!-- ROOT_HOME_NEWS_END -->"
 
 const excludedEntries = [
   "news-studio",
@@ -79,6 +81,36 @@ for (const file of htmlFiles) {
   const html = await fs.readFile(file, "utf8")
   if (!html.includes("ga-lazy.js?v=20260309-ga-v1")) {
     failures.push(`Missing lazy-load analytics include: ${relPath}`)
+  }
+  if (relPath === "index.html") {
+    if (html.includes("preloaded-news-posts.js")) {
+      failures.push("Root homepage should not depend on preloaded-news-posts.js at runtime")
+    }
+    if (html.includes("api.sanity.io") || html.includes("apicdn.sanity.io")) {
+      failures.push("Root homepage should not fetch homepage news from Sanity at runtime")
+    }
+    const start = html.indexOf(ROOT_HOME_NEWS_START)
+    const end = html.indexOf(ROOT_HOME_NEWS_END)
+    if (start === -1 || end === -1 || end < start) {
+      failures.push("Root homepage is missing generated news markers")
+    } else {
+      const block = html.slice(start, end)
+      const articleHrefMatches = [...block.matchAll(/href="https:\/\/news\.robot\.tv\/([^"?#]+)\/"/g)]
+        .map((match) => match[1])
+        .filter(Boolean)
+      if (new Set(articleHrefMatches).size < 3) {
+        failures.push("Root homepage generated news block should contain multiple crawlable newsroom article links")
+      }
+      if (!block.includes("<h2>Latest News</h2>")) {
+        failures.push("Root homepage generated news block is missing the Latest News section")
+      }
+      if (!block.includes("<h2>Pinned Analysis</h2>")) {
+        failures.push("Root homepage generated news block is missing the Pinned Analysis section")
+      }
+      if (!block.includes("<h2>Evergreen Hubs</h2>")) {
+        failures.push("Root homepage generated news block is missing the Evergreen Hubs section")
+      }
+    }
   }
 }
 
