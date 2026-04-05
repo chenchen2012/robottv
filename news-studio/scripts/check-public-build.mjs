@@ -14,8 +14,7 @@ const requiredFiles = [
   "sitemap.xml",
   "fonts/space-grotesk-latin.woff2",
   "fonts/orbitron-latin.woff2",
-  "scripts/ga-lazy.js",
-  "scripts/preloaded-news-posts.js"
+  "scripts/ga-lazy.js"
 ]
 
 const directGaPatterns = [
@@ -107,6 +106,14 @@ for (const file of htmlFiles) {
   }
   if (postRelPaths.has(relPath) && html.includes(thinBodySentinel) && !/noindex,follow/i.test(html)) {
     failures.push(`Thin fallback-only article is still indexable: ${relPath}`)
+  }
+  if (relPath === "index.html") {
+    if (html.includes("scripts/preloaded-news-posts.js")) {
+      failures.push("Homepage should not depend on preloaded-news-posts.js at runtime")
+    }
+    if (html.includes("localStorage.getItem(") || html.includes("localStorage.setItem(")) {
+      failures.push("Homepage should not use localStorage to control news rendering")
+    }
   }
   validateInlineScripts(html, relPath, failures)
 }
