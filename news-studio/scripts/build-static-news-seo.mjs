@@ -8,6 +8,7 @@ import { newsCoverImageOverrides } from "../../scripts/news-cover-image-override
 import {
   classifyHomepageStory,
   getHomepageListingPosts,
+  hasHomepagePlayableVideo,
   normalizeHomepageSlug,
   selectHomepageStoryLayout,
 } from "../../scripts/homepage-news-rules.mjs";
@@ -1798,6 +1799,7 @@ const renderStaticVisualStory = (post, { featured = false } = {}) => {
   const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
   const thumbUrl = escapeHtml(coverImageForPost(post));
   const summary = escapeHtml(getListingSummary(post));
+  const ctaLabel = hasHomepagePlayableVideo(post) ? "Watch story" : "Read brief";
   return `        <article class="visual-story${featured ? " visual-story-featured" : ""}" data-video="${escapeHtml(
     post.youtubeUrl || ""
   )}">
@@ -1811,7 +1813,7 @@ const renderStaticVisualStory = (post, { featured = false } = {}) => {
             <h3><a href="${articleUrl}">${title}</a></h3>
             <p>${summary}</p>
             <div class="row">
-              <a class="btn btn-primary" href="${articleUrl}">Watch story</a>
+              <a class="btn btn-primary" href="${articleUrl}">${ctaLabel}</a>
             </div>
           </div>
         </article>`;

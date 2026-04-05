@@ -143,6 +143,14 @@ export const hasHomepageStrongVisualSupport = (post) =>
   Boolean(String(post?.sourceImageUrl || "").trim()) ||
   Boolean(String(post?.heroImage?.asset?.url || "").trim())
 
+export const hasHomepagePlayableVideo = (post) => hasHomepageEmbeddedVideo(post)
+
+export const hasHomepageImageSupport = (post) =>
+  homepageLeadFeaturePreferredSlugs.has(normalizeHomepageSlug(post?.slug)) ||
+  homepageVisualFeaturePreferredSlugs.has(normalizeHomepageSlug(post?.slug)) ||
+  Boolean(String(post?.sourceImageUrl || "").trim()) ||
+  Boolean(String(post?.heroImage?.asset?.url || "").trim())
+
 export const getHomepageEditorialScore = (post) => {
   const slug = normalizeHomepageSlug(post?.slug)
   const title = String(post?.title || "")
@@ -176,15 +184,21 @@ export const isHomepageTextSignalCandidate = (post) =>
 export const classifyHomepageStory = (post) => {
   const slug = normalizeHomepageSlug(post?.slug)
   const editorialScore = getHomepageEditorialScore(post)
-  const hasStrongVisual = hasHomepageStrongVisualSupport(post)
+  const hasPlayableVideo = hasHomepagePlayableVideo(post)
+  const hasImageSupport = hasHomepageImageSupport(post)
+  const hasStrongVisual = hasPlayableVideo || hasImageSupport
 
   if (homepageLeadFeaturePreferredSlugs.has(slug)) {
     return { kind: "lead-feature", editorialScore, hasStrongVisual }
   }
-  if (hasStrongVisual && editorialScore >= 4) {
+  if (hasPlayableVideo && editorialScore >= 4) {
     return { kind: "lead-feature", editorialScore, hasStrongVisual }
   }
-  if (homepageVisualFeaturePreferredSlugs.has(slug) || (hasStrongVisual && editorialScore >= 3)) {
+  if (
+    homepageVisualFeaturePreferredSlugs.has(slug) ||
+    (hasPlayableVideo && editorialScore >= 3) ||
+    (hasImageSupport && editorialScore >= 5)
+  ) {
     return { kind: "featured", editorialScore, hasStrongVisual }
   }
   return { kind: "signal-brief", editorialScore, hasStrongVisual }
