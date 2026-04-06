@@ -185,11 +185,16 @@
       box-shadow:0 7px 16px rgba(6, 11, 18, 0.12);
     }
     .visual-story.visual-story-featured {
-      border-color:#47607f;
-      box-shadow:0 0 0 1px rgba(94,132,255,.12) inset, 0 8px 20px rgba(6,11,18,.14);
-      min-height:436px;
-      max-height:436px;
-      padding:.18rem .18rem .18rem .28rem;
+      grid-template-columns:minmax(354px, 1.18fr) minmax(248px, .82fr);
+      border-color:#4d678c;
+      background:
+        radial-gradient(520px 220px at 0% 0%, rgba(94,132,255,.12), transparent 56%),
+        radial-gradient(320px 160px at 82% 16%, rgba(126,154,199,.07), transparent 60%),
+        linear-gradient(160deg, rgba(17,27,41,.985), rgba(12,20,31,.95));
+      box-shadow:0 0 0 1px rgba(94,132,255,.14) inset, 0 14px 30px rgba(5,10,18,.2);
+      min-height:358px;
+      max-height:358px;
+      padding:.18rem .18rem .18rem calc(.44rem + 12px);
     }
     .visual-story .thumb-shell { min-height:100%; }
     .visual-story .thumb { height:100%; aspect-ratio:auto; border-bottom:0; }
@@ -218,29 +223,63 @@
       padding-top:0;
     }
     .visual-story.visual-story-featured .thumb-shell {
-      min-height:calc(100% - 1rem);
-      margin:.5rem 0 .5rem .32rem;
-      border-radius:10px;
+      position:relative;
+      min-height:calc(100% - .12rem);
+      margin:.06rem 0 .06rem .02rem;
+      border-radius:13px;
       overflow:hidden;
-      box-shadow:0 0 0 1px rgba(76,103,145,.28), inset 0 0 0 1px rgba(12,20,31,.4);
-      background:linear-gradient(180deg, rgba(6,10,16,.92), rgba(10,16,25,.72));
+      box-shadow:0 0 0 1px rgba(78,106,150,.22), inset 0 0 0 1px rgba(10,16,24,.34), 0 12px 22px rgba(4,8,14,.18);
+      background:linear-gradient(180deg, rgba(7,11,18,.98), rgba(9,15,23,.86));
+    }
+    .visual-story.visual-story-featured .thumb-shell::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(132% 96% at 18% 18%, rgba(255,255,255,.16), transparent 40%),
+        linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,0) 24%, rgba(8,12,18,0) 60%, rgba(8,12,18,.12)),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 16%, rgba(8,12,18,0) 62%, rgba(8,12,18,.06));
+    }
+    .visual-story.visual-story-featured .thumb-shell::before {
+      content:"";
+      position:absolute;
+      inset:auto 0 0 0;
+      height:40%;
+      pointer-events:none;
+      background:linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.02) 34%, rgba(7,11,18,.08));
+      z-index:1;
     }
     .visual-story.visual-story-featured .thumb {
       object-fit:cover;
-      object-position:center 24%;
-      transform:scale(1.08);
-      filter:saturate(.94) contrast(1.04);
+      object-position:center 18%;
+      transform:scale(1.14);
+      filter:saturate(.98) contrast(1.05) brightness(1.01);
     }
     .visual-story.visual-story-featured .thumb-preview {
       inset:0;
       border:0;
-      border-radius:10px;
+      border-radius:13px;
     }
     .visual-story.visual-story-featured .content {
+      position:relative;
       display:flex;
       flex-direction:column;
-      justify-content:flex-start;
-      padding:.84rem .96rem .88rem 1.02rem;
+      justify-content:center;
+      align-items:flex-start;
+      gap:0;
+      padding:1.06rem 1.12rem 1rem 1.16rem;
+      min-height:100%;
+    }
+    .visual-story.visual-story-featured .content::before {
+      content:"";
+      position:absolute;
+      inset:.22rem .12rem .22rem 0;
+      border-radius:0 13px 13px 0;
+      background:
+        linear-gradient(90deg, rgba(23,37,56,.12), rgba(15,25,38,.34) 10%, rgba(12,20,31,.5) 28%, rgba(12,20,31,.16) 74%, rgba(12,20,31,.04) 100%);
+      box-shadow:inset 1px 0 0 rgba(126,154,199,.14);
+      pointer-events:none;
     }
     .visual-story.visual-story-featured .meta {
       margin-top:0;
@@ -249,9 +288,34 @@
       white-space:nowrap;
     }
     .visual-story.visual-story-featured h3 {
-      margin-top:.68rem;
+      margin-top:.58rem;
+      max-width:10.8ch;
+      font-size:1.8rem;
+      line-height:1.06;
+      color:#fbfdff;
+      text-shadow:0 1px 0 rgba(7,11,18,.14), 0 8px 18px rgba(7,11,18,.08);
     }
-    .visual-story.visual-story-featured p { max-width:25ch; }
+    .visual-story.visual-story-featured p {
+      max-width:18.2ch;
+      margin-top:.64rem;
+      font-size:1.01rem;
+      line-height:1.42;
+      color:#f2f6fd;
+      -webkit-line-clamp:3;
+      display:none;
+    }
+    .visual-story.visual-story-featured .row {
+      margin-top:.82rem;
+      padding-top:0;
+    }
+    .visual-story.visual-story-featured .btn {
+      padding:.78rem 1.14rem;
+      box-shadow:0 10px 20px rgba(24,36,66,.24), inset 0 1px 0 rgba(255,255,255,.13);
+    }
+    .visual-story.visual-story-featured .btn {
+      padding:.78rem 1.18rem;
+      box-shadow:0 10px 18px rgba(22,34,62,.24), inset 0 1px 0 rgba(255,255,255,.12);
+    }
     .story-type {
       display:inline-flex;
       align-items:center;
@@ -827,17 +891,6 @@
           <p>Sanctuary AI&#39;s zero-shot hand result suggests dexterous robotics is starting to move from scripted manipulation toward...</p>
           <div class="row">
             <a class="signal-link" href="/sanctuary-ais-robotic-hand-demonstrates-zero-shot-in-hand-manipulation/">Read brief</a>
-          </div>
-        </article>
-        <article class="signal-story">
-          <div class="signal-story-header">
-            <span class="story-type">Signal Brief</span>
-            <p class="meta">Apr 3, 2026</p>
-          </div>
-          <h3><a href="/gill-pratt-says-humanoid-robots-moment-is-finally-here/">Gill Pratt Says Humanoid Robots’ Moment Is Finally Here</a></h3>
-          <p>Gill Pratt&#39;s call suggests humanoids are no longer being judged as distant research projects, but against...</p>
-          <div class="row">
-            <a class="signal-link" href="/gill-pratt-says-humanoid-robots-moment-is-finally-here/">Read brief</a>
           </div>
         </article>
         </div>
@@ -1965,6 +2018,12 @@
         </div>
       </article>
     `;
+    const trimHomepageRestPosts = (posts, { columns = 4 } = {}) => {
+      const items = Array.isArray(posts) ? posts : [];
+      if (items.length <= columns) return items;
+      const fullRowsCount = items.length - (items.length % columns);
+      return fullRowsCount ? items.slice(0, fullRowsCount) : items;
+    };
     const renderHomepageFeedItem = (post, index) => {
       if (classifyHomepageStory(post).kind !== "signal-brief") {
         return renderVisualStory(post, { featured: index === 0 });
@@ -2230,7 +2289,10 @@
       if (railBriefs.length) {
         topParts.push(`<div class="brief-rail">${railBriefs.map((post) => renderSignalStory(post)).join("")}</div>`);
       }
-      const restPosts = remainder.length ? remainder : pagePosts.filter((post) => normalizeHomepageSlug(post?.slug) !== normalizeHomepageSlug(lead?.slug));
+      const remainderOrFallback = remainder.length
+        ? remainder
+        : pagePosts.filter((post) => normalizeHomepageSlug(post?.slug) !== normalizeHomepageSlug(lead?.slug));
+      const restPosts = trimHomepageRestPosts(remainderOrFallback);
       const restHtml = restPosts.map((post, index) => renderHomepageFeedItem(post, index + 1)).join("");
       grid.innerHTML = `
         ${topParts.length ? `<div class="homepage-top">${topParts.join("")}</div>` : ""}

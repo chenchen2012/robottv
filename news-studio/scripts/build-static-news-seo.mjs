@@ -24,6 +24,7 @@ const coverImageOverridesScriptPath = path.join(staticDir, "scripts", "cover-ima
 const generatedCoverDir = path.join(staticDir, "images", "covers", "generated");
 const STATIC_RESERVED_DIRS = new Set(["images", "scripts"]);
 const HOMEPAGE_PAGE_SIZE = 12;
+const HOMEPAGE_REST_GRID_COLUMNS = 4;
 const HOMEPAGE_START_MARKER = "<!-- STATIC_NEWS_HOME_START -->";
 const HOMEPAGE_END_MARKER = "<!-- STATIC_NEWS_HOME_END -->";
 const RESERVED_ARTICLE_SLUGS = new Set([
@@ -1847,6 +1848,12 @@ const renderStaticSignalStory = (post, { featured = false } = {}) => {
           </div>
         </article>`;
 };
+const trimHomepageRestPosts = (posts, { columns = HOMEPAGE_REST_GRID_COLUMNS } = {}) => {
+  const items = Array.isArray(posts) ? posts : [];
+  if (items.length <= columns) return items;
+  const fullRowsCount = items.length - (items.length % columns);
+  return fullRowsCount ? items.slice(0, fullRowsCount) : items;
+};
 const buildHomepageStaticMarkup = (posts) => {
   const listingPosts = getHomepageListingPosts(posts);
   const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
@@ -1861,7 +1868,7 @@ const buildHomepageStaticMarkup = (posts) => {
 ${railBriefs.map((post) => renderStaticSignalStory(post)).join("\n")}
         </div>`
     : "";
-  const restHtml = remainder
+  const restHtml = trimHomepageRestPosts(remainder)
     .map((post) =>
       classifyHomepageStory(post).kind === "signal-brief"
         ? renderStaticSignalStory(post)
