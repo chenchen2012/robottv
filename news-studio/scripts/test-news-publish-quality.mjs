@@ -2,11 +2,16 @@ import assert from 'node:assert/strict'
 
 import { normalizeExcerpt } from './build-static-news-seo.mjs'
 import { callDeepSeekJson } from './lib/deepseek-provider.mjs'
+import { buildEditorialPackage } from './lib/news-editorial-content.mjs'
 import {
+  extractConcreteFactExcerpt,
   buildFallbackQcEnrichment,
   findHardDuplicate,
   findSoftDuplicate,
   getSourceTrustTier,
+  hasConcreteFact,
+  isValidSourceUrl,
+  leadStartsWithImplication,
   isPromotionalLikely,
   validateQcEnrichment,
 } from './lib/news-publish-quality.mjs'
@@ -48,11 +53,68 @@ const promotional = isPromotionalLikely({
 })
 assert.equal(promotional, true)
 
+assert.equal(isValidSourceUrl('https://example.com/story'), true)
+assert.equal(isValidSourceUrl(''), false)
+assert.equal(hasConcreteFact('UBTech offered $18 million to recruit an AI scientist.', { title: 'UBTech offers $18 million for AI scientist' }), true)
+assert.equal(leadStartsWithImplication('That matters because robotics buyers are demanding proof.'), true)
+assert.match(
+  extractConcreteFactExcerpt('That matters because buyers want proof. UBTech offered $18 million to recruit an AI scientist.'),
+  /\$18 million/
+)
+assert.equal(
+  hasConcreteFact('Generalist introduced GEN-1 for physical AI.', {
+    title: 'Generalist introduces GEN-1 general-purpose model for physical AI',
+  }),
+  true
+)
+
+const baseFetch = global.fetch
+global.fetch = async (url) => {
+  const target = String(url || '')
+  if (target === 'https://example.com/fact-story') {
+    return {
+      ok: true,
+      text: async () => `
+        <html>
+          <head>
+            <title>Generalist introduces GEN-1 general-purpose model for physical AI</title>
+            <meta name="description" content="Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.">
+            <meta property="og:description" content="The company said GEN-1 is designed to improve robot learning across tasks.">
+          </head>
+          <body>
+            <article>
+              <p>Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.</p>
+              <p>The company said GEN-1 is designed to improve robot learning across tasks and shorten iteration cycles for developers.</p>
+            </article>
+          </body>
+        </html>
+      `,
+    }
+  }
+  return baseFetch(url)
+}
+
+const editorialPackage = await buildEditorialPackage({
+  headline: 'Generalist introduces GEN-1 general-purpose model for physical AI',
+  source: 'The Robot Report',
+  sourceUrl: 'https://example.com/fact-story',
+  pubDate: now,
+})
+assert.equal(editorialPackage.generationMode, 'fallback')
+assert.equal(leadStartsWithImplication(editorialPackage.excerpt), false)
+assert.equal(hasConcreteFact(editorialPackage.excerpt, { title: 'Generalist introduces GEN-1 general-purpose model for physical AI' }), true)
+assert.equal(leadStartsWithImplication(editorialPackage.bodyParagraphs[0]), false)
+assert.equal(hasConcreteFact(editorialPackage.bodyParagraphs[0], { title: 'Generalist introduces GEN-1 general-purpose model for physical AI' }), true)
+assert.doesNotMatch(editorialPackage.bodyParagraphs[1], /^That matters because\b/i)
+assert.doesNotMatch(editorialPackage.bodyParagraphs[2], /^The next thing to watch\b/i)
+global.fetch = baseFetch
+
 const fallback = buildFallbackQcEnrichment({
   candidate: {
     title: 'Figure expands humanoid operations',
     sourceName: 'Reuters',
     sourceTrustTier: 'allow',
+    sourceUrl: 'https://www.reuters.com/world/robotics-story',
   },
   editorial: {
     excerpt:
@@ -67,6 +129,8 @@ const fallback = buildFallbackQcEnrichment({
 })
 const validatedFallback = validateQcEnrichment(fallback)
 assert.equal(validatedFallback.ok, true)
+assert.equal(validatedFallback.data.story_format, 'signal_brief')
+assert.equal(validatedFallback.data.publish_recommendation, 'auto_publish')
 
 const malformedProvider = await callDeepSeekJson({
   systemPrompt: 'Return JSON.',
@@ -79,9 +143,23 @@ const invalidCategory = validateQcEnrichment({
   summary: 'This robotics update signals a stronger commercial push as buyers ask for deployment proof and clearer execution data.',
   why_it_matters: 'It matters because robotics buyers are now testing whether these systems can move from pilots into repeatable operating programs.',
   category: 'category-invalid',
+  story_format: 'signal_brief',
+  publish_recommendation: 'draft_only',
+  concrete_fact_present: false,
+  concrete_fact_excerpt: '',
+  source_grounded: true,
+  headline_supported_by_body: true,
+  lead_with_concrete_fact: false,
+  implication_first_risk: 'high',
+  abstractness_score: 4,
+  repetition_score: 3,
+  source_strength_score: 3,
+  newsworthiness_score: 3,
+  visual_strength_score: 1,
   homepage_eligible: false,
   reject: false,
   reject_reason: '',
+  draft_reason: 'needs_editorial_review',
   internal_link_target: '',
   youtube_search_query: '',
 })

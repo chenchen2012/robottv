@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import {
+  extractConcreteFactExcerpt,
+  hasConcreteFact,
+  leadStartsWithImplication,
+} from "./news-publish-quality.mjs";
 
 const DEEPSEEK_API_URL = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/chat/completions";
 const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat";
@@ -37,6 +42,12 @@ const stripHtml = (value) =>
 const normalizeWhitespace = (value) => String(value || "").replace(/\s+/g, " ").trim();
 
 const countWords = (value) => normalizeWhitespace(value).split(" ").filter(Boolean).length;
+
+const splitSentences = (value = "") =>
+  normalizeWhitespace(value)
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => normalizeWhitespace(sentence))
+    .filter(Boolean);
 
 const safeSentence = (value, maxLength = 280) => {
   const text = normalizeWhitespace(value);
@@ -164,82 +175,139 @@ const themeFromHeadline = (headline = "") => {
   return "robotics commercialization";
 };
 
-const significanceLine = (headline, source, sourceContext) => {
-  const theme = themeFromHeadline(headline);
-  const description = sourceContext.metaDescription || sourceContext.ogDescription || "";
-  if (theme === "humanoid deployment") {
-    return "That matters because the market is shifting from concept demos toward proof that humanoids can hold up in real factory, warehouse, and service workflows.";
+const sourceSentences = (sourceContext = {}) => {
+  const candidates = [
+    sourceContext.metaDescription || "",
+    sourceContext.ogDescription || "",
+    ...(Array.isArray(sourceContext.paragraphs) ? sourceContext.paragraphs : []),
+    sourceContext.pageTitle || "",
+  ];
+  const unique = [];
+  const seen = new Set();
+  for (const candidate of candidates) {
+    for (const sentence of splitSentences(candidate)) {
+      const key = sentence.toLowerCase();
+      if (!sentence || seen.has(key)) continue;
+      seen.add(key);
+      unique.push(sentence);
+    }
   }
-  if (theme === "inspection operations") {
-    return "That matters because buyers care less about robot demos than about whether fleets can lower inspection costs, reduce risk, and fit into existing asset-management routines.";
-  }
-  if (theme === "robotics compute") {
-    return "That matters because compute choices are becoming a gating factor for model latency, on-robot autonomy, and how quickly teams can move from prototype to deployment.";
-  }
-  if (theme === "capital formation") {
-    return "That matters because funding rounds and valuations are useful only if they point to real product velocity, customer traction, and a believable path to scaled deployments.";
-  }
-  if (theme === "industry events") {
-    return "That matters because events and keynote slots often reveal which platforms, customers, and use cases are gaining real momentum before the market narrative fully catches up.";
-  }
-  if (description) {
-    return `${sourceReference(source)} is framing the update as a signal for ${theme}.`;
-  }
-  return "That matters because operators and investors are looking for concrete evidence that robotics progress is turning into durable deployment signals.";
+  return unique;
 };
 
-const watchLine = (headline) => {
+const firstFactSentence = ({ headline, sourceContext }) => {
+  const sentences = sourceSentences(sourceContext);
+  return (
+    sentences.find((sentence) => hasConcreteFact(sentence, { title: headline })) ||
+    extractConcreteFactExcerpt(
+      [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])]
+        .filter(Boolean)
+        .join(" "),
+      { title: headline }
+    ) ||
+    ""
+  );
+};
+
+const firstSourceSentence = ({ headline, sourceContext }) => {
+  const factSentence = firstFactSentence({ headline, sourceContext });
+  if (factSentence) return factSentence;
+  return (
+    sourceSentences(sourceContext).find((sentence) => !leadStartsWithImplication(sentence)) ||
+    safeSentence(sourceContext.pageTitle || headline || "", 180)
+  );
+};
+
+const supportSentence = ({ headline, sourceContext, exclude = "" }) =>
+  sourceSentences(sourceContext).find((sentence) => {
+    if (!sentence || sentence === exclude) return false;
+    if (leadStartsWithImplication(sentence)) return false;
+    return hasConcreteFact(sentence, { title: headline }) || countWords(sentence) >= 12;
+  }) || "";
+
+const significanceLine = (headline, source, sourceContext) => {
   const theme = themeFromHeadline(headline);
   if (theme === "humanoid deployment") {
-    return "The next thing to watch is whether the company can show repeatable uptime, safety integration, and task-level productivity rather than another short demonstration cycle.";
+    return "The real test is whether the system can hold up in repeatable factory, warehouse, or service workflows rather than isolated demos.";
   }
   if (theme === "inspection operations") {
-    return "The next thing to watch is whether this turns into contracted fleet rollouts, software attach rates, and evidence that operators keep the robots in routine use.";
+    return "For buyers, the key question is whether the robot lowers inspection cost, reduces risk, and fits routine asset-management work.";
+  }
+  if (theme === "robotics compute") {
+    return "For robotics teams, the implication is practical: compute choices shape latency, on-robot autonomy, and deployment cost.";
   }
   if (theme === "capital formation") {
-    return "The next thing to watch is how quickly the company converts this momentum into hiring, product milestones, signed customers, and on-site deployments.";
+    return "The useful signal is whether fresh capital turns into product milestones, customer wins, and scaled deployments.";
   }
   if (theme === "industry events") {
-    return "The next thing to watch is which live demos, customer references, or roadmap details hold up once the event buzz fades.";
+    return "The useful signal is which demos, customer references, or roadmap details hold up once the event cycle passes.";
   }
-  return "The next thing to watch is whether this headline translates into sustained customer adoption, stronger system performance, and a clearer competitive position.";
+  if (sourceContext.paragraphs?.length) {
+    return `For operators, the point is whether this update leads to clearer deployment proof in ${theme}.`;
+  }
+  return `${sourceReference(source)} points to a concrete development in ${theme}, not just another robotics narrative.`;
+};
+
+const watchLine = (headline, sourceContext) => {
+  const theme = themeFromHeadline(headline);
+  const sourceText = normalizeWhitespace(
+    [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(" ")
+  );
+  if (/pilot|deployment|contract|customer|fleet/i.test(sourceText)) {
+    return "Watch for follow-on deployments, named customers, or contract expansion that proves the update is more than a one-off.";
+  }
+  if (/launch|release|version|model/i.test(sourceText)) {
+    return "Watch for performance data, customer uptake, or deployment evidence that shows the release is landing beyond the announcement cycle.";
+  }
+  if (theme === "humanoid deployment") {
+    return "Watch for repeatable uptime, safety integration, and task-level productivity rather than another short demo cycle.";
+  }
+  if (theme === "inspection operations") {
+    return "Watch for contracted fleet rollouts, software attach rates, and evidence that operators keep the robots in routine use.";
+  }
+  if (theme === "capital formation") {
+    return "Watch how quickly the company converts the headline into hiring, product milestones, signed customers, and on-site deployments.";
+  }
+  if (theme === "industry events") {
+    return "Watch which demos, customer references, or roadmap details still matter once the event buzz fades.";
+  }
+  return "Watch whether the headline turns into sustained customer adoption, stronger system performance, and repeatable deployment proof.";
 };
 
 const buildFallbackBodyParagraphs = ({ headline, source, sourceContext }) => {
-  const introLead = pickVariant(headline, [
-    `Recent coverage puts ${headline} into the center of the current robotics conversation.`,
-    `${sourceReference(source)} is highlighting ${headline} as a fresh signal in the robotics market.`,
-    `${headline} is landing at a moment when robotics teams are under pressure to show more than prototype momentum.`,
-  ]);
-  const contextSentence = safeSentence(
-    sourceContext.metaDescription ||
-      sourceContext.ogDescription ||
-      sourceContext.paragraphs[0] ||
-      sourceContext.pageTitle ||
-      "",
-    220
+  const factSentence = safeSentence(firstSourceSentence({ headline, sourceContext }), 210);
+  const evidenceSentence = safeSentence(
+    supportSentence({ headline, sourceContext, exclude: factSentence }) || sourceContext.paragraphs[1] || "",
+    210
   );
-  const evidenceSentence = safeSentence(sourceContext.paragraphs[1] || sourceContext.paragraphs[0] || "", 220);
+  const implicationSentence = safeSentence(significanceLine(headline, source, sourceContext), 180);
+  const watchSentence = safeSentence(watchLine(headline, sourceContext), 180);
 
   const paragraphOne = normalizeWhitespace(
-    [introLead, contextSentence].filter(Boolean).join(" ")
+    [factSentence || safeSentence(`${headline}.`, 160), evidenceSentence && evidenceSentence !== factSentence ? evidenceSentence : ""]
+      .filter(Boolean)
+      .join(" ")
   );
-  const paragraphTwo = normalizeWhitespace(
-    [significanceLine(headline, source, sourceContext), evidenceSentence].filter(Boolean).join(" ")
-  );
-  const paragraphThree = watchLine(headline);
+  const paragraphTwo = normalizeWhitespace([implicationSentence].filter(Boolean).join(" "));
+  const paragraphThree = normalizeWhitespace([watchSentence].filter(Boolean).join(" "));
 
   return [paragraphOne, paragraphTwo, paragraphThree].filter((paragraph) => countWords(paragraph) >= 10);
 };
 
 const buildFallbackExcerpt = ({ headline, source, sourceContext }) => {
-  const opener = safeSentence(
-    sourceContext.metaDescription || sourceContext.ogDescription || sourceContext.paragraphs[0] || "",
-    145
+  const factLead = safeSentence(firstSourceSentence({ headline, sourceContext }) || headline, 145);
+  const implication = safeSentence(significanceLine(headline, source, sourceContext), 96);
+  const composed = normalizeWhitespace(
+    [
+      factLead,
+      implication && !leadStartsWithImplication(factLead) ? implication : "",
+    ]
+      .filter(Boolean)
+      .join(" ")
   );
-  const whyItMatters = safeSentence(significanceLine(headline, source, sourceContext), 120);
-  const composed = normalizeWhitespace([opener || headline, whyItMatters].filter(Boolean).join(" "));
-  return composed.length > 240 ? `${composed.slice(0, 237).trimEnd()}...` : composed;
+  if (composed) return composed.length > 240 ? `${composed.slice(0, 237).trimEnd()}...` : composed;
+  const fallbackLead = safeSentence(`${headline}.`, 140);
+  return fallbackLead.length > 240 ? `${fallbackLead.slice(0, 237).trimEnd()}...` : fallbackLead;
 };
 
 const buildFallbackVideoSummary = ({ headline, source, sourceContext, excerpt }) => {
@@ -327,6 +395,11 @@ const buildAiPrompt = ({ headline, source, sourceUrl, pubDate, sourceContext, ca
     "- Do not mention the source by name in the excerpt.",
     "- For robotics trade publications, avoid naming the outlet in body paragraphs unless essential for clarity.",
     "- For major general, business, or international outlets, naming the source once in the body is acceptable when it adds credibility.",
+    "- Lead with the most concrete fact available, then explain one implication.",
+    "- The excerpt should contain one concrete fact and one implication when possible.",
+    "- Paragraph 1 must be fact-first and source-grounded.",
+    "- Paragraph 2 should explain why the development matters operationally.",
+    "- Paragraph 3 should only include a watch-next line if the source context justifies it.",
     "- Focus on what happened, why it matters operationally, and what readers should watch next.",
     "",
     `Headline: ${headline}`,
@@ -341,16 +414,16 @@ const buildAiPrompt = ({ headline, source, sourceUrl, pubDate, sourceContext, ca
     "",
     "Return strict JSON only in this shape:",
     '{',
-    '  "excerpt": "2 sentences, 120-240 characters total",',
-    '  "videoSummary": "2 sentences, 140-320 characters total",',
+    '  "excerpt": "1-2 sentences, 120-240 characters total",',
+    '  "videoSummary": "2 compact sentences, 140-320 characters total",',
     '  "bodyParagraphs": ["paragraph 1", "paragraph 2", "paragraph 3"]',
     '}',
     "Body paragraph rules:",
     "- exactly 3 paragraphs",
     "- 35 to 85 words each",
-    "- paragraph 1 explains the development",
+    "- paragraph 1 explains the development with at least one concrete fact",
     "- paragraph 2 explains why it matters for deployment, commercialization, or product strategy",
-    "- paragraph 3 explains what readers should watch next",
+    "- paragraph 3 explains what readers should watch next only if justified by the source context",
   ].join("\n");
 
 const callDeepSeekEditorial = async (prompt) => {
