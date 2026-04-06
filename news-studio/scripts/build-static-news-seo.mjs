@@ -1818,8 +1818,10 @@ const renderStaticVisualStory = (post, { featured = false } = {}) => {
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <span class="story-type">Featured Story</span>
-            <p class="meta">${date}</p>
+            <div class="visual-story-header">
+              <span class="story-type">Featured Story</span>
+              <p class="meta">${date}</p>
+            </div>
             <h3><a href="${articleUrl}">${title}</a></h3>
             <p>${summary}</p>
             <div class="row">

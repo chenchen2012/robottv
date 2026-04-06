@@ -189,12 +189,19 @@
       box-shadow:0 0 0 1px rgba(94,132,255,.12) inset, 0 8px 20px rgba(6,11,18,.14);
       min-height:436px;
       max-height:436px;
+      padding:.18rem .18rem .18rem .28rem;
     }
     .visual-story .thumb-shell { min-height:100%; }
     .visual-story .thumb { height:100%; aspect-ratio:auto; border-bottom:0; }
     .visual-story .thumb-preview { border-bottom:0; }
     .visual-story .content { padding:.82rem .92rem .86rem; }
     .visual-story .meta { margin-top:.36rem; }
+    .visual-story-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.72rem;
+    }
     .visual-story h3 { margin:.4rem 0 0; line-height:1.16; }
     .visual-story p {
       margin:.42rem 0 0;
@@ -211,7 +218,11 @@
       padding-top:0;
     }
     .visual-story.visual-story-featured .thumb-shell {
+      min-height:calc(100% - 1rem);
+      margin:.5rem 0 .5rem .32rem;
+      border-radius:10px;
       overflow:hidden;
+      box-shadow:0 0 0 1px rgba(76,103,145,.28), inset 0 0 0 1px rgba(12,20,31,.4);
       background:linear-gradient(180deg, rgba(6,10,16,.92), rgba(10,16,25,.72));
     }
     .visual-story.visual-story-featured .thumb {
@@ -220,10 +231,25 @@
       transform:scale(1.08);
       filter:saturate(.94) contrast(1.04);
     }
+    .visual-story.visual-story-featured .thumb-preview {
+      inset:0;
+      border:0;
+      border-radius:10px;
+    }
     .visual-story.visual-story-featured .content {
       display:flex;
       flex-direction:column;
       justify-content:flex-start;
+      padding:.84rem .96rem .88rem 1.02rem;
+    }
+    .visual-story.visual-story-featured .meta {
+      margin-top:0;
+      margin-left:auto;
+      text-align:right;
+      white-space:nowrap;
+    }
+    .visual-story.visual-story-featured h3 {
+      margin-top:.68rem;
     }
     .visual-story.visual-story-featured p { max-width:25ch; }
     .story-type {
@@ -678,8 +704,10 @@
             <span class="thumb-preview" aria-hidden="true"></span>
           </span>
           <div class="content">
-            <span class="story-type">Featured Story</span>
-            <p class="meta">Apr 4, 2026</p>
+            <div class="visual-story-header">
+              <span class="story-type">Featured Story</span>
+              <p class="meta">Apr 4, 2026</p>
+            </div>
             <h3><a href="/the-future-of-realsense-3d-vision-with-chris-matthieu/">The future of RealSense 3D vision with Chris Matthieu</a></h3>
             <p>Intel&#39;s RealSense push matters because 3D vision still sits near the center of robotics perception, navigation,...</p>
             <div class="row">
@@ -1912,9 +1940,11 @@
           <span class="thumb-preview" aria-hidden="true"></span>
         </span>
         <div class="content">
+          <div class="visual-story-header">
             <span class="story-type">Featured Story</span>
             <p class="meta">${esc(formatDate(post.publishedAt))}</p>
-            <h3><a href="/${esc(post.slug)}/">${esc(post.title)}</a></h3>
+          </div>
+          <h3><a href="/${esc(post.slug)}/">${esc(post.title)}</a></h3>
           <p>${esc(buildListingSummary(post))}</p>
           <div class="row">
             <a class="btn btn-primary" href="/${esc(post.slug)}/">${hasEmbeddedVideo(post) ? "Watch story" : "Read brief"}</a>
