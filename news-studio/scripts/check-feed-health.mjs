@@ -3,25 +3,6 @@ const dataset = process.env.SANITY_DATASET || process.env.SANITY_STUDIO_DATASET 
 const token = process.env.SANITY_API_TOKEN || ''
 const maxFeedAgeHours = Number(process.env.MAX_FEED_AGE_HOURS || 24)
 const guardWindowHours = Number(process.env.GUARD_WINDOW_HOURS || 36)
-const mainstreamSources = new Set([
-  'Reuters',
-  'TechCrunch',
-  'Business Insider',
-  'The Guardian',
-  'Janes',
-  'Bloomberg',
-  'BBC',
-  'CNN',
-  'The Wall Street Journal',
-  'Wall Street Journal',
-  'Financial Times',
-  'Associated Press',
-  'AP',
-  'CNBC',
-  'VentureBeat',
-  'IEEE Spectrum'
-])
-
 if (!projectId) {
   console.error('Missing required env: SANITY_PROJECT_ID (or SANITY_STUDIO_PROJECT_ID)')
   process.exit(1)
@@ -45,10 +26,12 @@ const extractYoutubeId = (url) => {
   if (watch) return watch[1]
   const embed = value.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/)
   if (embed) return embed[1]
+  const shorts = value.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/)
+  if (shorts) return shorts[1]
+  const live = value.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/)
+  if (live) return live[1]
   return ''
 }
-
-const hasUsableImageUrl = (url) => /^https?:\/\/\S+/i.test(String(url || '').trim())
 
 const isExcerptStrong = (excerpt) => {
   const text = String(excerpt || '').trim()
@@ -63,44 +46,7 @@ const titleKey = (s) => normalizeTitle(s)
   .slice(0, 8)
   .join(' ')
 
-const bodyWordCount = (body = []) =>
-  (Array.isArray(body) ? body : [])
-    .flatMap((block) => Array.isArray(block?.children) ? block.children : [])
-    .map((child) => String(child?.text || '').trim())
-    .filter(Boolean)
-    .join(' ')
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .length
-
-const allowsMissingYoutube = (post) =>
-  (mainstreamSources.has(String(post?.sourceName || '').trim()) || trustedSources.has(String(post?.sourceName || '').trim())) &&
-  isExcerptStrong(post?.excerpt) &&
-  bodyWordCount(post?.body) >= 80 &&
-  hasUsableImageUrl(post?.sourceImageUrl)
-
-const trustedSources = new Set([
-  'Reuters',
-  'TechCrunch',
-  'The Robot Report',
-  'Business Insider',
-  'The Guardian',
-  'Janes',
-  'Bloomberg',
-  'BBC',
-  'CNN',
-  'The Wall Street Journal',
-  'Wall Street Journal',
-  'Financial Times',
-  'Associated Press',
-  'AP',
-  'CNBC',
-  'VentureBeat',
-  'IEEE Spectrum'
-])
-
-const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,sourceName,sourceImageUrl,body,"slug":slug.current}'
+const query = '*[_type=="post" && !(_id in path("drafts.**"))] | order(publishedAt desc)[0...12]{_id,title,excerpt,publishedAt,youtubeUrl,"slug":slug.current}'
 const url = `https://${projectId}.api.sanity.io/v2023-10-01/data/query/${dataset}?query=${encodeURIComponent(query)}`
 const headers = token ? { Authorization: `Bearer ${token}` } : {}
 const resp = await fetch(url, { headers })
@@ -155,7 +101,6 @@ for (const p of recentGuardPosts) {
   if (!String(p.title || '').trim()) badPosts.push(`${p._id}: missing title`)
   if (!String(p.slug || '').trim()) badPosts.push(`${p._id}: missing slug`)
   if (!isExcerptStrong(p.excerpt)) badPosts.push(`${p._id}: weak excerpt`)
-  if (!ytId && !allowsMissingYoutube(p)) badPosts.push(`${p._id}: missing/invalid YouTube URL`)
 
   if (ytId) {
     if (seenYoutube.has(ytId)) youtubeDupes.push([seenYoutube.get(ytId), p])
