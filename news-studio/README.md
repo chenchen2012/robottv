@@ -101,6 +101,39 @@ Homepage news now follows one build-time model across both public sites:
 Do not treat preload scripts, browser cache, or generated dist files as homepage sources of truth.
 Do not reintroduce browser-side homepage fetch or homepage `localStorage` fallback.
 
+## Current handoff
+
+Current state as of 2026-04-06:
+
+- `news.robot.tv` homepage is build-time generated from Sanity and deployed through GitHub Actions + Cloudflare Pages only.
+- Homepage ordering and eligibility are already fixed so:
+  - Featured Story eligibility is enforced before ordering.
+  - no-video stories fall back to `Signal Brief`.
+  - the lower Signal Brief grid trims to full desktop rows.
+- Auto-publish quality-control Batch 1 is already on `main`:
+  - `missing YouTube URL` no longer hard-fails feed health.
+  - Google News RSS redirect URLs are resolved to original publisher URLs before trust, dedupe, and editorial fetch.
+  - publish routing supports `auto_publish`, `draft_only`, and `reject`.
+  - `draft_only` currently goes only to the publish report queue, not to Sanity drafts.
+- Auto-post writing quality was improved in fallback generation:
+  - fallback copy now prefers fact-first summary/body structure.
+  - paragraph 1 is more source-grounded.
+  - implication-first phrasing and repeated `That matters because...` / `The next thing to watch...` style copy were reduced.
+
+Best next place to resume:
+
+- inspect recent auto-publish output quality with a dry run
+- review whether the new fallback copy is strong enough in real posts
+- then decide whether Batch 2 should focus on:
+  - more rewrite quality in fallback generation, or
+  - safer DeepSeek-assisted editorial generation
+
+Useful resume prompt for a future session:
+
+```text
+Please read news-studio/README.md and continue from the "Current handoff" section. Audit the current auto-post quality state and propose the next safe batch.
+```
+
 ## Content model
 
 - `post`: title, slug, excerpt, publish date, hero image, YouTube URL, optional YouTube video ID override, video summary, primary source name, primary source URL, optional source site URL, optional source publish time, author, categories, body.
