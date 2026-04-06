@@ -1848,7 +1848,7 @@ const renderStaticSignalStory = (post, { featured = false } = {}) => {
 const buildHomepageStaticMarkup = (posts) => {
   const listingPosts = getHomepageListingPosts(posts);
   const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
-  const { lead, leadKind, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts);
+  const { lead, leadKind, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts, { railBriefSlots: 2 });
   const leadHtml = lead
     ? leadKind === "lead-brief"
       ? renderStaticSignalStory(lead, { featured: true })

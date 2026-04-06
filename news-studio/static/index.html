@@ -161,14 +161,16 @@
     .latest-feed { display:grid; gap:1rem; }
     .homepage-top {
       display:grid;
-      grid-template-columns:minmax(0, 1.55fr) minmax(280px, .95fr);
+      grid-template-columns:minmax(0, 1.6fr) minmax(312px, .9fr);
       gap:1.05rem;
-      align-items:start;
+      align-items:stretch;
     }
     .brief-rail {
       display:grid;
-      gap:.92rem;
+      grid-template-rows:repeat(2, minmax(0, 1fr));
+      gap:1rem;
       align-content:start;
+      min-height:436px;
     }
     .visual-story {
       border:1px solid var(--line);
@@ -178,27 +180,52 @@
         linear-gradient(160deg, rgba(16,25,38,.94), rgba(11,19,31,.9));
       overflow:hidden;
       display:grid;
-      grid-template-columns:minmax(272px, 344px) 1fr;
+      grid-template-columns:minmax(236px, 304px) 1fr;
       min-height:100%;
-      box-shadow:0 8px 18px rgba(6, 11, 18, 0.14);
+      box-shadow:0 7px 16px rgba(6, 11, 18, 0.12);
     }
-    .visual-story.visual-story-featured { border-color:#496287; box-shadow:0 0 0 1px rgba(94,132,255,.14) inset, 0 10px 24px rgba(6,11,18,.16); }
+    .visual-story.visual-story-featured {
+      border-color:#47607f;
+      box-shadow:0 0 0 1px rgba(94,132,255,.12) inset, 0 8px 20px rgba(6,11,18,.14);
+      min-height:436px;
+      max-height:436px;
+    }
     .visual-story .thumb-shell { min-height:100%; }
     .visual-story .thumb { height:100%; aspect-ratio:auto; border-bottom:0; }
     .visual-story .thumb-preview { border-bottom:0; }
-    .visual-story .content { padding:1rem 1.05rem 1.02rem; }
+    .visual-story .content { padding:.82rem .92rem .86rem; }
     .visual-story .meta { margin-top:.36rem; }
-    .visual-story h3 { margin:.44rem 0 0; line-height:1.18; }
+    .visual-story h3 { margin:.4rem 0 0; line-height:1.16; }
     .visual-story p {
-      margin:.58rem 0 0;
-      line-height:1.58;
-      max-width:30ch;
+      margin:.42rem 0 0;
+      line-height:1.5;
+      max-width:27ch;
       color:#d7e2f4;
+      display:-webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
     }
     .visual-story .row {
-      margin-top:.92rem;
+      margin-top:.64rem;
       padding-top:0;
     }
+    .visual-story.visual-story-featured .thumb-shell {
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(6,10,16,.92), rgba(10,16,25,.72));
+    }
+    .visual-story.visual-story-featured .thumb {
+      object-fit:cover;
+      object-position:center 24%;
+      transform:scale(1.08);
+      filter:saturate(.94) contrast(1.04);
+    }
+    .visual-story.visual-story-featured .content {
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+    .visual-story.visual-story-featured p { max-width:25ch; }
     .story-type {
       display:inline-flex;
       align-items:center;
@@ -222,7 +249,28 @@
       box-shadow:none;
       position:relative;
     }
-    .brief-rail .signal-story:first-child { border-top:0; padding-top:.08rem; }
+    .brief-rail .signal-story {
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      min-height:0;
+      padding:1rem 0 .38rem;
+    }
+    .brief-rail .signal-story:first-child { border-top:0; padding-top:.18rem; }
+    .brief-rail .signal-story::before { top:1.04rem; bottom:.96rem; }
+    .brief-rail .signal-story:first-child::before { top:.24rem; }
+    .brief-rail .signal-story h3 {
+      margin:.58rem 0 0;
+      line-height:1.28;
+    }
+    .brief-rail .signal-story p {
+      margin:.54rem 0 0;
+      line-height:1.6;
+      -webkit-line-clamp:3;
+    }
+    .brief-rail .signal-story .row {
+      padding-top:.78rem;
+    }
     .signal-story::before {
       content:"";
       position:absolute;
@@ -266,7 +314,8 @@
       overflow:hidden;
     }
     .signal-story .row {
-      padding-top:.68rem;
+      margin-top:auto;
+      padding-top:.72rem;
       padding-left:.8rem;
     }
     .signal-story .story-type {
@@ -642,6 +691,17 @@
         <article class="signal-story">
           <div class="signal-story-header">
             <span class="story-type">Signal Brief</span>
+            <p class="meta">Apr 6, 2026</p>
+          </div>
+          <h3><a href="/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants/">In Japan, the robot isn’t coming for your job; it’s filling the one nobody wants</a></h3>
+          <p>TechCrunch is framing the update as a signal for robotics commercialization.</p>
+          <div class="row">
+            <a class="signal-link" href="/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants/">Read brief</a>
+          </div>
+        </article>
+        <article class="signal-story">
+          <div class="signal-story-header">
+            <span class="story-type">Signal Brief</span>
             <p class="meta">Apr 5, 2026</p>
           </div>
           <h3><a href="/is-chevrons-robotics-strategy-the-future-of-oilfields/">Is Chevron&#39;s Robotics Strategy the Future of Oilfields?</a></h3>
@@ -650,6 +710,9 @@
             <a class="signal-link" href="/is-chevrons-robotics-strategy-the-future-of-oilfields/">Read brief</a>
           </div>
         </article>
+        </div>
+        </div>
+        <div class="homepage-rest">
         <article class="signal-story">
           <div class="signal-story-header">
             <span class="story-type">Signal Brief</span>
@@ -670,24 +733,6 @@
           <p>CNBC is framing the update as a signal for robotics commercialization.</p>
           <div class="row">
             <a class="signal-link" href="/gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal/">Read brief</a>
-          </div>
-        </article>
-        </div>
-        </div>
-        <div class="homepage-rest">
-        <article class="visual-story" data-video="">
-          <span class="thumb-shell">
-            <img class="thumb" src="https://news.robot.tv/images/covers/generated/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants.svg" alt="In Japan, the robot isn’t coming for your job; it’s filling the one nobody wants thumbnail" loading="lazy">
-            <span class="thumb-preview" aria-hidden="true"></span>
-          </span>
-          <div class="content">
-            <span class="story-type">Featured Story</span>
-            <p class="meta">Apr 6, 2026</p>
-            <h3><a href="/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants/">In Japan, the robot isn’t coming for your job; it’s filling the one nobody wants</a></h3>
-            <p>TechCrunch is framing the update as a signal for robotics commercialization.</p>
-            <div class="row">
-              <a class="btn btn-primary" href="/in-japan-the-robot-isnt-coming-for-your-job-its-filling-the-one-nobody-wants/">Read brief</a>
-            </div>
           </div>
         </article>
         <article class="signal-story">
@@ -1824,36 +1869,40 @@
       }
       if (
         homepageVisualFeaturePreferredSlugs.has(slug) ||
-        (playableVideo && editorialScore >= 3) ||
-        (imageSupport && editorialScore >= 5)
+        (playableVideo && editorialScore >= 3)
       ) {
         return { kind: "featured", editorialScore, strongVisual };
       }
       return { kind: "signal-brief", editorialScore, strongVisual };
     };
-    const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) => {
+    const selectHomepageStoryLayout = (posts, { railBriefSlots = 2 } = {}) => {
       const entries = (Array.isArray(posts) ? posts : []).map((post) => ({
         post,
         classification: classifyHomepageStory(post)
       }));
-      const leadEntry =
-        entries.find((entry) => entry.classification.kind === "lead-feature") ||
-        entries.find((entry) => entry.classification.kind === "featured") ||
-        entries[0] ||
-        null;
+      const byPublishedAtDesc = (left, right) => {
+        const leftTime = new Date(left?.post?.publishedAt || 0).getTime();
+        const rightTime = new Date(right?.post?.publishedAt || 0).getTime();
+        return rightTime - leftTime;
+      };
+      const featureEntries = entries
+        .filter((entry) => entry.classification.kind === "lead-feature" || entry.classification.kind === "featured")
+        .sort(byPublishedAtDesc);
+      const signalEntries = entries
+        .filter((entry) => entry.classification.kind === "signal-brief")
+        .sort(byPublishedAtDesc);
+      const leadEntry = featureEntries[0] || entries[0] || null;
       const lead = leadEntry?.post || null;
       const leadKind = leadEntry && leadEntry.classification.kind === "signal-brief" ? "lead-brief" : "featured";
       const leadSlug = normalizeHomepageSlug(lead?.slug);
-      const remainingEntries = entries.filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug);
-      const railBriefs = [];
-      const remainder = [];
-      for (const entry of remainingEntries) {
-        if (railBriefs.length < railBriefSlots && entry.classification.kind === "signal-brief") {
-          railBriefs.push(entry.post);
-          continue;
-        }
-        remainder.push(entry.post);
-      }
+      const remainingFeatures = featureEntries
+        .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
+        .map((entry) => entry.post);
+      const remainingSignals = signalEntries
+        .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
+        .map((entry) => entry.post);
+      const railBriefs = remainingSignals.slice(0, railBriefSlots);
+      const remainder = [...remainingFeatures, ...remainingSignals.slice(railBriefSlots)];
       return { lead, leadKind, railBriefs, remainder };
     };
     const renderVisualStory = (post, { featured = false } = {}) => `

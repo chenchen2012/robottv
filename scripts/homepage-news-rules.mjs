@@ -196,8 +196,7 @@ export const classifyHomepageStory = (post) => {
   }
   if (
     homepageVisualFeaturePreferredSlugs.has(slug) ||
-    (hasPlayableVideo && editorialScore >= 3) ||
-    (hasImageSupport && editorialScore >= 5)
+    (hasPlayableVideo && editorialScore >= 3)
   ) {
     return { kind: "featured", editorialScore, hasStrongVisual }
   }
@@ -250,12 +249,19 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) =>
     post,
     classification: classifyHomepageStory(post),
   }))
+  const byPublishedAtDesc = (left, right) => {
+    const leftTime = new Date(left?.post?.publishedAt || 0).getTime()
+    const rightTime = new Date(right?.post?.publishedAt || 0).getTime()
+    return rightTime - leftTime
+  }
+  const featureEntries = classifications
+    .filter((entry) => entry.classification.kind === "lead-feature" || entry.classification.kind === "featured")
+    .sort(byPublishedAtDesc)
+  const signalEntries = classifications
+    .filter((entry) => entry.classification.kind === "signal-brief")
+    .sort(byPublishedAtDesc)
 
-  const leadEntry =
-    classifications.find((entry) => entry.classification.kind === "lead-feature") ||
-    classifications.find((entry) => entry.classification.kind === "featured") ||
-    classifications[0] ||
-    null
+  const leadEntry = featureEntries[0] || classifications[0] || null
 
   const lead = leadEntry?.post || null
   const leadKind = leadEntry
@@ -265,18 +271,15 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) =>
     : "featured"
 
   const leadSlug = normalizeHomepageSlug(lead?.slug)
-  const remaining = classifications.filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
+  const remainingFeatures = featureEntries
+    .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
+    .map((entry) => entry.post)
+  const remainingSignals = signalEntries
+    .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
+    .map((entry) => entry.post)
 
-  const railBriefs = []
-  const remainder = []
-
-  for (const entry of remaining) {
-    if (railBriefs.length < railBriefSlots && entry.classification.kind === "signal-brief") {
-      railBriefs.push(entry.post)
-      continue
-    }
-    remainder.push(entry.post)
-  }
+  const railBriefs = remainingSignals.slice(0, railBriefSlots)
+  const remainder = [...remainingFeatures, ...remainingSignals.slice(railBriefSlots)]
 
   return {
     lead,
