@@ -138,6 +138,8 @@ const comparableTokens = (value) =>
     .split(' ')
     .filter((token) => token && token.length > 2 && !STOPWORDS.has(token))
 
+const firstSentence = (value = '') => normalizeWhitespace(String(value || '').split(/(?<=[.!?])\s+/)[0] || '')
+
 export const titleSimilarity = (a, b) => {
   const aTokens = new Set(comparableTokens(a))
   const bTokens = new Set(comparableTokens(b))
@@ -145,6 +147,29 @@ export const titleSimilarity = (a, b) => {
   const overlap = [...aTokens].filter((token) => bTokens.has(token)).length
   const union = new Set([...aTokens, ...bTokens]).size
   return union ? overlap / union : 0
+}
+
+export const paragraphAdvancesSummary = ({ summary = '', paragraph = '' } = {}) => {
+  const summaryLead = firstSentence(summary)
+  const paragraphLead = firstSentence(paragraph)
+  if (!summaryLead || !paragraphLead) return true
+
+  const normalizedSummaryLead = normalizeText(summaryLead)
+  const normalizedParagraphLead = normalizeText(paragraphLead)
+  if (!normalizedSummaryLead || !normalizedParagraphLead) return true
+  if (normalizedSummaryLead === normalizedParagraphLead) return false
+
+  const summaryTokens = new Set(comparableTokens(summaryLead))
+  const paragraphTokens = new Set(comparableTokens(paragraphLead))
+  if (!summaryTokens.size || !paragraphTokens.size) return true
+
+  const sharedTokens = [...summaryTokens].filter((token) => paragraphTokens.has(token)).length
+  const minSize = Math.min(summaryTokens.size, paragraphTokens.size)
+  if (sharedTokens >= Math.max(3, minSize - 1) && titleSimilarity(summaryLead, paragraphLead) >= 0.72) {
+    return false
+  }
+
+  return true
 }
 
 export const extractKeyEntities = (title = '') => {
@@ -188,10 +213,54 @@ export const extractConcreteFactExcerpt = (value = '', options = {}) => {
   return concreteSentence || ''
 }
 
+export const extractMainNumberOrScale = (value = '') => {
+  const text = normalizeWhitespace(value)
+  if (!text) return ''
+  const match = text.match(
+    /\b(\$[\d,.]+(?:\s?(?:m|b|million|billion))?|\d[\d,.]*(?:\s?(?:%|percent|million|billion|thousand|robots?|units?|days?|hours?|years?|customers?|factories?|warehouses?|sites?|ships?))?|version\s+\d+(?:\.\d+)?|v\d+(?:\.\d+)?)\b/i
+  )
+  return normalizeWhitespace(match?.[1] || '')
+}
+
 export const leadStartsWithImplication = (value = '') => {
   const text = normalizeWhitespace(value)
   if (!text) return false
   return IMPLICATION_FIRST_PATTERNS.some((pattern) => pattern.test(text))
+}
+
+export const validateFactPackage = (value, { title = '' } = {}) => {
+  if (!value || typeof value !== 'object') return { ok: false, reason: 'missing_fact_package', data: null }
+
+  const thinSourceRisk = String(value.thin_source_risk || '').trim().toLowerCase()
+  const storyFormatRecommendation = String(value.story_format_recommendation || '').trim()
+  const normalized = {
+    main_actor: normalizeWhitespace(value.main_actor || ''),
+    main_action: normalizeWhitespace(value.main_action || ''),
+    main_object: normalizeWhitespace(value.main_object || ''),
+    main_number_or_scale: normalizeWhitespace(value.main_number_or_scale || ''),
+    best_concrete_fact: shortenText(value.best_concrete_fact || '', 220),
+    secondary_fact: shortenText(value.secondary_fact || '', 220),
+    source_grounded: Boolean(value.source_grounded),
+    thin_source_risk: ['low', 'medium', 'high'].includes(thinSourceRisk) ? thinSourceRisk : 'high',
+    headline_supported: Boolean(value.headline_supported),
+    story_format_recommendation: ['signal_brief', 'featured_candidate', 'draft_only'].includes(storyFormatRecommendation)
+      ? storyFormatRecommendation
+      : 'draft_only',
+  }
+
+  if (!normalized.best_concrete_fact || !hasConcreteFact(normalized.best_concrete_fact, { title })) {
+    return { ok: false, reason: 'invalid_best_concrete_fact', data: null }
+  }
+
+  if (normalized.secondary_fact && !hasConcreteFact(normalized.secondary_fact, { title })) {
+    normalized.secondary_fact = ''
+  }
+
+  if (normalized.main_number_or_scale && !extractMainNumberOrScale(normalized.main_number_or_scale)) {
+    normalized.main_number_or_scale = ''
+  }
+
+  return { ok: true, reason: '', data: normalized }
 }
 
 export const headlineSupportedByBody = ({ title = '', summary = '', bodyParagraphs = [] } = {}) => {
@@ -326,14 +395,19 @@ export const resolveInternalLinkTarget = ({ title = '', categoryId = '' } = {}) 
 
 export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   const summarySource = editorial?.excerpt || editorial?.bodyParagraphs?.[0] || candidate?.title || ''
-  const whySource = editorial?.bodyParagraphs?.[1] || editorial?.bodyParagraphs?.[0] || summarySource
+  const whySource = editorial?.whyItMatters || editorial?.bodyParagraphs?.[1] || editorial?.bodyParagraphs?.[0] || summarySource
+  const factPackage = editorial?.factPackage || null
   const category = inferCategory({ title: candidate?.title, sourceName: candidate?.sourceName, sourceContext: editorial?.sourceContext })
   const summary = shortenText(summarySource, 220)
   const whyItMatters = shortenText(whySource, 180)
   const sourceGrounded = Boolean(
-    editorial?.sourceContext?.metaDescription || editorial?.sourceContext?.ogDescription || editorial?.sourceContext?.paragraphs?.length
+    factPackage?.source_grounded ||
+      editorial?.sourceContext?.metaDescription ||
+      editorial?.sourceContext?.ogDescription ||
+      editorial?.sourceContext?.paragraphs?.length
   )
   const concreteFactExcerpt =
+    factPackage?.best_concrete_fact ||
     extractConcreteFactExcerpt(summary, { title: candidate?.title }) ||
     extractConcreteFactExcerpt(editorial?.bodyParagraphs?.[0] || '', { title: candidate?.title }) ||
     extractConcreteFactExcerpt((editorial?.bodyParagraphs || []).join(' '), { title: candidate?.title })
@@ -351,7 +425,10 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   })
     ? 4
     : 1
-  const storyFormat = visualStrengthScore >= 4 ? 'featured_candidate' : 'signal_brief'
+  const storyFormat =
+    visualStrengthScore >= 4 && factPackage?.story_format_recommendation === 'featured_candidate'
+      ? 'featured_candidate'
+      : 'signal_brief'
   const implicationRisk = leadStartsWithImplication(summary) && !leadWithConcreteFact ? 'high' : 'low'
   const homepageEligible =
     candidate?.sourceTrustTier === 'allow' &&
@@ -368,7 +445,7 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   const publishRecommendation =
     !isValidSourceUrl(candidate?.sourceUrl) || !sourceGrounded
       ? 'reject'
-      : !concreteFactPresent || !leadWithConcreteFact || !headlineSupported || abstraction >= 4 || repetition >= 4
+      : factPackage?.thin_source_risk === 'high' || !concreteFactPresent || !leadWithConcreteFact || !headlineSupported || abstraction >= 4 || repetition >= 4
         ? 'draft_only'
         : 'auto_publish'
 
@@ -381,7 +458,7 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
     concrete_fact_present: concreteFactPresent,
     concrete_fact_excerpt: concreteFactExcerpt,
     source_grounded: sourceGrounded,
-    headline_supported_by_body: headlineSupported,
+    headline_supported_by_body: factPackage ? Boolean(factPackage.headline_supported) && headlineSupported : headlineSupported,
     lead_with_concrete_fact: leadWithConcreteFact,
     implication_first_risk: implicationRisk,
     abstractness_score: abstraction,

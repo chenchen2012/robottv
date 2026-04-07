@@ -1,529 +1,653 @@
-import fs from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
+import fs from 'node:fs/promises'
+import os from 'node:os'
+import path from 'node:path'
+
+import { callDeepSeekJson } from './deepseek-provider.mjs'
 import {
   extractConcreteFactExcerpt,
+  extractMainNumberOrScale,
   hasConcreteFact,
+  headlineSupportedByBody,
   leadStartsWithImplication,
-} from "./news-publish-quality.mjs";
+  paragraphAdvancesSummary,
+  titleSimilarity,
+  validateFactPackage,
+} from './news-publish-quality.mjs'
 
-const DEEPSEEK_API_URL = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/chat/completions";
-const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat";
-const DEEPSEEK_API_KEY = String(process.env.DEEPSEEK_API_KEY || "").trim();
-const SOURCE_FETCH_TIMEOUT_MS = Number(process.env.NEWS_SOURCE_FETCH_TIMEOUT_MS || 12_000);
-const AI_TIMEOUT_MS = Number(process.env.NEWS_EDITORIAL_AI_TIMEOUT_MS || 30_000);
+const SOURCE_FETCH_TIMEOUT_MS = Number(process.env.NEWS_SOURCE_FETCH_TIMEOUT_MS || 12_000)
 
 const SOURCE_NAME_OVERRIDES = new Map([
-  ["businessinsider", "Business Insider"],
-  ["therobotreport", "The Robot Report"],
-  ["techcrunch", "TechCrunch"],
-]);
-const COMPETITOR_SOURCE_KEYS = new Set([
-  "therobotreport",
-  "roboticsbusinessreview",
-  "robotics247",
-]);
+  ['businessinsider', 'Business Insider'],
+  ['therobotreport', 'The Robot Report'],
+  ['techcrunch', 'TechCrunch'],
+])
+const COMPETITOR_SOURCE_KEYS = new Set(['therobotreport', 'roboticsbusinessreview', 'robotics247'])
+const MAIN_ACTION_PATTERN =
+  /\b(raised?|raises|acquires?|acquired|acquisition|partners?|partnered|deal|contract|deploy(?:ed|ment|ments)?|pilot|production|rolls? out|launched?|released?|introduced?|announced?|unveiled?|debuts?|sign(?:ed|s)?|opened?|offers?|hired?|joins?)\b/i
 
 const stripHtml = (value) =>
-  String(value || "")
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<noscript[\s\S]*?<\/noscript>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
+  String(value || '')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;|&#x27;/gi, "'")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/\s+/g, " ")
-    .trim();
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/\s+/g, ' ')
+    .trim()
 
-const normalizeWhitespace = (value) => String(value || "").replace(/\s+/g, " ").trim();
+const normalizeWhitespace = (value) => String(value || '').replace(/\s+/g, ' ').trim()
 
-const countWords = (value) => normalizeWhitespace(value).split(" ").filter(Boolean).length;
+const countWords = (value) => normalizeWhitespace(value).split(' ').filter(Boolean).length
 
-const splitSentences = (value = "") =>
+const splitSentences = (value = '') =>
   normalizeWhitespace(value)
     .split(/(?<=[.!?])\s+/)
     .map((sentence) => normalizeWhitespace(sentence))
-    .filter(Boolean);
+    .filter(Boolean)
 
 const safeSentence = (value, maxLength = 280) => {
-  const text = normalizeWhitespace(value);
-  if (!text) return "";
-  if (text.length <= maxLength) return text;
-  const clipped = text.slice(0, maxLength);
-  const breakpoint = Math.max(clipped.lastIndexOf(". "), clipped.lastIndexOf("; "), clipped.lastIndexOf(", "));
-  return `${(breakpoint > 120 ? clipped.slice(0, breakpoint + 1) : clipped).trimEnd()}...`;
-};
+  const text = normalizeWhitespace(value)
+  if (!text) return ''
+  if (text.length <= maxLength) return text
+  const clipped = text.slice(0, maxLength)
+  const breakpoint = Math.max(clipped.lastIndexOf('. '), clipped.lastIndexOf('; '), clipped.lastIndexOf(', '))
+  return `${(breakpoint > 120 ? clipped.slice(0, breakpoint + 1) : clipped).trimEnd()}...`
+}
+
+const shortenText = (value, maxChars) => {
+  const text = normalizeWhitespace(value)
+  if (!text || text.length <= maxChars) return text
+  const clipped = text.slice(0, maxChars)
+  const breakpoint = clipped.lastIndexOf(' ')
+  return `${(breakpoint > 40 ? clipped.slice(0, breakpoint) : clipped).trimEnd()}...`
+}
 
 const titleCaseSource = (source) => {
-  const normalized = normalizeWhitespace(source);
-  if (!normalized) return "the source report";
-  const key = normalized.toLowerCase().replace(/[^a-z]/g, "");
-  return SOURCE_NAME_OVERRIDES.get(key) || normalized;
-};
+  const normalized = normalizeWhitespace(source)
+  if (!normalized) return 'the source report'
+  const key = normalized.toLowerCase().replace(/[^a-z]/g, '')
+  return SOURCE_NAME_OVERRIDES.get(key) || normalized
+}
+
 const sourceReference = (source) => {
-  const normalized = normalizeWhitespace(source);
-  if (!normalized) return "public reporting";
-  const key = normalized.toLowerCase().replace(/[^a-z]/g, "");
-  if (COMPETITOR_SOURCE_KEYS.has(key)) return "recent industry reporting";
-  return titleCaseSource(source);
-};
+  const normalized = normalizeWhitespace(source)
+  if (!normalized) return 'public reporting'
+  const key = normalized.toLowerCase().replace(/[^a-z]/g, '')
+  if (COMPETITOR_SOURCE_KEYS.has(key)) return 'recent industry reporting'
+  return titleCaseSource(source)
+}
 
 const hashString = (value) => {
-  let hash = 0;
-  const text = String(value || "");
+  let hash = 0
+  const text = String(value || '')
   for (let i = 0; i < text.length; i += 1) {
-    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0
   }
-  return Math.abs(hash);
-};
+  return Math.abs(hash)
+}
 
 const pickVariant = (value, options) => {
-  if (!options.length) return "";
-  return options[hashString(value) % options.length];
-};
+  if (!options.length) return ''
+  return options[hashString(value) % options.length]
+}
 
 const extractMeta = (html, pattern) => {
-  const match = html.match(pattern);
-  return match ? stripHtml(match[1]) : "";
-};
+  const match = html.match(pattern)
+  return match ? stripHtml(match[1]) : ''
+}
 
-const extractImageUrl = (html, baseUrl = "") => {
+const extractImageUrl = (html, baseUrl = '') => {
   const candidates = [
     /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
     /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
     /<meta[^>]+property=["']og:image:url["'][^>]+content=["']([^"']+)["']/i,
-  ];
+  ]
   for (const pattern of candidates) {
-    const value = extractMeta(html, pattern);
-    if (!value) continue;
+    const value = extractMeta(html, pattern)
+    if (!value) continue
     try {
-      return new URL(value, baseUrl || undefined).toString();
+      return new URL(value, baseUrl || undefined).toString()
     } catch {
-      continue;
+      continue
     }
   }
-  return "";
-};
+  return ''
+}
 
 const extractParagraphs = (html) => {
   const mainSectionMatch =
     html.match(/<article[\s\S]*?<\/article>/i) ||
     html.match(/<main[\s\S]*?<\/main>/i) ||
-    html.match(/<body[\s\S]*?<\/body>/i);
-  const scope = mainSectionMatch ? mainSectionMatch[0] : html;
+    html.match(/<body[\s\S]*?<\/body>/i)
+  const scope = mainSectionMatch ? mainSectionMatch[0] : html
   const paragraphs = [...scope.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)]
     .map((match) => stripHtml(match[1]))
-    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .map((paragraph) => paragraph.replace(/\s+/g, ' ').trim())
     .filter((paragraph) => paragraph.length >= 70)
     .filter((paragraph) => !/subscribe|newsletter|advertisement|cookie|sign up|all rights reserved/i.test(paragraph))
-    .filter((paragraph) => !/^©|^copyright/i.test(paragraph));
-  return [...new Set(paragraphs)].slice(0, 6);
-};
+    .filter((paragraph) => !/^©|^copyright/i.test(paragraph))
+  return [...new Set(paragraphs)].slice(0, 6)
+}
 
 const fetchWithTimeout = async (url, options = {}, timeoutMs = SOURCE_FETCH_TIMEOUT_MS) => {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {
     return await fetch(url, {
       ...options,
       signal: controller.signal,
       headers: {
-        "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-        "accept-language": "en-US,en;q=0.9",
+        'user-agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+        'accept-language': 'en-US,en;q=0.9',
         ...(options.headers || {}),
       },
-    });
+    })
   } finally {
-    clearTimeout(timer);
+    clearTimeout(timer)
   }
-};
+}
 
 export const blocksFromParagraphs = (paragraphs = []) =>
   (Array.isArray(paragraphs) ? paragraphs : [])
     .map((paragraph) => normalizeWhitespace(paragraph))
     .filter(Boolean)
     .map((paragraph, index) => ({
-      _type: "block",
+      _type: 'block',
       _key: `body-${index}-${hashString(paragraph).toString(36).slice(0, 6)}`,
-      style: "normal",
+      style: 'normal',
       markDefs: [],
       children: [
         {
-          _type: "span",
+          _type: 'span',
           _key: `span-${index}-${hashString(`${paragraph}-${index}`).toString(36).slice(0, 6)}`,
           text: paragraph,
         },
       ],
-    }));
+    }))
 
-const themeFromHeadline = (headline = "") => {
-  const text = headline.toLowerCase();
-  if (/(funding|raises|valuation|series [abc]|stealth|backed)/.test(text)) return "capital formation";
-  if (/(warehouse|fulfillment|logistics|distribution center)/.test(text)) return "warehouse operations";
-  if (/(inspection|data center|power plant|oil|gas|infrastructure)/.test(text)) return "inspection operations";
-  if (/(factory|manufacturing|assembly|automotive|production)/.test(text)) return "factory automation";
-  if (/(humanoid|biped|figure|optimus|digit|apollo)/.test(text)) return "humanoid deployment";
-  if (/(quadruped|robot dog|spot)/.test(text)) return "field robotics";
-  if (/(chip|nvidia|qualcomm|jetson|compute|semiconductor)/.test(text)) return "robotics compute";
-  if (/(summit|conference|expo|keynote)/.test(text)) return "industry events";
-  if (/(policy|pentagon|military|security|regulation|standards)/.test(text)) return "policy and governance";
-  return "robotics commercialization";
-};
+const themeFromHeadline = (headline = '') => {
+  const text = headline.toLowerCase()
+  if (/(funding|raises|valuation|series [abc]|stealth|backed)/.test(text)) return 'capital formation'
+  if (/(warehouse|fulfillment|logistics|distribution center)/.test(text)) return 'warehouse operations'
+  if (/(inspection|data center|power plant|oil|gas|infrastructure)/.test(text)) return 'inspection operations'
+  if (/(factory|manufacturing|assembly|automotive|production)/.test(text)) return 'factory automation'
+  if (/(humanoid|biped|figure|optimus|digit|apollo)/.test(text)) return 'humanoid deployment'
+  if (/(quadruped|robot dog|spot)/.test(text)) return 'field robotics'
+  if (/(chip|nvidia|qualcomm|jetson|compute|semiconductor)/.test(text)) return 'robotics compute'
+  if (/(summit|conference|expo|keynote)/.test(text)) return 'industry events'
+  if (/(policy|pentagon|military|security|regulation|standards)/.test(text)) return 'policy and governance'
+  return 'robotics commercialization'
+}
 
 const sourceSentences = (sourceContext = {}) => {
   const candidates = [
-    sourceContext.metaDescription || "",
-    sourceContext.ogDescription || "",
+    sourceContext.metaDescription || '',
+    sourceContext.ogDescription || '',
     ...(Array.isArray(sourceContext.paragraphs) ? sourceContext.paragraphs : []),
-    sourceContext.pageTitle || "",
-  ];
-  const unique = [];
-  const seen = new Set();
+    sourceContext.pageTitle || '',
+  ]
+  const unique = []
+  const seen = new Set()
   for (const candidate of candidates) {
     for (const sentence of splitSentences(candidate)) {
-      const key = sentence.toLowerCase();
-      if (!sentence || seen.has(key)) continue;
-      seen.add(key);
-      unique.push(sentence);
+      const key = sentence.toLowerCase()
+      if (!sentence || seen.has(key)) continue
+      seen.add(key)
+      unique.push(sentence)
     }
   }
-  return unique;
-};
+  return unique
+}
+
+const hasUsableSourceContext = (sourceContext = {}) =>
+  Boolean(
+    sourceContext.metaDescription ||
+      sourceContext.ogDescription ||
+      sourceContext.pageTitle ||
+      (Array.isArray(sourceContext.paragraphs) && sourceContext.paragraphs.length)
+  )
 
 const firstFactSentence = ({ headline, sourceContext }) => {
-  const sentences = sourceSentences(sourceContext);
+  const sentences = sourceSentences(sourceContext)
   return (
     sentences.find((sentence) => hasConcreteFact(sentence, { title: headline })) ||
     extractConcreteFactExcerpt(
       [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])]
         .filter(Boolean)
-        .join(" "),
+        .join(' '),
       { title: headline }
     ) ||
-    ""
-  );
-};
+    ''
+  )
+}
 
 const firstSourceSentence = ({ headline, sourceContext }) => {
-  const factSentence = firstFactSentence({ headline, sourceContext });
-  if (factSentence) return factSentence;
-  return (
-    sourceSentences(sourceContext).find((sentence) => !leadStartsWithImplication(sentence)) ||
-    safeSentence(sourceContext.pageTitle || headline || "", 180)
-  );
-};
+  const factSentence = firstFactSentence({ headline, sourceContext })
+  if (factSentence) return factSentence
+  return sourceSentences(sourceContext).find((sentence) => !leadStartsWithImplication(sentence)) || safeSentence(sourceContext.pageTitle || headline || '', 180)
+}
 
-const supportSentence = ({ headline, sourceContext, exclude = "" }) =>
+const supportSentence = ({ headline, sourceContext, exclude = '' }) =>
   sourceSentences(sourceContext).find((sentence) => {
-    if (!sentence || sentence === exclude) return false;
-    if (leadStartsWithImplication(sentence)) return false;
-    return hasConcreteFact(sentence, { title: headline }) || countWords(sentence) >= 12;
-  }) || "";
+    if (!sentence || sentence === exclude) return false
+    if (leadStartsWithImplication(sentence)) return false
+    return hasConcreteFact(sentence, { title: headline }) || countWords(sentence) >= 12
+  }) || ''
 
-const significanceLine = (headline, source, sourceContext) => {
-  const theme = themeFromHeadline(headline);
-  if (theme === "humanoid deployment") {
-    return "The real test is whether the system can hold up in repeatable factory, warehouse, or service workflows rather than isolated demos.";
-  }
-  if (theme === "inspection operations") {
-    return "For buyers, the key question is whether the robot lowers inspection cost, reduces risk, and fits routine asset-management work.";
-  }
-  if (theme === "robotics compute") {
-    return "For robotics teams, the implication is practical: compute choices shape latency, on-robot autonomy, and deployment cost.";
-  }
-  if (theme === "capital formation") {
-    return "The useful signal is whether fresh capital turns into product milestones, customer wins, and scaled deployments.";
-  }
-  if (theme === "industry events") {
-    return "The useful signal is which demos, customer references, or roadmap details hold up once the event cycle passes.";
-  }
-  if (sourceContext.paragraphs?.length) {
-    return `For operators, the point is whether this update leads to clearer deployment proof in ${theme}.`;
-  }
-  return `${sourceReference(source)} points to a concrete development in ${theme}, not just another robotics narrative.`;
-};
+const deriveMainAction = (value = '') => {
+  const match = normalizeWhitespace(value).match(MAIN_ACTION_PATTERN)
+  return normalizeWhitespace(match?.[1] || '')
+}
 
-const watchLine = (headline, sourceContext) => {
-  const theme = themeFromHeadline(headline);
+const deriveMainActor = (value = '', fallbackHeadline = '') => {
+  const text = normalizeWhitespace(value)
+  const action = deriveMainAction(text)
+  if (text && action) {
+    const splitIndex = text.toLowerCase().indexOf(action.toLowerCase())
+    if (splitIndex > 0) {
+      return shortenText(text.slice(0, splitIndex), 80)
+    }
+  }
+  const headline = normalizeWhitespace(fallbackHeadline)
+  const headlineMatch = headline.match(/^([A-Z0-9][A-Za-z0-9&.+'’ -]{2,90}?)(?:\s+(?:raises|acquires|partners|deploys|launches|rolls out|offers|joins|wins|is)\b|:)/)
+  return shortenText(headlineMatch?.[1] || '', 80)
+}
+
+const deriveMainObject = (value = '', fallbackHeadline = '') => {
+  const text = normalizeWhitespace(value)
+  const action = deriveMainAction(text)
+  if (text && action) {
+    const splitIndex = text.toLowerCase().indexOf(action.toLowerCase())
+    if (splitIndex >= 0) {
+      return shortenText(text.slice(splitIndex + action.length).replace(/^[\s:-]+/, ''), 120)
+    }
+  }
+  return shortenText(fallbackHeadline, 120)
+}
+
+const buildFallbackFactDraft = ({ headline, sourceContext }) => {
+  const bestConcreteFact = safeSentence(firstFactSentence({ headline, sourceContext }) || firstSourceSentence({ headline, sourceContext }), 220)
+  const secondaryFact = safeSentence(
+    supportSentence({ headline, sourceContext, exclude: bestConcreteFact }) || sourceContext.paragraphs?.[1] || '',
+    220
+  )
+  const sourceGrounded = hasUsableSourceContext(sourceContext)
+  const headlineSupported = headlineSupportedByBody({
+    title: headline,
+    summary: bestConcreteFact,
+    bodyParagraphs: [secondaryFact, ...(sourceContext.paragraphs || []).slice(0, 1)],
+  })
+  const thinSourceRisk = !sourceGrounded || !bestConcreteFact
+    ? 'high'
+    : secondaryFact
+      ? 'low'
+      : 'medium'
+  const storyFormatRecommendation =
+    thinSourceRisk === 'high'
+      ? 'draft_only'
+      : sourceContext.imageUrl
+        ? 'featured_candidate'
+        : 'signal_brief'
+
+  return {
+    main_actor: deriveMainActor(bestConcreteFact, headline),
+    main_action: deriveMainAction(bestConcreteFact),
+    main_object: deriveMainObject(bestConcreteFact, headline),
+    main_number_or_scale: extractMainNumberOrScale(bestConcreteFact),
+    best_concrete_fact: bestConcreteFact,
+    secondary_fact: hasConcreteFact(secondaryFact, { title: headline }) ? secondaryFact : '',
+    source_grounded: sourceGrounded,
+    thin_source_risk: thinSourceRisk,
+    headline_supported: headlineSupported,
+    story_format_recommendation: storyFormatRecommendation,
+  }
+}
+
+const significanceLine = ({ headline, source, sourceContext, factPackage }) => {
+  const theme = themeFromHeadline(headline)
+  const actor = factPackage?.main_actor || sourceReference(source)
+  const object = factPackage?.main_object || 'this reported move'
+  if (factPackage?.secondary_fact) {
+    return safeSentence(
+      `${factPackage.secondary_fact} This matters because ${actor} is now tying ${object.toLowerCase()} to a more operational robotics outcome.`,
+      220
+    )
+  }
+  if (theme === 'robotics compute') {
+    return 'The practical question is whether this changes latency, on-robot autonomy, or deployment cost in ways robotics teams can actually use.'
+  }
+  if (theme === 'inspection operations') {
+    return 'The useful signal is whether the move reduces inspection risk or cost in routine operations rather than staying at the demo stage.'
+  }
+  if (theme === 'humanoid deployment') {
+    return 'The useful signal is whether this development improves real deployment readiness rather than adding another humanoid headline.'
+  }
+  return `${actor} is now attached to a concrete development in ${theme}, which matters more than generic momentum language.`
+}
+
+const shouldUseParagraphThree = ({ factPackage, sourceContext }) => {
+  if (!factPackage?.source_grounded || factPackage?.thin_source_risk === 'high') return false
+  if (factPackage?.secondary_fact) return true
   const sourceText = normalizeWhitespace(
-    [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(" ")
-  );
+    [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(' ')
+  )
+  return /pilot|deployment|contract|customer|fleet|launch|release|version|model|orders?|expansion/i.test(sourceText)
+}
+
+const watchLine = ({ headline, sourceContext, factPackage }) => {
+  const theme = themeFromHeadline(headline)
+  const sourceText = normalizeWhitespace(
+    [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(' ')
+  )
+  if (!shouldUseParagraphThree({ factPackage, sourceContext })) return ''
   if (/pilot|deployment|contract|customer|fleet/i.test(sourceText)) {
-    return "Watch for follow-on deployments, named customers, or contract expansion that proves the update is more than a one-off.";
+    return 'Watch for follow-on deployments, named customers, or contract expansion that proves the update is more than a one-off.'
   }
   if (/launch|release|version|model/i.test(sourceText)) {
-    return "Watch for performance data, customer uptake, or deployment evidence that shows the release is landing beyond the announcement cycle.";
+    return 'Watch for performance data, customer uptake, or deployment evidence that shows the release is landing beyond the announcement cycle.'
   }
-  if (theme === "humanoid deployment") {
-    return "Watch for repeatable uptime, safety integration, and task-level productivity rather than another short demo cycle.";
+  if (theme === 'humanoid deployment') {
+    return 'Watch for repeatable uptime, safety integration, and task-level productivity rather than another short demo cycle.'
   }
-  if (theme === "inspection operations") {
-    return "Watch for contracted fleet rollouts, software attach rates, and evidence that operators keep the robots in routine use.";
-  }
-  if (theme === "capital formation") {
-    return "Watch how quickly the company converts the headline into hiring, product milestones, signed customers, and on-site deployments.";
-  }
-  if (theme === "industry events") {
-    return "Watch which demos, customer references, or roadmap details still matter once the event buzz fades.";
-  }
-  return "Watch whether the headline turns into sustained customer adoption, stronger system performance, and repeatable deployment proof.";
-};
+  return 'Watch for evidence that this reported move turns into repeatable deployment, stronger customer proof, or measurable operating value.'
+}
 
-const buildFallbackBodyParagraphs = ({ headline, source, sourceContext }) => {
-  const factSentence = safeSentence(firstSourceSentence({ headline, sourceContext }), 210);
-  const evidenceSentence = safeSentence(
-    supportSentence({ headline, sourceContext, exclude: factSentence }) || sourceContext.paragraphs[1] || "",
-    210
-  );
-  const implicationSentence = safeSentence(significanceLine(headline, source, sourceContext), 180);
-  const watchSentence = safeSentence(watchLine(headline, sourceContext), 180);
+const buildFallbackExcerpt = ({ headline, source, sourceContext, factPackage }) => {
+  const factLead = safeSentence(factPackage?.best_concrete_fact || firstSourceSentence({ headline, sourceContext }) || headline, 160)
+  const implication =
+    factPackage?.thin_source_risk === 'high' ? '' : safeSentence(significanceLine({ headline, source, sourceContext, factPackage }), 96)
+  const composed = normalizeWhitespace([factLead, implication && !leadStartsWithImplication(factLead) ? implication : ''].filter(Boolean).join(' '))
+  if (composed) return composed.length > 240 ? `${composed.slice(0, 237).trimEnd()}...` : composed
+  return safeSentence(`${headline}.`, 140)
+}
 
+const distinctParagraphLeadCandidate = ({ headline, summary, candidates = [] }) => {
+  for (const candidate of candidates) {
+    const sentence = safeSentence(candidate, 220)
+    if (!sentence) continue
+    if (!hasConcreteFact(sentence, { title: headline })) continue
+    if (!paragraphAdvancesSummary({ summary, paragraph: sentence })) continue
+    return sentence
+  }
+  return ''
+}
+
+const buildFallbackBodyParagraphs = ({ headline, source, sourceContext, factPackage }) => {
+  const summary = buildFallbackExcerpt({ headline, source, sourceContext, factPackage })
+  const excerptLead = safeSentence(factPackage?.best_concrete_fact || firstSourceSentence({ headline, sourceContext }) || `${headline}.`, 220)
+  const paragraphOneLead =
+    distinctParagraphLeadCandidate({
+      headline,
+      summary,
+      candidates: [
+        factPackage?.secondary_fact,
+        supportSentence({ headline, sourceContext, exclude: factPackage?.best_concrete_fact || '' }),
+        ...splitSentences([sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(' ')),
+      ],
+    }) || excerptLead
+  const paragraphOneSupport = distinctParagraphLeadCandidate({
+    headline,
+    summary: normalizeWhitespace([summary, paragraphOneLead].join(' ')),
+    candidates: [
+      supportSentence({ headline, sourceContext, exclude: paragraphOneLead }),
+      factPackage?.secondary_fact && titleSimilarity(factPackage.secondary_fact, paragraphOneLead) < 0.72 ? factPackage.secondary_fact : '',
+      ...splitSentences((sourceContext.paragraphs || []).join(' ')),
+    ],
+  })
   const paragraphOne = normalizeWhitespace(
-    [factSentence || safeSentence(`${headline}.`, 160), evidenceSentence && evidenceSentence !== factSentence ? evidenceSentence : ""]
+    [paragraphOneLead, paragraphOneSupport]
       .filter(Boolean)
-      .join(" ")
-  );
-  const paragraphTwo = normalizeWhitespace([implicationSentence].filter(Boolean).join(" "));
-  const paragraphThree = normalizeWhitespace([watchSentence].filter(Boolean).join(" "));
+      .join(' ')
+  )
+  const paragraphTwo = normalizeWhitespace(
+    [safeSentence(significanceLine({ headline, source, sourceContext, factPackage }), 220)].filter(Boolean).join(' ')
+  )
+  const paragraphThree = normalizeWhitespace(
+    [safeSentence(watchLine({ headline, sourceContext, factPackage }), 180)].filter(Boolean).join(' ')
+  )
 
-  return [paragraphOne, paragraphTwo, paragraphThree].filter((paragraph) => countWords(paragraph) >= 10);
-};
-
-const buildFallbackExcerpt = ({ headline, source, sourceContext }) => {
-  const factLead = safeSentence(firstSourceSentence({ headline, sourceContext }) || headline, 145);
-  const implication = safeSentence(significanceLine(headline, source, sourceContext), 96);
-  const composed = normalizeWhitespace(
-    [
-      factLead,
-      implication && !leadStartsWithImplication(factLead) ? implication : "",
-    ]
-      .filter(Boolean)
-      .join(" ")
-  );
-  if (composed) return composed.length > 240 ? `${composed.slice(0, 237).trimEnd()}...` : composed;
-  const fallbackLead = safeSentence(`${headline}.`, 140);
-  return fallbackLead.length > 240 ? `${fallbackLead.slice(0, 237).trimEnd()}...` : fallbackLead;
-};
+  return [paragraphOne, paragraphTwo, paragraphThree].filter((paragraph) => countWords(paragraph) >= 12)
+}
 
 const buildFallbackVideoSummary = ({ headline, source, sourceContext, excerpt }) => {
-  const opener = excerpt || buildFallbackExcerpt({ headline, source, sourceContext });
+  const opener = excerpt || buildFallbackExcerpt({ headline, source, sourceContext, factPackage: null })
   const visualContext = pickVariant(headline, [
-    "The embedded video helps readers judge how much of the story is product theater versus operational proof.",
-    "The embedded video gives a clearer read on the capability, deployment setting, or market signal behind the headline.",
-    "The embedded video adds the visual evidence needed to evaluate whether the claim points to real robotics progress.",
-  ]);
-  const combined = normalizeWhitespace([opener, visualContext].join(" "));
-  return combined.length > 320 ? `${combined.slice(0, 317).trimEnd()}...` : combined;
-};
+    'The embedded video helps readers judge how much of the story is product theater versus operational proof.',
+    'The embedded video gives a clearer read on the capability, deployment setting, or market signal behind the headline.',
+    'The embedded video adds the visual evidence needed to evaluate whether the claim points to real robotics progress.',
+  ])
+  const combined = normalizeWhitespace([opener, visualContext].join(' '))
+  return combined.length > 320 ? `${combined.slice(0, 317).trimEnd()}...` : combined
+}
 
-const parseJsonResponse = async (response) => {
-  const payload = await response.json();
-  if (payload?.error) {
-    throw new Error(JSON.stringify(payload.error));
+const buildFallbackEditorialPackage = ({ headline, source, sourceContext, factPackage }) => {
+  const excerpt = buildFallbackExcerpt({ headline, source, sourceContext, factPackage })
+  const bodyParagraphs = buildFallbackBodyParagraphs({ headline, source, sourceContext, factPackage })
+  return {
+    excerpt,
+    whyItMatters: shortenText(bodyParagraphs[1] || bodyParagraphs[0] || excerpt, 180),
+    videoSummary: buildFallbackVideoSummary({ headline, source, sourceContext, excerpt }),
+    bodyParagraphs,
+    paragraph3Useful: bodyParagraphs.length > 2,
   }
-  const content = payload?.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error("DeepSeek returned no content.");
+}
+
+const buildStructuredEditorialPrompt = ({ headline, source, sourceUrl, pubDate, sourceContext, fallbackFacts, fallbackEditorial }) =>
+  [
+    'You are editing a robotics news post for robot.tv.',
+    'Your first job is factual extraction. Your second job is writing concise, source-grounded copy from that fact package.',
+    'Use only the supplied source context. Do not invent facts. Empty strings are better than guessed facts.',
+    'If the source is thin, say so through thin_source_risk and keep the writing conservative.',
+    'The summary must begin with a concrete fact when possible.',
+    'Paragraph 1 must be fact-first and source-grounded.',
+    'Paragraph 1 must add the next strongest concrete fact or operational detail instead of closely repeating the summary lead.',
+    'Paragraph 2 must stay tied to extracted facts, not generic robotics-market narration.',
+    'Paragraph 3 is optional. Include it only when the source context justifies a watch-next line.',
+    'Missing video must not block a valid signal brief.',
+    '',
+    `Headline: ${headline}`,
+    `Source: ${titleCaseSource(source)}`,
+    `Source URL: ${sourceUrl || 'n/a'}`,
+    `Source published date: ${pubDate || 'n/a'}`,
+    `Source page title: ${sourceContext.pageTitle || 'n/a'}`,
+    `Source meta description: ${sourceContext.metaDescription || 'n/a'}`,
+    `Source og description: ${sourceContext.ogDescription || 'n/a'}`,
+    `Source extracted paragraphs: ${sourceContext.paragraphs.join(' || ') || 'n/a'}`,
+    `Fallback best concrete fact: ${fallbackFacts.best_concrete_fact || 'n/a'}`,
+    `Fallback secondary fact: ${fallbackFacts.secondary_fact || 'n/a'}`,
+    `Fallback summary: ${fallbackEditorial.excerpt || 'n/a'}`,
+    `Fallback paragraph 1: ${fallbackEditorial.bodyParagraphs?.[0] || 'n/a'}`,
+    '',
+    'Return strict JSON only in this shape:',
+    '{',
+    '  "fact_package": {',
+    '    "main_actor": "string",',
+    '    "main_action": "string",',
+    '    "main_object": "string",',
+    '    "main_number_or_scale": "string",',
+    '    "best_concrete_fact": "string",',
+    '    "secondary_fact": "string",',
+    '    "source_grounded": true,',
+    '    "thin_source_risk": "low | medium | high",',
+    '    "headline_supported": true,',
+    '    "story_format_recommendation": "signal_brief | featured_candidate | draft_only"',
+    '  },',
+    '  "summary": "string",',
+    '  "why_it_matters": "string",',
+    '  "video_summary": "string",',
+    '  "body_paragraphs": ["paragraph 1", "paragraph 2"],',
+    '  "paragraph3_useful": false',
+    '}',
+    'Rules:',
+    '- best_concrete_fact must be a fact directly supported by the source context.',
+    '- If you cannot support a field from the source, return an empty string rather than guessing.',
+    '- summary should contain one concrete fact and one implication when justified.',
+    '- paragraph 3 must be omitted when paragraph3_useful is false.',
+    '- story_format_recommendation should be draft_only when the source is too thin for confident publication.',
+  ].join('\n')
+
+const normalizeAiEditorialPackage = (value, { title = '', fallbackPackage = null } = {}) => {
+  if (!value || typeof value !== 'object') return null
+  const validatedFacts = validateFactPackage(value.fact_package, { title })
+  if (!validatedFacts.ok) return null
+
+  const bodyParagraphs = (Array.isArray(value.body_paragraphs) ? value.body_paragraphs : [])
+    .map((paragraph) => normalizeWhitespace(paragraph))
+    .filter(Boolean)
+  const paragraph3Useful = Boolean(value.paragraph3_useful)
+  const summary = normalizeWhitespace(value.summary || '')
+  const whyItMatters = normalizeWhitespace(value.why_it_matters || bodyParagraphs[1] || '')
+  const videoSummary = normalizeWhitespace(value.video_summary || fallbackPackage?.videoSummary || '')
+
+  if (bodyParagraphs.length < 2 || bodyParagraphs.length > 3) return null
+  if (bodyParagraphs.some((paragraph) => countWords(paragraph) < 18 || paragraph.length > 700 || /^source:/i.test(paragraph))) return null
+  if (!summary || summary.length < 90 || countWords(summary) < 12) return null
+  if (leadStartsWithImplication(summary) || !hasConcreteFact(summary, { title })) return null
+  if (!bodyParagraphs[0] || leadStartsWithImplication(bodyParagraphs[0]) || !hasConcreteFact(bodyParagraphs[0], { title })) return null
+  if (!paragraphAdvancesSummary({ summary, paragraph: bodyParagraphs[0] })) return null
+  if (!whyItMatters || whyItMatters.length < 50 || countWords(whyItMatters) < 8) return null
+  if (bodyParagraphs.length === 3 && !paragraph3Useful) return null
+  if (bodyParagraphs.length === 2 && paragraph3Useful) return null
+  if (
+    !headlineSupportedByBody({
+      title,
+      summary,
+      bodyParagraphs,
+    })
+  ) {
+    return null
   }
-  const trimmed = String(content).trim().replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "");
-  const start = trimmed.indexOf("{");
-  const end = trimmed.lastIndexOf("}");
-  return JSON.parse(start >= 0 && end > start ? trimmed.slice(start, end + 1) : trimmed);
-};
+
+  return {
+    excerpt: shortenText(summary, 240),
+    whyItMatters: shortenText(whyItMatters, 180),
+    videoSummary: shortenText(videoSummary || fallbackPackage?.videoSummary || '', 340),
+    bodyParagraphs,
+    paragraph3Useful,
+    factPackage: validatedFacts.data,
+  }
+}
 
 const fetchSourceContext = async (sourceUrl) => {
   const fallback = {
-    pageTitle: "",
-    metaDescription: "",
-    ogDescription: "",
-    imageUrl: "",
+    pageTitle: '',
+    metaDescription: '',
+    ogDescription: '',
+    imageUrl: '',
     paragraphs: [],
-  };
-  const url = String(sourceUrl || "").trim();
-  if (!url) return fallback;
+  }
+  const url = String(sourceUrl || '').trim()
+  if (!url) return fallback
 
   try {
-    const response = await fetchWithTimeout(url, {}, SOURCE_FETCH_TIMEOUT_MS);
-    if (!response.ok) return fallback;
-    const html = await response.text();
+    const response = await fetchWithTimeout(url, {}, SOURCE_FETCH_TIMEOUT_MS)
+    if (!response.ok) return fallback
+    const html = await response.text()
     return {
       pageTitle: extractMeta(html, /<title>([\s\S]*?)<\/title>/i),
       metaDescription: extractMeta(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"]+)["']/i),
       ogDescription: extractMeta(html, /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"]+)["']/i),
       imageUrl: extractImageUrl(html, url),
       paragraphs: extractParagraphs(html),
-    };
-  } catch {
-    return fallback;
-  }
-};
-
-const isValidExcerpt = (excerpt) => {
-  const text = normalizeWhitespace(excerpt);
-  return text.length >= 120 && text.length <= 260 && countWords(text) >= 18;
-};
-
-const isValidVideoSummary = (summary) => {
-  const text = normalizeWhitespace(summary);
-  return text.length >= 130 && text.length <= 340 && countWords(text) >= 18;
-};
-
-const isValidBodyParagraphs = (paragraphs) =>
-  Array.isArray(paragraphs) &&
-  paragraphs.length >= 3 &&
-  paragraphs.length <= 4 &&
-  paragraphs.every((paragraph) => {
-    const text = normalizeWhitespace(paragraph);
-    return countWords(text) >= 24 && text.length <= 700 && !/^source:/i.test(text);
-  });
-
-const buildAiPrompt = ({ headline, source, sourceUrl, pubDate, sourceContext, categoryHint }) =>
-  [
-    "You are editing a robotics news post for robot.tv.",
-    "Write richer but compact editorial copy that feels human, informed, and grounded.",
-    "Rules:",
-    "- Use only the supplied facts and context.",
-    "- Do not invent specs, dates, customer names, product capabilities, or partnerships.",
-    "- Do not quote the source article.",
-    "- Avoid robotic phrases like 'Why it matters:' or 'this update may change market momentum'.",
-    "- Keep the tone analytical, confident, and readable for robotics operators, founders, and investors.",
-    "- Do not mention the source by name in the excerpt.",
-    "- For robotics trade publications, avoid naming the outlet in body paragraphs unless essential for clarity.",
-    "- For major general, business, or international outlets, naming the source once in the body is acceptable when it adds credibility.",
-    "- Lead with the most concrete fact available, then explain one implication.",
-    "- The excerpt should contain one concrete fact and one implication when possible.",
-    "- Paragraph 1 must be fact-first and source-grounded.",
-    "- Paragraph 2 should explain why the development matters operationally.",
-    "- Paragraph 3 should only include a watch-next line if the source context justifies it.",
-    "- Focus on what happened, why it matters operationally, and what readers should watch next.",
-    "",
-    `Headline: ${headline}`,
-    `Source: ${titleCaseSource(source)}`,
-    `Source URL: ${sourceUrl || "n/a"}`,
-    `Source published date: ${pubDate || "n/a"}`,
-    `Category hint: ${categoryHint || themeFromHeadline(headline)}`,
-    `Source page title: ${sourceContext.pageTitle || "n/a"}`,
-    `Source meta description: ${sourceContext.metaDescription || "n/a"}`,
-    `Source og description: ${sourceContext.ogDescription || "n/a"}`,
-    `Source extracted paragraphs: ${sourceContext.paragraphs.join(" || ") || "n/a"}`,
-    "",
-    "Return strict JSON only in this shape:",
-    '{',
-    '  "excerpt": "1-2 sentences, 120-240 characters total",',
-    '  "videoSummary": "2 compact sentences, 140-320 characters total",',
-    '  "bodyParagraphs": ["paragraph 1", "paragraph 2", "paragraph 3"]',
-    '}',
-    "Body paragraph rules:",
-    "- exactly 3 paragraphs",
-    "- 35 to 85 words each",
-    "- paragraph 1 explains the development with at least one concrete fact",
-    "- paragraph 2 explains why it matters for deployment, commercialization, or product strategy",
-    "- paragraph 3 explains what readers should watch next only if justified by the source context",
-  ].join("\n");
-
-const callDeepSeekEditorial = async (prompt) => {
-  if (!DEEPSEEK_API_KEY) return null;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
-  try {
-    const response = await fetch(DEEPSEEK_API_URL, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: DEEPSEEK_MODEL,
-        temperature: 0.45,
-        max_tokens: 750,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a precise robotics news editor. You do not invent facts and you only return strict JSON.",
-          },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(`DeepSeek HTTP ${response.status}`);
     }
-    return await parseJsonResponse(response);
-  } finally {
-    clearTimeout(timer);
+  } catch {
+    return fallback
   }
-};
-
-const normalizeAiPackage = (value) => {
-  if (!value || typeof value !== "object") return null;
-  const excerpt = normalizeWhitespace(value.excerpt || "");
-  const videoSummary = normalizeWhitespace(value.videoSummary || "");
-  const bodyParagraphs = (Array.isArray(value.bodyParagraphs) ? value.bodyParagraphs : [])
-    .map((paragraph) => normalizeWhitespace(paragraph))
-    .filter(Boolean);
-  if (!isValidExcerpt(excerpt) || !isValidVideoSummary(videoSummary) || !isValidBodyParagraphs(bodyParagraphs)) {
-    return null;
-  }
-  return { excerpt, videoSummary, bodyParagraphs };
-};
+}
 
 export const buildEditorialPackage = async ({
   headline,
   source,
   sourceUrl,
   pubDate,
-  categoryHint = "",
 }) => {
-  const sourceContext = await fetchSourceContext(sourceUrl);
-
-  const excerpt = buildFallbackExcerpt({ headline, source, sourceContext });
-  return {
-    excerpt,
-    videoSummary: buildFallbackVideoSummary({ headline, source, sourceContext, excerpt }),
-    bodyParagraphs: buildFallbackBodyParagraphs({ headline, source, sourceContext }),
+  const sourceContext = await fetchSourceContext(sourceUrl)
+  const fallbackFactDraft = buildFallbackFactDraft({ headline, sourceContext })
+  const validatedFallbackFacts = validateFactPackage(fallbackFactDraft, { title: headline })
+  const fallbackFactPackage = validatedFallbackFacts.ok ? validatedFallbackFacts.data : null
+  const fallbackEditorial = buildFallbackEditorialPackage({
+    headline,
+    source,
     sourceContext,
-    generationMode: "fallback",
-  };
-};
+    factPackage: fallbackFactPackage,
+  })
+
+  let selectedEditorial = {
+    ...fallbackEditorial,
+    factPackage: fallbackFactPackage || fallbackFactDraft,
+    generationMode: 'fallback',
+    sourceContext,
+  }
+
+  if (hasUsableSourceContext(sourceContext)) {
+    const deepSeekResult = await callDeepSeekJson({
+      systemPrompt: 'You are a precise robotics news fact extractor and editor. Return strict JSON only. Do not invent facts.',
+      userPrompt: buildStructuredEditorialPrompt({
+        headline,
+        source,
+        sourceUrl,
+        pubDate,
+        sourceContext,
+        fallbackFacts: fallbackFactDraft,
+        fallbackEditorial,
+      }),
+      maxTokens: 900,
+    })
+    const normalizedAiPackage = normalizeAiEditorialPackage(deepSeekResult.data, {
+      title: headline,
+      fallbackPackage: fallbackEditorial,
+    })
+    if (deepSeekResult.ok && normalizedAiPackage) {
+      selectedEditorial = {
+        ...normalizedAiPackage,
+        generationMode: 'deepseek',
+        sourceContext,
+      }
+    }
+  }
+
+  return selectedEditorial
+}
 
 export const renderEditorialReport = ({ title, editorialPackage, source }) => {
   const lines = [
     `# ${title}`,
-    "",
+    '',
     `Mode: ${editorialPackage.generationMode}`,
     `Source: ${titleCaseSource(source)}`,
-    "",
-    "## Excerpt",
-    editorialPackage.excerpt,
-    "",
-    "## Video Summary",
-    editorialPackage.videoSummary,
-    "",
-    "## Body",
-  ];
+    '',
+    '## Fact Package',
+  ]
+
+  const factPackage = editorialPackage.factPackage || {}
+  Object.entries(factPackage).forEach(([key, value]) => {
+    if (value === '' || value === null || typeof value === 'undefined') return
+    lines.push(`- ${key}: ${value}`)
+  })
+
+  lines.push('', '## Excerpt', editorialPackage.excerpt, '', '## Why It Matters', editorialPackage.whyItMatters, '', '## Video Summary', editorialPackage.videoSummary, '', '## Body')
 
   editorialPackage.bodyParagraphs.forEach((paragraph, index) => {
-    lines.push(`${index + 1}. ${paragraph}`);
-  });
+    lines.push(`${index + 1}. ${paragraph}`)
+  })
 
-  lines.push("", "## Source Context");
-  const context = editorialPackage.sourceContext || {};
-  if (context.pageTitle) lines.push(`- Title: ${context.pageTitle}`);
-  if (context.metaDescription) lines.push(`- Description: ${context.metaDescription}`);
+  lines.push('', '## Source Context')
+  const context = editorialPackage.sourceContext || {}
+  if (context.pageTitle) lines.push(`- Title: ${context.pageTitle}`)
+  if (context.metaDescription) lines.push(`- Description: ${context.metaDescription}`)
   for (const paragraph of context.paragraphs || []) {
-    lines.push(`- Paragraph: ${paragraph}`);
+    lines.push(`- Paragraph: ${paragraph}`)
   }
-  return `${lines.join(os.EOL)}${os.EOL}`;
-};
+  return `${lines.join(os.EOL)}${os.EOL}`
+}
 
 export const writeEditorialReport = async (targetFile, payload) => {
-  await fs.mkdir(path.dirname(targetFile), { recursive: true });
-  await fs.writeFile(targetFile, renderEditorialReport(payload), "utf8");
-};
+  await fs.mkdir(path.dirname(targetFile), { recursive: true })
+  await fs.writeFile(targetFile, renderEditorialReport(payload), 'utf8')
+}

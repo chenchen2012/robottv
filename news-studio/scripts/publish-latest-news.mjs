@@ -2,7 +2,6 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { buildEditorialPackage, blocksFromParagraphs } from './lib/news-editorial-content.mjs'
-import { callDeepSeekJson } from './lib/deepseek-provider.mjs'
 import {
   NEWS_MAX_POSTS_PER_DAY,
   NEWS_PUBLISH_BATCH_LIMIT,
@@ -12,7 +11,6 @@ import {
 import {
   abstractnessScore,
   buildFallbackQcEnrichment,
-  buildQcPrompt,
   choosePreferredCandidate,
   extractConcreteFactExcerpt,
   findHardDuplicate,
@@ -291,6 +289,7 @@ const hasUsableSourceContext = (editorial) =>
 const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision }) => {
   const rejectReasons = []
   const draftReasons = []
+  const factPackage = editorial?.factPackage || null
 
   if (!isValidSourceUrl(candidate?.sourceUrl)) {
     rejectReasons.push('missing_or_invalid_source_url')
@@ -305,6 +304,7 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
   const bodyParagraphs = Array.isArray(editorial?.bodyParagraphs) ? editorial.bodyParagraphs : []
   const composedText = [summary, ...bodyParagraphs].join(' ')
   const concreteFactExcerpt =
+    factPackage?.best_concrete_fact ||
     extractConcreteFactExcerpt(summary, { title: candidate?.title }) ||
     extractConcreteFactExcerpt(bodyParagraphs[0] || '', { title: candidate?.title }) ||
     extractConcreteFactExcerpt(composedText, { title: candidate?.title })
@@ -327,8 +327,12 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
     summary,
     bodyParagraphs,
   })
-  if (!headlineSupported) {
+  if ((factPackage && !factPackage.headline_supported) || !headlineSupported) {
     draftReasons.push('headline_not_supported_by_body')
+  }
+
+  if (factPackage?.thin_source_risk === 'high') {
+    draftReasons.push('thin_source_requires_review')
   }
 
   const abstraction = Math.max(
@@ -488,21 +492,13 @@ for (const candidate of candidatePool) {
   }
 
   const fallbackQc = buildFallbackQcEnrichment({ candidate, editorial })
-  const deepSeekResult = await callDeepSeekJson({
-    systemPrompt: 'You are a strict robotics news quality-control reviewer. Return strict JSON only and do not invent facts.',
-    userPrompt: buildQcPrompt({ candidate, editorial }),
-    maxTokens: 420,
-  })
-
-  const normalizedModelOutput = validateQcEnrichment(deepSeekResult.data)
   const normalizedFallback = validateQcEnrichment(fallbackQc)
-  const enrichment =
-    normalizedModelOutput.ok ? normalizedModelOutput.data : normalizedFallback.ok ? normalizedFallback.data : null
+  const enrichment = normalizedFallback.ok ? normalizedFallback.data : null
 
   if (!enrichment) {
     rejectedReviews.push({
       title: candidate.title,
-      reason: normalizedModelOutput.reason || normalizedFallback.reason || 'no_safe_enrichment',
+      reason: normalizedFallback.reason || 'no_safe_enrichment',
       tier: candidate.sourceTrustTier,
       ...sourceUrlDebug,
     })
@@ -529,8 +525,9 @@ for (const candidate of candidatePool) {
     _type: 'post',
     title: candidate.title,
     slug: { _type: 'slug', current: candidate.slug },
-    excerpt: enrichment.summary,
-    whyItMatters: enrichment.why_it_matters,
+    excerpt: editorial.excerpt,
+    whyItMatters: editorial.whyItMatters,
+    videoSummary: editorial.videoSummary,
     homepageEligible: enrichment.homepage_eligible,
     sourceTrustTier: candidate.sourceTrustTier,
     internalLinkTarget: enrichment.internal_link_target || undefined,
@@ -569,7 +566,7 @@ for (const candidate of candidatePool) {
   })
   const reviewPayload = {
     title: candidate.title,
-    mode: deepSeekResult.ok ? 'deepseek' : 'fallback',
+    mode: editorial.generationMode,
     tier: candidate.sourceTrustTier,
     decision: evaluated.decision,
     storyFormat: evaluated.storyFormat,
@@ -582,6 +579,8 @@ for (const candidate of candidatePool) {
     visualSupport: evaluated.visualSupport,
     draftReasons: evaluated.draftReasons,
     rejectReasons: evaluated.rejectReasons,
+    thinSourceRisk: editorial?.factPackage?.thin_source_risk || '',
+    headlineSupported: editorial?.factPackage?.headline_supported ?? null,
     youtubeSearchQuery: enrichment.youtube_search_query || '',
     youtube: {
       attached: youtubeDecision.attached,
@@ -589,8 +588,9 @@ for (const candidate of candidatePool) {
       channel: youtubeDecision.match?.channelTitle || '',
       title: youtubeDecision.match?.videoTitle || '',
     },
-    summary: enrichment.summary,
-    whyItMatters: enrichment.why_it_matters,
+    summary: editorial.excerpt,
+    whyItMatters: editorial.whyItMatters,
+    factPackage: editorial.factPackage || null,
     internalLinkTarget: enrichment.internal_link_target || '',
   }
 

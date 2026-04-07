@@ -13,6 +13,8 @@ import {
   isValidSourceUrl,
   leadStartsWithImplication,
   isPromotionalLikely,
+  paragraphAdvancesSummary,
+  validateFactPackage,
   validateQcEnrichment,
 } from './lib/news-publish-quality.mjs'
 import { evaluateYouTubeCandidate, matchYouTubeVideo } from './lib/youtube-provider.mjs'
@@ -57,6 +59,22 @@ assert.equal(isValidSourceUrl('https://example.com/story'), true)
 assert.equal(isValidSourceUrl(''), false)
 assert.equal(hasConcreteFact('UBTech offered $18 million to recruit an AI scientist.', { title: 'UBTech offers $18 million for AI scientist' }), true)
 assert.equal(leadStartsWithImplication('That matters because robotics buyers are demanding proof.'), true)
+assert.equal(
+  paragraphAdvancesSummary({
+    summary: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    paragraph:
+      'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time. CNBC reported the company said its robots use cameras and sensors.',
+  }),
+  false
+)
+assert.equal(
+  paragraphAdvancesSummary({
+    summary: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    paragraph:
+      'CNBC reported Gecko said its robots can shorten a repair process that can take three months to as little as two days.',
+  }),
+  true
+)
 assert.match(
   extractConcreteFactExcerpt('That matters because buyers want proof. UBTech offered $18 million to recruit an AI scientist.'),
   /\$18 million/
@@ -71,6 +89,46 @@ assert.equal(
 const baseFetch = global.fetch
 global.fetch = async (url) => {
   const target = String(url || '')
+  if (target === 'https://api.deepseek.com/chat/completions') {
+    return {
+      ok: true,
+      json: async () => ({
+        choices: [
+          {
+            message: {
+              content: JSON.stringify({
+                fact_package: {
+                  main_actor: 'Generalist',
+                  main_action: 'introduced',
+                  main_object: 'GEN-1, a general-purpose model for physical AI',
+                  main_number_or_scale: 'GEN-1',
+                  best_concrete_fact:
+                    'Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.',
+                  secondary_fact:
+                    'The company said GEN-1 is designed to improve robot learning across tasks and shorten iteration cycles for developers.',
+                  source_grounded: true,
+                  thin_source_risk: 'low',
+                  headline_supported: true,
+                  story_format_recommendation: 'signal_brief',
+                },
+                summary:
+                  'Generalist introduced GEN-1, a general-purpose model for physical AI, and said it is aimed at faster robot training and deployment. The update matters because it ties model progress to a practical robotics workflow.',
+                why_it_matters:
+                  'The release is notable because it connects a specific model launch to faster robot training and deployment rather than vague platform ambition.',
+                video_summary:
+                  'This briefing is grounded in Generalist’s GEN-1 launch for physical AI and the company’s claim that it can speed robot training. The video context helps readers judge whether that claim looks like operational progress or branding.',
+                body_paragraphs: [
+                  'The company said GEN-1 is designed to improve robot learning across tasks and shorten iteration cycles for developers. Generalist framed the model as a way to move from announcement-level AI language to faster robot training and deployment.',
+                  'That is a more useful robotics signal than broad AI rhetoric because it ties the release to a concrete workflow: how quickly teams can train and iterate on robot behavior. If the model really shortens development cycles, it could matter for deployment pace rather than just research positioning.',
+                ],
+                paragraph3_useful: false,
+              }),
+            },
+          },
+        ],
+      }),
+    }
+  }
   if (target === 'https://example.com/fact-story') {
     return {
       ok: true,
@@ -100,13 +158,63 @@ const editorialPackage = await buildEditorialPackage({
   sourceUrl: 'https://example.com/fact-story',
   pubDate: now,
 })
-assert.equal(editorialPackage.generationMode, 'fallback')
+assert.equal(editorialPackage.generationMode, 'deepseek')
 assert.equal(leadStartsWithImplication(editorialPackage.excerpt), false)
 assert.equal(hasConcreteFact(editorialPackage.excerpt, { title: 'Generalist introduces GEN-1 general-purpose model for physical AI' }), true)
 assert.equal(leadStartsWithImplication(editorialPackage.bodyParagraphs[0]), false)
 assert.equal(hasConcreteFact(editorialPackage.bodyParagraphs[0], { title: 'Generalist introduces GEN-1 general-purpose model for physical AI' }), true)
-assert.doesNotMatch(editorialPackage.bodyParagraphs[1], /^That matters because\b/i)
-assert.doesNotMatch(editorialPackage.bodyParagraphs[2], /^The next thing to watch\b/i)
+assert.equal(paragraphAdvancesSummary({ summary: editorialPackage.excerpt, paragraph: editorialPackage.bodyParagraphs[0] }), true)
+assert.equal(editorialPackage.bodyParagraphs.length, 2)
+assert.match(editorialPackage.factPackage.best_concrete_fact, /GEN-1/)
+assert.equal(validateFactPackage(editorialPackage.factPackage, { title: 'Generalist introduces GEN-1 general-purpose model for physical AI' }).ok, true)
+global.fetch = baseFetch
+
+global.fetch = async (url) => {
+  const target = String(url || '')
+  if (target === 'https://api.deepseek.com/chat/completions') {
+    return {
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: '{' } }],
+      }),
+    }
+  }
+  if (target === 'https://example.com/fact-story') {
+    return {
+      ok: true,
+      text: async () => `
+        <html>
+          <head>
+            <title>Generalist introduces GEN-1 general-purpose model for physical AI</title>
+            <meta name="description" content="Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.">
+            <meta property="og:description" content="The company said GEN-1 is designed to improve robot learning across tasks.">
+          </head>
+          <body>
+            <article>
+              <p>Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.</p>
+              <p>The company said GEN-1 is designed to improve robot learning across tasks and shorten iteration cycles for developers.</p>
+            </article>
+          </body>
+        </html>
+      `,
+    }
+  }
+  return baseFetch(url)
+}
+
+const fallbackEditorialPackage = await buildEditorialPackage({
+  headline: 'Generalist introduces GEN-1 general-purpose model for physical AI',
+  source: 'The Robot Report',
+  sourceUrl: 'https://example.com/fact-story',
+  pubDate: now,
+})
+assert.equal(fallbackEditorialPackage.generationMode, 'fallback')
+assert.equal(fallbackEditorialPackage.bodyParagraphs.length >= 2, true)
+assert.equal(leadStartsWithImplication(fallbackEditorialPackage.excerpt), false)
+assert.equal(
+  paragraphAdvancesSummary({ summary: fallbackEditorialPackage.excerpt, paragraph: fallbackEditorialPackage.bodyParagraphs[0] }),
+  true
+)
 global.fetch = baseFetch
 
 const fallback = buildFallbackQcEnrichment({
@@ -132,12 +240,19 @@ assert.equal(validatedFallback.ok, true)
 assert.equal(validatedFallback.data.story_format, 'signal_brief')
 assert.equal(validatedFallback.data.publish_recommendation, 'auto_publish')
 
+global.fetch = async () => ({
+  ok: true,
+  json: async () => ({
+    choices: [{ message: { content: '{' } }],
+  }),
+})
 const malformedProvider = await callDeepSeekJson({
   systemPrompt: 'Return JSON.',
   userPrompt: 'Return JSON.',
   timeoutMs: 10,
 })
 assert.ok(malformedProvider.ok === false || malformedProvider.ok === true)
+global.fetch = baseFetch
 
 const invalidCategory = validateQcEnrichment({
   summary: 'This robotics update signals a stronger commercial push as buyers ask for deployment proof and clearer execution data.',
