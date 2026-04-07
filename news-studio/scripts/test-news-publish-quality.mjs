@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { normalizeExcerpt } from './build-static-news-seo.mjs'
 import { callDeepSeekJson } from './lib/deepseek-provider.mjs'
 import { buildEditorialPackage } from './lib/news-editorial-content.mjs'
+import { extractFactLayer } from './lib/news-fact-extraction.mjs'
 import {
   extractConcreteFactExcerpt,
   buildFallbackQcEnrichment,
@@ -85,6 +86,35 @@ assert.equal(
   }),
   true
 )
+
+const deterministicFactLayer = extractFactLayer({
+  headline: 'Generalist introduces GEN-1 general-purpose model for physical AI',
+  sourceContext: {
+    pageTitle: 'Generalist introduces GEN-1 general-purpose model for physical AI',
+    metaDescription:
+      'Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.',
+    ogDescription: 'The company said GEN-1 is designed to improve robot learning across tasks.',
+    paragraphs: [
+      'Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.',
+      'The company said GEN-1 is designed to improve robot learning across tasks and shorten iteration cycles for developers.',
+    ],
+  },
+})
+assert.equal(deterministicFactLayer.validation.ok, true)
+assert.equal(deterministicFactLayer.diagnostics.viable_for_writing, true)
+assert.equal(deterministicFactLayer.diagnostics.viable_for_deepseek_refinement, true)
+assert.match(deterministicFactLayer.selectedFactPackage.best_concrete_fact, /GEN-1/)
+
+const thinFactLayer = extractFactLayer({
+  headline: 'Robotics executive shares outlook on the market',
+  sourceContext: {
+    pageTitle: 'Robotics executive shares outlook on the market',
+    metaDescription: 'A robotics executive discussed trends in the market.',
+    ogDescription: '',
+    paragraphs: [],
+  },
+})
+assert.equal(thinFactLayer.diagnostics.viable_for_deepseek_refinement, false)
 
 const baseFetch = global.fetch
 global.fetch = async (url) => {

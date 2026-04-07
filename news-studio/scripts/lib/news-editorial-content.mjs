@@ -3,9 +3,9 @@ import os from 'node:os'
 import path from 'node:path'
 
 import { callDeepSeekJson } from './deepseek-provider.mjs'
+import { extractFactLayer, hasUsableSourceContext as factLayerHasUsableSourceContext } from './news-fact-extraction.mjs'
 import {
   extractConcreteFactExcerpt,
-  extractMainNumberOrScale,
   hasConcreteFact,
   headlineSupportedByBody,
   leadStartsWithImplication,
@@ -22,9 +22,6 @@ const SOURCE_NAME_OVERRIDES = new Map([
   ['techcrunch', 'TechCrunch'],
 ])
 const COMPETITOR_SOURCE_KEYS = new Set(['therobotreport', 'roboticsbusinessreview', 'robotics247'])
-const MAIN_ACTION_PATTERN =
-  /\b(raised?|raises|acquires?|acquired|acquisition|partners?|partnered|deal|contract|deploy(?:ed|ment|ments)?|pilot|production|rolls? out|launched?|released?|introduced?|announced?|unveiled?|debuts?|sign(?:ed|s)?|opened?|offers?|hired?|joins?)\b/i
-
 const stripHtml = (value) =>
   String(value || '')
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
@@ -185,129 +182,20 @@ const themeFromHeadline = (headline = '') => {
   return 'robotics commercialization'
 }
 
-const sourceSentences = (sourceContext = {}) => {
-  const candidates = [
-    sourceContext.metaDescription || '',
-    sourceContext.ogDescription || '',
-    ...(Array.isArray(sourceContext.paragraphs) ? sourceContext.paragraphs : []),
-    sourceContext.pageTitle || '',
-  ]
-  const unique = []
-  const seen = new Set()
-  for (const candidate of candidates) {
-    for (const sentence of splitSentences(candidate)) {
-      const key = sentence.toLowerCase()
-      if (!sentence || seen.has(key)) continue
-      seen.add(key)
-      unique.push(sentence)
-    }
-  }
-  return unique
-}
-
-const hasUsableSourceContext = (sourceContext = {}) =>
-  Boolean(
-    sourceContext.metaDescription ||
-      sourceContext.ogDescription ||
-      sourceContext.pageTitle ||
-      (Array.isArray(sourceContext.paragraphs) && sourceContext.paragraphs.length)
-  )
-
-const firstFactSentence = ({ headline, sourceContext }) => {
-  const sentences = sourceSentences(sourceContext)
-  return (
-    sentences.find((sentence) => hasConcreteFact(sentence, { title: headline })) ||
-    extractConcreteFactExcerpt(
-      [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])]
-        .filter(Boolean)
-        .join(' '),
-      { title: headline }
-    ) ||
-    ''
-  )
-}
-
-const firstSourceSentence = ({ headline, sourceContext }) => {
-  const factSentence = firstFactSentence({ headline, sourceContext })
-  if (factSentence) return factSentence
-  return sourceSentences(sourceContext).find((sentence) => !leadStartsWithImplication(sentence)) || safeSentence(sourceContext.pageTitle || headline || '', 180)
-}
+const firstSourceSentence = ({ headline, sourceContext }) =>
+  extractConcreteFactExcerpt(
+    [sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])]
+      .filter(Boolean)
+      .join(' '),
+    { title: headline }
+  ) || splitSentences([sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || []), sourceContext.pageTitle || headline || ''].join(' ')).find((sentence) => !leadStartsWithImplication(sentence)) || safeSentence(sourceContext.pageTitle || headline || '', 180)
 
 const supportSentence = ({ headline, sourceContext, exclude = '' }) =>
-  sourceSentences(sourceContext).find((sentence) => {
+  splitSentences([sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(' ')).find((sentence) => {
     if (!sentence || sentence === exclude) return false
     if (leadStartsWithImplication(sentence)) return false
     return hasConcreteFact(sentence, { title: headline }) || countWords(sentence) >= 12
   }) || ''
-
-const deriveMainAction = (value = '') => {
-  const match = normalizeWhitespace(value).match(MAIN_ACTION_PATTERN)
-  return normalizeWhitespace(match?.[1] || '')
-}
-
-const deriveMainActor = (value = '', fallbackHeadline = '') => {
-  const text = normalizeWhitespace(value)
-  const action = deriveMainAction(text)
-  if (text && action) {
-    const splitIndex = text.toLowerCase().indexOf(action.toLowerCase())
-    if (splitIndex > 0) {
-      return shortenText(text.slice(0, splitIndex), 80)
-    }
-  }
-  const headline = normalizeWhitespace(fallbackHeadline)
-  const headlineMatch = headline.match(/^([A-Z0-9][A-Za-z0-9&.+'’ -]{2,90}?)(?:\s+(?:raises|acquires|partners|deploys|launches|rolls out|offers|joins|wins|is)\b|:)/)
-  return shortenText(headlineMatch?.[1] || '', 80)
-}
-
-const deriveMainObject = (value = '', fallbackHeadline = '') => {
-  const text = normalizeWhitespace(value)
-  const action = deriveMainAction(text)
-  if (text && action) {
-    const splitIndex = text.toLowerCase().indexOf(action.toLowerCase())
-    if (splitIndex >= 0) {
-      return shortenText(text.slice(splitIndex + action.length).replace(/^[\s:-]+/, ''), 120)
-    }
-  }
-  return shortenText(fallbackHeadline, 120)
-}
-
-const buildFallbackFactDraft = ({ headline, sourceContext }) => {
-  const bestConcreteFact = safeSentence(firstFactSentence({ headline, sourceContext }) || firstSourceSentence({ headline, sourceContext }), 220)
-  const secondaryFact = safeSentence(
-    supportSentence({ headline, sourceContext, exclude: bestConcreteFact }) || sourceContext.paragraphs?.[1] || '',
-    220
-  )
-  const sourceGrounded = hasUsableSourceContext(sourceContext)
-  const headlineSupported = headlineSupportedByBody({
-    title: headline,
-    summary: bestConcreteFact,
-    bodyParagraphs: [secondaryFact, ...(sourceContext.paragraphs || []).slice(0, 1)],
-  })
-  const thinSourceRisk = !sourceGrounded || !bestConcreteFact
-    ? 'high'
-    : secondaryFact
-      ? 'low'
-      : 'medium'
-  const storyFormatRecommendation =
-    thinSourceRisk === 'high'
-      ? 'draft_only'
-      : sourceContext.imageUrl
-        ? 'featured_candidate'
-        : 'signal_brief'
-
-  return {
-    main_actor: deriveMainActor(bestConcreteFact, headline),
-    main_action: deriveMainAction(bestConcreteFact),
-    main_object: deriveMainObject(bestConcreteFact, headline),
-    main_number_or_scale: extractMainNumberOrScale(bestConcreteFact),
-    best_concrete_fact: bestConcreteFact,
-    secondary_fact: hasConcreteFact(secondaryFact, { title: headline }) ? secondaryFact : '',
-    source_grounded: sourceGrounded,
-    thin_source_risk: thinSourceRisk,
-    headline_supported: headlineSupported,
-    story_format_recommendation: storyFormatRecommendation,
-  }
-}
 
 const significanceLine = ({ headline, source, sourceContext, factPackage }) => {
   const theme = themeFromHeadline(headline)
@@ -568,24 +456,26 @@ export const buildEditorialPackage = async ({
   pubDate,
 }) => {
   const sourceContext = await fetchSourceContext(sourceUrl)
-  const fallbackFactDraft = buildFallbackFactDraft({ headline, sourceContext })
-  const validatedFallbackFacts = validateFactPackage(fallbackFactDraft, { title: headline })
-  const fallbackFactPackage = validatedFallbackFacts.ok ? validatedFallbackFacts.data : null
+  const deterministicFacts = extractFactLayer({ headline, sourceContext })
+  const fallbackFactDraft = deterministicFacts.factDraft
+  const fallbackFactPackage = deterministicFacts.factPackage
+  const selectedDeterministicFactPackage = deterministicFacts.selectedFactPackage
   const fallbackEditorial = buildFallbackEditorialPackage({
     headline,
     source,
     sourceContext,
-    factPackage: fallbackFactPackage,
+    factPackage: selectedDeterministicFactPackage,
   })
 
   let selectedEditorial = {
     ...fallbackEditorial,
-    factPackage: fallbackFactPackage || fallbackFactDraft,
+    factPackage: selectedDeterministicFactPackage,
+    factDiagnostics: deterministicFacts.diagnostics,
     generationMode: 'fallback',
     sourceContext,
   }
 
-  if (hasUsableSourceContext(sourceContext)) {
+  if (factLayerHasUsableSourceContext(sourceContext) && deterministicFacts.diagnostics.viable_for_deepseek_refinement) {
     const deepSeekResult = await callDeepSeekJson({
       systemPrompt: 'You are a precise robotics news fact extractor and editor. Return strict JSON only. Do not invent facts.',
       userPrompt: buildStructuredEditorialPrompt({
@@ -594,7 +484,7 @@ export const buildEditorialPackage = async ({
         sourceUrl,
         pubDate,
         sourceContext,
-        fallbackFacts: fallbackFactDraft,
+        fallbackFacts: selectedDeterministicFactPackage,
         fallbackEditorial,
       }),
       maxTokens: 900,
@@ -606,6 +496,7 @@ export const buildEditorialPackage = async ({
     if (deepSeekResult.ok && normalizedAiPackage) {
       selectedEditorial = {
         ...normalizedAiPackage,
+        factDiagnostics: deterministicFacts.diagnostics,
         generationMode: 'deepseek',
         sourceContext,
       }

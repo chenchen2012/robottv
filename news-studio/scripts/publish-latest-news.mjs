@@ -592,6 +592,7 @@ for (const candidate of candidatePool) {
     summary: editorial.excerpt,
     whyItMatters: editorial.whyItMatters,
     factPackage: editorial.factPackage || null,
+    factDiagnostics: editorial.factDiagnostics || null,
     internalLinkTarget: enrichment.internal_link_target || '',
   }
 
