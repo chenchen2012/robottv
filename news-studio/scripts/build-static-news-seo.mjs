@@ -1805,7 +1805,7 @@ const getListingSummary = (post) => {
   }
   return tightenListingSummary(cleanedLead || cleaned);
 };
-const renderStaticVisualStory = (post, { featured = false } = {}) => {
+const renderStaticVisualStory = (post, { featured = false, storyType = "Featured Story" } = {}) => {
   const title = escapeHtml(toPlainText(post.title || "robot.tv News"));
   const date = escapeHtml(formatDisplayDate(post.publishedAt));
   const articleUrl = escapeHtml(`/${normalizeSlug(post.slug)}/`);
@@ -1821,7 +1821,7 @@ const renderStaticVisualStory = (post, { featured = false } = {}) => {
           </span>
           <div class="content">
             <div class="visual-story-header">
-              <span class="story-type">Featured Story</span>
+              <span class="story-type">${escapeHtml(storyType)}</span>
               <p class="meta">${date}</p>
             </div>
             <h3><a href="${articleUrl}">${title}</a></h3>
@@ -1858,11 +1858,20 @@ const trimHomepageRestPosts = (posts, { columns = HOMEPAGE_REST_GRID_COLUMNS } =
 const buildHomepageStaticMarkup = (posts) => {
   const listingPosts = getHomepageListingPosts(posts);
   const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
-  const { lead, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts, { railBriefSlots: 2 });
-  const leadHtml = lead ? renderStaticVisualStory(lead, { featured: true }) : "";
-  const railHtml = railBriefs.length
+  const { lead, layoutMode, topBriefs, remainder } = selectHomepageStoryLayout(pagePosts, {
+    railBriefSlots: 2,
+    briefsOnlyTopSlots: 4,
+    fallbackSourcePosts: listingPosts,
+  });
+  const leadHtml = lead
+    ? renderStaticVisualStory(lead, {
+        featured: layoutMode === "featured" || layoutMode === "video-brief",
+        storyType: layoutMode === "featured" ? "Featured Story" : "Latest Video Brief",
+      })
+    : "";
+  const topBriefsHtml = topBriefs.length
     ? `        <div class="brief-rail">
-${railBriefs.map((post) => renderStaticSignalStory(post)).join("\n")}
+${topBriefs.map((post) => renderStaticSignalStory(post)).join("\n")}
         </div>`
     : "";
   const restHtml = trimHomepageRestPosts(remainder)
@@ -1886,9 +1895,9 @@ ${railBriefs.map((post) => renderStaticSignalStory(post)).join("\n")}
           <h2>Latest Robot News</h2>
         </div>
         <div class="latest-feed">
-${leadHtml || railHtml ? `        <div class="homepage-top">
+${leadHtml || topBriefsHtml ? `        <div class="homepage-top${layoutMode === "briefs-only" ? " homepage-top-briefs-only" : layoutMode === "video-brief" ? " homepage-top-video-brief" : ""}">
 ${leadHtml}
-${railHtml}
+${topBriefsHtml}
         </div>` : ""}
 ${restHtml ? `        <div class="homepage-rest">
 ${restHtml}

@@ -165,12 +165,41 @@
       gap:1.05rem;
       align-items:stretch;
     }
+    .homepage-top.homepage-top-briefs-only {
+      grid-template-columns:minmax(0, 1fr);
+      align-items:start;
+    }
     .brief-rail {
       display:grid;
       grid-template-rows:repeat(2, minmax(0, 1fr));
       gap:1rem;
       align-content:start;
       min-height:436px;
+    }
+    .homepage-top.homepage-top-briefs-only .brief-rail {
+      grid-template-rows:none;
+      grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+      min-height:0;
+    }
+    .homepage-top.homepage-top-briefs-only .brief-rail .signal-story {
+      border-top:1px solid rgba(58,82,119,.5);
+      border-radius:12px;
+      padding:.82rem .84rem .2rem;
+      background:
+        radial-gradient(260px 94px at 100% 0%, rgba(94,132,255,.06), transparent 58%),
+        linear-gradient(160deg, rgba(10,17,27,.9), rgba(11,18,29,.88));
+      box-shadow:0 8px 16px rgba(5,9,14,.1);
+    }
+    .homepage-top.homepage-top-briefs-only .brief-rail .signal-story::before {
+      top:12px;
+      bottom:12px;
+    }
+    .homepage-top.homepage-top-briefs-only .brief-rail .signal-story-header,
+    .homepage-top.homepage-top-briefs-only .brief-rail .signal-story h3,
+    .homepage-top.homepage-top-briefs-only .brief-rail .signal-story p,
+    .homepage-top.homepage-top-briefs-only .brief-rail .signal-story .row {
+      padding-left:.62rem;
+      padding-right:.3rem;
     }
     .visual-story {
       border:1px solid var(--line);
@@ -761,9 +790,36 @@
           <h2>Latest Robot News</h2>
         </div>
         <div class="latest-feed">
-        <div class="homepage-top">
-
+        <div class="homepage-top homepage-top-video-brief">
+        <article class="visual-story visual-story-featured" data-video="https://www.youtube.com/watch?v=TnV2h4dy3Dc">
+          <span class="thumb-shell">
+            <img class="thumb" src="https://img.youtube.com/vi/TnV2h4dy3Dc/hqdefault.jpg" alt="The future of RealSense 3D vision with Chris Matthieu thumbnail" loading="lazy">
+            <span class="thumb-preview" aria-hidden="true"></span>
+          </span>
+          <div class="content">
+            <div class="visual-story-header">
+              <span class="story-type">Latest Video Brief</span>
+              <p class="meta">Apr 4, 2026</p>
+            </div>
+            <h3><a href="/the-future-of-realsense-3d-vision-with-chris-matthieu/">The future of RealSense 3D vision with Chris Matthieu</a></h3>
+            <p>Intel&#39;s RealSense push matters because 3D vision still sits near the center of robotics perception, navigation,...</p>
+            <div class="row">
+              <a class="btn btn-primary" href="/the-future-of-realsense-3d-vision-with-chris-matthieu/">Watch story</a>
+            </div>
+          </div>
+        </article>
         <div class="brief-rail">
+        <article class="signal-story">
+          <div class="signal-story-header">
+            <span class="story-type">Signal Brief</span>
+            <p class="meta">Apr 7, 2026</p>
+          </div>
+          <h3><a href="/bmws-104-year-old-munich-plant-will-build-only-electric-cars-by-2027/">BMW&#39;s 104-year-old Munich plant will build only electric cars by 2027</a></h3>
+          <p>BMW&#39;s Munich plant has begun its shift to EV-only production and is expected to launch the...</p>
+          <div class="row">
+            <a class="signal-link" href="/bmws-104-year-old-munich-plant-will-build-only-electric-cars-by-2027/">Read brief</a>
+          </div>
+        </article>
         <article class="signal-story">
           <div class="signal-story-header">
             <span class="story-type">Signal Brief</span>
@@ -775,6 +831,9 @@
             <a class="signal-link" href="/ai-driven-software-system-lowers-data-center-cooling-demand-by-25/">Read brief</a>
           </div>
         </article>
+        </div>
+        </div>
+        <div class="homepage-rest">
         <article class="signal-story">
           <div class="signal-story-header">
             <span class="story-type">Signal Brief</span>
@@ -786,9 +845,6 @@
             <a class="signal-link" href="/chinas-smart-factory-employs-over-100-humanoid-robots-as-interns-in-automation-push/">Read brief</a>
           </div>
         </article>
-        </div>
-        </div>
-        <div class="homepage-rest">
         <article class="signal-story">
           <div class="signal-story-header">
             <span class="story-type">Signal Brief</span>
@@ -864,17 +920,6 @@
           <p>Nvidia CEO Jensen Huang predicts that every industrial company will become a robotics company, highlighting the...</p>
           <div class="row">
             <a class="signal-link" href="/every-industrial-company-will-become-a-robotics-company-nvidia-ceo-jensen-huang-says/">Read brief</a>
-          </div>
-        </article>
-        <article class="signal-story">
-          <div class="signal-story-header">
-            <span class="story-type">Signal Brief</span>
-            <p class="meta">Apr 5, 2026</p>
-          </div>
-          <h3><a href="/gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal/">Gecko Robotics brings its AI to U.S. Navy ship repair in latest next-gen defense tech deal</a></h3>
-          <p>Gecko Robotics announced a $71 million deal with the U.S.</p>
-          <div class="row">
-            <a class="signal-link" href="/gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal/">Read brief</a>
           </div>
         </article>
         </div>
@@ -1940,8 +1985,13 @@
       }
       return { kind: "signal-brief", editorialScore, strongVisual };
     };
-    const selectHomepageStoryLayout = (posts, { railBriefSlots = 2 } = {}) => {
+    const selectHomepageStoryLayout = (posts, { railBriefSlots = 2, briefsOnlyTopSlots = 4, fallbackSourcePosts } = {}) => {
+      const fallbackPosts = Array.isArray(fallbackSourcePosts) && fallbackSourcePosts.length ? fallbackSourcePosts : posts;
       const entries = (Array.isArray(posts) ? posts : []).map((post) => ({
+        post,
+        classification: classifyHomepageStory(post)
+      }));
+      const fallbackEntries = (Array.isArray(fallbackPosts) ? fallbackPosts : []).map((post) => ({
         post,
         classification: classifyHomepageStory(post)
       }));
@@ -1956,9 +2006,16 @@
       const signalEntries = entries
         .filter((entry) => entry.classification.kind === "signal-brief")
         .sort(byPublishedAtDesc);
-      const leadEntry = featureEntries[0] || null;
+      const featuredLeadEntry = featureEntries[0] || null;
+      const fallbackVideoEntry = featuredLeadEntry
+        ? null
+        : fallbackEntries
+            .filter((entry) => hasEmbeddedVideo(entry.post))
+            .sort(byPublishedAtDesc)[0] || null;
+      const leadEntry = featuredLeadEntry || fallbackVideoEntry;
       const lead = leadEntry?.post || null;
-      const leadKind = "featured";
+      const leadKind = featuredLeadEntry ? "featured" : fallbackVideoEntry ? "video-brief" : "none";
+      const layoutMode = featuredLeadEntry ? "featured" : fallbackVideoEntry ? "video-brief" : "briefs-only";
       const leadSlug = normalizeHomepageSlug(lead?.slug);
       const remainingFeatures = featureEntries
         .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
@@ -1966,11 +2023,15 @@
       const remainingSignals = signalEntries
         .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
         .map((entry) => entry.post);
-      const railBriefs = remainingSignals.slice(0, railBriefSlots);
-      const remainder = [...remainingFeatures, ...remainingSignals.slice(railBriefSlots)];
-      return { lead, leadKind, railBriefs, remainder };
+      const topBriefs = layoutMode === "briefs-only"
+        ? remainingSignals.slice(0, briefsOnlyTopSlots)
+        : remainingSignals.slice(0, railBriefSlots);
+      const remainder = layoutMode === "briefs-only"
+        ? [...remainingSignals.slice(briefsOnlyTopSlots)]
+        : [...remainingFeatures, ...remainingSignals.slice(railBriefSlots)];
+      return { lead, leadKind, layoutMode, topBriefs, remainder };
     };
-    const renderVisualStory = (post, { featured = false } = {}) => `
+    const renderVisualStory = (post, { featured = false, storyType = "Featured Story" } = {}) => `
       <article class="visual-story${featured ? " visual-story-featured" : ""}" data-video="${esc(post.youtubeUrl || "")}">
         <span class="thumb-shell">
           <img class="thumb" src="${esc(coverImageForPost(post))}" alt="${esc(post.title)} thumbnail" loading="lazy">
@@ -1978,7 +2039,7 @@
         </span>
         <div class="content">
           <div class="visual-story-header">
-            <span class="story-type">Featured Story</span>
+            <span class="story-type">${esc(storyType)}</span>
             <p class="meta">${esc(formatDate(post.publishedAt))}</p>
           </div>
           <h3><a href="/${esc(post.slug)}/">${esc(post.title)}</a></h3>
@@ -2261,13 +2322,18 @@
       const from = (page - 1) * PAGE_SIZE;
       const pagePosts = uniquePosts.slice(from, from + PAGE_SIZE);
       if (!pagePosts.length) { empty.hidden = false; return; }
-      const { lead, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts);
+      const { lead, layoutMode, topBriefs, remainder } = selectHomepageStoryLayout(pagePosts, {
+        fallbackSourcePosts: uniquePosts
+      });
       const topParts = [];
       if (lead) {
-        topParts.push(renderVisualStory(lead, { featured: true }));
+        topParts.push(renderVisualStory(lead, {
+          featured: layoutMode === "featured" || layoutMode === "video-brief",
+          storyType: layoutMode === "featured" ? "Featured Story" : "Latest Video Brief"
+        }));
       }
-      if (railBriefs.length) {
-        topParts.push(`<div class="brief-rail">${railBriefs.map((post) => renderSignalStory(post)).join("")}</div>`);
+      if (topBriefs.length) {
+        topParts.push(`<div class="brief-rail">${topBriefs.map((post) => renderSignalStory(post)).join("")}</div>`);
       }
       const remainderOrFallback = remainder.length
         ? remainder
@@ -2275,7 +2341,7 @@
       const restPosts = trimHomepageRestPosts(remainderOrFallback);
       const restHtml = restPosts.map((post, index) => renderHomepageFeedItem(post, index + 1)).join("");
       grid.innerHTML = `
-        ${topParts.length ? `<div class="homepage-top">${topParts.join("")}</div>` : ""}
+        ${topParts.length ? `<div class="homepage-top${layoutMode === "briefs-only" ? " homepage-top-briefs-only" : layoutMode === "video-brief" ? " homepage-top-video-brief" : ""}">${topParts.join("")}</div>` : ""}
         ${restHtml ? `<div class="homepage-rest">${restHtml}</div>` : ""}
       `;
 

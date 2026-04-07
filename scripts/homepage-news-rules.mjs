@@ -243,9 +243,16 @@ export const selectHomepagePromotionSlots = (posts, { visualSlots = 2, textSlots
   return { visualPosts, textSignalPosts }
 }
 
-export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) => {
+export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3, briefsOnlyTopSlots = 4, fallbackSourcePosts } = {}) => {
   const orderedPosts = Array.isArray(posts) ? [...posts] : []
+  const fallbackOrderedPosts = Array.isArray(fallbackSourcePosts) && fallbackSourcePosts.length
+    ? [...fallbackSourcePosts]
+    : orderedPosts
   const classifications = orderedPosts.map((post) => ({
+    post,
+    classification: classifyHomepageStory(post),
+  }))
+  const fallbackClassifications = fallbackOrderedPosts.map((post) => ({
     post,
     classification: classifyHomepageStory(post),
   }))
@@ -261,10 +268,16 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) =>
     .filter((entry) => entry.classification.kind === "signal-brief")
     .sort(byPublishedAtDesc)
 
-  const leadEntry = featureEntries[0] || null
-
+  const featuredLeadEntry = featureEntries[0] || null
+  const fallbackVideoEntry = featuredLeadEntry
+    ? null
+    : fallbackClassifications
+        .filter((entry) => hasHomepageEmbeddedVideo(entry.post))
+        .sort(byPublishedAtDesc)[0] || null
+  const leadEntry = featuredLeadEntry || fallbackVideoEntry
   const lead = leadEntry?.post || null
-  const leadKind = "featured"
+  const leadKind = featuredLeadEntry ? "featured" : fallbackVideoEntry ? "video-brief" : "none"
+  const layoutMode = featuredLeadEntry ? "featured" : fallbackVideoEntry ? "video-brief" : "briefs-only"
 
   const leadSlug = normalizeHomepageSlug(lead?.slug)
   const remainingFeatures = featureEntries
@@ -274,13 +287,18 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) =>
     .filter((entry) => normalizeHomepageSlug(entry.post?.slug) !== leadSlug)
     .map((entry) => entry.post)
 
-  const railBriefs = remainingSignals.slice(0, railBriefSlots)
-  const remainder = [...remainingFeatures, ...remainingSignals.slice(railBriefSlots)]
+  const topBriefs = layoutMode === "briefs-only"
+    ? remainingSignals.slice(0, briefsOnlyTopSlots)
+    : remainingSignals.slice(0, railBriefSlots)
+  const remainder = layoutMode === "briefs-only"
+    ? [...remainingSignals.slice(briefsOnlyTopSlots)]
+    : [...remainingFeatures, ...remainingSignals.slice(railBriefSlots)]
 
   return {
     lead,
     leadKind,
-    railBriefs,
+    layoutMode,
+    topBriefs,
     remainder,
   }
 }
