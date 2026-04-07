@@ -481,6 +481,17 @@ for (const candidate of candidatePool) {
     categoryHint: '',
   })
 
+  const factDiagnostics = editorial?.factDiagnostics || null
+  if (factDiagnostics) {
+    console.log(
+      `Fact layer for "${candidate.title}": ` +
+        `grounded=${factDiagnostics.source_grounded ? 'yes' : 'no'}, ` +
+        `thin=${factDiagnostics.thin_source_risk || 'n/a'}, ` +
+        `write=${factDiagnostics.viable_for_writing ? 'yes' : 'no'}, ` +
+        `deepseek=${factDiagnostics.viable_for_deepseek_refinement ? 'yes' : 'no'}`
+    )
+  }
+
   if (isPromotionalLikely({ title: candidate.title, sourceName: candidate.sourceName, sourceUrl: candidate.sourceUrl, sourceContext: editorial.sourceContext })) {
     rejectedReviews.push({
       title: candidate.title,
