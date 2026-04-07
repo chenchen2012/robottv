@@ -175,6 +175,39 @@ Automation status
   - `news-studio/scripts/publish-latest-news.mjs` may now publish article-only posts when the source is mainstream and the generated editorial package is strong, even if no acceptable YouTube match exists
   - `news-studio/scripts/check-feed-health.mjs` was updated to allow those source-first posts so scheduled runs do not fail solely because a video is unavailable
   - Sanity schema `news-studio/schemas/post.ts` now treats `youtubeUrl` as optional, and static article rendering was updated so no-video posts present as source-backed briefings rather than broken video pages
+- Apr 7, 2026 auto-post quality Batch 2A:
+  - `news-studio/scripts/lib/news-editorial-content.mjs` now performs factual extraction before article writing
+  - the editorial builder fetches source context, derives a fallback fact package, then attempts a single structured DeepSeek fact+editorial package; deterministic validation remains the final authority
+  - implemented fact package keys:
+    - `main_actor`
+    - `main_action`
+    - `main_object`
+    - `main_number_or_scale`
+    - `best_concrete_fact`
+    - `secondary_fact`
+    - `source_grounded`
+    - `thin_source_risk`
+    - `headline_supported`
+    - `story_format_recommendation`
+  - `publish-latest-news.mjs` no longer mixes model summary with fallback body; it now publishes one coherent selected editorial package (`deepseek` when validated, otherwise safer deterministic fallback)
+  - paragraph 3 is now optional; unsupported generic `Watch for...` lines should be reduced
+  - thin-source items are downgraded through deterministic review gates (`thin_source_requires_review`) instead of being polished into confident hollow copy
+  - no-video Signal Brief policy remains unchanged
+  - targeted refresh path for clearly weak existing posts was added:
+    - script: `news-studio/scripts/refresh-selected-weak-posts.mjs`
+    - allowlist helper: `news-studio/scripts/lib/selected-weak-post-refresh-targets.mjs`
+    - default behavior is dry-run unless `--apply` or `APPLY_CHANGES=1`
+  - initial weak-post refresh allowlist:
+    - `gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal`
+    - `video-friday-digit-learns-to-dancevirtually-overnight`
+    - `every-industrial-company-will-become-a-robotics-company-nvidia-ceo-jensen-huang-says`
+    - `the-future-of-realsense-3d-vision-with-chris-matthieu`
+  - verification checkpoint:
+    - `cd news-studio && npm run test:publish-quality` passed on Apr 7, 2026
+- Apr 7, 2026 homepage no-feature fallback refinement:
+  - `scripts/homepage-news-rules.mjs` now exposes `layoutMode` plus `topBriefs` so the homepage can switch between a true featured layout and a briefs-only layout
+  - when there is no eligible Featured Story, `news.robot.tv` no longer keeps hero proportions; the top section becomes a 4-card briefs-only grid with normal Signal Brief sizing and no empty hero gap
+  - shared build/runtime wiring lives in `news-studio/scripts/build-static-news-seo.mjs` and `news-studio/static/index.html`
 - Mar 28, 2026 cover-image hardening:
   - shared generic fallback cover photos were removed from the public cover-selection path because they were causing duplicate and sometimes irrelevant post covers across `news.robot.tv` and robot.tv news cards
   - `news-studio/scripts/build-static-news-seo.mjs` now computes a final unique cover per slug during each build:
@@ -2777,3 +2810,30 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - it ran commit `805c329`, not yet `fe2bc02`
   - status observed from public page: `Failure`
   - next debugging step in a future session should inspect the authenticated workflow logs for the failing `publish` job and confirm the first scheduled run that executes `fe2bc02`
+
+2026-04-07 Gecko weak-post refresh and deploy
+- Batch 2A newsroom quality pass is now in the local workspace; key behavior changes include fact extraction before writing, deterministic fact-package validation, coherent selected editorial packages, optional paragraph 3, and selected weak-post refresh tooling.
+- For the four initially selected weak posts, only `gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal` was safe to refresh after correcting its source URL from a Google News redirect to the real publisher URL:
+  - `https://www.cnbc.com/2026/03/17/gecko-robotics-navy-contract-ship-repair-trump.html`
+- Applied a Sanity patch only for that Gecko post:
+  - updated `sourceUrl`, `excerpt`, `whyItMatters`, and `body`
+  - final live excerpt starts: `Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time...`
+  - final body is two paragraphs; no generic paragraph 3 remains
+- The other three reviewed weak posts (`video-friday-digit-learns-to-dancevirtually-overnight`, `every-industrial-company-will-become-a-robotics-company-nvidia-ceo-jensen-huang-says`, `the-future-of-realsense-3d-vision-with-chris-matthieu`) were explicitly held and not patched.
+- Fixed a local-only static build entrypoint bug in `news-studio/scripts/build-static-news-seo.mjs` for workspaces whose path contains spaces by comparing `import.meta.url` against `pathToFileURL(process.argv[1]).href`; this mattered for `/Users/cc801/Documents/New project/robottv` but is not required for GitHub-hosted deploys.
+- Triggered `Deploy Public News Site` workflow run `24079249327`; it succeeded in `1m15s` and production now serves the refreshed Gecko article at:
+  - `https://news.robot.tv/gecko-robotics-brings-its-ai-to-us-navy-ship-repair-in-latest-next-gen-defense-tech-deal/`
+- Follow-up newsroom writing refinement on Apr 7, 2026:
+  - added an anti-duplication rule so article paragraph 1 must advance beyond the excerpt/summary lead instead of closely restating it
+  - fallback editorial generation now prefers the next distinct concrete fact or operational detail for paragraph 1 when available
+  - AI editorial packages are now rejected if paragraph 1 mirrors the summary lead too closely; tests were updated and `npm run test:publish-quality` passed
+- Follow-up homepage slot fix on Apr 7, 2026:
+  - `news.robot.tv` hero/lead slot is now reserved strictly for featured-eligible stories
+  - shared selector `selectHomepageStoryLayout()` no longer falls back to the first post when no featured candidate exists
+  - when a cycle has only signal briefs, the homepage now renders a briefs-only top section (`brief-rail`) instead of placing a `Signal Brief` inside the featured hero box
+- Apr 7, 2026 YouTube attachment recall pass:
+  - `news-studio/scripts/lib/youtube-provider.mjs` now builds up to 3 fact-aware YouTube query variants from the title plus fact package (`main_actor`, `main_action`, `main_object`, `best_concrete_fact`) instead of relying on one title-led query
+  - matching now tries relevance-first search, ranks accepted candidates across attempts, and only falls back to a date-ordered search as a final pass
+  - trusted-channel matching now accepts known channels by channel title alias as well as channel id, and `youtube-trusted-channels.mjs` was expanded beyond the previous single-channel allowlist
+  - `buildFallbackQcEnrichment()` now emits a stronger `youtube_search_query` from the fact package when available
+  - verification checkpoint: `cd news-studio && npm run test:publish-quality` passed after the recall changes

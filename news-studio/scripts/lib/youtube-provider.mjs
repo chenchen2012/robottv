@@ -3,11 +3,68 @@ import { extractKeyEntities, normalizeText, normalizeWhitespace, titleSimilarity
 import { TRUSTED_YOUTUBE_CHANNEL_MAP, TRUSTED_YOUTUBE_CHANNELS } from './youtube-trusted-channels.mjs'
 
 const publishedAfterIso = (maxAgeDays) => new Date(Date.now() - maxAgeDays * 24 * 60 * 60 * 1000).toISOString()
+const QUERY_STOPWORDS = new Set(['the', 'a', 'an', 'and', 'for', 'to', 'of', 'in', 'on', 'with', 'after', 'than', 'latest'])
 
-const buildFallbackQuery = ({ title = '', youtubeSearchQuery = '' } = {}) => {
-  const base = normalizeWhitespace(youtubeSearchQuery || title)
-  const entities = [...extractKeyEntities(title)].slice(0, 3)
-  return normalizeWhitespace([base, ...entities].join(' '))
+const clipQuery = (value = '', maxWords = 12) =>
+  normalizeWhitespace(value)
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, maxWords)
+    .join(' ')
+
+const comparableQueryTokens = (value = '') =>
+  normalizeText(value)
+    .split(' ')
+    .filter((token) => token && token.length > 2 && !QUERY_STOPWORDS.has(token))
+
+const uniqueQueryPhrases = (values = []) => {
+  const seen = new Set()
+  const unique = []
+  for (const value of values) {
+    const phrase = clipQuery(value)
+    if (!phrase) continue
+    const key = comparableQueryTokens(phrase).join(' ')
+    if (!key || seen.has(key)) continue
+    seen.add(key)
+    unique.push(phrase)
+  }
+  return unique
+}
+
+const hasRoboticsHint = (value = '') => /\b(robot|robotics|humanoid|automation|factory|warehouse|vision|quadruped)\b/i.test(value)
+
+export const buildYouTubeQueryVariants = ({ story = {}, youtubeSearchQuery = '' }) => {
+  const title = normalizeWhitespace(story?.title || '')
+  const sourceName = normalizeWhitespace(story?.sourceName || '')
+  const factPackage = story?.factPackage || {}
+  const actor = normalizeWhitespace(factPackage?.main_actor || '')
+  const action = normalizeWhitespace(factPackage?.main_action || '')
+  const object = normalizeWhitespace(factPackage?.main_object || '')
+  const concreteFact = normalizeWhitespace(factPackage?.best_concrete_fact || '')
+  const titleEntities = [...extractKeyEntities(title)].slice(0, 3)
+  const objectEntities = [...extractKeyEntities([object, concreteFact].filter(Boolean).join(' '))].slice(0, 3)
+
+  const factFocused = normalizeWhitespace(
+    [actor, object || objectEntities.join(' '), hasRoboticsHint(`${actor} ${object}`) ? '' : 'robotics'].filter(Boolean).join(' ')
+  )
+  const actionFocused = normalizeWhitespace(
+    [actor, action, objectEntities.slice(0, 2).join(' ') || titleEntities.slice(0, 2).join(' '), 'robotics']
+      .filter(Boolean)
+      .join(' ')
+  )
+  const concreteFocused = normalizeWhitespace(
+    [actor, clipQuery(concreteFact, 8), hasRoboticsHint(concreteFact) ? '' : 'robotics'].filter(Boolean).join(' ')
+  )
+  const titleFallback = normalizeWhitespace([youtubeSearchQuery || title, ...titleEntities, sourceName && sourceName !== actor ? sourceName : ''].join(' '))
+
+  return uniqueQueryPhrases([
+    youtubeSearchQuery,
+    factFocused,
+    actionFocused,
+    concreteFocused,
+    titleFallback,
+    title,
+  ]).slice(0, 3)
 }
 
 const fetchJson = async (url) => {
@@ -31,7 +88,7 @@ const fetchText = async (url) => {
   return response.text()
 }
 
-export const searchYouTubeCandidates = async ({ query }) => {
+export const searchYouTubeCandidates = async ({ query, order = 'date', maxResults = YOUTUBE_ENV.maxCandidates }) => {
   if (!YOUTUBE_ENV.apiKey) {
     return { ok: false, reason: 'missing_api_key', items: [] }
   }
@@ -39,8 +96,8 @@ export const searchYouTubeCandidates = async ({ query }) => {
   const url = new URL(YOUTUBE_ENV.apiUrl)
   url.searchParams.set('part', 'snippet')
   url.searchParams.set('type', 'video')
-  url.searchParams.set('maxResults', String(YOUTUBE_ENV.maxCandidates))
-  url.searchParams.set('order', 'date')
+  url.searchParams.set('maxResults', String(maxResults))
+  url.searchParams.set('order', order)
   url.searchParams.set('q', query)
   url.searchParams.set('key', YOUTUBE_ENV.apiKey)
   url.searchParams.set('publishedAfter', publishedAfterIso(YOUTUBE_ENV.maxVideoAgeDays))
@@ -179,13 +236,35 @@ const hasConflictingEntity = (storyEntities, videoTitle) => {
   return importantEntities.some((entity) => normalizedTitle.includes(entity) && !storyEntities.includes(entity))
 }
 
+const buildStoryEntities = ({ story = {}, query = '' }) => {
+  const factPackage = story?.factPackage || {}
+  return [
+    ...new Set([
+      ...extractKeyEntities(story?.title || ''),
+      ...extractKeyEntities([factPackage?.main_actor, factPackage?.main_object, factPackage?.best_concrete_fact].filter(Boolean).join(' ')),
+      ...extractKeyEntities(query),
+    ]),
+  ]
+}
+
+const acceptedCandidateScore = ({ evaluation, queryIndex = 0, searchOrder = 'relevance' }) => {
+  const publishedMs = new Date(evaluation?.publishedAt || 0).getTime()
+  const ageDays = publishedMs && !Number.isNaN(publishedMs) ? Math.max(0, (Date.now() - publishedMs) / (24 * 60 * 60 * 1000)) : 365
+  const freshnessBonus = Math.max(0, 18 - ageDays)
+  const overlapScore = Number(evaluation?.overlap || 0) * 100
+  const entityScore = Number(evaluation?.entityHits || 0) * 22
+  const queryBonus = Math.max(0, 8 - queryIndex * 3)
+  const searchModeBonus = searchOrder === 'relevance' ? 6 : 0
+  return overlapScore + entityScore + freshnessBonus + queryBonus + searchModeBonus
+}
+
 export const evaluateYouTubeCandidate = ({ story, query, candidate }) => {
   const channelId = String(candidate?.snippet?.channelId || '').trim()
   const channelTitle = String(candidate?.snippet?.channelTitle || '').trim()
   const videoId = String(candidate?.id?.videoId || '').trim()
   const videoTitle = String(candidate?.snippet?.title || '').trim()
   const publishedAt = String(candidate?.snippet?.publishedAt || '').trim()
-  const trustedChannel = TRUSTED_YOUTUBE_CHANNEL_MAP.get(channelId) || null
+  const trustedChannel = TRUSTED_YOUTUBE_CHANNEL_MAP.get(channelId) || findTrustedChannelByTitle(channelTitle) || null
 
   if (!videoId || !videoTitle) {
     return { accepted: false, reason: 'missing_video_fields' }
@@ -201,7 +280,7 @@ export const evaluateYouTubeCandidate = ({ story, query, candidate }) => {
   }
 
   const storyTitle = String(story?.title || '')
-  const storyEntities = [...extractKeyEntities(storyTitle)]
+  const storyEntities = buildStoryEntities({ story, query })
   const overlap = Math.max(titleSimilarity(storyTitle, videoTitle), titleSimilarity(query, videoTitle))
   const entityHits = countEntityHits(storyEntities, videoTitle)
 
@@ -230,40 +309,100 @@ export const evaluateYouTubeCandidate = ({ story, query, candidate }) => {
 }
 
 export const matchYouTubeVideo = async ({ story, youtubeSearchQuery = '' }) => {
-  const query = buildFallbackQuery({ title: story?.title, youtubeSearchQuery })
-  if (!query) {
-    return { attached: false, reason: 'empty_query', query: '', match: null }
+  const queries = buildYouTubeQueryVariants({ story, youtubeSearchQuery })
+  if (!queries.length) {
+    return { attached: false, reason: 'empty_query', query: '', attemptedQueries: [], match: null }
   }
 
-  let search = await searchYouTubeCandidates({ query })
-  let searchMode = 'api'
+  const attempts = []
+  const acceptedMatches = []
 
-  if (!search.ok && YOUTUBE_ENV.enableScrapeFallback) {
-    const scrapeSearch = await searchYouTubeCandidatesByScrape({ query })
-    if (scrapeSearch.ok) {
-      search = scrapeSearch
-      searchMode = 'scrape'
-    } else {
-      return {
-        attached: false,
-        reason: `${search.reason || 'api_failed'}_and_${scrapeSearch.reason || 'scrape_failed'}`,
-        query,
-        match: null,
+  const runSearchAttempt = async ({ query, queryIndex, order, maxResults }) => {
+    let search = await searchYouTubeCandidates({ query, order, maxResults })
+    let searchMode = 'api'
+    if (!search.ok && YOUTUBE_ENV.enableScrapeFallback) {
+      const scrapeSearch = await searchYouTubeCandidatesByScrape({ query })
+      if (scrapeSearch.ok) {
+        search = scrapeSearch
+        searchMode = 'scrape'
+      } else {
+        attempts.push({
+          query,
+          order,
+          mode: 'error',
+          reason: `${search.reason || 'api_failed'}_and_${scrapeSearch.reason || 'scrape_failed'}`,
+        })
+        return
       }
     }
+
+    if (!search.ok) {
+      attempts.push({ query, order, mode: 'error', reason: search.reason || 'provider_failed' })
+      return
+    }
+
+    let acceptedCount = 0
+    for (const item of search.items) {
+      const evaluation = evaluateYouTubeCandidate({ story, query, candidate: item })
+      if (!evaluation.accepted) continue
+      acceptedCount += 1
+      acceptedMatches.push({
+        ...evaluation,
+        query,
+        queryIndex,
+        searchMode,
+        searchOrder: order,
+        score: acceptedCandidateScore({ evaluation, queryIndex, searchOrder: order }),
+      })
+    }
+
+    attempts.push({
+      query,
+      order,
+      mode: searchMode,
+      reason: acceptedCount ? 'accepted_candidates_found' : search.items.length ? 'no_safe_match' : 'no_candidates',
+      candidateCount: search.items.length,
+      acceptedCount,
+    })
   }
 
-  if (!search.ok) {
-    return { attached: false, reason: search.reason, query, match: null }
+  for (const [queryIndex, query] of queries.entries()) {
+    await runSearchAttempt({
+      query,
+      queryIndex,
+      order: 'relevance',
+      maxResults: Math.max(YOUTUBE_ENV.maxCandidates, 8),
+    })
+    if (acceptedMatches.length) break
   }
 
-  for (const item of search.items) {
-    const evaluation = evaluateYouTubeCandidate({ story, query, candidate: item })
-    if (evaluation.accepted) {
-      return { attached: true, reason: `${evaluation.reason}_${searchMode}`, query, match: evaluation }
+  if (!acceptedMatches.length && queries[0]) {
+    await runSearchAttempt({
+      query: queries[0],
+      queryIndex: 0,
+      order: 'date',
+      maxResults: Math.max(YOUTUBE_ENV.maxCandidates, 6),
+    })
+  }
+
+  if (acceptedMatches.length) {
+    acceptedMatches.sort((left, right) => right.score - left.score)
+    const best = acceptedMatches[0]
+    return {
+      attached: true,
+      reason: `${best.reason}_${best.searchMode}_${best.searchOrder}`,
+      query: best.query,
+      attemptedQueries: attempts,
+      match: best,
     }
   }
 
-  const fallbackReason = search.items.length ? 'no_safe_match' : 'no_candidates'
-  return { attached: false, reason: `${fallbackReason}_${searchMode}`, query, match: null }
+  const lastAttempt = attempts[attempts.length - 1] || null
+  return {
+    attached: false,
+    reason: lastAttempt ? `${lastAttempt.reason}_${lastAttempt.mode}_${lastAttempt.order}` : 'no_candidates',
+    query: queries[0] || '',
+    attemptedQueries: attempts,
+    match: null,
+  }
 }

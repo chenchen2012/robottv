@@ -442,6 +442,21 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   })
   const abstraction = abstractnessScore({ summary, whyItMatters, bodyParagraphs: editorial?.bodyParagraphs || [] })
   const repetition = repetitionScore({ summary, whyItMatters, bodyParagraphs: editorial?.bodyParagraphs || [] })
+  const actor = normalizeWhitespace(factPackage?.main_actor || '')
+  const action = normalizeWhitespace(factPackage?.main_action || '')
+  const object = normalizeWhitespace(factPackage?.main_object || '')
+  const factEntities = [...extractKeyEntities([object, factPackage?.best_concrete_fact || ''].filter(Boolean).join(' '))].slice(0, 2)
+  const youtubeSearchQuery =
+    normalizeWhitespace(
+      [
+        actor,
+        object || factEntities.join(' '),
+        action && !object ? action : '',
+        /(robot|robotics|humanoid|automation|factory|warehouse|vision)/i.test(`${actor} ${object}`) ? '' : 'robotics',
+      ]
+        .filter(Boolean)
+        .join(' ')
+    ) || normalizeWhitespace(`${candidate?.title || ''} ${candidate?.sourceName || ''} robotics`)
   const publishRecommendation =
     !isValidSourceUrl(candidate?.sourceUrl) || !sourceGrounded
       ? 'reject'
@@ -471,7 +486,7 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
     reject_reason: '',
     draft_reason: publishRecommendation === 'draft_only' ? 'needs_editorial_review' : '',
     internal_link_target: validateInternalLinkTarget(internalLinkTarget) ? internalLinkTarget : '',
-    youtube_search_query: normalizeWhitespace(`${candidate?.title || ''} ${candidate?.sourceName || ''} robotics`),
+    youtube_search_query: youtubeSearchQuery,
   }
 }
 

@@ -550,6 +550,7 @@ for (const candidate of candidatePool) {
       title: doc.title,
       sourceName: doc.sourceName,
       sourcePublishedAt,
+      factPackage: editorial.factPackage || null,
     },
     youtubeSearchQuery: enrichment.youtube_search_query || '',
   })

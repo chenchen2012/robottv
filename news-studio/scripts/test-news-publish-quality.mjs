@@ -17,7 +17,7 @@ import {
   validateFactPackage,
   validateQcEnrichment,
 } from './lib/news-publish-quality.mjs'
-import { evaluateYouTubeCandidate, matchYouTubeVideo } from './lib/youtube-provider.mjs'
+import { buildYouTubeQueryVariants, evaluateYouTubeCandidate, matchYouTubeVideo } from './lib/youtube-provider.mjs'
 import { TRUSTED_YOUTUBE_CHANNELS } from './lib/youtube-trusted-channels.mjs'
 
 const now = new Date().toISOString()
@@ -284,6 +284,22 @@ const dailyCapRemaining = Math.max(0, 8 - 8)
 assert.equal(dailyCapRemaining, 0)
 
 const trustedChannelId = TRUSTED_YOUTUBE_CHANNELS[0].channelId
+const factAwareQueries = buildYouTubeQueryVariants({
+  story: {
+    title: 'Gecko Robotics brings its AI to U.S. Navy ship repair',
+    sourceName: 'CNBC',
+    factPackage: {
+      main_actor: 'Gecko Robotics',
+      main_action: 'announced',
+      main_object: 'U.S. Navy ship repair robots',
+      best_concrete_fact: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    },
+  },
+  youtubeSearchQuery: 'Gecko Robotics U.S. Navy ship repair robots',
+})
+assert.equal(factAwareQueries.length >= 2, true)
+assert.match(factAwareQueries[0], /Gecko Robotics/i)
+assert.equal(factAwareQueries.some((query) => /Navy|ship repair/i.test(query)), true)
 
 const trustedVideo = evaluateYouTubeCandidate({
   story: { title: 'Humanoid robots join a factory workforce at Figure' },
@@ -299,6 +315,27 @@ const trustedVideo = evaluateYouTubeCandidate({
   },
 })
 assert.equal(trustedVideo.accepted, true)
+
+const trustedByTitleVideo = evaluateYouTubeCandidate({
+  story: {
+    title: 'Gecko Robotics brings its AI to U.S. Navy ship repair',
+    factPackage: {
+      main_actor: 'Gecko Robotics',
+      main_object: 'U.S. Navy ship repair',
+    },
+  },
+  query: 'Gecko Robotics U.S. Navy ship repair robots',
+  candidate: {
+    id: { videoId: 'navy123def45' },
+    snippet: {
+      channelId: 'UNKNOWN_CHANNEL',
+      channelTitle: 'CNBC Television',
+      title: 'Gecko Robotics lands U.S. Navy ship repair contract',
+      publishedAt: new Date().toISOString(),
+    },
+  },
+})
+assert.equal(trustedByTitleVideo.accepted, true)
 
 const untrustedVideo = evaluateYouTubeCandidate({
   story: { title: 'Humanoid robots join a factory workforce at Figure' },
@@ -400,7 +437,99 @@ const scrapeFallbackMatch = await matchYouTubeVideo({
 })
 assert.equal(scrapeFallbackMatch.attached, true)
 assert.equal(scrapeFallbackMatch.match?.channelTitle, 'The Wall Street Journal')
-assert.match(scrapeFallbackMatch.reason, /_scrape$/)
+assert.match(scrapeFallbackMatch.reason, /_scrape_/)
+
+global.fetch = originalFetch
+
+global.fetch = async (url) => {
+  const target = String(url || '')
+  if (target.includes('googleapis.com/youtube/v3/search')) {
+    const parsed = new URL(target)
+    const q = (parsed.searchParams.get('q') || '').toLowerCase()
+    if (q.includes('gecko robotics') && q.includes('navy') && q.includes('robots')) {
+      return {
+        ok: true,
+        json: async () => ({
+          items: [],
+        }),
+      }
+    }
+    if (q.includes('gecko robotics') && q.includes('navy')) {
+      return {
+        ok: true,
+        json: async () => ({
+          items: [
+            {
+              id: { videoId: 'gecko1234567' },
+              snippet: {
+                channelId: 'UNKNOWN_CHANNEL',
+                channelTitle: 'CNBC Television',
+                title: 'Gecko Robotics wins U.S. Navy ship repair contract',
+                publishedAt: new Date().toISOString(),
+              },
+            },
+          ],
+        }),
+      }
+    }
+    return {
+      ok: true,
+      json: async () => ({ items: [] }),
+    }
+  }
+  if (target.includes('youtube.com/results?search_query=')) {
+    const scrapedGeckoData = JSON.stringify({
+      contents: {
+        twoColumnSearchResultsRenderer: {
+          primaryContents: {
+            sectionListRenderer: {
+              contents: [
+                {
+                  itemSectionRenderer: {
+                    contents: [
+                      {
+                        videoRenderer: {
+                          videoId: 'gecko1234567',
+                          title: { runs: [{ text: 'Gecko Robotics wins U.S. Navy ship repair contract' }] },
+                          ownerText: { runs: [{ text: 'CNBC Television' }] },
+                          publishedTimeText: { simpleText: '1 day ago' },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    })
+    return {
+      ok: true,
+      text: async () => `<script>var ytInitialData = ${scrapedGeckoData};</script>`,
+    }
+  }
+  return originalFetch(url)
+}
+
+const secondQueryMatch = await matchYouTubeVideo({
+  story: {
+    title: 'Gecko Robotics brings its AI to U.S. Navy ship repair',
+    sourceName: 'CNBC',
+    factPackage: {
+      main_actor: 'Gecko Robotics',
+      main_action: 'announced',
+      main_object: 'U.S. Navy ship repair',
+      best_concrete_fact: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    },
+  },
+  youtubeSearchQuery: 'Gecko Robotics U.S. Navy ship repair robots',
+})
+assert.equal(secondQueryMatch.attached, true)
+assert.equal(secondQueryMatch.match?.channelTitle, 'CNBC Television')
+assert.equal(Array.isArray(secondQueryMatch.attemptedQueries), true)
+assert.equal(secondQueryMatch.attemptedQueries.length >= 1, true)
+assert.match(secondQueryMatch.query, /Gecko Robotics/i)
 
 global.fetch = originalFetch
 
