@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import {
   editorialPinnedPosts,
   homepageEditorialPinnedPosts,
@@ -1857,12 +1858,8 @@ const trimHomepageRestPosts = (posts, { columns = HOMEPAGE_REST_GRID_COLUMNS } =
 const buildHomepageStaticMarkup = (posts) => {
   const listingPosts = getHomepageListingPosts(posts);
   const pagePosts = listingPosts.slice(0, HOMEPAGE_PAGE_SIZE);
-  const { lead, leadKind, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts, { railBriefSlots: 2 });
-  const leadHtml = lead
-    ? leadKind === "lead-brief"
-      ? renderStaticSignalStory(lead, { featured: true })
-      : renderStaticVisualStory(lead, { featured: true })
-    : "";
+  const { lead, railBriefs, remainder } = selectHomepageStoryLayout(pagePosts, { railBriefSlots: 2 });
+  const leadHtml = lead ? renderStaticVisualStory(lead, { featured: true }) : "";
   const railHtml = railBriefs.length
     ? `        <div class="brief-rail">
 ${railBriefs.map((post) => renderStaticSignalStory(post)).join("\n")}
@@ -2057,7 +2054,7 @@ const main = async () => {
   console.log(`Generated ${posts.length} static post pages plus sitemap.xml and feed.xml`);
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((error) => {
     console.error(error);
     process.exit(1);

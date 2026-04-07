@@ -261,14 +261,10 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3 } = {}) =>
     .filter((entry) => entry.classification.kind === "signal-brief")
     .sort(byPublishedAtDesc)
 
-  const leadEntry = featureEntries[0] || classifications[0] || null
+  const leadEntry = featureEntries[0] || null
 
   const lead = leadEntry?.post || null
-  const leadKind = leadEntry
-    ? leadEntry.classification.kind === "signal-brief"
-      ? "lead-brief"
-      : "featured"
-    : "featured"
+  const leadKind = "featured"
 
   const leadSlug = normalizeHomepageSlug(lead?.slug)
   const remainingFeatures = featureEntries
