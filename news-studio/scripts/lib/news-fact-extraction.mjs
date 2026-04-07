@@ -84,7 +84,7 @@ const firstSourceSentence = ({ headline, sourceContext }) => {
   if (factSentence) return factSentence
   return (
     sourceSentences(sourceContext).find((sentence) => !leadStartsWithImplication(sentence)) ||
-    safeSentence(sourceContext.pageTitle || headline || '', 180)
+    safeSentence(sourceContext.pageTitle || '', 180)
   )
 }
 
@@ -127,9 +127,9 @@ const deriveMainObject = (value = '', fallbackHeadline = '') => {
 }
 
 export const buildDeterministicFactDraft = ({ headline, sourceContext }) => {
-  const bestConcreteFact = safeSentence(firstFactSentence({ headline, sourceContext }) || firstSourceSentence({ headline, sourceContext }), 220)
+  const bestConcreteFact = safeSentence(firstFactSentence({ headline, sourceContext }) || '', 220)
   const secondaryFact = safeSentence(
-    supportSentence({ headline, sourceContext, exclude: bestConcreteFact }) || sourceContext.paragraphs?.[1] || '',
+    supportSentence({ headline, sourceContext, exclude: bestConcreteFact }) || firstSourceSentence({ headline, sourceContext }) || sourceContext.paragraphs?.[1] || '',
     220
   )
   const sourceGrounded = hasUsableSourceContext(sourceContext)

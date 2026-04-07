@@ -9,6 +9,7 @@ import {
   hasConcreteFact,
   headlineSupportedByBody,
   leadStartsWithImplication,
+  paragraphAnchoredToFactPackage,
   paragraphAdvancesSummary,
   titleSimilarity,
   validateFactPackage,
@@ -201,9 +202,16 @@ const significanceLine = ({ headline, source, sourceContext, factPackage }) => {
   const theme = themeFromHeadline(headline)
   const actor = factPackage?.main_actor || sourceReference(source)
   const object = factPackage?.main_object || 'this reported move'
+  const scale = factPackage?.main_number_or_scale || ''
   if (factPackage?.secondary_fact) {
     return safeSentence(
       `${factPackage.secondary_fact} This matters because ${actor} is now tying ${object.toLowerCase()} to a more operational robotics outcome.`,
+      220
+    )
+  }
+  if (factPackage?.best_concrete_fact) {
+    return safeSentence(
+      `${actor} is now tying ${object.toLowerCase()}${scale ? ` at ${scale}` : ''} to a concrete robotics outcome rather than a general market narrative.`,
       220
     )
   }
@@ -400,6 +408,7 @@ const normalizeAiEditorialPackage = (value, { title = '', fallbackPackage = null
   if (!bodyParagraphs[0] || leadStartsWithImplication(bodyParagraphs[0]) || !hasConcreteFact(bodyParagraphs[0], { title })) return null
   if (!paragraphAdvancesSummary({ summary, paragraph: bodyParagraphs[0] })) return null
   if (!whyItMatters || whyItMatters.length < 50 || countWords(whyItMatters) < 8) return null
+  if (!paragraphAnchoredToFactPackage({ paragraph: bodyParagraphs[1] || '', factPackage: validatedFacts.data, title })) return null
   if (bodyParagraphs.length === 3 && !paragraph3Useful) return null
   if (bodyParagraphs.length === 2 && paragraph3Useful) return null
   if (

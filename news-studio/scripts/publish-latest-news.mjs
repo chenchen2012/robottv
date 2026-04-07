@@ -25,6 +25,7 @@ import {
   normalizeText,
   normalizeUrl,
   normalizeWhitespace,
+  paragraphAnchoredToFactPackage,
   rankCandidate,
   repetitionScore,
   slugify,
@@ -277,6 +278,13 @@ const acceptedReviews = []
 const draftOnlyReviews = []
 const rejectedReviews = []
 const acceptedForDupChecks = [...existingPosts]
+const factLayerSummary = {
+  evaluated: 0,
+  grounded: 0,
+  thinHigh: 0,
+  viableForWriting: 0,
+  deepseekEligible: 0,
+}
 
 const hasUsableSourceContext = (editorial) =>
   Boolean(
@@ -290,6 +298,7 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
   const rejectReasons = []
   const draftReasons = []
   const factPackage = editorial?.factPackage || null
+  const factDiagnostics = editorial?.factDiagnostics || null
 
   if (!isValidSourceUrl(candidate?.sourceUrl)) {
     rejectReasons.push('missing_or_invalid_source_url')
@@ -333,6 +342,12 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
 
   if (factPackage?.thin_source_risk === 'high') {
     draftReasons.push('thin_source_requires_review')
+  }
+  if (factDiagnostics && !factDiagnostics.viable_for_writing) {
+    draftReasons.push('deterministic_fact_layer_failed')
+  }
+  if (bodyParagraphs[1] && !paragraphAnchoredToFactPackage({ paragraph: bodyParagraphs[1], factPackage, title: candidate?.title })) {
+    draftReasons.push('paragraph_two_not_fact_anchored')
   }
 
   const abstraction = Math.max(
@@ -483,6 +498,11 @@ for (const candidate of candidatePool) {
 
   const factDiagnostics = editorial?.factDiagnostics || null
   if (factDiagnostics) {
+    factLayerSummary.evaluated += 1
+    if (factDiagnostics.source_grounded) factLayerSummary.grounded += 1
+    if (factDiagnostics.thin_source_risk === 'high') factLayerSummary.thinHigh += 1
+    if (factDiagnostics.viable_for_writing) factLayerSummary.viableForWriting += 1
+    if (factDiagnostics.viable_for_deepseek_refinement) factLayerSummary.deepseekEligible += 1
     console.log(
       `Fact layer for "${candidate.title}": ` +
         `grounded=${factDiagnostics.source_grounded ? 'yes' : 'no'}, ` +
@@ -646,6 +666,11 @@ for (const candidate of candidatePool) {
 
 if (!docs.length) {
   await writePublishReport()
+  if (factLayerSummary.evaluated) {
+    console.log(
+      `Fact layer summary: evaluated=${factLayerSummary.evaluated}, grounded=${factLayerSummary.grounded}, thin_high=${factLayerSummary.thinHigh}, write_ready=${factLayerSummary.viableForWriting}, deepseek_ready=${factLayerSummary.deepseekEligible}`
+    )
+  }
   console.log('Quality-control layer did not auto-publish any candidates. No-op for this cycle.')
   if (draftOnlyReviews.length) {
     console.log(`Draft-only review queue: ${draftOnlyReviews.length}`)
@@ -657,6 +682,11 @@ if (!docs.length) {
 }
 
 if (dryRun) {
+  if (factLayerSummary.evaluated) {
+    console.log(
+      `Fact layer summary: evaluated=${factLayerSummary.evaluated}, grounded=${factLayerSummary.grounded}, thin_high=${factLayerSummary.thinHigh}, write_ready=${factLayerSummary.viableForWriting}, deepseek_ready=${factLayerSummary.deepseekEligible}`
+    )
+  }
   console.log('Dry run selected docs:')
   docs.forEach((doc) => console.log(`- ${doc._id} | ${doc.title}`))
   process.exit(0)
@@ -686,6 +716,11 @@ await writePublishReport()
 
 console.log('Created docs:', docs.map((doc) => doc._id).join(', '))
 console.log(`Published: ${docs.length}`)
+if (factLayerSummary.evaluated) {
+  console.log(
+    `Fact layer summary: evaluated=${factLayerSummary.evaluated}, grounded=${factLayerSummary.grounded}, thin_high=${factLayerSummary.thinHigh}, write_ready=${factLayerSummary.viableForWriting}, deepseek_ready=${factLayerSummary.deepseekEligible}`
+  )
+}
 if (result?.results) {
   console.log('Mutation results:', result.results.length)
 }

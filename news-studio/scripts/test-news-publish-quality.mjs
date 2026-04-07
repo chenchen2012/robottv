@@ -7,6 +7,7 @@ import { extractFactLayer } from './lib/news-fact-extraction.mjs'
 import {
   extractConcreteFactExcerpt,
   buildFallbackQcEnrichment,
+  factLooksLikeHeadlineEcho,
   findHardDuplicate,
   findSoftDuplicate,
   getSourceTrustTier,
@@ -14,6 +15,7 @@ import {
   isValidSourceUrl,
   leadStartsWithImplication,
   isPromotionalLikely,
+  paragraphAnchoredToFactPackage,
   paragraphAdvancesSummary,
   validateFactPackage,
   validateQcEnrichment,
@@ -86,6 +88,37 @@ assert.equal(
   }),
   true
 )
+assert.equal(
+  factLooksLikeHeadlineEcho({
+    fact: 'Cerebras Backer Eclipse Raises $1.3 Billion for Robotics, AI Infrastructure',
+    title: 'Cerebras Backer Eclipse Raises $1.3 Billion for Robotics, AI Infrastructure',
+  }),
+  true
+)
+assert.equal(
+  paragraphAnchoredToFactPackage({
+    paragraph: 'Gecko is tying U.S. Navy ship repair to a faster maintenance workflow.',
+    factPackage: {
+      main_actor: 'Gecko Robotics',
+      main_object: 'U.S. Navy ship repair',
+      best_concrete_fact: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    },
+    title: 'Gecko Robotics brings its AI to U.S. Navy ship repair',
+  }),
+  true
+)
+assert.equal(
+  paragraphAnchoredToFactPackage({
+    paragraph: 'That matters because robotics markets are moving from hype to execution.',
+    factPackage: {
+      main_actor: 'Gecko Robotics',
+      main_object: 'U.S. Navy ship repair',
+      best_concrete_fact: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    },
+    title: 'Gecko Robotics brings its AI to U.S. Navy ship repair',
+  }),
+  false
+)
 
 const deterministicFactLayer = extractFactLayer({
   headline: 'Generalist introduces GEN-1 general-purpose model for physical AI',
@@ -115,6 +148,8 @@ const thinFactLayer = extractFactLayer({
   },
 })
 assert.equal(thinFactLayer.diagnostics.viable_for_deepseek_refinement, false)
+assert.equal(thinFactLayer.diagnostics.viable_for_writing, false)
+assert.equal(thinFactLayer.validation.ok, false)
 
 const baseFetch = global.fetch
 global.fetch = async (url) => {
@@ -268,7 +303,7 @@ const fallback = buildFallbackQcEnrichment({
 const validatedFallback = validateQcEnrichment(fallback)
 assert.equal(validatedFallback.ok, true)
 assert.equal(validatedFallback.data.story_format, 'signal_brief')
-assert.equal(validatedFallback.data.publish_recommendation, 'auto_publish')
+assert.equal(validatedFallback.data.publish_recommendation, 'draft_only')
 
 global.fetch = async () => ({
   ok: true,

@@ -2847,3 +2847,8 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - DeepSeek is now gated by deterministic fact viability (`viable_for_deepseek_refinement`) instead of being attempted whenever source context exists
   - `publish-latest-news.mjs` review payloads now include `factDiagnostics`
   - regression tests now directly cover deterministic fact extraction viability in `scripts/test-news-publish-quality.mjs`
+- Apr 7, 2026 content-quality hardening follow-up:
+  - deterministic fact extraction no longer treats a headline echo as a valid `best_concrete_fact` when source grounding is weak
+  - `news-fact-extraction.mjs` now prefers real extracted fact sentences and stops falling back to the headline as the main fact
+  - paragraph 2 is now required to stay anchored to the selected fact package; unanchored generic “this matters because...” language is downgraded to review
+  - `publish-latest-news.mjs` now prints per-candidate fact diagnostics plus aggregate fact-layer summary counts (`evaluated`, `grounded`, `thin_high`, `write_ready`, `deepseek_ready`) during dry runs and publish runs

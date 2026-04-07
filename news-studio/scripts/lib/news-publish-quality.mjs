@@ -222,6 +222,35 @@ export const extractMainNumberOrScale = (value = '') => {
   return normalizeWhitespace(match?.[1] || '')
 }
 
+export const factLooksLikeHeadlineEcho = ({ fact = '', title = '' } = {}) => {
+  const normalizedFact = normalizeText(fact)
+  const normalizedTitle = normalizeText(title)
+  if (!normalizedFact || !normalizedTitle) return false
+  if (normalizedFact === normalizedTitle) return true
+  const similarity = titleSimilarity(fact, title)
+  const factTokens = comparableTokens(fact)
+  const titleTokens = comparableTokens(title)
+  return similarity >= 0.9 && Math.abs(factTokens.length - titleTokens.length) <= 2
+}
+
+export const paragraphAnchoredToFactPackage = ({ paragraph = '', factPackage = {}, title = '' } = {}) => {
+  const text = normalizeWhitespace(paragraph)
+  if (!text) return false
+  const normalized = normalizeText(text)
+  const anchors = [
+    factPackage?.main_actor || '',
+    factPackage?.main_object || '',
+    factPackage?.main_number_or_scale || '',
+  ]
+    .map((value) => normalizeText(value))
+    .filter(Boolean)
+
+  if (anchors.some((anchor) => normalized.includes(anchor))) return true
+  if (factPackage?.secondary_fact && titleSimilarity(text, factPackage.secondary_fact) >= 0.16) return true
+  if (factPackage?.best_concrete_fact && titleSimilarity(text, factPackage.best_concrete_fact) >= 0.16) return true
+  return hasConcreteFact(text, { title })
+}
+
 export const leadStartsWithImplication = (value = '') => {
   const text = normalizeWhitespace(value)
   if (!text) return false
@@ -250,6 +279,9 @@ export const validateFactPackage = (value, { title = '' } = {}) => {
 
   if (!normalized.best_concrete_fact || !hasConcreteFact(normalized.best_concrete_fact, { title })) {
     return { ok: false, reason: 'invalid_best_concrete_fact', data: null }
+  }
+  if (!normalized.source_grounded && factLooksLikeHeadlineEcho({ fact: normalized.best_concrete_fact, title })) {
+    return { ok: false, reason: 'headline_echo_best_concrete_fact', data: null }
   }
 
   if (normalized.secondary_fact && !hasConcreteFact(normalized.secondary_fact, { title })) {
@@ -460,7 +492,13 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   const publishRecommendation =
     !isValidSourceUrl(candidate?.sourceUrl) || !sourceGrounded
       ? 'reject'
-      : factPackage?.thin_source_risk === 'high' || !concreteFactPresent || !leadWithConcreteFact || !headlineSupported || abstraction >= 4 || repetition >= 4
+      : factPackage?.thin_source_risk === 'high' ||
+          !concreteFactPresent ||
+          !leadWithConcreteFact ||
+          !headlineSupported ||
+          abstraction >= 4 ||
+          repetition >= 4 ||
+          !paragraphAnchoredToFactPackage({ paragraph: editorial?.bodyParagraphs?.[1] || '', factPackage, title: candidate?.title })
         ? 'draft_only'
         : 'auto_publish'
 
