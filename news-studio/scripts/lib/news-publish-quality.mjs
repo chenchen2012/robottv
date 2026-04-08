@@ -66,8 +66,10 @@ const AUDIENCE_RELEVANCE_PATTERNS = {
   investor: /\b(funding|raised?|valuation|revenue|orders?|backlog|market|commercial|contract|customer|margin|capex|roi)\b/i,
   operator: /\b(factory|plant|warehouse|hospital|site|fleet|inspection|maintenance|manufacturing|workflow|uptime|throughput|safety|labor|deployment)\b/i,
 }
+const EXPLICIT_VISUAL_EVIDENCE_PATTERNS =
+  /\b(video|watch|demo|demonstration|footage|clip|showcase|shown|shows)\b/i
 const VISUAL_STANDOUT_PATTERNS =
-  /\b(video|watch|demo|demonstration|footage|clip|showcase|walks?|running|working|test|tested|prototype|humanoid|quadruped|robot dog|drone|delivery bot|robot hand|gripper)\b/i
+  /\b(video|watch|demo|demonstration|footage|clip|showcase|shown|shows|humanoid|quadruped|robot dog|drone|delivery bot|robot hand|gripper)\b/i
 const HEADLINE_OVERPROMISE_PATTERNS = /\b(world['’]s first|revolutionary|game[- ]changing|breakthrough|guarantees?)\b/i
 const VISUAL_STORY_FORMATS = new Set(['featured_candidate'])
 
@@ -499,6 +501,9 @@ export const visualStandoutScore = ({
 } = {}) => {
   const combined = normalizeWhitespace([title, summary, whyItMatters, ...(Array.isArray(bodyParagraphs) ? bodyParagraphs : [])].join(' '))
   const visualSupport = hasStrongVisualSupport({ youtubeUrl, sourceImageUrl, sourceContext, visualStrengthScore })
+  const hasVideoSupport = Boolean(String(youtubeUrl || '').trim())
+  const explicitVisualEvidence = EXPLICIT_VISUAL_EVIDENCE_PATTERNS.test(combined)
+  const qualifiesAsVisualEvidence = hasVideoSupport || (visualSupport && explicitVisualEvidence)
   let score = 1
 
   if (visualSupport) score += 2
@@ -508,7 +513,7 @@ export const visualStandoutScore = ({
   if (STRATEGY_ONLY_TITLE_PATTERNS.some((pattern) => pattern.test(title)) && !VISUAL_STANDOUT_PATTERNS.test(combined)) score -= 2
 
   const bounded = Math.max(1, Math.min(5, score))
-  return visualSupport ? bounded : Math.min(3, bounded)
+  return qualifiesAsVisualEvidence ? bounded : Math.min(3, bounded)
 }
 
 export const hasStrongVisualSupport = ({ youtubeUrl = '', sourceImageUrl = '', sourceContext = null, visualStrengthScore = 0 } = {}) =>

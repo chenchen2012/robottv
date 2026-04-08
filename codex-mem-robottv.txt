@@ -2891,3 +2891,12 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
     - high-information signal briefs
     - specific visual standout stories
   - regression coverage in `scripts/test-news-publish-quality.mjs` passed after this balancing pass
+- Apr 9, 2026 visual-standout threshold tightening:
+  - first pass was too permissive because generic source images plus words like `running` could make non-visual stories look like `visual_standout`
+  - tightened both newsroom and homepage logic so `visual_standout` now requires:
+    - a real playable video, or
+    - image support plus explicit visual-evidence language such as `watch`, `video`, `footage`, `demo`, `clip`, or `showcase`
+  - image-only stories without explicit visual evidence now stay `signal_brief`
+  - verified with `npm run test:publish-quality` plus a local homepage classification spot-check:
+    - image-only deployment story => `signal-brief`
+    - image-backed `Watch ... footage ...` story => `featured`

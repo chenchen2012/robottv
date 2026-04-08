@@ -129,7 +129,7 @@ const homepageSpecificProductPattern =
   /\b(robot|robots|humanoid|quadruped|drone|uav|ugv|cobot|robot dog|robot hand|gripper|delivery bot|inspection system|platform|model)\b/i
 
 const homepageVisualAppealPattern =
-  /\b(video|watch|demo|demonstration|footage|clip|showcase|walks?|running|working|test|tested|prototype)\b/i
+  /\b(video|watch|demo|demonstration|footage|clip|showcase|shown|shows)\b/i
 
 const hoursSincePublished = (post) => {
   const publishedAt = new Date(post?.publishedAt || 0).getTime()
@@ -183,6 +183,10 @@ export const getHomepageVisualStandoutScore = (post) => {
   const title = String(post?.title || "")
   const excerpt = String(post?.excerpt || "")
   const combined = `${title} ${excerpt}`
+  const hasPlayableVideo = hasHomepagePlayableVideo(post)
+  const hasImageSupport = hasHomepageImageSupport(post)
+  const explicitVisualEvidence = homepageVisualAppealPattern.test(combined)
+  const qualifiesAsVisualEvidence = hasPlayableVideo || (hasImageSupport && explicitVisualEvidence)
   let score = 1
 
   if (hasHomepageStrongVisualSupport(post)) score += 2
@@ -190,7 +194,8 @@ export const getHomepageVisualStandoutScore = (post) => {
   if (homepageVisualAppealPattern.test(combined)) score += 1
   if (homepageConcreteFactPattern.test(combined)) score += 1
 
-  return Math.max(1, Math.min(5, score))
+  const bounded = Math.max(1, Math.min(5, score))
+  return qualifiesAsVisualEvidence ? bounded : Math.min(3, bounded)
 }
 
 export const isHomepageVisualFeatureCandidate = (post) =>
@@ -218,7 +223,7 @@ export const classifyHomepageStory = (post) => {
   if (
     homepageVisualFeaturePreferredSlugs.has(slug) ||
     (hasPlayableVideo && (editorialScore >= 3 || visualStandoutScore >= 3)) ||
-    (hasImageSupport && visualStandoutScore >= 4)
+    (hasImageSupport && homepageVisualAppealPattern.test(`${String(post?.title || "")} ${String(post?.excerpt || "")}`) && visualStandoutScore >= 4)
   ) {
     return { kind: "featured", editorialScore, visualStandoutScore, hasStrongVisual }
   }

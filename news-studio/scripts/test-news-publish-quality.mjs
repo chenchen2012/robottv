@@ -151,6 +151,15 @@ assert.equal(
   true
 )
 assert.equal(
+  visualStandoutScore({
+    title: 'Figure deploys humanoid robots in a BMW factory',
+    summary: 'Figure said it deployed humanoid robots in a BMW factory to handle repetitive material movement.',
+    bodyParagraphs: ['Reuters reported the rollout is running in Spartanburg.'],
+    sourceImageUrl: 'https://example.com/factory.jpg',
+  }) <= 3,
+  true
+)
+assert.equal(
   isThemeOnlyRoboticsStory({
     title: "Is Chevron's Robotics Strategy the Future of Oilfields?",
     summary: "Chevron's robotics strategy is relevant because oilfield operators care less about flashy demos than about whether autonomous inspection systems can lower cost.",
