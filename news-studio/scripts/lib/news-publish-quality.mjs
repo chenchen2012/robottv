@@ -3,6 +3,8 @@ import {
   HIGH_SIGNAL_PATTERN,
   INTERNAL_LINK_ALLOWLIST,
   LOW_VALUE_DOMAIN_PATTERN,
+  NEWS_MIN_AUDIENCE_RELEVANCE,
+  NEWS_MIN_INFORMATIONAL_DENSITY,
   NEWS_RECENT_DUPLICATE_WINDOW_DAYS,
   PROMOTIONAL_PATTERN,
   SOURCE_TRUST,
@@ -44,6 +46,26 @@ const TEMPLATED_EDITORIAL_PATTERNS = [
   /\bthe practical question is\b/i,
   /\bthe real signal is\b/i,
 ]
+const STRATEGY_ONLY_TITLE_PATTERNS = [
+  /\bstrategy\b/i,
+  /\bplan\b/i,
+  /\bvision\b/i,
+  /\bfuture of\b/i,
+  /\binsights?\b/i,
+  /\btrends?\b/i,
+  /\bhow .* changing\b/i,
+]
+const SPECIFIC_PRODUCT_PATTERNS =
+  /\b(robot|robots|humanoid|quadruped|drone|uav|ugv|cobot|arm|hand|gripper|vision system|camera|sensor|platform|model|software|fleet|inspection system|delivery bot)\b/i
+const DEPLOYMENT_VALUE_PATTERNS =
+  /\b(deploy(?:ed|ment|ments)?|pilot|customer|contract|order|fleet|site|factory|plant|warehouse|hospital|port|mine|ship|inspection|maintenance|picking|packing|surgery|delivery|manufacturing|uptime|throughput|labor|cost|risk|safety|roi|valuation|funding|raised?|acquired?|partner(?:ed|ship)?|rolls? out|commercial)\b/i
+const HARD_PROOF_PATTERNS =
+  /\b(deployed?|customer|contract|order|fleet|site|factory|plant|warehouse|hospital|port|mine|ship|inspection|maintenance|surgery|delivery|valuation|funding|raised?|acquired?|rolls? out)\b/i
+const AUDIENCE_RELEVANCE_PATTERNS = {
+  consumer: /\b(home|consumer|household|retail|personal|cleaning|lawn|delivery|companion)\b/i,
+  investor: /\b(funding|raised?|valuation|revenue|orders?|backlog|market|commercial|contract|customer|margin|capex|roi)\b/i,
+  operator: /\b(factory|plant|warehouse|hospital|site|fleet|inspection|maintenance|manufacturing|workflow|uptime|throughput|safety|labor|deployment)\b/i,
+}
 const HEADLINE_OVERPROMISE_PATTERNS = /\b(world['’]s first|revolutionary|game[- ]changing|breakthrough|guarantees?)\b/i
 const VISUAL_STORY_FORMATS = new Set(['featured_candidate'])
 
@@ -395,6 +417,74 @@ export const editorialNaturalnessScore = ({ summary = '', whyItMatters = '', bod
   return Math.max(1, Math.min(5, score))
 }
 
+export const informationalDensityScore = ({ title = '', summary = '', whyItMatters = '', bodyParagraphs = [], factPackage = null } = {}) => {
+  const paragraphs = Array.isArray(bodyParagraphs) ? bodyParagraphs.map((value) => normalizeWhitespace(value)).filter(Boolean) : []
+  const allText = [summary, whyItMatters, ...paragraphs].map((value) => normalizeWhitespace(value)).filter(Boolean)
+  if (!allText.length) return 1
+
+  const combined = allText.join(' ')
+  const sentences = combined
+    .split(/(?<=[.!?])\s+/)
+    .map((value) => normalizeWhitespace(value))
+    .filter(Boolean)
+  const concreteFactSentences = sentences.filter(
+    (sentence) => hasConcreteFact(sentence, { title }) && (extractMainNumberOrScale(sentence) || HARD_PROOF_PATTERNS.test(sentence))
+  ).length
+  const storyEntities = new Set([
+    ...extractKeyEntities(title),
+    ...extractKeyEntities([factPackage?.main_actor, factPackage?.main_object].filter(Boolean).join(' ')),
+  ])
+  const normalizedCombined = normalizeText(combined)
+  const entityHits = [...storyEntities].filter((entity) => entity && normalizedCombined.includes(entity)).length
+  const operationalHits = (combined.match(new RegExp(DEPLOYMENT_VALUE_PATTERNS.source, 'gi')) || []).length
+  const productHits = (combined.match(new RegExp(SPECIFIC_PRODUCT_PATTERNS.source, 'gi')) || []).length
+  const hardProofHits = (combined.match(new RegExp(HARD_PROOF_PATTERNS.source, 'gi')) || []).length
+
+  let score = 1
+  if (concreteFactSentences >= 1) score += 1
+  if (concreteFactSentences >= 2) score += 1
+  if (entityHits >= 2) score += 1
+  if (hardProofHits >= 1 || (productHits >= 2 && hardProofHits >= 1)) score += 1
+  if (!extractMainNumberOrScale(combined) && hardProofHits === 0) score -= 1
+  if (STRATEGY_ONLY_TITLE_PATTERNS.some((pattern) => pattern.test(title)) && concreteFactSentences < 2 && operationalHits < 2) {
+    score -= 2
+  }
+
+  return Math.max(1, Math.min(5, score))
+}
+
+export const roboticsAudienceRelevanceScore = ({ title = '', summary = '', whyItMatters = '', bodyParagraphs = [] } = {}) => {
+  const combined = normalizeWhitespace([title, summary, whyItMatters, ...(Array.isArray(bodyParagraphs) ? bodyParagraphs : [])].join(' '))
+  if (!combined) return 1
+
+  let score = 1
+  if (SPECIFIC_PRODUCT_PATTERNS.test(combined)) score += 1
+  if (DEPLOYMENT_VALUE_PATTERNS.test(combined)) score += 1
+
+  const audienceMatches = Object.values(AUDIENCE_RELEVANCE_PATTERNS).filter((pattern) => pattern.test(combined)).length
+  if (audienceMatches >= 1) score += 1
+  if (audienceMatches >= 2) score += 1
+
+  if (STRATEGY_ONLY_TITLE_PATTERNS.some((pattern) => pattern.test(title)) && !DEPLOYMENT_VALUE_PATTERNS.test(combined)) {
+    score -= 2
+  }
+
+  return Math.max(1, Math.min(5, score))
+}
+
+export const isThemeOnlyRoboticsStory = ({ title = '', summary = '', bodyParagraphs = [], factPackage = null } = {}) => {
+  const combined = normalizeWhitespace([title, summary, ...(Array.isArray(bodyParagraphs) ? bodyParagraphs : [])].join(' '))
+  const strategyTitle = STRATEGY_ONLY_TITLE_PATTERNS.some((pattern) => pattern.test(title))
+  if (!strategyTitle) return false
+
+  const density = informationalDensityScore({ title, summary, bodyParagraphs, factPackage })
+  const concreteStoryFact = hasConcreteFact(combined, { title })
+  const hasProductSignal = SPECIFIC_PRODUCT_PATTERNS.test(combined)
+  const hasDeploymentSignal = DEPLOYMENT_VALUE_PATTERNS.test(combined)
+  if (!concreteStoryFact) return true
+  return density < NEWS_MIN_INFORMATIONAL_DENSITY && (!hasProductSignal || !hasDeploymentSignal)
+}
+
 export const hasStrongVisualSupport = ({ youtubeUrl = '', sourceImageUrl = '', sourceContext = null, visualStrengthScore = 0 } = {}) =>
   Boolean(youtubeUrl) ||
   isValidSourceUrl(sourceImageUrl) ||
@@ -545,6 +635,25 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
     whyItMatters,
     bodyParagraphs: editorial?.bodyParagraphs || [],
   })
+  const informationalDensity = informationalDensityScore({
+    title: candidate?.title,
+    summary,
+    whyItMatters,
+    bodyParagraphs: editorial?.bodyParagraphs || [],
+    factPackage,
+  })
+  const audienceRelevance = roboticsAudienceRelevanceScore({
+    title: candidate?.title,
+    summary,
+    whyItMatters,
+    bodyParagraphs: editorial?.bodyParagraphs || [],
+  })
+  const themeOnlyStory = isThemeOnlyRoboticsStory({
+    title: candidate?.title,
+    summary,
+    bodyParagraphs: editorial?.bodyParagraphs || [],
+    factPackage,
+  })
   const actor = normalizeWhitespace(factPackage?.main_actor || '')
   const action = normalizeWhitespace(factPackage?.main_action || '')
   const object = normalizeWhitespace(factPackage?.main_object || '')
@@ -573,6 +682,9 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
           abstraction >= 4 ||
           repetition >= 4 ||
           editorialNaturalness <= 2 ||
+          informationalDensity < NEWS_MIN_INFORMATIONAL_DENSITY ||
+          audienceRelevance < NEWS_MIN_AUDIENCE_RELEVANCE ||
+          themeOnlyStory ||
           !paragraphAnchoredToFactPackage({ paragraph: editorial?.bodyParagraphs?.[1] || '', factPackage, title: candidate?.title })
         ? 'draft_only'
         : 'auto_publish'
@@ -592,6 +704,8 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
     abstractness_score: abstraction,
     repetition_score: repetition,
     editorial_naturalness_score: editorialNaturalness,
+    informational_density_score: informationalDensity,
+    robotics_audience_relevance_score: audienceRelevance,
     source_strength_score: candidate?.sourceTrustTier === 'allow' ? 5 : candidate?.sourceTrustTier === 'caution' ? 3 : 2,
     newsworthiness_score: HIGH_SIGNAL_PATTERN.test(`${candidate?.title || ''} ${summary}`) ? 4 : 3,
     visual_strength_score: visualStrengthScore,
@@ -627,6 +741,8 @@ export const validateQcEnrichment = (value) => {
     abstractness_score: Number(value.abstractness_score || 0),
     repetition_score: Number(value.repetition_score || 0),
     editorial_naturalness_score: Number(value.editorial_naturalness_score || 0),
+    informational_density_score: Number(value.informational_density_score || 0),
+    robotics_audience_relevance_score: Number(value.robotics_audience_relevance_score || 0),
     source_strength_score: Number(value.source_strength_score || 0),
     newsworthiness_score: Number(value.newsworthiness_score || 0),
     visual_strength_score: Number(value.visual_strength_score || 0),
@@ -660,6 +776,8 @@ export const validateQcEnrichment = (value) => {
     normalized.abstractness_score,
     normalized.repetition_score,
     normalized.editorial_naturalness_score,
+    normalized.informational_density_score,
+    normalized.robotics_audience_relevance_score,
     normalized.source_strength_score,
     normalized.newsworthiness_score,
     normalized.visual_strength_score,
@@ -710,6 +828,8 @@ export const buildQcPrompt = ({ candidate, editorial }) => {
     '- concrete_fact_present should be true only if the summary/body contains at least one concrete factual statement.',
     '- lead_with_concrete_fact should be false if the summary opens with implication-first framing before stating a concrete fact.',
     '- headline_supported_by_body should be false if the body does not substantiate the headline.',
+    `- informational_density_score should fall below ${NEWS_MIN_INFORMATIONAL_DENSITY} when the story stays too abstract or lacks enough concrete product/deployment facts.`,
+    `- robotics_audience_relevance_score should fall below ${NEWS_MIN_AUDIENCE_RELEVANCE} when the story is weak for robotics consumers, investors, or operators.`,
     '- Use draft_only when the item is potentially useful but needs editorial review.',
     '- Use reject only for items that should not be published.',
     '',
@@ -728,6 +848,9 @@ export const buildQcPrompt = ({ candidate, editorial }) => {
     '  "implication_first_risk": "low | medium | high",',
     '  "abstractness_score": 1,',
     '  "repetition_score": 1,',
+    '  "editorial_naturalness_score": 1,',
+    '  "informational_density_score": 1,',
+    '  "robotics_audience_relevance_score": 1,',
     '  "source_strength_score": 1,',
     '  "newsworthiness_score": 1,',
     '  "visual_strength_score": 1,',

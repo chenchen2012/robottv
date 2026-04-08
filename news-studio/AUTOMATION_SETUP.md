@@ -53,10 +53,11 @@ Note:
 2. Select `Auto Publish Robot News`.
 3. Click `Run workflow`.
 
-The workflow runs automatically every 6 hours via cron and now includes:
+The workflow runs automatically every 3 hours via cron and now includes:
 - duplicate guard on recent titles
 - top-company weighted selection
 - draft fallback for low-confidence items
+- selective publish behavior: every run reviews candidates, but only product/deployment-worthy stories with enough informational density and audience relevance are auto-published
 - feed health check (`MAX_FEED_AGE_HOURS`, default `24`)
 - automatic rebuild + deploy of both public sites after successful publish
 

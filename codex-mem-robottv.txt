@@ -204,6 +204,27 @@ Automation status
     - `the-future-of-realsense-3d-vision-with-chris-matthieu`
   - verification checkpoint:
     - `cd news-studio && npm run test:publish-quality` passed on Apr 7, 2026
+- Apr 8, 2026 auto-post quality guardrail follow-up:
+  - live failure example: Business Insider Ukraine UGV story auto-published with title-echo / chopped filler copy (`This matter...`) because the pipeline had treated page-title-only fetch results as usable source context
+  - durable fix:
+    - `news-studio/scripts/lib/news-fact-extraction.mjs` no longer treats `pageTitle` alone as source-grounded context
+    - `news-studio/scripts/lib/news-publish-quality.mjs` now flags malformed/title-echo editorial text and downgrades those items out of auto-publish
+    - `news-studio/scripts/publish-latest-news.mjs` now adds explicit draft reasons for malformed summary / paragraph-one headline echo / paragraph-one repetition
+  - regression coverage added in `news-studio/scripts/test-news-publish-quality.mjs` for the Business Insider-style title-only context case
+- Apr 8, 2026 live newsroom remediation:
+  - because `news.robot.tv` article/feed pages are static build outputs from Sanity, fixing malformed live post copy required two steps:
+    1. patch the canonical Sanity post content
+    2. trigger GitHub Actions workflow `Deploy Public News Site` so Cloudflare Pages rebuilds against the updated dataset
+  - authenticated local Sanity CLI session on this machine was available via `npx sanity exec ... --with-user-token`
+  - reusable helper scripts added:
+    - `news-studio/scripts/refresh-live-malformed-posts.cjs`
+    - `news-studio/scripts/apply-manual-live-post-overrides.cjs`
+  - manual live overrides were applied to these slugs, then workflow run `24138543194` successfully rebuilt/deployed the public newsroom:
+    - `ukraine-says-it-replaced-human-soldiers-with-ground-robots-in-over-21000-missions-for-q1`
+    - `robot-maker-kuka-eyes-us-asia-as-europes-factories-lag-on-ai`
+    - `eclipse-raises-13-billion-to-back-manufacturing-robotics`
+    - `cerebras-backer-eclipse-raises-13-billion-for-robotics-ai-infrastructure`
+    - `bmws-104-year-old-munich-plant-will-build-only-electric-cars-by-2027`
 - Apr 7, 2026 homepage no-feature fallback refinement:
   - `scripts/homepage-news-rules.mjs` now exposes `layoutMode` plus `topBriefs` so the homepage can switch between a true featured layout and a briefs-only layout
   - when there is no eligible Featured Story, `news.robot.tv` no longer keeps hero proportions; the top section becomes a 4-card briefs-only grid with normal Signal Brief sizing and no empty hero gap
@@ -2852,3 +2873,12 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - `news-fact-extraction.mjs` now prefers real extracted fact sentences and stops falling back to the headline as the main fact
   - paragraph 2 is now required to stay anchored to the selected fact package; unanchored generic “this matters because...” language is downgraded to review
   - `publish-latest-news.mjs` now prints per-candidate fact diagnostics plus aggregate fact-layer summary counts (`evaluated`, `grounded`, `thin_high`, `write_ready`, `deepseek_ready`) during dry runs and publish runs
+- Apr 9, 2026 cadence + specificity policy update:
+  - `.github/workflows/news-auto-publish.yml` now runs every 3 hours (`15 */3 * * *`) instead of every 6 hours, but per-run auto-publish is capped at 3 while the daily cap remains 8
+  - the intended policy is now “review every 3 hours, publish only when a candidate clears the quality bar,” not “force a post every cycle”
+  - `news-publish-quality.mjs` gained two stronger gates:
+    - `informational_density_score` to downgrade stories that sound smooth but lack concrete product/deployment/customer facts
+    - `robotics_audience_relevance_score` to prefer stories that are actually useful to robotics consumers, investors, or operators
+  - strategy/theme headlines without enough concrete proof are now treated as `draft_only` via `isThemeOnlyRoboticsStory()`
+  - `publish-latest-news.mjs` now adds draft reasons `low_informational_density`, `weak_robotics_audience_relevance`, and `theme_only_story_without_product_or_deployment_proof`
+  - regression coverage in `scripts/test-news-publish-quality.mjs` passed after this policy change

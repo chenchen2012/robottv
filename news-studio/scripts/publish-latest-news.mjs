@@ -4,6 +4,8 @@ import path from 'node:path'
 import { buildEditorialPackage, blocksFromParagraphs } from './lib/news-editorial-content.mjs'
 import {
   NEWS_MAX_POSTS_PER_DAY,
+  NEWS_MIN_AUDIENCE_RELEVANCE,
+  NEWS_MIN_INFORMATIONAL_DENSITY,
   NEWS_PUBLISH_BATCH_LIMIT,
   NEWS_RECENT_DUPLICATE_WINDOW_DAYS,
   RSS_URL,
@@ -20,7 +22,9 @@ import {
   hasConcreteFact,
   hasStrongVisualSupport,
   headlineSupportedByBody,
+  informationalDensityScore,
   isValidSourceUrl,
+  isThemeOnlyRoboticsStory,
   isPromotionalLikely,
   leadStartsWithImplication,
   looksMalformedEditorialText,
@@ -30,6 +34,7 @@ import {
   paragraphAnchoredToFactPackage,
   rankCandidate,
   repetitionScore,
+  roboticsAudienceRelevanceScore,
   slugify,
   stripHtml,
   titleKey,
@@ -383,6 +388,39 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
   )
   if (editorialNaturalness <= 2) {
     draftReasons.push('templated_editorial_voice')
+  }
+
+  const informationalDensity = Math.min(
+    Number.isFinite(Number(enrichment?.informational_density_score)) ? Number(enrichment.informational_density_score) : 5,
+    informationalDensityScore({
+      title: candidate?.title,
+      summary,
+      whyItMatters,
+      bodyParagraphs,
+      factPackage,
+    })
+  )
+  if (informationalDensity < NEWS_MIN_INFORMATIONAL_DENSITY) {
+    draftReasons.push('low_informational_density')
+  }
+
+  const audienceRelevance = Math.min(
+    Number.isFinite(Number(enrichment?.robotics_audience_relevance_score))
+      ? Number(enrichment.robotics_audience_relevance_score)
+      : 5,
+    roboticsAudienceRelevanceScore({
+      title: candidate?.title,
+      summary,
+      whyItMatters,
+      bodyParagraphs,
+    })
+  )
+  if (audienceRelevance < NEWS_MIN_AUDIENCE_RELEVANCE) {
+    draftReasons.push('weak_robotics_audience_relevance')
+  }
+
+  if (isThemeOnlyRoboticsStory({ title: candidate?.title, summary, bodyParagraphs, factPackage })) {
+    draftReasons.push('theme_only_story_without_product_or_deployment_proof')
   }
 
   if (enrichment?.publish_recommendation === 'reject' || enrichment?.reject) {

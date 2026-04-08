@@ -13,12 +13,15 @@ import {
   findSoftDuplicate,
   getSourceTrustTier,
   hasConcreteFact,
+  informationalDensityScore,
   isValidSourceUrl,
+  isThemeOnlyRoboticsStory,
   leadStartsWithImplication,
   looksMalformedEditorialText,
   isPromotionalLikely,
   paragraphAnchoredToFactPackage,
   paragraphAdvancesSummary,
+  roboticsAudienceRelevanceScore,
   validateFactPackage,
   validateQcEnrichment,
 } from './lib/news-publish-quality.mjs'
@@ -112,6 +115,41 @@ assert.equal(
     sourceName: 'Business Insider',
   }),
   false
+)
+assert.equal(
+  informationalDensityScore({
+    title: 'Figure deploys humanoid robots in a BMW factory',
+    summary: 'Figure said it deployed humanoid robots in a BMW factory to handle repetitive material movement.',
+    bodyParagraphs: [
+      'Reuters reported the deployment is running in Spartanburg and focuses on repetitive material movement inside the plant.',
+      'That gives operators a concrete signal on workflow fit, labor substitution pressure, and whether the system can stay in routine use.',
+    ],
+    factPackage: {
+      main_actor: 'Figure',
+      main_object: 'humanoid robots',
+      best_concrete_fact: 'Figure deployed humanoid robots in a BMW factory in Spartanburg.',
+    },
+  }) >= 4,
+  true
+)
+assert.equal(
+  roboticsAudienceRelevanceScore({
+    title: 'Figure deploys humanoid robots in a BMW factory',
+    summary: 'Figure said it deployed humanoid robots in a BMW factory to handle repetitive material movement.',
+    bodyParagraphs: ['The rollout matters to operators and investors because it shows a real factory workflow and a live customer setting.'],
+  }) >= 4,
+  true
+)
+assert.equal(
+  isThemeOnlyRoboticsStory({
+    title: "Is Chevron's Robotics Strategy the Future of Oilfields?",
+    summary: "Chevron's robotics strategy is relevant because oilfield operators care less about flashy demos than about whether autonomous inspection systems can lower cost.",
+    bodyParagraphs: [
+      'Chevron robotics push matters if it leads to routine inspection and maintenance use in oilfield operations.',
+      'That is a tougher standard than a polished demo.',
+    ],
+  }),
+  true
 )
 assert.equal(
   paragraphAnchoredToFactPackage({
@@ -360,6 +398,8 @@ assert.equal(validatedFallback.ok, true)
 assert.equal(validatedFallback.data.story_format, 'signal_brief')
 assert.equal(validatedFallback.data.publish_recommendation, 'draft_only')
 assert.equal(validatedFallback.data.editorial_naturalness_score <= 2, true)
+assert.equal(validatedFallback.data.informational_density_score <= 2, true)
+assert.equal(validatedFallback.data.robotics_audience_relevance_score >= 3, true)
 
 global.fetch = async () => ({
   ok: true,

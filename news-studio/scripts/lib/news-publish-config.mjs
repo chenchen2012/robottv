@@ -8,6 +8,8 @@ export const RSS_URL =
 
 export const NEWS_MAX_POSTS_PER_DAY = parsePositiveNumber(process.env.NEWS_MAX_POSTS_PER_DAY, 8)
 export const NEWS_PUBLISH_BATCH_LIMIT = parsePositiveNumber(process.env.PUBLISH_COUNT, 8)
+export const NEWS_MIN_INFORMATIONAL_DENSITY = parsePositiveNumber(process.env.NEWS_MIN_INFORMATIONAL_DENSITY, 3)
+export const NEWS_MIN_AUDIENCE_RELEVANCE = parsePositiveNumber(process.env.NEWS_MIN_AUDIENCE_RELEVANCE, 3)
 export const NEWS_RECENT_DUPLICATE_WINDOW_DAYS = parsePositiveNumber(
   process.env.NEWS_RECENT_DUPLICATE_WINDOW_DAYS,
   7

@@ -118,6 +118,10 @@ Current state as of 2026-04-06:
 - Auto-post writing quality was improved in fallback generation:
   - fallback copy now prefers fact-first summary/body structure.
   - paragraph 1 is more source-grounded.
+ - Auto-publish now evaluates every 3 hours but only publishes when a candidate clears stronger specificity gates:
+   - low-density strategy/theme stories are routed to `draft_only`
+   - product/deployment/customer-proof stories are preferred
+   - robotics audience relevance for consumers, investors, and operators is part of the gate
   - implication-first phrasing and repeated `That matters because...` / `The next thing to watch...` style copy were reduced.
 
 Best next place to resume:
