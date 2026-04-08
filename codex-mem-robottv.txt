@@ -2900,3 +2900,16 @@ Startup execution guide + market/startup article expansion (Mar 8, 2026, later p
   - verified with `npm run test:publish-quality` plus a local homepage classification spot-check:
     - image-only deployment story => `signal-brief`
     - image-backed `Watch ... footage ...` story => `featured`
+- Apr 9, 2026 mobile featured-story tap fix on `news.robot.tv` homepage:
+  - user reported that the Featured Story card was hard to open on mobile
+  - root cause had two layers:
+    - the new whole-card navigation handler returned early on non-hover devices, so mobile never got the tap binding
+    - the static build-time homepage branch had a startup `path is not defined` console error, which prevented later homepage JS from running
+  - durable fix in `news-studio/static/index.html`:
+    - featured/visual cards now carry `data-url`, `tabindex`, and card-level navigation
+    - a dedicated `bindHomepageVisualCardLinks()` now attaches to the build-time homepage cards
+    - mobile/coarse-pointer devices no longer skip card navigation binding
+    - fixed the `isHomepagePath` initialization so the homepage script runs cleanly
+  - `news-studio/scripts/build-static-news-seo.mjs` was updated so regenerated homepage markup preserves the card-level `data-url` attributes
+  - verified locally with Playwright at mobile width (`390x844`) against a local HTTP server for `dist-public`:
+    - tapping the featured story article card now navigates to the article permalink

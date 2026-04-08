@@ -1825,7 +1825,7 @@ const renderStaticVisualStory = (post, { featured = false, storyType = "Featured
   const ctaLabel = hasHomepagePlayableVideo(post) ? "Watch story" : "Read brief";
   return `        <article class="visual-story${featured ? " visual-story-featured" : ""}" data-video="${escapeHtml(
     post.youtubeUrl || ""
-  )}">
+  )}" data-url="${articleUrl}" tabindex="0" aria-label="${title}">
           <span class="thumb-shell">
             <img class="thumb" src="${thumbUrl}" alt="${title} thumbnail" loading="lazy">
             <span class="thumb-preview" aria-hidden="true"></span>
