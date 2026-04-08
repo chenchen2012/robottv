@@ -1420,6 +1420,12 @@ const buildArticleHtml = (post) => {
     .meta { margin:.55rem 0 0; color:var(--muted); font-size:.9rem; }
     .article-meta { margin:.6rem 0 0; display:flex; flex-wrap:wrap; gap:.45rem 1rem; align-items:center; }
     .meta-link { color:#dbe8ff; text-decoration:underline; text-decoration-color:rgba(219,232,255,.45); text-underline-offset:.18em; }
+    .article-actions { margin:.9rem 0 0; display:flex; gap:.7rem; flex-wrap:wrap; align-items:center; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; padding:.52rem .95rem; font-weight:700; font-size:.9rem; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, color .18s ease; }
+    .btn:hover { transform:translateY(-1px); }
+    .btn-newsroom { border:1px solid #5c80bb; color:#f4f8ff; background:linear-gradient(120deg, rgba(94,132,255,.28), rgba(94,132,255,.14)); box-shadow:0 0 0 1px rgba(94,132,255,.22) inset, 0 8px 18px rgba(18,33,63,.22); }
+    .btn-newsroom:hover { border-color:#7a9cff; box-shadow:0 0 0 1px rgba(122,156,255,.26) inset, 0 12px 22px rgba(18,33,63,.28); }
+    .article-actions .context-note { color:#9fb2d4; font-size:.88rem; }
     .excerpt { margin:.75rem 0 0; color:#c3d0e4; line-height:1.7; }
     .video { margin:.9rem 0 0; width:100%; aspect-ratio:16/9; border:1px solid #24344f; border-radius:10px; overflow:hidden; background:#000; }
     .video iframe { width:100%; height:100%; border:0; display:block; }
@@ -1516,6 +1522,10 @@ const buildArticleHtml = (post) => {
           .map((p) => `<p>${escapeHtml(p)}</p>`)
           .join("")}
       </section>
+      <div class="article-actions" aria-label="Article navigation">
+        <a class="btn btn-newsroom" href="/">Back to Newsroom</a>
+        <span class="context-note">Return to the latest robotics briefings on news.robot.tv</span>
+      </div>
       <section class="insight-grid" aria-label="Source and author details">
         <section class="insight-card">
           <p class="eyebrow">${visibleSource.eyebrow}</p>
@@ -1543,6 +1553,7 @@ const buildArticleHtml = (post) => {
     <footer class="panel footer">
       <div>robot.tv News | Real-time robotics briefings</div>
       <div class="footer-links">
+        <a href="https://news.robot.tv/">Newsroom</a>
         <a href="https://robot.tv">robot.tv</a>
         <a href="https://robot.tv/home.html">Robot Index</a>
         <a href="https://robot.tv/companies.html">Companies</a>
