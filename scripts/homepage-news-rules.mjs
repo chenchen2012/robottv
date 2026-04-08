@@ -125,6 +125,12 @@ const homepageHighSignalPattern =
 const homepageConcreteFactPattern =
   /\b(\$[\d,.]+(?:\s?(?:m|b|million|billion))?|\d[\d,]*(?:st|nd|rd|th)?|digit|ubtech|figure|agibot|amazon|google|intel|toyota|picknik|surgery|humanoid)\b/i
 
+const homepageSpecificProductPattern =
+  /\b(robot|robots|humanoid|quadruped|drone|uav|ugv|cobot|robot dog|robot hand|gripper|delivery bot|inspection system|platform|model)\b/i
+
+const homepageVisualAppealPattern =
+  /\b(video|watch|demo|demonstration|footage|clip|showcase|walks?|running|working|test|tested|prototype)\b/i
+
 const hoursSincePublished = (post) => {
   const publishedAt = new Date(post?.publishedAt || 0).getTime()
   if (!publishedAt || Number.isNaN(publishedAt)) return Number.POSITIVE_INFINITY
@@ -173,6 +179,20 @@ export const getHomepageEditorialScore = (post) => {
   return score
 }
 
+export const getHomepageVisualStandoutScore = (post) => {
+  const title = String(post?.title || "")
+  const excerpt = String(post?.excerpt || "")
+  const combined = `${title} ${excerpt}`
+  let score = 1
+
+  if (hasHomepageStrongVisualSupport(post)) score += 2
+  if (homepageSpecificProductPattern.test(combined)) score += 1
+  if (homepageVisualAppealPattern.test(combined)) score += 1
+  if (homepageConcreteFactPattern.test(combined)) score += 1
+
+  return Math.max(1, Math.min(5, score))
+}
+
 export const isHomepageVisualFeatureCandidate = (post) =>
   hasHomepageStrongVisualSupport(post) && getHomepageEditorialScore(post) >= 3
 
@@ -184,23 +204,25 @@ export const isHomepageTextSignalCandidate = (post) =>
 export const classifyHomepageStory = (post) => {
   const slug = normalizeHomepageSlug(post?.slug)
   const editorialScore = getHomepageEditorialScore(post)
+  const visualStandoutScore = getHomepageVisualStandoutScore(post)
   const hasPlayableVideo = hasHomepagePlayableVideo(post)
   const hasImageSupport = hasHomepageImageSupport(post)
   const hasStrongVisual = hasPlayableVideo || hasImageSupport
 
   if (homepageLeadFeaturePreferredSlugs.has(slug)) {
-    return { kind: "lead-feature", editorialScore, hasStrongVisual }
+    return { kind: "lead-feature", editorialScore, visualStandoutScore, hasStrongVisual }
   }
-  if (hasPlayableVideo && editorialScore >= 4) {
-    return { kind: "lead-feature", editorialScore, hasStrongVisual }
+  if (hasPlayableVideo && (editorialScore >= 4 || visualStandoutScore >= 4)) {
+    return { kind: "lead-feature", editorialScore, visualStandoutScore, hasStrongVisual }
   }
   if (
     homepageVisualFeaturePreferredSlugs.has(slug) ||
-    (hasPlayableVideo && editorialScore >= 3)
+    (hasPlayableVideo && (editorialScore >= 3 || visualStandoutScore >= 3)) ||
+    (hasImageSupport && visualStandoutScore >= 4)
   ) {
-    return { kind: "featured", editorialScore, hasStrongVisual }
+    return { kind: "featured", editorialScore, visualStandoutScore, hasStrongVisual }
   }
-  return { kind: "signal-brief", editorialScore, hasStrongVisual }
+  return { kind: "signal-brief", editorialScore, visualStandoutScore, hasStrongVisual }
 }
 
 export const selectHomepagePromotionSlots = (posts, { visualSlots = 2, textSlots = 1 } = {}) => {
@@ -257,6 +279,10 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3, briefsOnl
     classification: classifyHomepageStory(post),
   }))
   const byPublishedAtDesc = (left, right) => {
+    const scoreDelta =
+      (right?.classification?.visualStandoutScore || 0) - (left?.classification?.visualStandoutScore || 0) ||
+      (right?.classification?.editorialScore || 0) - (left?.classification?.editorialScore || 0)
+    if (scoreDelta) return scoreDelta
     const leftTime = new Date(left?.post?.publishedAt || 0).getTime()
     const rightTime = new Date(right?.post?.publishedAt || 0).getTime()
     return rightTime - leftTime

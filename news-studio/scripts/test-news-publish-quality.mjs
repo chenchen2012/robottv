@@ -22,6 +22,7 @@ import {
   paragraphAnchoredToFactPackage,
   paragraphAdvancesSummary,
   roboticsAudienceRelevanceScore,
+  visualStandoutScore,
   validateFactPackage,
   validateQcEnrichment,
 } from './lib/news-publish-quality.mjs'
@@ -137,6 +138,15 @@ assert.equal(
     title: 'Figure deploys humanoid robots in a BMW factory',
     summary: 'Figure said it deployed humanoid robots in a BMW factory to handle repetitive material movement.',
     bodyParagraphs: ['The rollout matters to operators and investors because it shows a real factory workflow and a live customer setting.'],
+  }) >= 4,
+  true
+)
+assert.equal(
+  visualStandoutScore({
+    title: 'Watch Figure humanoid robots working in a BMW factory',
+    summary: 'Figure shared factory footage showing humanoid robots moving materials inside a BMW plant.',
+    bodyParagraphs: ['The video gives viewers a concrete look at the robot, the workflow, and the live production setting.'],
+    youtubeUrl: 'https://www.youtube.com/watch?v=abcdefghijk',
   }) >= 4,
   true
 )
@@ -400,6 +410,7 @@ assert.equal(validatedFallback.data.publish_recommendation, 'draft_only')
 assert.equal(validatedFallback.data.editorial_naturalness_score <= 2, true)
 assert.equal(validatedFallback.data.informational_density_score <= 2, true)
 assert.equal(validatedFallback.data.robotics_audience_relevance_score >= 3, true)
+assert.equal(validatedFallback.data.visual_standout_score <= 3, true)
 
 global.fetch = async () => ({
   ok: true,

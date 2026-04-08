@@ -66,6 +66,8 @@ const AUDIENCE_RELEVANCE_PATTERNS = {
   investor: /\b(funding|raised?|valuation|revenue|orders?|backlog|market|commercial|contract|customer|margin|capex|roi)\b/i,
   operator: /\b(factory|plant|warehouse|hospital|site|fleet|inspection|maintenance|manufacturing|workflow|uptime|throughput|safety|labor|deployment)\b/i,
 }
+const VISUAL_STANDOUT_PATTERNS =
+  /\b(video|watch|demo|demonstration|footage|clip|showcase|walks?|running|working|test|tested|prototype|humanoid|quadruped|robot dog|drone|delivery bot|robot hand|gripper)\b/i
 const HEADLINE_OVERPROMISE_PATTERNS = /\b(world['’]s first|revolutionary|game[- ]changing|breakthrough|guarantees?)\b/i
 const VISUAL_STORY_FORMATS = new Set(['featured_candidate'])
 
@@ -485,6 +487,30 @@ export const isThemeOnlyRoboticsStory = ({ title = '', summary = '', bodyParagra
   return density < NEWS_MIN_INFORMATIONAL_DENSITY && (!hasProductSignal || !hasDeploymentSignal)
 }
 
+export const visualStandoutScore = ({
+  title = '',
+  summary = '',
+  whyItMatters = '',
+  bodyParagraphs = [],
+  youtubeUrl = '',
+  sourceImageUrl = '',
+  sourceContext = null,
+  visualStrengthScore = 0,
+} = {}) => {
+  const combined = normalizeWhitespace([title, summary, whyItMatters, ...(Array.isArray(bodyParagraphs) ? bodyParagraphs : [])].join(' '))
+  const visualSupport = hasStrongVisualSupport({ youtubeUrl, sourceImageUrl, sourceContext, visualStrengthScore })
+  let score = 1
+
+  if (visualSupport) score += 2
+  if (VISUAL_STANDOUT_PATTERNS.test(combined)) score += 1
+  if (SPECIFIC_PRODUCT_PATTERNS.test(combined)) score += 1
+  if (hasConcreteFact(combined, { title })) score += 1
+  if (STRATEGY_ONLY_TITLE_PATTERNS.some((pattern) => pattern.test(title)) && !VISUAL_STANDOUT_PATTERNS.test(combined)) score -= 2
+
+  const bounded = Math.max(1, Math.min(5, score))
+  return visualSupport ? bounded : Math.min(3, bounded)
+}
+
 export const hasStrongVisualSupport = ({ youtubeUrl = '', sourceImageUrl = '', sourceContext = null, visualStrengthScore = 0 } = {}) =>
   Boolean(youtubeUrl) ||
   isValidSourceUrl(sourceImageUrl) ||
@@ -613,15 +639,30 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   })
     ? 4
     : 1
+  const visualStandout = visualStandoutScore({
+    title: candidate?.title,
+    summary,
+    whyItMatters,
+    bodyParagraphs: editorial?.bodyParagraphs || [],
+    youtubeUrl: candidate?.youtubeUrl || '',
+    sourceImageUrl: editorial?.sourceContext?.imageUrl || '',
+    sourceContext: editorial?.sourceContext,
+    visualStrengthScore,
+  })
   const storyFormat =
-    visualStrengthScore >= 4 && factPackage?.story_format_recommendation === 'featured_candidate'
+    visualStrengthScore >= 4 && (factPackage?.story_format_recommendation === 'featured_candidate' || visualStandout >= 4)
       ? 'featured_candidate'
       : 'signal_brief'
   const implicationRisk = leadStartsWithImplication(summary) && !leadWithConcreteFact ? 'high' : 'low'
   const homepageEligible =
-    candidate?.sourceTrustTier === 'allow' &&
-    HIGH_SIGNAL_PATTERN.test(`${candidate?.title || ''} ${summarySource}`) &&
-    (category === 'category-humanoid-robots' || category === 'category-robotics-startups')
+    (
+      candidate?.sourceTrustTier === 'allow' &&
+      HIGH_SIGNAL_PATTERN.test(`${candidate?.title || ''} ${summarySource}`) &&
+      (category === 'category-humanoid-robots' || category === 'category-robotics-startups')
+    ) ||
+    ((candidate?.sourceTrustTier === 'allow' || candidate?.sourceTrustTier === 'caution') &&
+      visualStandout >= 4 &&
+      SPECIFIC_PRODUCT_PATTERNS.test(`${candidate?.title || ''} ${summary}`))
   const internalLinkTarget = resolveInternalLinkTarget({ title: candidate?.title, categoryId: category })
   const headlineSupported = headlineSupportedByBody({
     title: candidate?.title,
@@ -706,6 +747,7 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
     editorial_naturalness_score: editorialNaturalness,
     informational_density_score: informationalDensity,
     robotics_audience_relevance_score: audienceRelevance,
+    visual_standout_score: visualStandout,
     source_strength_score: candidate?.sourceTrustTier === 'allow' ? 5 : candidate?.sourceTrustTier === 'caution' ? 3 : 2,
     newsworthiness_score: HIGH_SIGNAL_PATTERN.test(`${candidate?.title || ''} ${summary}`) ? 4 : 3,
     visual_strength_score: visualStrengthScore,
@@ -743,6 +785,7 @@ export const validateQcEnrichment = (value) => {
     editorial_naturalness_score: Number(value.editorial_naturalness_score || 0),
     informational_density_score: Number(value.informational_density_score || 0),
     robotics_audience_relevance_score: Number(value.robotics_audience_relevance_score || 0),
+    visual_standout_score: Number(value.visual_standout_score || 0),
     source_strength_score: Number(value.source_strength_score || 0),
     newsworthiness_score: Number(value.newsworthiness_score || 0),
     visual_strength_score: Number(value.visual_strength_score || 0),
@@ -778,6 +821,7 @@ export const validateQcEnrichment = (value) => {
     normalized.editorial_naturalness_score,
     normalized.informational_density_score,
     normalized.robotics_audience_relevance_score,
+    normalized.visual_standout_score,
     normalized.source_strength_score,
     normalized.newsworthiness_score,
     normalized.visual_strength_score,
@@ -793,7 +837,10 @@ export const rankCandidate = (candidate) => {
   const trust = sourceTrustScore(candidate?.sourceTrustTier) * 10
   const signal = HIGH_SIGNAL_PATTERN.test(candidate?.title || '') ? 3 : 0
   const entities = COMPANY_ENTITY_TOKENS.some((token) => normalizeText(candidate?.title || '').includes(token)) ? 2 : 0
-  return trust + signal + entities
+  const visualAppeal = VISUAL_STANDOUT_PATTERNS.test(candidate?.title || '') ? 2 : 0
+  const specificProduct = SPECIFIC_PRODUCT_PATTERNS.test(candidate?.title || '') ? 2 : 0
+  const strategyPenalty = STRATEGY_ONLY_TITLE_PATTERNS.some((pattern) => pattern.test(candidate?.title || '')) ? -3 : 0
+  return trust + signal + entities + visualAppeal + specificProduct + strategyPenalty
 }
 
 export const buildQcPrompt = ({ candidate, editorial }) => {
@@ -830,6 +877,7 @@ export const buildQcPrompt = ({ candidate, editorial }) => {
     '- headline_supported_by_body should be false if the body does not substantiate the headline.',
     `- informational_density_score should fall below ${NEWS_MIN_INFORMATIONAL_DENSITY} when the story stays too abstract or lacks enough concrete product/deployment facts.`,
     `- robotics_audience_relevance_score should fall below ${NEWS_MIN_AUDIENCE_RELEVANCE} when the story is weak for robotics consumers, investors, or operators.`,
+    '- visual_standout_score should be high only when the story is both specific and visually compelling for a robotics audience, not just vaguely hypey.',
     '- Use draft_only when the item is potentially useful but needs editorial review.',
     '- Use reject only for items that should not be published.',
     '',
@@ -851,6 +899,7 @@ export const buildQcPrompt = ({ candidate, editorial }) => {
     '  "editorial_naturalness_score": 1,',
     '  "informational_density_score": 1,',
     '  "robotics_audience_relevance_score": 1,',
+    '  "visual_standout_score": 1,',
     '  "source_strength_score": 1,',
     '  "newsworthiness_score": 1,',
     '  "visual_strength_score": 1,',
