@@ -12,6 +12,7 @@ import {
   abstractnessScore,
   buildFallbackQcEnrichment,
   choosePreferredCandidate,
+  editorialNaturalnessScore,
   extractConcreteFactExcerpt,
   findHardDuplicate,
   findSoftDuplicate,
@@ -22,6 +23,7 @@ import {
   isValidSourceUrl,
   isPromotionalLikely,
   leadStartsWithImplication,
+  looksMalformedEditorialText,
   normalizeText,
   normalizeUrl,
   normalizeWhitespace,
@@ -290,7 +292,6 @@ const hasUsableSourceContext = (editorial) =>
   Boolean(
     editorial?.sourceContext?.metaDescription ||
       editorial?.sourceContext?.ogDescription ||
-      editorial?.sourceContext?.pageTitle ||
       (Array.isArray(editorial?.sourceContext?.paragraphs) && editorial.sourceContext.paragraphs.length)
   )
 
@@ -331,6 +332,16 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
     draftReasons.push('implication_first_without_fact')
   }
 
+  if (looksMalformedEditorialText({ text: summary, title: candidate?.title, sourceName: candidate?.sourceName })) {
+    draftReasons.push('malformed_or_headline_echo_summary')
+  }
+  if (looksMalformedEditorialText({ text: bodyParagraphs[0] || '', title: candidate?.title, sourceName: candidate?.sourceName })) {
+    draftReasons.push('malformed_or_headline_echo_paragraph_one')
+  }
+  if (bodyParagraphs[0] && !paragraphAdvancesSummary({ summary, paragraph: bodyParagraphs[0] })) {
+    draftReasons.push('paragraph_one_repeats_summary_or_headline')
+  }
+
   const headlineSupported = headlineSupportedByBody({
     title: candidate?.title,
     summary,
@@ -364,6 +375,14 @@ const evaluateDecision = ({ candidate, editorial, enrichment, youtubeDecision })
   )
   if (repetition >= 4) {
     draftReasons.push('repetitive_abstract_language')
+  }
+
+  const editorialNaturalness = Math.min(
+    Number.isFinite(Number(enrichment?.editorial_naturalness_score)) ? Number(enrichment.editorial_naturalness_score) : 5,
+    editorialNaturalnessScore({ summary, whyItMatters, bodyParagraphs })
+  )
+  if (editorialNaturalness <= 2) {
+    draftReasons.push('templated_editorial_voice')
   }
 
   if (enrichment?.publish_recommendation === 'reject' || enrichment?.reject) {

@@ -7,6 +7,7 @@ import { extractFactLayer } from './lib/news-fact-extraction.mjs'
 import {
   extractConcreteFactExcerpt,
   buildFallbackQcEnrichment,
+  editorialNaturalnessScore,
   factLooksLikeHeadlineEcho,
   findHardDuplicate,
   findSoftDuplicate,
@@ -135,6 +136,29 @@ assert.equal(
     title: 'Gecko Robotics brings its AI to U.S. Navy ship repair',
   }),
   false
+)
+assert.equal(
+  editorialNaturalnessScore({
+    summary: 'Gecko Robotics announced a $71 million deal with the U.S. Navy to help reduce ship repair time.',
+    whyItMatters:
+      'The useful point is that Gecko is moving from inspection hype into a concrete defense-maintenance workflow with measurable operational stakes.',
+    bodyParagraphs: [
+      'CNBC reported Gecko said its robots can shorten a repair process that can take three months to as little as two days.',
+      'That makes the contract more than another defense headline because the company is tying automation to a specific maintenance bottleneck.',
+    ],
+  }) >= 3,
+  true
+)
+assert.equal(
+  editorialNaturalnessScore({
+    summary: 'That matters because robotics buyers want proof.',
+    whyItMatters: 'The next thing to watch is whether the signal turns into momentum.',
+    bodyParagraphs: [
+      'That matters because robotics buyers want proof.',
+      'The useful signal is whether this is now tying the update to a concrete development in robotics commercialization.',
+    ],
+  }) <= 2,
+  true
 )
 
 const deterministicFactLayer = extractFactLayer({
@@ -335,6 +359,7 @@ const validatedFallback = validateQcEnrichment(fallback)
 assert.equal(validatedFallback.ok, true)
 assert.equal(validatedFallback.data.story_format, 'signal_brief')
 assert.equal(validatedFallback.data.publish_recommendation, 'draft_only')
+assert.equal(validatedFallback.data.editorial_naturalness_score <= 2, true)
 
 global.fetch = async () => ({
   ok: true,
@@ -364,6 +389,7 @@ const invalidCategory = validateQcEnrichment({
   implication_first_risk: 'high',
   abstractness_score: 4,
   repetition_score: 3,
+  editorial_naturalness_score: 2,
   source_strength_score: 3,
   newsworthiness_score: 3,
   visual_strength_score: 1,

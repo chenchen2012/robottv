@@ -32,6 +32,18 @@ const ABSTRACT_SIGNAL_PATTERNS = [
   /\bclearer competitive position\b/i,
   /\bdurable deployment signals\b/i,
 ]
+const TEMPLATED_EDITORIAL_PATTERNS = [
+  /\bthat matters because\b/i,
+  /\bthe next thing to watch\b/i,
+  /\bis now tying\b/i,
+  /\bpoints to a concrete development\b/i,
+  /\bsignals a shift\b/i,
+  /\bmore useful than generic momentum language\b/i,
+  /\bmore useful than another broad robotics claim\b/i,
+  /\bthe useful signal is\b/i,
+  /\bthe practical question is\b/i,
+  /\bthe real signal is\b/i,
+]
 const HEADLINE_OVERPROMISE_PATTERNS = /\b(world['’]s first|revolutionary|game[- ]changing|breakthrough|guarantees?)\b/i
 const VISUAL_STORY_FORMATS = new Set(['featured_candidate'])
 
@@ -233,6 +245,25 @@ export const factLooksLikeHeadlineEcho = ({ fact = '', title = '' } = {}) => {
   return similarity >= 0.9 && Math.abs(factTokens.length - titleTokens.length) <= 2
 }
 
+export const looksMalformedEditorialText = ({ text = '', title = '', sourceName = '' } = {}) => {
+  const normalizedText = normalizeWhitespace(text)
+  if (!normalizedText) return true
+
+  if (/\bthis matter\.\.\.$/i.test(normalizedText)) return true
+  if (/[.?!]\.\.\.$/.test(normalizedText)) return true
+
+  const source = normalizeWhitespace(sourceName)
+  if (source) {
+    const sourceSuffixPattern = new RegExp(`\\s-\\s${source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
+    if (sourceSuffixPattern.test(normalizedText)) return true
+  }
+
+  if (factLooksLikeHeadlineEcho({ fact: normalizedText, title })) return true
+  if (titleSimilarity(normalizedText, title) >= 0.92 && normalizedText.length <= normalizeWhitespace(title).length + 36) return true
+
+  return false
+}
+
 export const paragraphAnchoredToFactPackage = ({ paragraph = '', factPackage = {}, title = '' } = {}) => {
   const text = normalizeWhitespace(paragraph)
   if (!text) return false
@@ -339,6 +370,31 @@ export const repetitionScore = ({ summary = '', whyItMatters = '', bodyParagraph
   return Math.min(5, Math.max(1, 1 + Math.floor(repeated / 2)))
 }
 
+export const editorialNaturalnessScore = ({ summary = '', whyItMatters = '', bodyParagraphs = [] } = {}) => {
+  const lead = normalizeWhitespace(summary || '')
+  const paragraphs = Array.isArray(bodyParagraphs) ? bodyParagraphs.map((value) => normalizeWhitespace(value)).filter(Boolean) : []
+  const second = normalizeWhitespace(whyItMatters || paragraphs[1] || '')
+  const allText = [lead, second, ...paragraphs].filter(Boolean)
+  if (!allText.length) return 1
+
+  let score = 5
+  const templatedHits = TEMPLATED_EDITORIAL_PATTERNS.reduce(
+    (count, pattern) => count + allText.filter((sample) => pattern.test(sample)).length,
+    0
+  )
+  const implicationLedSamples = allText.filter((sample) => leadStartsWithImplication(sample)).length
+  const repeatedLead = lead && paragraphs[0] && !paragraphAdvancesSummary({ summary: lead, paragraph: paragraphs[0] })
+  const genericSecond = second && !hasConcreteFact(second) && countAbstractSignals(second) > 0
+
+  if (templatedHits >= 1) score -= 1
+  if (templatedHits >= 3) score -= 1
+  if (implicationLedSamples >= 2) score -= 1
+  if (repeatedLead) score -= 1
+  if (genericSecond) score -= 1
+
+  return Math.max(1, Math.min(5, score))
+}
+
 export const hasStrongVisualSupport = ({ youtubeUrl = '', sourceImageUrl = '', sourceContext = null, visualStrengthScore = 0 } = {}) =>
   Boolean(youtubeUrl) ||
   isValidSourceUrl(sourceImageUrl) ||
@@ -432,6 +488,16 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   const category = inferCategory({ title: candidate?.title, sourceName: candidate?.sourceName, sourceContext: editorial?.sourceContext })
   const summary = shortenText(summarySource, 220)
   const whyItMatters = shortenText(whySource, 180)
+  const malformedSummary = looksMalformedEditorialText({
+    text: summary,
+    title: candidate?.title,
+    sourceName: candidate?.sourceName,
+  })
+  const malformedParagraphOne = looksMalformedEditorialText({
+    text: editorial?.bodyParagraphs?.[0] || '',
+    title: candidate?.title,
+    sourceName: candidate?.sourceName,
+  })
   const sourceGrounded = Boolean(
     factPackage?.source_grounded ||
       editorial?.sourceContext?.metaDescription ||
@@ -474,6 +540,11 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   })
   const abstraction = abstractnessScore({ summary, whyItMatters, bodyParagraphs: editorial?.bodyParagraphs || [] })
   const repetition = repetitionScore({ summary, whyItMatters, bodyParagraphs: editorial?.bodyParagraphs || [] })
+  const editorialNaturalness = editorialNaturalnessScore({
+    summary,
+    whyItMatters,
+    bodyParagraphs: editorial?.bodyParagraphs || [],
+  })
   const actor = normalizeWhitespace(factPackage?.main_actor || '')
   const action = normalizeWhitespace(factPackage?.main_action || '')
   const object = normalizeWhitespace(factPackage?.main_object || '')
@@ -492,12 +563,16 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
   const publishRecommendation =
     !isValidSourceUrl(candidate?.sourceUrl) || !sourceGrounded
       ? 'reject'
-      : factPackage?.thin_source_risk === 'high' ||
+      : malformedSummary ||
+          malformedParagraphOne ||
+          factPackage?.thin_source_risk === 'high' ||
           !concreteFactPresent ||
           !leadWithConcreteFact ||
           !headlineSupported ||
+          !paragraphAdvancesSummary({ summary, paragraph: editorial?.bodyParagraphs?.[0] || '' }) ||
           abstraction >= 4 ||
           repetition >= 4 ||
+          editorialNaturalness <= 2 ||
           !paragraphAnchoredToFactPackage({ paragraph: editorial?.bodyParagraphs?.[1] || '', factPackage, title: candidate?.title })
         ? 'draft_only'
         : 'auto_publish'
@@ -516,6 +591,7 @@ export const buildFallbackQcEnrichment = ({ candidate, editorial }) => {
     implication_first_risk: implicationRisk,
     abstractness_score: abstraction,
     repetition_score: repetition,
+    editorial_naturalness_score: editorialNaturalness,
     source_strength_score: candidate?.sourceTrustTier === 'allow' ? 5 : candidate?.sourceTrustTier === 'caution' ? 3 : 2,
     newsworthiness_score: HIGH_SIGNAL_PATTERN.test(`${candidate?.title || ''} ${summary}`) ? 4 : 3,
     visual_strength_score: visualStrengthScore,
@@ -550,6 +626,7 @@ export const validateQcEnrichment = (value) => {
     implication_first_risk: ['low', 'medium', 'high'].includes(implicationRisk) ? implicationRisk : 'medium',
     abstractness_score: Number(value.abstractness_score || 0),
     repetition_score: Number(value.repetition_score || 0),
+    editorial_naturalness_score: Number(value.editorial_naturalness_score || 0),
     source_strength_score: Number(value.source_strength_score || 0),
     newsworthiness_score: Number(value.newsworthiness_score || 0),
     visual_strength_score: Number(value.visual_strength_score || 0),
@@ -563,6 +640,9 @@ export const validateQcEnrichment = (value) => {
 
   if (normalized.summary.length < 90 || wordCount(normalized.summary) < 12) {
     return { ok: false, reason: 'invalid_summary', data: null }
+  }
+  if (looksMalformedEditorialText({ text: normalized.summary })) {
+    return { ok: false, reason: 'malformed_summary', data: null }
   }
   if (normalized.why_it_matters.length < 50 || wordCount(normalized.why_it_matters) < 8) {
     return { ok: false, reason: 'invalid_why_it_matters', data: null }
@@ -579,6 +659,7 @@ export const validateQcEnrichment = (value) => {
   const boundedScores = [
     normalized.abstractness_score,
     normalized.repetition_score,
+    normalized.editorial_naturalness_score,
     normalized.source_strength_score,
     normalized.newsworthiness_score,
     normalized.visual_strength_score,
