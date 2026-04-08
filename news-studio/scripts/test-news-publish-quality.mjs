@@ -14,6 +14,7 @@ import {
   hasConcreteFact,
   isValidSourceUrl,
   leadStartsWithImplication,
+  looksMalformedEditorialText,
   isPromotionalLikely,
   paragraphAnchoredToFactPackage,
   paragraphAdvancesSummary,
@@ -96,6 +97,22 @@ assert.equal(
   true
 )
 assert.equal(
+  looksMalformedEditorialText({
+    text: "'Ground Robots' Replace Ukrainian Troops in 21,500 Missions in Q1 - Business Insider",
+    title: "Ukraine says it replaced human soldiers with 'ground robots' in over 21,000 missions for Q1",
+    sourceName: 'Business Insider',
+  }),
+  true
+)
+assert.equal(
+  looksMalformedEditorialText({
+    text: "Ukraine's forces tripled UGV missions since November to more than 9,000 tasks in March alone.",
+    title: "Ukraine says it replaced human soldiers with 'ground robots' in over 21,000 missions for Q1",
+    sourceName: 'Business Insider',
+  }),
+  false
+)
+assert.equal(
   paragraphAnchoredToFactPackage({
     paragraph: 'Gecko is tying U.S. Navy ship repair to a faster maintenance workflow.',
     factPackage: {
@@ -150,6 +167,18 @@ const thinFactLayer = extractFactLayer({
 assert.equal(thinFactLayer.diagnostics.viable_for_deepseek_refinement, false)
 assert.equal(thinFactLayer.diagnostics.viable_for_writing, false)
 assert.equal(thinFactLayer.validation.ok, false)
+
+const titleOnlyFactLayer = extractFactLayer({
+  headline: "Ukraine says it replaced human soldiers with 'ground robots' in over 21,000 missions for Q1",
+  sourceContext: {
+    pageTitle: "'Ground Robots' Replace Ukrainian Troops in 21,500 Missions in Q1 - Business Insider",
+    metaDescription: '',
+    ogDescription: '',
+    paragraphs: [],
+  },
+})
+assert.equal(titleOnlyFactLayer.diagnostics.source_grounded, false)
+assert.equal(titleOnlyFactLayer.diagnostics.viable_for_writing, false)
 
 const baseFetch = global.fetch
 global.fetch = async (url) => {
@@ -276,6 +305,8 @@ const fallbackEditorialPackage = await buildEditorialPackage({
 assert.equal(fallbackEditorialPackage.generationMode, 'fallback')
 assert.equal(fallbackEditorialPackage.bodyParagraphs.length >= 2, true)
 assert.equal(leadStartsWithImplication(fallbackEditorialPackage.excerpt), false)
+assert.equal(/This matters because|is now tying|The next thing to watch/i.test(fallbackEditorialPackage.excerpt), false)
+assert.equal(/This matters because|is now tying|The next thing to watch/i.test(fallbackEditorialPackage.bodyParagraphs[1] || ''), false)
 assert.equal(
   paragraphAdvancesSummary({ summary: fallbackEditorialPackage.excerpt, paragraph: fallbackEditorialPackage.bodyParagraphs[0] }),
   true

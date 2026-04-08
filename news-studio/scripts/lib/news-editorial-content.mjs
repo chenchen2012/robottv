@@ -198,33 +198,74 @@ const supportSentence = ({ headline, sourceContext, exclude = '' }) =>
     return hasConcreteFact(sentence, { title: headline }) || countWords(sentence) >= 12
   }) || ''
 
-const significanceLine = ({ headline, source, sourceContext, factPackage }) => {
+const sourceTextFromContext = (sourceContext = {}) =>
+  normalizeWhitespace([sourceContext.metaDescription, sourceContext.ogDescription, ...(sourceContext.paragraphs || [])].join(' '))
+
+const editorialLens = ({ headline, sourceContext, factPackage }) => {
   const theme = themeFromHeadline(headline)
+  const sourceText = sourceTextFromContext(sourceContext)
+  const object = normalizeWhitespace(factPackage?.main_object || '')
+
+  if (/military|defense|battlefield|troops?|ukraine|pentagon|navy/i.test(`${headline} ${sourceText} ${object}`)) return 'adoption'
+  if (/funding|valuation|fund|capital|backer/i.test(`${headline} ${sourceText}`)) return 'capital'
+  if (/factory|manufacturing|production|assembly|plant/i.test(`${headline} ${sourceText}`)) return 'operations'
+  if (/customer|contract|orders?|fleet|deployment|pilot/i.test(sourceText)) return 'deployment'
+  if (/policy|regulation|ban|lawmakers|government/i.test(`${headline} ${sourceText}`)) return 'policy'
+  if (/chip|compute|latency|edge|semiconductor|dragonwing|thor|jetson/i.test(`${headline} ${sourceText}`)) return 'compute'
+  if (/inspection|security|data center|patrol|monitoring/i.test(`${headline} ${sourceText}`)) return 'operations'
+  return {
+    'capital formation': 'capital',
+    'warehouse operations': 'operations',
+    'inspection operations': 'operations',
+    'factory automation': 'operations',
+    'humanoid deployment': 'deployment',
+    'field robotics': 'deployment',
+    'robotics compute': 'compute',
+    'industry events': 'adoption',
+    'policy and governance': 'policy',
+    'robotics commercialization': 'adoption',
+  }[theme] || 'adoption'
+}
+
+const significanceLine = ({ headline, source, sourceContext, factPackage }) => {
+  const lens = editorialLens({ headline, sourceContext, factPackage })
+  const sourceText = sourceTextFromContext(sourceContext)
   const actor = factPackage?.main_actor || sourceReference(source)
-  const object = factPackage?.main_object || 'this reported move'
-  const scale = factPackage?.main_number_or_scale || ''
-  if (factPackage?.secondary_fact) {
-    return safeSentence(
-      `${factPackage.secondary_fact} This matters because ${actor} is now tying ${object.toLowerCase()} to a more operational robotics outcome.`,
-      220
-    )
+  const object = normalizeWhitespace(factPackage?.main_object || '')
+  const scale = normalizeWhitespace(factPackage?.main_number_or_scale || '')
+
+  if (lens === 'capital') {
+    if (/infrastructure|manufacturing|energy|physical industr/i.test(sourceText)) {
+      return 'For robotics, the useful point is where the money is aimed: physical industries where AI has to show up in real systems, not just software.'
+    }
+    return 'Funding matters here because robotics categories that need hardware, integration, and long deployment cycles still depend on patient capital, not just model hype.'
   }
-  if (factPackage?.best_concrete_fact) {
-    return safeSentence(
-      `${actor} is now tying ${object.toLowerCase()}${scale ? ` at ${scale}` : ''} to a concrete robotics outcome rather than a general market narrative.`,
-      220
-    )
+  if (lens === 'operations') {
+    if (/legacy|data|connect/i.test(sourceText)) {
+      return 'The bottleneck here looks operational, not conceptual: factories that cannot connect equipment, data, and AI workflows will be slower to capture value from automation.'
+    }
+    if (/plant|production|assembly/i.test(sourceText)) {
+      return 'The notable signal is operational: large production changes usually ripple into automation, software integration, and material-flow decisions, not just product headlines.'
+    }
+    return 'The operational question is whether the update changes workflow, throughput, or integration discipline in a way customers would actually notice.'
   }
-  if (theme === 'robotics compute') {
-    return 'The practical question is whether this changes latency, on-robot autonomy, or deployment cost in ways robotics teams can actually use.'
+  if (lens === 'deployment') {
+    if (/troops?|missions?|battlefield|combat/i.test(sourceText)) {
+      return 'The stronger signal is usage intensity, not rhetoric: if mission counts are rising this quickly, the systems are moving from occasional deployment into regular field use.'
+    }
+    return 'The real signal is deployment quality: whether this turns into repeatable use in real settings rather than another promising robotics announcement.'
   }
-  if (theme === 'inspection operations') {
-    return 'The useful signal is whether the move reduces inspection risk or cost in routine operations rather than staying at the demo stage.'
+  if (lens === 'policy') {
+    return 'What matters here is how the decision changes procurement, deployment constraints, or market access, because policy effects usually show up through operational rules.'
   }
-  if (theme === 'humanoid deployment') {
-    return 'The useful signal is whether this development improves real deployment readiness rather than adding another humanoid headline.'
+  if (lens === 'compute') {
+    return 'The practical question is whether this improves latency, on-robot autonomy, or deployment cost enough to matter in real robotics stacks.'
   }
-  return `${actor} is now attached to a concrete development in ${theme}, which matters more than generic momentum language.`
+
+  return safeSentence(
+    `${actor}${object ? ` is pushing ${object.toLowerCase()}` : ''}${scale ? ` at ${scale}` : ''} into a more operational phase, which is more useful than another broad robotics claim.`,
+    220
+  )
 }
 
 const shouldUseParagraphThree = ({ factPackage, sourceContext }) => {
@@ -257,7 +298,7 @@ const watchLine = ({ headline, sourceContext, factPackage }) => {
 const buildFallbackExcerpt = ({ headline, source, sourceContext, factPackage }) => {
   const factLead = safeSentence(factPackage?.best_concrete_fact || firstSourceSentence({ headline, sourceContext }) || headline, 160)
   const implication =
-    factPackage?.thin_source_risk === 'high' ? '' : safeSentence(significanceLine({ headline, source, sourceContext, factPackage }), 96)
+    factPackage?.thin_source_risk === 'high' ? '' : safeSentence(significanceLine({ headline, source, sourceContext, factPackage }), 110)
   const composed = normalizeWhitespace([factLead, implication && !leadStartsWithImplication(factLead) ? implication : ''].filter(Boolean).join(' '))
   if (composed) return composed.length > 240 ? `${composed.slice(0, 237).trimEnd()}...` : composed
   return safeSentence(`${headline}.`, 140)
@@ -341,9 +382,11 @@ const buildStructuredEditorialPrompt = ({ headline, source, sourceUrl, pubDate, 
     'Use only the supplied source context. Do not invent facts. Empty strings are better than guessed facts.',
     'If the source is thin, say so through thin_source_risk and keep the writing conservative.',
     'The summary must begin with a concrete fact when possible.',
+    'Write like a concise editor, not a template.',
+    'Avoid phrases like "This matters because", "The next thing to watch", "signals a shift", and "is now tying".',
     'Paragraph 1 must be fact-first and source-grounded.',
     'Paragraph 1 must add the next strongest concrete fact or operational detail instead of closely repeating the summary lead.',
-    'Paragraph 2 must stay tied to extracted facts, not generic robotics-market narration.',
+    'Paragraph 2 must stay tied to extracted facts and explain the practical signal in specific terms, not generic robotics-market narration.',
     'Paragraph 3 is optional. Include it only when the source context justifies a watch-next line.',
     'Missing video must not block a valid signal brief.',
     '',
@@ -383,9 +426,10 @@ const buildStructuredEditorialPrompt = ({ headline, source, sourceUrl, pubDate, 
     'Rules:',
     '- best_concrete_fact must be a fact directly supported by the source context.',
     '- If you cannot support a field from the source, return an empty string rather than guessing.',
-    '- summary should contain one concrete fact and one implication when justified.',
+    '- summary should contain one concrete fact and, when justified, one specific implication rather than a generic significance phrase.',
     '- paragraph 3 must be omitted when paragraph3_useful is false.',
     '- story_format_recommendation should be draft_only when the source is too thin for confident publication.',
+    '- paragraph 2 should name the actual operational, deployment, funding, policy, or compute implication suggested by the facts.',
   ].join('\n')
 
 const normalizeAiEditorialPackage = (value, { title = '', fallbackPackage = null } = {}) => {
