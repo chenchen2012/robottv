@@ -10,12 +10,14 @@ export const NEWS_MAX_POSTS_PER_DAY = parsePositiveNumber(process.env.NEWS_MAX_P
 export const NEWS_PUBLISH_BATCH_LIMIT = parsePositiveNumber(process.env.PUBLISH_COUNT, 8)
 export const NEWS_MIN_INFORMATIONAL_DENSITY = parsePositiveNumber(process.env.NEWS_MIN_INFORMATIONAL_DENSITY, 3)
 export const NEWS_MIN_AUDIENCE_RELEVANCE = parsePositiveNumber(process.env.NEWS_MIN_AUDIENCE_RELEVANCE, 3)
+export const NEWS_CANDIDATE_REVIEW_LIMIT = parsePositiveNumber(process.env.NEWS_CANDIDATE_REVIEW_LIMIT, 24)
 export const NEWS_RECENT_DUPLICATE_WINDOW_DAYS = parsePositiveNumber(
   process.env.NEWS_RECENT_DUPLICATE_WINDOW_DAYS,
   7
 )
 export const NEWS_SOURCE_FETCH_TIMEOUT_MS = parsePositiveNumber(process.env.NEWS_SOURCE_FETCH_TIMEOUT_MS, 12_000)
 export const NEWS_DEEPSEEK_TIMEOUT_MS = parsePositiveNumber(process.env.NEWS_DEEPSEEK_TIMEOUT_MS, 20_000)
+export const YOUTUBE_FETCH_TIMEOUT_MS = parsePositiveNumber(process.env.YOUTUBE_FETCH_TIMEOUT_MS, 10_000)
 export const YOUTUBE_MAX_CANDIDATES = parsePositiveNumber(process.env.YOUTUBE_MAX_CANDIDATES, 5)
 export const YOUTUBE_MAX_VIDEO_AGE_DAYS = parsePositiveNumber(process.env.YOUTUBE_MAX_VIDEO_AGE_DAYS, 45)
 export const YOUTUBE_REQUIRE_TRUSTED_CHANNEL = String(process.env.YOUTUBE_REQUIRE_TRUSTED_CHANNEL || '1') !== '0'
@@ -168,6 +170,7 @@ export const YOUTUBE_ENV = {
   apiUrl: process.env.YOUTUBE_API_URL || 'https://www.googleapis.com/youtube/v3/search',
   maxCandidates: YOUTUBE_MAX_CANDIDATES,
   maxVideoAgeDays: YOUTUBE_MAX_VIDEO_AGE_DAYS,
+  fetchTimeoutMs: YOUTUBE_FETCH_TIMEOUT_MS,
   requireTrustedChannel: YOUTUBE_REQUIRE_TRUSTED_CHANNEL,
   enableScrapeFallback: YOUTUBE_ENABLE_SCRAPE_FALLBACK,
 }

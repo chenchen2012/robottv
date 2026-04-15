@@ -4,6 +4,7 @@ import path from 'node:path'
 import { buildEditorialPackage, blocksFromParagraphs } from './lib/news-editorial-content.mjs'
 import {
   NEWS_MAX_POSTS_PER_DAY,
+  NEWS_CANDIDATE_REVIEW_LIMIT,
   NEWS_MIN_AUDIENCE_RELEVANCE,
   NEWS_MIN_INFORMATIONAL_DENSITY,
   NEWS_PUBLISH_BATCH_LIMIT,
@@ -514,7 +515,12 @@ const writePublishReport = async () => {
   )
 }
 
-for (const candidate of candidatePool) {
+const reviewCandidates = candidatePool.slice(0, NEWS_CANDIDATE_REVIEW_LIMIT)
+if (candidatePool.length > reviewCandidates.length) {
+  console.log(`Reviewing top ${reviewCandidates.length} of ${candidatePool.length} deduped candidates this cycle.`)
+}
+
+for (const candidate of reviewCandidates) {
   if (docs.length >= Math.min(remainingDailySlots, NEWS_PUBLISH_BATCH_LIMIT)) break
 
   const sourceUrlDebug = {

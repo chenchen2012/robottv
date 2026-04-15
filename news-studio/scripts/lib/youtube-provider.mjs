@@ -33,6 +33,24 @@ const uniqueQueryPhrases = (values = []) => {
 
 const hasRoboticsHint = (value = '') => /\b(robot|robotics|humanoid|automation|factory|warehouse|vision|quadruped)\b/i.test(value)
 
+const fetchWithTimeout = async (url, options = {}) => {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), YOUTUBE_ENV.fetchTimeoutMs)
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      throw new Error('youtube_timeout')
+    }
+    throw error
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 export const buildYouTubeQueryVariants = ({ story = {}, youtubeSearchQuery = '' }) => {
   const title = normalizeWhitespace(story?.title || '')
   const sourceName = normalizeWhitespace(story?.sourceName || '')
@@ -68,7 +86,7 @@ export const buildYouTubeQueryVariants = ({ story = {}, youtubeSearchQuery = '' 
 }
 
 const fetchJson = async (url) => {
-  const response = await fetch(url)
+  const response = await fetchWithTimeout(url)
   if (!response.ok) {
     throw new Error(`youtube_http_${response.status}`)
   }
@@ -76,7 +94,7 @@ const fetchJson = async (url) => {
 }
 
 const fetchText = async (url) => {
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     headers: {
       'user-agent':
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
