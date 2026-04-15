@@ -32,6 +32,7 @@ import {
   normalizeUrl,
   normalizeWhitespace,
   paragraphAnchoredToFactPackage,
+  paragraphAdvancesSummary,
   rankCandidate,
   repetitionScore,
   roboticsAudienceRelevanceScore,
