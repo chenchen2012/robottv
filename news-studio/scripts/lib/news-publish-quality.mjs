@@ -337,6 +337,9 @@ export const validateFactPackage = (value, { title = '' } = {}) => {
   if (!normalized.best_concrete_fact || !hasConcreteFact(normalized.best_concrete_fact, { title })) {
     return { ok: false, reason: 'invalid_best_concrete_fact', data: null }
   }
+  if (SPECIFIC_PRODUCT_PATTERNS.test(title) && !SPECIFIC_PRODUCT_PATTERNS.test(normalized.best_concrete_fact)) {
+    return { ok: false, reason: 'best_concrete_fact_topic_mismatch', data: null }
+  }
   if (!normalized.source_grounded && factLooksLikeHeadlineEcho({ fact: normalized.best_concrete_fact, title })) {
     return { ok: false, reason: 'headline_echo_best_concrete_fact', data: null }
   }

@@ -118,6 +118,25 @@ assert.equal(
   false
 )
 assert.equal(
+  validateFactPackage(
+    {
+      main_actor: '',
+      main_action: '',
+      main_object: 'Humanoid robots show off boxing and language skills in Hong Kong',
+      main_number_or_scale: '2020',
+      best_concrete_fact:
+        'Immigration and Customs Enforcement employees and contractors have been charged with crimes since 2020 and their wrongdoing includes patterns of physical and sexual abuse.',
+      secondary_fact: '',
+      source_grounded: true,
+      thin_source_risk: 'low',
+      headline_supported: true,
+      story_format_recommendation: 'featured_candidate',
+    },
+    { title: 'Humanoid robots show off boxing and language skills in Hong Kong' }
+  ).reason,
+  'best_concrete_fact_topic_mismatch'
+)
+assert.equal(
   informationalDensityScore({
     title: 'Figure deploys humanoid robots in a BMW factory',
     summary: 'Figure said it deployed humanoid robots in a BMW factory to handle repetitive material movement.',
