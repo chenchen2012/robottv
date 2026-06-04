@@ -22,6 +22,12 @@ export const YOUTUBE_MAX_CANDIDATES = parsePositiveNumber(process.env.YOUTUBE_MA
 export const YOUTUBE_MAX_VIDEO_AGE_DAYS = parsePositiveNumber(process.env.YOUTUBE_MAX_VIDEO_AGE_DAYS, 45)
 export const YOUTUBE_REQUIRE_TRUSTED_CHANNEL = String(process.env.YOUTUBE_REQUIRE_TRUSTED_CHANNEL || '1') !== '0'
 export const YOUTUBE_ENABLE_SCRAPE_FALLBACK = String(process.env.YOUTUBE_ENABLE_SCRAPE_FALLBACK || '1') !== '0'
+const parseRatio = (value, fallback) => {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? Math.min(1, Math.max(0, parsed)) : fallback
+}
+
+export const NEWS_VIDEO_PRIORITY_MIN_RATIO = parseRatio(process.env.NEWS_VIDEO_PRIORITY_MIN_RATIO, 0.7)
 
 export const TAXONOMY = [
   {

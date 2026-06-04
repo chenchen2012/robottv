@@ -22,6 +22,7 @@ import {
   paragraphAnchoredToFactPackage,
   paragraphAdvancesSummary,
   roboticsAudienceRelevanceScore,
+  selectVideoPreferredPublishables,
   visualStandoutScore,
   validateFactPackage,
   validateQcEnrichment,
@@ -483,6 +484,48 @@ assert.equal(invalidCategory.ok, false)
 
 const dailyCapRemaining = Math.max(0, 8 - 8)
 assert.equal(dailyCapRemaining, 0)
+
+const balancedVideoFirstSelection = selectVideoPreferredPublishables({
+  targetCount: 3,
+  minVideoRatio: 0.7,
+  publishables: [
+    { doc: { title: 'Article-only robotics funding story' }, review: { youtube: { attached: false } } },
+    {
+      doc: { title: 'Figure factory video story', youtubeUrl: 'https://www.youtube.com/watch?v=abc123def45' },
+      review: { youtube: { attached: true } },
+    },
+    { doc: { title: 'Another article-only robot story' }, review: { youtube: { attached: false } } },
+    {
+      doc: { title: 'Unitree demo video story', youtubeUrl: 'https://www.youtube.com/watch?v=unitree1234' },
+      review: { youtube: { attached: true } },
+    },
+    {
+      doc: { title: 'Agility warehouse video story', youtubeUrl: 'https://www.youtube.com/watch?v=agility123' },
+      review: { youtube: { attached: true } },
+    },
+  ],
+})
+assert.deepEqual(
+  balancedVideoFirstSelection.map((item) => item.doc.title),
+  ['Figure factory video story', 'Unitree demo video story', 'Agility warehouse video story']
+)
+
+const articleFallbackSelection = selectVideoPreferredPublishables({
+  targetCount: 3,
+  minVideoRatio: 0.7,
+  publishables: [
+    {
+      doc: { title: 'Figure factory video story', youtubeUrl: 'https://www.youtube.com/watch?v=abc123def45' },
+      review: { youtube: { attached: true } },
+    },
+    { doc: { title: 'Source-backed robot acquisition story' }, review: { youtube: { attached: false } } },
+    { doc: { title: 'Source-backed AI robotics funding story' }, review: { youtube: { attached: false } } },
+  ],
+})
+assert.deepEqual(
+  articleFallbackSelection.map((item) => item.doc.title),
+  ['Figure factory video story', 'Source-backed robot acquisition story', 'Source-backed AI robotics funding story']
+)
 
 const trustedChannelId = TRUSTED_YOUTUBE_CHANNELS[0].channelId
 const factAwareQueries = buildYouTubeQueryVariants({

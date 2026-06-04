@@ -6,6 +6,7 @@ import {
   NEWS_MIN_AUDIENCE_RELEVANCE,
   NEWS_MIN_INFORMATIONAL_DENSITY,
   NEWS_RECENT_DUPLICATE_WINDOW_DAYS,
+  NEWS_VIDEO_PRIORITY_MIN_RATIO,
   PROMOTIONAL_PATTERN,
   SOURCE_TRUST,
   SOURCE_TRUST_SCORES,
@@ -851,6 +852,37 @@ export const rankCandidate = (candidate) => {
   return trust + signal + entities + visualAppeal + specificProduct + strategyPenalty
 }
 
+export const hasAttachedYouTube = (item) =>
+  Boolean(
+    String(item?.doc?.youtubeUrl || item?.youtubeUrl || '').trim() ||
+      item?.review?.youtube?.attached ||
+      item?.youtube?.attached
+  )
+
+export const selectVideoPreferredPublishables = ({
+  publishables = [],
+  targetCount = 1,
+  minVideoRatio = NEWS_VIDEO_PRIORITY_MIN_RATIO,
+} = {}) => {
+  const target = Math.max(0, Math.floor(Number(targetCount || 0)))
+  if (!target) return []
+
+  const videoBacked = publishables.filter(hasAttachedYouTube)
+  const articleOnly = publishables.filter((item) => !hasAttachedYouTube(item))
+  const desiredVideoCount = Math.min(target, Math.ceil(target * Math.max(0, Math.min(1, Number(minVideoRatio || 0)))))
+  const selected = []
+
+  selected.push(...videoBacked.slice(0, desiredVideoCount))
+  if (selected.length < target && videoBacked.length > selected.length) {
+    selected.push(...videoBacked.slice(selected.length, target))
+  }
+  if (selected.length < target) {
+    selected.push(...articleOnly.slice(0, target - selected.length))
+  }
+
+  return selected
+}
+
 export const buildQcPrompt = ({ candidate, editorial }) => {
   const allowedCategories = TAXONOMY.map((entry) => `${entry.id}: ${entry.title}`).join('; ')
   const allowedLinks = [...INTERNAL_LINK_ALLOWLIST].join('; ')
@@ -877,8 +909,8 @@ export const buildQcPrompt = ({ candidate, editorial }) => {
     `Fallback why it matters: ${editorial?.bodyParagraphs?.[1] || editorial?.bodyParagraphs?.[0] || 'n/a'}`,
     '',
     'Rules:',
-    '- A YouTube video is not required for a valid post.',
-    '- If the item has no embedded video or strong visual support, it should be treated as signal_brief, not rejected for that reason alone.',
+    '- Prefer robotics and AI stories that can support a related YouTube embed; article-only posts are acceptable only when no safer video-backed alternative is available in the cycle.',
+    '- If the item has no embedded video or strong visual support, treat it as signal_brief and keep homepage_eligible false unless the source signal is exceptional.',
     '- Only return featured_candidate when the item appears visually strong enough for featured treatment.',
     '- concrete_fact_present should be true only if the summary/body contains at least one concrete factual statement.',
     '- lead_with_concrete_fact should be false if the summary opens with implication-first framing before stating a concrete fact.',

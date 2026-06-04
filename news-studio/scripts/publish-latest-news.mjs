@@ -37,6 +37,7 @@ import {
   rankCandidate,
   repetitionScore,
   roboticsAudienceRelevanceScore,
+  selectVideoPreferredPublishables,
   slugify,
   stripHtml,
   titleKey,
@@ -284,6 +285,7 @@ for (const candidate of normalizedCandidates) {
 
 const docs = []
 const acceptedReviews = []
+const publishableReviews = []
 const draftOnlyReviews = []
 const rejectedReviews = []
 const acceptedForDupChecks = [...existingPosts]
@@ -489,6 +491,11 @@ const writePublishReport = async () => {
         remainingDailySlots,
         maxPostsPerDay: NEWS_MAX_POSTS_PER_DAY,
         published: docs.length,
+        publishedWithVideo: docs.filter((doc) => String(doc.youtubeUrl || '').trim()).length,
+        publishedArticleOnly: docs.filter((doc) => !String(doc.youtubeUrl || '').trim()).length,
+        publishableReviewed: publishableReviews.length,
+        publishableWithVideo: publishableReviews.filter((item) => item.review?.youtube?.attached).length,
+        publishableArticleOnly: publishableReviews.filter((item) => !item.review?.youtube?.attached).length,
         draftOnly: draftOnlyReviews.length,
         rejected: rejectedReviews.length,
         acceptedReviews,
@@ -516,12 +523,13 @@ const writePublishReport = async () => {
 }
 
 const reviewCandidates = candidatePool.slice(0, NEWS_CANDIDATE_REVIEW_LIMIT)
+const publishTarget = Math.min(remainingDailySlots, NEWS_PUBLISH_BATCH_LIMIT)
 if (candidatePool.length > reviewCandidates.length) {
   console.log(`Reviewing top ${reviewCandidates.length} of ${candidatePool.length} deduped candidates this cycle.`)
 }
 
 for (const candidate of reviewCandidates) {
-  if (docs.length >= Math.min(remainingDailySlots, NEWS_PUBLISH_BATCH_LIMIT)) break
+  if (publishableReviews.filter((item) => item.review?.youtube?.attached).length >= publishTarget) break
 
   const sourceUrlDebug = {
     rssSourceUrl: candidate.rssSourceUrl || '',
@@ -718,14 +726,53 @@ for (const candidate of reviewCandidates) {
     continue
   }
 
-  docs.push(doc)
+  publishableReviews.push({ doc, review: reviewPayload })
   acceptedForDupChecks.unshift({
     title: doc.title,
     slug: doc.slug.current,
     sourceUrl: doc.sourceUrl,
     publishedAt: doc.publishedAt,
   })
-  acceptedReviews.push(reviewPayload)
+}
+
+const selectedPublishables = selectVideoPreferredPublishables({
+  publishables: publishableReviews,
+  targetCount: publishTarget,
+})
+docs.push(...selectedPublishables.map((item) => item.doc))
+acceptedReviews.push(
+  ...selectedPublishables.map((item) => ({
+    ...item.review,
+    videoPriority: item.review?.youtube?.attached ? 'selected_video_backed' : 'selected_article_only_fallback',
+  }))
+)
+
+const skippedArticleOnlyFallbacks = publishableReviews.filter(
+  (item) => !selectedPublishables.includes(item) && !item.review?.youtube?.attached
+)
+if (skippedArticleOnlyFallbacks.length) {
+  rejectedReviews.push(
+    ...skippedArticleOnlyFallbacks.map((item) => ({
+      title: item.doc.title,
+      reason: 'article-only fallback skipped because video-backed alternatives were available',
+      tier: item.doc.sourceTrustTier,
+      rssSourceUrl: item.doc.rssSourceUrl || '',
+      sourceUrl: item.doc.sourceUrl || '',
+      sourceUrlResolution: item.doc.sourceUrlResolution || '',
+      review: {
+        ...item.review,
+        videoPriority: 'skipped_article_only_video_priority',
+      },
+    }))
+  )
+}
+
+const videoBackedSelectedCount = docs.filter((doc) => String(doc.youtubeUrl || '').trim()).length
+if (docs.length) {
+  console.log(
+    `Video priority selected ${videoBackedSelectedCount}/${docs.length} post(s) with YouTube embeds; ` +
+      `${docs.length - videoBackedSelectedCount} article-only fallback(s).`
+  )
 }
 
 if (!docs.length) {
