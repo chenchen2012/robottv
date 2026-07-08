@@ -137,6 +137,14 @@ const hoursSincePublished = (post) => {
   return (Date.now() - publishedAt) / (1000 * 60 * 60)
 }
 
+const daysBetweenPublishedAt = (post, comparisonTime) => {
+  const publishedAt = new Date(post?.publishedAt || 0).getTime()
+  if (!publishedAt || Number.isNaN(publishedAt) || !comparisonTime || Number.isNaN(comparisonTime)) {
+    return Number.POSITIVE_INFINITY
+  }
+  return Math.max(0, (comparisonTime - publishedAt) / (1000 * 60 * 60 * 24))
+}
+
 const hasPriorityHomepageTopic = (post) =>
   (Array.isArray(post?.categories) ? post.categories : []).some((category) =>
     priorityHomepageTopics.has(normalizeTopicToken(category))
@@ -270,11 +278,23 @@ export const selectHomepagePromotionSlots = (posts, { visualSlots = 2, textSlots
   return { visualPosts, textSignalPosts }
 }
 
-export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3, briefsOnlyTopSlots = 4, fallbackSourcePosts } = {}) => {
+export const selectHomepageStoryLayout = (
+  posts,
+  { railBriefSlots = 3, briefsOnlyTopSlots = 4, fallbackSourcePosts, leadFreshnessDays = 14 } = {}
+) => {
   const orderedPosts = Array.isArray(posts) ? [...posts] : []
   const fallbackOrderedPosts = Array.isArray(fallbackSourcePosts) && fallbackSourcePosts.length
     ? [...fallbackSourcePosts]
     : orderedPosts
+  const newestVisiblePublishedAt = orderedPosts.reduce((newest, post) => {
+    const publishedAt = new Date(post?.publishedAt || 0).getTime()
+    return publishedAt && !Number.isNaN(publishedAt) ? Math.max(newest, publishedAt) : newest
+  }, 0)
+  const isFreshEnoughForLead = (post) => {
+    const slug = normalizeHomepageSlug(post?.slug)
+    if (homepageLeadFeaturePreferredSlugs.has(slug)) return true
+    return daysBetweenPublishedAt(post, newestVisiblePublishedAt) <= leadFreshnessDays
+  }
   const classifications = orderedPosts.map((post) => ({
     post,
     classification: classifyHomepageStory(post),
@@ -295,15 +315,16 @@ export const selectHomepageStoryLayout = (posts, { railBriefSlots = 3, briefsOnl
   const featureEntries = classifications
     .filter((entry) => entry.classification.kind === "lead-feature" || entry.classification.kind === "featured")
     .sort(byPublishedAtDesc)
+  const freshFeatureEntries = featureEntries.filter((entry) => isFreshEnoughForLead(entry.post))
   const signalEntries = classifications
     .filter((entry) => entry.classification.kind === "signal-brief")
     .sort(byPublishedAtDesc)
 
-  const featuredLeadEntry = featureEntries[0] || null
+  const featuredLeadEntry = freshFeatureEntries[0] || null
   const fallbackVideoEntry = featuredLeadEntry
     ? null
     : fallbackClassifications
-        .filter((entry) => hasHomepageEmbeddedVideo(entry.post))
+        .filter((entry) => hasHomepageEmbeddedVideo(entry.post) && isFreshEnoughForLead(entry.post))
         .sort(byPublishedAtDesc)[0] || null
   const leadEntry = featuredLeadEntry || fallbackVideoEntry
   const lead = leadEntry?.post || null

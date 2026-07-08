@@ -11,6 +11,7 @@ on:
       - "news-studio/package-lock.json"
       - "news-studio/static/**"
       - "scripts/editorial-pinned-posts.mjs"
+      - "scripts/homepage-news-rules.mjs"
       - "news-studio/scripts/build-static-news-seo.mjs"
       - "news-studio/scripts/build-public-dist.mjs"
       - "news-studio/scripts/check-public-build.mjs"
