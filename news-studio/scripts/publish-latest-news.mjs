@@ -648,26 +648,42 @@ for (const candidate of reviewCandidates) {
     body: blocksFromParagraphs(editorial.bodyParagraphs),
   }
 
-  const youtubeDecision = await matchYouTubeVideo({
-    story: {
-      title: doc.title,
-      sourceName: doc.sourceName,
-      sourcePublishedAt,
-      factPackage: editorial.factPackage || null,
-    },
-    youtubeSearchQuery: enrichment.youtube_search_query || '',
-  })
-
-  if (youtubeDecision.attached && youtubeDecision.match?.youtubeUrl) {
-    doc.youtubeUrl = youtubeDecision.match.youtubeUrl
+  let youtubeDecision = {
+    attached: false,
+    reason: 'not_attempted_until_publishable',
+    query: '',
+    attemptedQueries: [],
+    match: null,
   }
-
-  const evaluated = evaluateDecision({
+  let evaluated = evaluateDecision({
     candidate,
     editorial,
     enrichment,
     youtubeDecision,
   })
+
+  if (evaluated.decision === 'auto_publish') {
+    youtubeDecision = await matchYouTubeVideo({
+      story: {
+        title: doc.title,
+        sourceName: doc.sourceName,
+        sourcePublishedAt,
+        sourceContext: editorial.sourceContext || null,
+        factPackage: editorial.factPackage || null,
+      },
+      youtubeSearchQuery: enrichment.youtube_search_query || '',
+    })
+  }
+
+  if (youtubeDecision.attached && youtubeDecision.match?.youtubeUrl) {
+    doc.youtubeUrl = youtubeDecision.match.youtubeUrl
+    evaluated = evaluateDecision({
+      candidate,
+      editorial,
+      enrichment,
+      youtubeDecision,
+    })
+  }
   const reviewPayload = {
     title: candidate.title,
     mode: editorial.generationMode,

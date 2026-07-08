@@ -100,8 +100,8 @@ jobs:
           NEWS_RECENT_DUPLICATE_WINDOW_DAYS: "7"
           NEWS_DEEPSEEK_TIMEOUT_MS: "20000"
           NEWS_VIDEO_PRIORITY_MIN_RATIO: "0.7"
-          YOUTUBE_MAX_CANDIDATES: "12"
-          YOUTUBE_MAX_VIDEO_AGE_DAYS: "60"
+          YOUTUBE_MAX_CANDIDATES: "6"
+          YOUTUBE_MAX_VIDEO_AGE_DAYS: "120"
           YOUTUBE_REQUIRE_TRUSTED_CHANNEL: "1"
         run: node scripts/publish-latest-news.mjs
 

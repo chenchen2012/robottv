@@ -336,6 +336,7 @@ global.fetch = async (url) => {
           </head>
           <body>
             <article>
+              <iframe src="https://www.youtube.com/embed/GeckoNavy12"></iframe>
               <p>Generalist introduced GEN-1, a general-purpose model for physical AI, and said the release is aimed at faster robot training and deployment.</p>
               <p>The company said GEN-1 is designed to improve robot learning across tasks and shorten iteration cycles for developers.</p>
             </article>
@@ -361,6 +362,7 @@ assert.equal(hasConcreteFact(editorialPackage.bodyParagraphs[0], { title: 'Gener
 assert.equal(paragraphAdvancesSummary({ summary: editorialPackage.excerpt, paragraph: editorialPackage.bodyParagraphs[0] }), true)
 assert.equal(editorialPackage.bodyParagraphs.length, 2)
 assert.match(editorialPackage.factPackage.best_concrete_fact, /GEN-1/)
+assert.deepEqual(editorialPackage.sourceContext.youtubeUrls, ['https://www.youtube.com/watch?v=GeckoNavy12'])
 assert.equal(validateFactPackage(editorialPackage.factPackage, { title: 'Generalist introduces GEN-1 general-purpose model for physical AI' }).ok, true)
 global.fetch = baseFetch
 
@@ -559,6 +561,25 @@ const trustedVideo = evaluateYouTubeCandidate({
   },
 })
 assert.equal(trustedVideo.accepted, true)
+
+global.fetch = async () => {
+  throw new Error('source_page_embed_should_not_search')
+}
+const sourceEmbeddedVideo = await matchYouTubeVideo({
+  story: {
+    title: 'Watch Figure humanoid robots working in a BMW factory',
+    sourceName: 'Interesting Engineering',
+    sourcePublishedAt: now,
+    sourceContext: {
+      youtubeUrls: ['https://www.youtube.com/embed/FigureBMW01'],
+    },
+  },
+  youtubeSearchQuery: 'Figure humanoid BMW factory',
+})
+assert.equal(sourceEmbeddedVideo.attached, true)
+assert.equal(sourceEmbeddedVideo.reason, 'source_page_youtube_embed')
+assert.equal(sourceEmbeddedVideo.match?.youtubeUrl, 'https://www.youtube.com/watch?v=FigureBMW01')
+global.fetch = baseFetch
 
 const trustedByTitleVideo = evaluateYouTubeCandidate({
   story: {

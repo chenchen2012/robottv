@@ -117,6 +117,35 @@ const extractImageUrl = (html, baseUrl = '') => {
   return ''
 }
 
+const normalizeYouTubeUrl = (value = '') => {
+  const text = String(value || '').replace(/\\\//g, '/').replace(/&amp;/gi, '&').trim()
+  if (!text) return ''
+  const patterns = [
+    /(?:youtube\.com\/watch\?[^"'<>\s]*v=|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/i,
+    /["']videoId["']\s*:\s*["']([a-zA-Z0-9_-]{11})["']/i,
+  ]
+  const match = patterns.map((pattern) => text.match(pattern)).find(Boolean)
+  const videoId = match?.[1] || ''
+  return videoId ? `https://www.youtube.com/watch?v=${videoId}` : ''
+}
+
+const extractYouTubeUrls = (html) => {
+  const urls = []
+  const seen = new Set()
+  const candidates = [
+    ...String(html || '').matchAll(/(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?[^"'<>\s]*v=|embed\/|shorts\/|live\/)|youtu\.be\/)[a-zA-Z0-9_-]{11}[^"'<>\s]*/gi),
+    ...String(html || '').matchAll(/["']videoId["']\s*:\s*["'][a-zA-Z0-9_-]{11}["']/gi),
+  ]
+  for (const candidate of candidates) {
+    const normalized = normalizeYouTubeUrl(candidate[0])
+    if (!normalized || seen.has(normalized)) continue
+    seen.add(normalized)
+    urls.push(normalized)
+    if (urls.length >= 3) break
+  }
+  return urls
+}
+
 const extractParagraphs = (html) => {
   const mainSectionMatch =
     html.match(/<article[\s\S]*?<\/article>/i) ||
@@ -481,6 +510,7 @@ const fetchSourceContext = async (sourceUrl) => {
     metaDescription: '',
     ogDescription: '',
     imageUrl: '',
+    youtubeUrls: [],
     paragraphs: [],
   }
   const url = String(sourceUrl || '').trim()
@@ -495,6 +525,7 @@ const fetchSourceContext = async (sourceUrl) => {
       metaDescription: extractMeta(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"]+)["']/i),
       ogDescription: extractMeta(html, /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"]+)["']/i),
       imageUrl: extractImageUrl(html, url),
+      youtubeUrls: extractYouTubeUrls(html),
       paragraphs: extractParagraphs(html),
     }
   } catch {

@@ -33,6 +33,32 @@ const uniqueQueryPhrases = (values = []) => {
 
 const hasRoboticsHint = (value = '') => /\b(robot|robotics|humanoid|automation|factory|warehouse|vision|quadruped)\b/i.test(value)
 
+const normalizeYouTubeUrl = (value = '') => {
+  const text = String(value || '').replace(/\\\//g, '/').replace(/&amp;/gi, '&').trim()
+  const match = text.match(
+    /(?:youtube\.com\/watch\?[^"'<>\s]*v=|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/i
+  )
+  const videoId = match?.[1] || ''
+  return videoId ? `https://www.youtube.com/watch?v=${videoId}` : ''
+}
+
+const videoIdFromYouTubeUrl = (value = '') => {
+  const normalized = normalizeYouTubeUrl(value)
+  return (normalized.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || [])[1] || ''
+}
+
+const sourcePageYouTubeUrls = (story = {}) => {
+  const urls = []
+  const seen = new Set()
+  for (const value of story?.sourceContext?.youtubeUrls || story?.sourceYouTubeUrls || []) {
+    const normalized = normalizeYouTubeUrl(value)
+    if (!normalized || seen.has(normalized)) continue
+    seen.add(normalized)
+    urls.push(normalized)
+  }
+  return urls
+}
+
 const fetchWithTimeout = async (url, options = {}) => {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), YOUTUBE_ENV.fetchTimeoutMs)
@@ -327,6 +353,30 @@ export const evaluateYouTubeCandidate = ({ story, query, candidate }) => {
 }
 
 export const matchYouTubeVideo = async ({ story, youtubeSearchQuery = '' }) => {
+  const sourceUrls = sourcePageYouTubeUrls(story)
+  if (sourceUrls.length) {
+    const youtubeUrl = sourceUrls[0]
+    const videoId = videoIdFromYouTubeUrl(youtubeUrl)
+    return {
+      attached: true,
+      reason: 'source_page_youtube_embed',
+      query: '',
+      attemptedQueries: [],
+      match: {
+        accepted: true,
+        reason: 'source_page_youtube_embed',
+        channelId: '',
+        channelTitle: String(story?.sourceName || '').trim(),
+        videoId,
+        videoTitle: 'Source embedded video',
+        publishedAt: String(story?.sourcePublishedAt || '').trim(),
+        overlap: 1,
+        entityHits: 1,
+        youtubeUrl,
+      },
+    }
+  }
+
   const queries = buildYouTubeQueryVariants({ story, youtubeSearchQuery })
   if (!queries.length) {
     return { attached: false, reason: 'empty_query', query: '', attemptedQueries: [], match: null }
@@ -389,7 +439,7 @@ export const matchYouTubeVideo = async ({ story, youtubeSearchQuery = '' }) => {
       query,
       queryIndex,
       order: 'relevance',
-      maxResults: Math.max(YOUTUBE_ENV.maxCandidates, 8),
+      maxResults: YOUTUBE_ENV.maxCandidates,
     })
     if (acceptedMatches.length) break
   }
@@ -399,7 +449,7 @@ export const matchYouTubeVideo = async ({ story, youtubeSearchQuery = '' }) => {
       query: queries[0],
       queryIndex: 0,
       order: 'date',
-      maxResults: Math.max(YOUTUBE_ENV.maxCandidates, 6),
+      maxResults: YOUTUBE_ENV.maxCandidates,
     })
   }
 
