@@ -2003,7 +2003,7 @@
       }
       return { kind: "signal-brief", editorialScore, strongVisual };
     };
-    const selectHomepageStoryLayout = (posts, { railBriefSlots = 2, briefsOnlyTopSlots = 4, fallbackSourcePosts, leadFreshnessDays = 14 } = {}) => {
+    const selectHomepageStoryLayout = (posts, { railBriefSlots = 2, briefsOnlyTopSlots = 4, fallbackSourcePosts, leadFreshnessDays = 7 } = {}) => {
       const fallbackPosts = Array.isArray(fallbackSourcePosts) && fallbackSourcePosts.length ? fallbackSourcePosts : posts;
       const newestVisiblePublishedAt = (Array.isArray(posts) ? posts : []).reduce((newest, post) => {
         const publishedAt = new Date(post?.publishedAt || 0).getTime();

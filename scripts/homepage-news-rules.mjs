@@ -280,7 +280,7 @@ export const selectHomepagePromotionSlots = (posts, { visualSlots = 2, textSlots
 
 export const selectHomepageStoryLayout = (
   posts,
-  { railBriefSlots = 3, briefsOnlyTopSlots = 4, fallbackSourcePosts, leadFreshnessDays = 14 } = {}
+  { railBriefSlots = 3, briefsOnlyTopSlots = 4, fallbackSourcePosts, leadFreshnessDays = 7 } = {}
 ) => {
   const orderedPosts = Array.isArray(posts) ? [...posts] : []
   const fallbackOrderedPosts = Array.isArray(fallbackSourcePosts) && fallbackSourcePosts.length
