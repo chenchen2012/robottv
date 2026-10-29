@@ -167,8 +167,8 @@
                 <p class="sales-domain">Target Domain: <span id="sales-domain-value">Domain from your inquiry</span></p>
 
                 <div class="sales-actions">
-                    <a id="make-offer" class="btn btn-primary" href="contact.html">Make Offer</a>
-                    <a id="ask-questions" class="btn btn-ghost" href="contact.html">Ask Questions</a>
+                    <a id="make-offer" class="btn btn-primary" href="mailto:chenchen2012@hotmail.com">Make Offer</a>
+                    <a id="ask-questions" class="btn btn-ghost" href="mailto:chenchen2012@hotmail.com">Ask Questions</a>
                 </div>
 
                 <section class="sales-grid" aria-label="Domain value summary">
@@ -206,7 +206,7 @@
                     </article>
                     <article class="faq-item">
                         <h3>How do I contact immediately?</h3>
-                        <p>Use the contact form on robot.tv to send offer details and preferred contact channel.</p>
+                        <p>Email chenchen2012@hotmail.com with your offer details and preferred contact channel.</p>
                     </article>
                 </section>
 
@@ -218,7 +218,7 @@
             <p>robot.tv | Premium robotics media and digital assets</p>
             <div>
                 <a href="index.html">Home</a>
-                <a href="contact.html">Contact</a>
+                <a href="mailto:chenchen2012@hotmail.com">Contact</a>
                 <a href="https://news.robot.tv">Newsroom</a>
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms</a>
@@ -250,8 +250,8 @@
         : "Domain from your inquiry";
       if (domainEl) domainEl.textContent = labelDomain;
 
-      const encodedDomain = encodeURIComponent(labelDomain);
-      const offerUrl = `contact.html?topic=domain-sale&domain=${encodedDomain}&source=sales-page`;
+      const encodedDomain = encodeURIComponent(`Domain inquiry: ${labelDomain}`);
+      const offerUrl = `mailto:chenchen2012@hotmail.com?subject=${encodedDomain}`;
       const offer = document.getElementById("make-offer");
       const ask = document.getElementById("ask-questions");
       if (offer) offer.href = offerUrl;

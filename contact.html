@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Contact robot.tv for general questions, partnerships, and support.">
     <meta property="og:title" content="Contact | robot.tv">
-    <meta property="og:description" content="Send robot.tv a message through a fast web form.">
+    <meta property="og:description" content="Email robot.tv for general questions, partnerships, and support.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://robot.tv/contact.html">
     <meta property="og:image" content="https://robot.tv/images/robot_logo.png">
@@ -46,63 +46,14 @@
             line-height: 1.6;
         }
 
-        .contact-list {
-            margin: 0.9rem 0 0;
-            padding-left: 1rem;
-            display: grid;
-            gap: 0.42rem;
-            color: #c7d3ea;
-        }
-
-        .contact-form {
-            display: grid;
-            gap: 0.72rem;
-            margin-top: 0.92rem;
-        }
-
-        .contact-form .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.68rem;
-        }
-
-        .contact-form label {
-            display: grid;
-            gap: 0.28rem;
-            font-size: 0.9rem;
-            color: #b7c8e5;
-        }
-
-        .contact-form input,
-        .contact-form select,
-        .contact-form textarea {
-            border: 1px solid #2f4465;
-            border-radius: 9px;
-            background: #0b1421;
-            color: #e9f1ff;
-            font: inherit;
-            padding: 0.58rem 0.62rem;
-        }
-
-        .contact-form textarea {
-            min-height: 130px;
-            resize: vertical;
-        }
-
         .contact-note {
             margin-top: 0.4rem;
             color: #9cb0d2;
             font-size: 0.84rem;
         }
 
-        .hidden-field {
-            position: absolute;
-            left: -5000px;
-        }
-
         @media (max-width: 980px) {
             .contact-layout { grid-template-columns: 1fr; }
-            .contact-form .grid { grid-template-columns: 1fr; }
         }
     </style>
     <script src="scripts/ga-lazy.js?v=20260309-ga-v1"></script>
@@ -131,69 +82,16 @@
         <main class="contact-layout">
             <section class="panel contact-panel">
                 <p class="kicker">CONTACT DESK</p>
-                <h1>A shorter, stronger link for robotics</h1>
-                <p>Use this form for general questions, partnership follow-up, and operational support.</p>
-                <ul class="contact-list">
-                    <li>No email app required.</li>
-                    <li>Fast message intake with direct reply path.</li>
-                    <li>Choose your best contact channel (WhatsApp, Telegram, phone, or email).</li>
-                </ul>
+                <h1>Contact robot.tv</h1>
+                <p>Email us for general questions, partnerships, and support.</p>
                 <p class="contact-note">For editorial submissions and video review, use <a href="get-featured.html">Get Featured</a>.</p>
             </section>
 
             <section class="panel contact-panel">
-                <p class="kicker">SUBMIT</p>
-                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Send Message</h2>
-
-                <form name="robottv-contact" method="POST" action="https://formsubmit.co/chenchen2012@hotmail.com" class="contact-form">
-                    <input type="hidden" name="_next" value="https://robot.tv/contact-success/">
-                    <input type="hidden" name="_subject" value="robot.tv contact form submission">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="text" name="_honey" class="hidden-field" tabindex="-1" autocomplete="off">
-                    <input type="hidden" name="topic" value="">
-                    <input type="hidden" name="domain" value="">
-                    <input type="hidden" name="source" value="">
-
-                    <div class="grid">
-                        <label>
-                            Your Name
-                            <input type="text" name="name" required>
-                        </label>
-                        <label>
-                            Organization (Optional)
-                            <input type="text" name="organization">
-                        </label>
-                    </div>
-
-                    <div class="grid">
-                        <label>
-                            Preferred Contact Channel
-                            <select name="contact_channel" required>
-                                <option value="">Select one</option>
-                                <option>WhatsApp</option>
-                                <option>Telegram</option>
-                                <option>Phone / SMS</option>
-                                <option>Email</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                        <label>
-                            Contact Handle / Number
-                            <input type="text" name="contact_value" placeholder="e.g. +1..., @username, or address" required>
-                        </label>
-                    </div>
-
-                    <label>
-                        Message
-                        <textarea name="message" placeholder="Tell us what you want to share or ask..." required></textarea>
-                    </label>
-
-                    <div class="hero-actions">
-                        <button class="btn btn-primary" type="submit">Send to robot.tv</button>
-                        <a class="btn btn-ghost" href="index.html">Back Home</a>
-                    </div>
-                    <p class="contact-note">Submissions are forwarded directly to the robot.tv inbox.</p>
-                </form>
+                <p class="kicker">EMAIL</p>
+                <h2 style="margin:0.35rem 0 0; font-family:'Orbitron',sans-serif;">Get in Touch</h2>
+                <p><a href="mailto:chenchen2012@hotmail.com">chenchen2012@hotmail.com</a></p>
+                <p class="contact-note">Click the address to open your email app, or copy it into your email service.</p>
             </section>
         </main>
 
@@ -204,35 +102,13 @@
                 <a href="home.html">Robot Index</a>
                 <a href="https://news.robot.tv">News</a>
                 <a href="partner.html">Partner</a>
-                <a href="contact.html">Contact</a>
+                <a href="mailto:chenchen2012@hotmail.com">Contact</a>
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms</a>
             </div>
         </footer>
     </div>
 
-    <script>
-        // Keep campaign/source context with each submission (e.g. domain-sale lead).
-        (() => {
-            const form = document.querySelector('form[name="robottv-contact"]');
-            if (!form) return;
-            const q = new URLSearchParams(window.location.search);
-            const topic = (q.get("topic") || "").trim();
-            const domain = (q.get("domain") || "").trim();
-            const source = (q.get("source") || "").trim();
-            const apply = (name, value) => {
-                const input = form.querySelector(`input[name="${name}"]`);
-                if (input && value) input.value = value;
-            };
-            apply("topic", topic);
-            apply("domain", domain);
-            apply("source", source);
-            if (topic === "domain-sale") {
-                const heading = document.querySelector(".contact-panel h2");
-                if (heading) heading.textContent = "Send Domain Offer / Inquiry";
-            }
-        })();
-    </script>
     <script src="scripts/nav-active.js?v=20260219-navfix2"></script>
 </body>
 </html>
